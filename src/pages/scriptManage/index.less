@@ -1,0 +1,85 @@
+// .show-row .tag-btn {
+//   opacity: 0;
+//   transition: all ease 0.5s;
+// }
+
+// // .addTagBtn:hover {
+// //   opacity: 1;
+// // }
+
+// // .show-row:hover .addTagBtn {
+// //   opacity: 1;
+// // }
+
+// .show-row:hover .tag-btn {
+//   opacity: 1;
+// }
+
+.tagsWrap {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.scriptName {
+  padding: 2px 4px;
+  display: inline-block;
+  border-radius: 2px;
+  border: 1px solid #efefef;
+}
+
+.tags,
+.files {
+  max-height: 300px;
+  overflow: scroll;
+  :global {
+    .ant-divider-horizontal {
+      margin: 8px 0;
+    }
+  }
+}
+
+.circleTag {
+  display: inline-block;
+  max-width: 67px;
+  height: 24px;
+  border-radius: 14px;
+  background-color: #ebeeef;
+  color: #595959;
+  line-height: 18px;
+  padding: 3px 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.codeMirror {
+  :global {
+    .CodeMirror {
+      height: 700px;
+    }
+  }
+}
+
+.progressCircle {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  text-align: center;
+  line-height: 76px;
+}
+
+.progressName {
+  font-weight: 600;
+  color: #434343;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.dashedLine {
+  width: 88px;
+  height: 1px;
+  border: 1px dashed transparent;
+  margin-top: 40px;
+}

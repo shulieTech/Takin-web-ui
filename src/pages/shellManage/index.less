@@ -1,0 +1,50 @@
+.codeMirror {
+  line-height: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.tagsWrap {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.tags {
+  max-height: 300px;
+  overflow: px scroll;
+  :global {
+    .ant-divider-horizontal {
+      margin: 8px 0;
+    }
+  }
+}
+
+.circleTag {
+  display: inline-block;
+  max-width: 67px;
+  height: 24px;
+  border-radius: 14px;
+  background-color: #ebeeef;
+  color: #595959;
+  line-height: 18px;
+  padding: 3px 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shellDemoWrap {
+  max-height: 300px;
+  overflow: scroll;
+  :global {
+    .ant-divider-horizontal {
+      margin: 8px 0;
+    }
+  }
+}
+
+.resultWrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 300px;
+}

@@ -1,0 +1,48 @@
+.steps {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin: 8px;
+
+  .stepsItem {
+    margin: 8px 0;
+    text-align: center;
+    border-right: 1px solid #eeeeee;
+    font-size: 14px;
+    color: #acb3b9;
+    height: 32px;
+    line-height: 32px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .stepsItemLast {
+    margin: 8px 0;
+    text-align: center;
+    border-right: none;
+    font-size: 14px;
+    color: #acb3b9;
+    height: 32px;
+    line-height: 32px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .active {
+    font-size: 16px !important;
+    color: #393b4f;
+    display: inline-block;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .active:after {
+    display: block;
+    content: '';
+    width: 100%;
+    height: 3px;
+    background-color: var(--BrandPrimary-500);
+    border-radius: 3px 3px 0 0;
+    position: absolute;
+    bottom: -9px;
+  }
+}

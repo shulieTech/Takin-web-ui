@@ -1,0 +1,1 @@
+export const timerInterval = 60000;

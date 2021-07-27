@@ -1,0 +1,213 @@
+// @import './../../custom.less';
+.tooltipStyle {
+  position: relative;
+  width: 320px;
+  padding: 16px 16px 32px;
+}
+
+.tableWrap {
+  height: 800px;
+  padding-bottom: 80px;
+  overflow: scroll;
+  :global {
+    .ant-divider-horizontal {
+      margin-top: 8px;
+    }
+  }
+}
+
+.addAction {
+  position: absolute;
+  top: 0px;
+  right: 8px;
+}
+
+.extraWrap {
+  position: absolute;
+  right: 30px;
+  bottom: 10px;
+}
+
+.tagStyle {
+  color: #656d77;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.tagWrap {
+  :global {
+    .ant-select-selection__rendered {
+      height: 260px;
+    }
+
+    .ant-select-selection__placeholder {
+      top: 7%;
+    }
+
+    .ant-select-dropdown-menu,
+    .ant-select-dropdown-menu-root,
+    .ant-select-dropdown-menu-vertical {
+      height: 0;
+    }
+
+    .ant-empty,
+    .ant-empty-normal,
+    .ant-empty-small {
+      height: 0;
+    }
+  }
+}
+
+.note {
+  width: 320px;
+  padding: 8px;
+
+  .noteTitle {
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .noteContent {
+    margin-bottom: 24px;
+    font-size: 13px;
+    line-height: 21px;
+  }
+
+  .noteNum {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+    background: rgba(61, 61, 61, 1);
+    border-radius: 20px;
+  }
+
+  .noteSubTitle {
+    color: #3d3d3d;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .noteSubContent {
+    margin-top: 8px;
+    margin-bottom: 32px;
+    margin-left: 24px;
+    font-size: 13px;
+  }
+}
+
+.leftSelected {
+  display: inline-block;
+  width: 194px;
+  height: 100%;
+  overflow-y: scroll;
+  border: 1px solid #e9efff;
+
+  .item {
+    width: 100%;
+    height: 39px;
+    padding-left: 14px;
+    line-height: 39px;
+    cursor: pointer;
+  }
+
+  .itemActive {
+    width: 100%;
+    height: 39px;
+    padding-left: 14px;
+    line-height: 39px;
+    background-color: rgba(17, 187, 213, 0.1);
+    border-right: 4px solid #11bbd5;
+    cursor: pointer;
+  }
+}
+
+.roleRightWrap {
+  position: relative;
+  display: inline-block;
+  width: 990px;
+  border: 1px solid #f2f2f2;
+  border-left: none;
+
+  .roleTitle {
+    margin-right: 16px;
+    color: #595959;
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .roleDes {
+    color: #8c8c8c;
+  }
+}
+
+.roleFooter {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 8px;
+  text-align: left;
+  background: #ffffff;
+  box-shadow: 0px 2px 20px 0px rgba(92, 80, 133, 0.15),
+    0px -4px 8px 0px rgba(222, 223, 233, 0.3);
+}
+
+.agentIds {
+  max-height: 300px;
+  overflow: scroll;
+  :global {
+    .ant-divider-horizontal {
+      margin: 8px 0;
+    }
+  }
+}
+
+.consumerTable {
+  :global {
+    .ant-table-small {
+      border: none;
+    }
+  }
+}
+
+.nodenum {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 4px;
+}
+
+.modalTitle {
+  font-size: 16px;
+  color: var(--Netural-14);
+  margin-left: 8px;
+}
+
+.serverAppName {
+  display: inline-block;
+  max-width: 142px;
+  overflow: hidden; //超出的文本隐藏
+  text-overflow: ellipsis; //溢出用省略号显示
+  white-space: nowrap; //溢出不换行
+}
+
+.spinloading {
+  -webkit-animation: spin 1s linear 1s 5 alternate;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

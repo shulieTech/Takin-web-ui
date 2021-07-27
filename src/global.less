@@ -1,0 +1,365 @@
+@import '~antd/lib/style/themes/default.less';
+// @import './custom.less';
+@import './assets/fonts/iconfont/iconfont.css';
+
+#root {
+  // 品牌主色 BrandPrimary
+  --BrandPrimary-50: #f4fffe; // 文字条的背景色
+  --BrandPrimary-100: #d2eff3;
+  --BrandPrimary-200: #97d9e3;
+  --BrandPrimary-300: #4fcfe2;
+  --BrandPrimary-400: #2bc5db;
+  --BrandPrimary-500: #26cdc3; // 主色
+  --BrandPrimary-600: #269dae; // hover
+  --BrandPrimary-700: #0f8d9d; // active
+  --BrandPrimary-800: #05707c;
+  --BrandPrimary-900: #064d63;
+
+  // FunctionalAlert
+  --FunctionalAlert-50: #fff8ee;
+  --FunctionalAlert-100: #ffe2b8;
+  --FunctionalAlert-200: #ffca7f;
+  --FunctionalAlert-300: #ffb54c;
+  --FunctionalAlert-400: #ffa425;
+  --FunctionalAlert-500: #ff9500;
+  --FunctionalAlert-600: #fb8901;
+  --FunctionalAlert-700: #f57902;
+  --FunctionalAlert-800: #ef6902;
+  --FunctionalAlert-900: #e64d03;
+
+  // FunctionalError
+  --FunctionalError-50: #fdedef;
+  --FunctionalError-100: #fbd2d5;
+  --FunctionalError-200: #eaa4a1;
+  --FunctionalError-300: #de827d;
+  --FunctionalError-400: #e8695d;
+  --FunctionalError-500: #ed6047;
+  --FunctionalError-600: #de5745;
+  --FunctionalError-700: #cc4e3e;
+  --FunctionalError-800: #be4838;
+  --FunctionalError-900: #ae412f;
+
+  // FunctionalNetural
+  --FunctionalNetural-50: #f5f7f7;
+  --FunctionalNetural-100: #ced2da;
+  --FunctionalNetural-200: #838b99;
+  --FunctionalNetural-300: #646e81;
+  --FunctionalNetural-400: #4c5a71;
+  --FunctionalNetural-500: #404d62;
+  --FunctionalNetural-600: #3b414b;
+  --FunctionalNetural-700: #2e333b;
+  --FunctionalNetural-800: #24282e;
+  --FunctionalNetural-900: #1c1f23;
+
+  // 表格：table-title 10,主数据 14
+  // 详情：【标题10，正文14】
+  // tab :
+  // Netural
+  --Netural-01: #ffffff; // button文字（除disable）
+  --Netural-02: #f8f8f8; // disabled 背景色
+  --Netural-03: #f0f0f0;
+  --Netural-04: #e8e8e8;
+  --Netural-05: #dadada;
+  --Netural-06: #c9c9c9; // 状态的未配置色
+  --Netural-07: #bababa; // diable 文字色
+  --Netural-08: #ababab;
+  --Netural-09: #9e9e9e;
+  --Netural-10: #8e8e8e;
+  --Netural-11: #7b7b7b;
+  --Netural-12: #666666;
+  --Netural-13: #525252;
+  --Netural-14: #424242;
+  --Netural-15: #313131;
+  --Netural-16: #262626;
+  height: 100%;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  font-variant-numeric: tabular-nums;
+
+  .ant-btn-link {
+    padding: 0;
+    height: 14px;
+    line-height: 12px;
+    border-color: transparent;
+  }
+
+  .ant-btn-link:hover {
+    background-color: transparent;
+  }
+
+  .ant-btn-primary:hover {
+    background-color: var(--BrandPrimary-600);
+    border: 1px solid transparent;
+  }
+
+  .ant-btn-danger {
+    background-color: var(--Netural-01);
+    border-color: var(--FunctionalError-500);
+    color: var(--FunctionalError-500);
+  }
+
+  .ant-layout-header {
+    height: 50px;
+    line-height: 50px;
+  }
+  .ant-menu-sub {
+    background-color: var(--BrandPrimary-500);
+  }
+
+  .ant-menu-item-selected {
+    color: var(--BrandPrimary-500);
+  }
+
+  .ant-menu-item:hover,
+  .ant-menu-item-active,
+  .ant-menu .ant-menu-submenu-open,
+  .ant-menu-submenu-active,
+  .ant-menu-submenu-title:hover {
+    color: var(--Netural-01) !important;
+  }
+
+  .ant-menu-vertical .ant-menu-submenu-selected,
+  .ant-menu-vertical-left .ant-menu-submenu-selected,
+  .ant-menu-vertical-right .ant-menu-submenu-selected {
+    color: var(--BrandPrimary-500);
+  }
+  .ant-menu-vertical .ant-menu-submenu-selected > a,
+  .ant-menu-vertical-left .ant-menu-submenu-selected > a,
+  .ant-menu-vertical-right .ant-menu-submenu-selected > a {
+    color: var(--BrandPrimary-500) !important;
+  }
+  .ant-menu-horizontal > .ant-menu-item:hover,
+  .ant-menu-horizontal > .ant-menu-submenu:hover,
+  .ant-menu-horizontal > .ant-menu-item-active,
+  .ant-menu-horizontal > .ant-menu-submenu-active,
+  .ant-menu-horizontal > .ant-menu-item-open,
+  .ant-menu-horizontal > .ant-menu-submenu-open,
+  .ant-menu-horizontal > .ant-menu-item-selected,
+  .ant-menu-horizontal > .ant-menu-submenu-selected {
+    color: var(--BrandPrimary-500) !important;
+    border-bottom: 2px solid var(--BrandPrimary-500);
+  }
+  .ant-menu-horizontal > .ant-menu-item > a:hover {
+    color: var(--BrandPrimary-500);
+  }
+  .ant-menu-horizontal > .ant-menu-item-selected > a {
+    color: var(--Netural-01);
+  }
+  .ant-menu-dark {
+    background: var(--BrandPrimary-500);
+  }
+
+  .ant-menu-vertical .ant-menu-item::after,
+  .ant-menu-vertical-left .ant-menu-item::after,
+  .ant-menu-vertical-right .ant-menu-item::after,
+  .ant-menu .ant-menu-dark .ant-menu-item-selected,
+  .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
+    background-color: #1d2131 !important;
+  }
+
+  .ant-input {
+    font-size: 12px;
+  }
+  :global {
+    // 布局
+    .hidden {
+      display: none;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .of-hd {
+      overflow: hidden;
+    }
+
+    .of-x-hd {
+      overflow-x: hidden;
+    }
+
+    .of-y-at {
+      overflow-y: auto;
+    }
+
+    .w-100p {
+      width: 100%;
+    }
+
+    .h-100p {
+      height: 100%;
+      background-color: #1d2530;
+    }
+
+    .mh-100p {
+      min-height: 100%;
+    }
+    /* margin left */
+
+    .mg-l1x {
+      margin-left: 8px;
+    }
+
+    .mg-l2x {
+      margin-left: 16px;
+    }
+    /* margin top */
+
+    .mg-t1x {
+      margin-top: 8px;
+    }
+
+    .mg-t2x {
+      margin-top: 16px !important;
+    }
+
+    .mg-t3x {
+      margin-top: 24px;
+    }
+
+    .mg-t4x {
+      margin-top: 32px;
+    }
+
+    /* margin right */
+
+    .mg-r1x {
+      margin-right: 8px;
+    }
+
+    .mg-r2x {
+      margin-right: 16px;
+    }
+
+    .mg-r4x {
+      margin-right: 32px;
+    }
+
+    /* margin-bottom */
+
+    .mg-b1x {
+      margin-bottom: 8px;
+    }
+
+    .mg-b2x {
+      margin-bottom: 16px;
+    }
+
+    .mg-b3x {
+      margin-bottom: 24px;
+    }
+
+    .mg-b4x {
+      margin-bottom: 32px;
+    }
+
+    .mg-b0 {
+      margin-bottom: 0 !important;
+    }
+
+    /* padding left */
+
+    .pd-2x {
+      padding: 16px;
+    }
+
+    /* padding top */
+
+    .pd-t1x {
+      padding-top: 8px;
+    }
+
+    .pd-t3x {
+      padding-top: 24px;
+    }
+    /* padding right */
+
+    .pd-r1x {
+      padding-right: 8px;
+    }
+    /* padding bottom */
+
+    .pd-b1x {
+      padding-bottom: 8px;
+    }
+
+    .pd-b3x {
+      padding-bottom: 24px;
+    }
+
+    /* cursor */
+
+    .pointer {
+      cursor: pointer;
+    }
+
+    /* font */
+
+    .ft-12 {
+      font-size: 12px;
+    }
+
+    .ft-14 {
+      font-size: 14px;
+    }
+
+    .ft-16 {
+      font-size: 16px;
+    }
+
+    .ft-18 {
+      font-size: 18px;
+    }
+
+    .ft-20 {
+      font-size: 20px;
+    }
+
+    .ft-ct {
+      text-align: center;
+    }
+
+    .ft-rt {
+      text-align: right;
+    }
+
+    .ft-white {
+      color: #fff;
+    }
+
+    .flt-rt {
+      float: right;
+    }
+  }
+}
+
+:global {
+  .react-resizable {
+    position: relative;
+    background-clip: padding-box;
+  }
+
+  .react-resizable-handle {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    bottom: 0;
+    right: -5px;
+    cursor: col-resize;
+    z-index: 1;
+  }
+}
+@font-face {
+  font-family: 'Digital-7';
+  src: url('./assets/fonts/digital-7-mono.ttf') format('truetype');
+}
+.font-digtal {
+  font-family: 'Digital-7';
+}

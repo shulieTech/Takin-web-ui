@@ -1,0 +1,45 @@
+.process {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+
+  .processItem {
+    width: 30%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    i {
+      border: 1px solid rgba(238, 241, 245, 1);
+      border-radius: 999px;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+      background-color: #fff;
+
+      svg {
+        color: #e4eaf0;
+        font-size: 28px;
+      }
+    }
+
+    .processTit{
+        color: #e4eaf0;
+        padding:12px;
+    }
+  }
+  .processItem:after {
+    content: '';
+    display: block;
+    width: 100%;
+    border-top: 1px dashed rgba(238, 241, 245, 1);
+    position: absolute;
+    left: 50%;
+    top: 35px;
+  }
+  .processItem:last-child::after {
+    width: 0;
+    display: none;
+  }
+}

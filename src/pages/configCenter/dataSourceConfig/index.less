@@ -1,0 +1,37 @@
+.tagsWrap {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.scriptName {
+  padding: 2px 4px;
+  display: inline-block;
+  border-radius: 2px;
+  border: 1px solid #efefef;
+}
+
+.tags,
+.files {
+  max-height: 300px;
+  overflow: scroll;
+  :global {
+    .ant-divider-horizontal {
+      margin: 8px 0;
+    }
+  }
+}
+
+.circleTag {
+  display: inline-block;
+  max-width: 67px;
+  height: 24px;
+  border-radius: 14px;
+  background-color: #ebeeef;
+  color: #595959;
+  line-height: 18px;
+  padding: 3px 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

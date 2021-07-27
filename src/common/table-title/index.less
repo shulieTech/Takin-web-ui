@@ -1,0 +1,19 @@
+.title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #393b4f;
+  line-height: 20px;
+  position: relative;
+}
+
+.title::before {
+  content: '';
+  display: inline-block;
+  border-radius: 999px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--BrandPrimary-500);
+  margin: 0 8px;
+  position: relative;
+  top: 1px;
+}

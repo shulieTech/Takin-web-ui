@@ -1,0 +1,29 @@
+.graph {
+  :global {
+    .g6-minimap {
+      position: absolute;
+      right: 11px;
+      bottom: 24px;
+      background: #fff;
+      box-shadow: 0px 0px 12px 0px rgba(177, 192, 192, 0.45);
+      border-radius: 4px;
+    }
+    .g6-minimap-viewport {
+      border: 2px solid rgba(57, 59, 79, 0.2) !important;
+    }
+    .g6-component-toolbar {
+      left: initial;
+      right: 120px;
+      top: initial;
+      bottom: 22px;
+      li {
+        &:first-child {
+          display: none;
+        }
+        &:nth-child(2) {
+          display: none;
+        }
+      }
+    }
+  }
+}
