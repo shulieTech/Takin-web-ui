@@ -98,6 +98,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
       data: { data, success }
     } = await UserService.queryBtnResource({});
     if (success) {
+      localStorage.setItem('takinAuthority', 'false');
       localStorage.setItem('trowebBtnResource', JSON.stringify(data));
     }
   };
