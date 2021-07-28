@@ -37,7 +37,7 @@ const getInitState = () => ({
   /** 页面内容是否被修改过，修改过需要弹窗提示 */
   isChanged: false,
   /** 历史配置搜索条件 */
-  searchParams: null,
+  searchParams: undefined,
   total: 0,
   pageSize: 10,
   current: 0,

@@ -1,3 +1,8 @@
+/**
+ * @name 表格内序号、ID等
+ * @name chuxu
+ */
+
 import React, { Fragment } from 'react';
 import styles from './index.less';
 interface Props {

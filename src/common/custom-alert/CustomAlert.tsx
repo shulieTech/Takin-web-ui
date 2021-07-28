@@ -8,12 +8,13 @@ interface Props extends AlertProps {
   content?: string | React.ReactNode;
   types?: 'info' | 'warning' | 'success' | 'error' | 'business';
 }
+
 const CustomAlert: React.FC<Props> = props => {
   return (
     <Alert
       icon={
         <img
-          style={{ width: 20, marginTop: -2 }}
+          style={{ width: 20 }}
           src={require(`./../../assets/${
             props.types ? AlertTypes[props.types] : AlertTypes.info
           }.png`)}
@@ -27,7 +28,10 @@ const CustomAlert: React.FC<Props> = props => {
             <span style={{ marginLeft: 8 }}>{props.content}</span>
           )}
         </div>}
-      className={props.types ? styles[props.types] : styles.info}
+      style={{
+        backgroundColor: AlertBgStyleTypes[props.types],
+        borderColor: AlertBorderStyleTypes[props.types]
+      }}
     />
   );
 };
@@ -42,4 +46,26 @@ enum AlertTypes {
   error = 'alert_error_icon',
   warning = 'alert_warning_icon',
   business = 'alert_business_icon'
+}
+
+/**
+ * @name alert类型style
+ */
+enum AlertBgStyleTypes {
+  info = '#F5FFFE',
+  success = '#F5FFFE',
+  error = '#FFF7F8',
+  warning = '#FFF8EE',
+  business = '#F5FFFE'
+}
+
+/**
+ * @name alert类型style
+ */
+enum AlertBorderStyleTypes {
+  info = '#E4FBF9',
+  success = '#E4FBF9',
+  error = '#FBD2D5',
+  warning = '#FFE2B8',
+  business = '#E4FBF9'
 }

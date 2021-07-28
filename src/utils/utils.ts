@@ -99,3 +99,22 @@ export const filter = (inputValue, path) => {
       option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
   );
 };
+
+/** @name 判断是否为空 */
+export const isEmpty = (obj: any) => {
+  if (typeof obj === 'undefined' || obj === null || obj === '') {
+    return true;
+  }
+  return false;
+};
+
+ /** @name 数组平铺 */
+export const flatten = arr => {
+  return [].concat(
+      ...arr.map(item => {
+        return item.children
+          ? [].concat(item, ...flatten(item.children))
+          : [].concat(item);
+      })
+    );
+};

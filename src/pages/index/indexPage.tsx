@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect } from 'react';
 import UserService from 'src/services/user';
 import router from 'umi/router';
-import { useStateReducer } from 'racc';
+import menuList from 'src/common/menu';
+import { flatten } from 'src/utils/utils';
 interface Props {
   location?: any;
 }
@@ -25,6 +26,7 @@ const Demo: React.FC<Props> = props => {
       queryBtnResource();
     }
   }, []);
+
   /**
    * @name 获取菜单权限
    */
@@ -43,8 +45,9 @@ const Demo: React.FC<Props> = props => {
       }
 
       const urlString = Object.keys(data) && Object.keys(data)[0];
-      const urls = urlString && urlString.replace(/_/, '/');
-      const url = urls ? `/${urls}` : '/';
+      const url =
+        flatten(menuList).find(item => item.key === urlString) &&
+        flatten(menuList).find(item => item.key === urlString).path;
       router.push(url);
     }
   };

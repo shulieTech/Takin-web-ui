@@ -100,6 +100,30 @@ const routes = [
           : require('../appWhiteList/indexPage.tsx').default,
       },
       {
+        path: '/bottleneckTable/bottleneckDetails/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () =>
+                import('../bottleneckTable/bottleneckDetails/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../bottleneckTable/bottleneckDetails/indexPage.tsx')
+              .default,
+      },
+      {
+        path: '/bottleneckTable/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () => import('../bottleneckTable/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../bottleneckTable/indexPage.tsx').default,
+      },
+      {
         path: '/businessActivity/addEdit',
         exact: true,
         component: __IS_BROWSER
@@ -275,6 +299,18 @@ const routes = [
           : require('../configCenter/keyConfig/indexPage.tsx').default,
       },
       {
+        path: '/configCenter/middlewareManage/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () =>
+                import('../configCenter/middlewareManage/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../configCenter/middlewareManage/indexPage.tsx').default,
+      },
+      {
         path: '/configCenter/operationLog/',
         exact: true,
         component: __IS_BROWSER
@@ -345,6 +381,28 @@ const routes = [
           : require('../debugTool/linkDebug/indexPage.tsx').default,
       },
       {
+        path: '/e2eBigScreen/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () => import('../e2eBigScreen/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../e2eBigScreen/indexPage.tsx').default,
+      },
+      {
+        path: '/faultNotification/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () => import('../faultNotification/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../faultNotification/indexPage.tsx').default,
+      },
+      {
         path: '/flowAccount/',
         exact: true,
         component: __IS_BROWSER
@@ -376,6 +434,29 @@ const routes = [
                 .default,
             })
           : require('../linkMark/indexPage.tsx').default,
+      },
+      {
+        path: '/missionManage/SceneDetails/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () =>
+                import('../missionManage/SceneDetails/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../missionManage/SceneDetails/indexPage.tsx').default,
+      },
+      {
+        path: '/missionManage/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () => import('../missionManage/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../missionManage/indexPage.tsx').default,
       },
       {
         path: '/pressMachineManage/pressMachineManage/',
@@ -522,6 +603,17 @@ const routes = [
                 .default,
             })
           : require('../scriptOperation/indexPage.tsx').default,
+      },
+      {
+        path: '/setFocus/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () => import('../setFocus/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../setFocus/indexPage.tsx').default,
       },
       {
         path: '/shellManage/',

@@ -2,7 +2,7 @@ import { Col, Row } from 'antd';
 import React, { Fragment } from 'react';
 import styles from './index.less';
 interface Props {
-  dataSource: {
+  dataSource?: {
     name: string;
     value: string;
     color?: string;
@@ -10,17 +10,20 @@ interface Props {
   }[];
   title: string | React.ReactNode;
   img?: React.ReactNode;
+  description?: string | React.ReactNode;
+  extra?: React.ReactNode;
 }
 const CustomDetailHeader: React.FC<Props> = props => {
-  const { title, dataSource } = props;
+  const { title, dataSource, description, extra } = props;
   return (
-    <Row type="flex">
+    <div style={{ display: 'flex', position: 'relative' }}>
       <Col>{props.img}</Col>
       <Col style={{ marginLeft: 16 }}>
         <div className={styles.title}>{title}</div>
-        <div>
-          {dataSource &&
-            dataSource.map((item, key) => {
+        {description && <p className={styles.description}>{description}</p>}
+        {dataSource && (
+          <div>
+            {dataSource.map((item, key) => {
               return (
                 <p className={styles.details} key={key}>
                   <span className={styles.detailsLabel}>{item.name}：</span>
@@ -38,9 +41,11 @@ const CustomDetailHeader: React.FC<Props> = props => {
                 </p>
               );
             })}
-        </div>
+          </div>
+        )}
       </Col>
-    </Row>
+      {extra && <div style={{ position: 'absolute', right: 0 }}>{extra}</div>}
+    </div>
   );
 };
 export default CustomDetailHeader;

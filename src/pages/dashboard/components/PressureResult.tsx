@@ -92,7 +92,7 @@ const PressureResult: React.FC<Props> = props => {
           </Col>
         </Row>
         <Table
-          rowkey={record => record.id}
+          key="id"
           style={{ marginTop: 24 }}
           dataSource={data}
           columns={columns}

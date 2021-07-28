@@ -555,7 +555,28 @@ const AppManageService = {
   async refreshAppStatus(data = {}) {
     const url = '/';
     return httpGet(url, data);
-  }
+  },
+  /*
+   * @name 获取中间件支持概况
+   */
+  async queryMiddlewareDashboard(data = {}) {
+    const url = '/application/middleware/count';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取中间件列表
+   */
+  async queryMiddlewareList(data = {}) {
+    const url = '/application/middleware/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取中间件列表
+   */
+  async compare(data = {}) {
+    const url = '/application/middleware/compare';
+    return httpPost(url, data);
+  }   
 };
 
 export default AppManageService;

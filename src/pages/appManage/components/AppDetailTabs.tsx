@@ -6,6 +6,7 @@ import BlackList from './BlackList';
 import DbAndTable from './DbAndTable';
 import ExitJob from './ExitJob';
 import Job from './Job';
+import MiddlewareList from './MiddlewareList';
 import MockList from './MockList';
 import NodeManageList from './NodeManageList';
 import NodeManageListOld from './NodeManageListOld';
@@ -28,6 +29,18 @@ const AppDetailTabs: React.FC<Props> = props => {
     {
       title: '基础信息',
       tabNode: <BasicInfo detailData={detailData} />,
+      show: true
+    },
+    {
+      title: '中间件',
+      tabNode: (
+        <MiddlewareList
+          id={id}
+          detailData={detailData}
+          detailState={detailState}
+          action={action}
+        />
+      ),
       show: true
     },
     {

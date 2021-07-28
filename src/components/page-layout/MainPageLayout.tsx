@@ -7,7 +7,7 @@ interface MainPageLayoutProps {
 }
 const MainPageLayout: React.FC<MainPageLayoutProps> = props => {
   return (
-    <div className="pd-2x">
+    <div className="pd-2x" style={{ height: '100%' }}>
       <Row type="flex" justify="space-between" align="middle">
         <Col>
           <h1 className={styles.title}>{props.title}</h1>

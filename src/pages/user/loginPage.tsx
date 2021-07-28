@@ -176,12 +176,10 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
-      // if (data.role === 1) {
-      //   router.push('/appTrialManage');
-      //   return;
-      // }
       router.push('/');
+      return;
     }
+    this.refresh();
   };
 
   content = () => {

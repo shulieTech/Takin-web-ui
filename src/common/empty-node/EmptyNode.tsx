@@ -12,7 +12,7 @@ const EmptyNode: React.FC<Props> = props => {
       <div className={styles.circle} />
       <div className={styles.title}>{title ? title : '暂无数据'}</div>
       {desc && <p className={styles.desc}>{desc}</p>}
-      {extra}
+      <div>{extra}</div>
     </div>
   );
 };

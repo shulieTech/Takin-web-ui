@@ -248,7 +248,7 @@ const MockList: React.FC<Props> = props => {
           </Col>
         </Row>
         <CustomTable
-          rowKey="wlistId"
+          rowKey={(row, index) => index.toString()}
           loading={state.loading}
           columns={getMockListColumns(state, setState, props.id)}
           dataSource={state.mockList || []}

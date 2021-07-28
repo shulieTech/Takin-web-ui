@@ -7,6 +7,7 @@ import { useStateReducer } from 'racc';
 import React, { Fragment } from 'react';
 import SearchTable from 'src/components/search-table';
 import getColumns from './components/TableNode';
+import TableAction from './components/TableAction';
 interface Props {}
 const getInitState = () => ({
   reload: false
@@ -31,6 +32,7 @@ const BigDataConfig: React.FC<Props> = props => {
         }}
         title={title}
         // commonFormProps={{ formData: getFormData(state, setState), rowNum: 6 }}
+        tableAction={<TableAction state={state} setState={setState} />}
         ajaxProps={{ url: '/pradar/switch/list', method: 'GET' }}
         toggleRoload={state.reload}
       />

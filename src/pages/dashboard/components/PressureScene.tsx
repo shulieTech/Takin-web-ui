@@ -69,7 +69,7 @@ const PressureScene: React.FC<Props> = props => {
         </Row>
         {data && data.length > 0 ? (
           <Table
-            rowKey={record => record.id}
+            key="id"
             style={{ marginTop: 24 }}
             dataSource={data}
             columns={columns}

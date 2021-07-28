@@ -2,6 +2,11 @@
  * @name
  * @author chuxu
  */
+import {
+  Button,
+  Popconfirm,
+  message
+} from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
@@ -10,11 +15,25 @@ import { MapBtnAuthority } from 'src/utils/utils';
 import { BigDataBean } from '../enum';
 import { BigDataConfigState } from '../indexPage';
 import EditModal from '../modals/EditModal';
+import BigDataService from '../service';
 
 const getColumns = (
   state: BigDataConfigState,
   setState: (state: Partial<BigDataConfigState>) => void
 ): ColumnProps<any>[] => {
+
+  const handleDelete = async id => {
+    const {
+      data: { data, success }
+    } = await BigDataService.deleteConfig({ id });
+    if (success) {
+      message.success('删除成功');
+      setState({
+        reload: !state.reload
+      });
+    }
+  };
+
   return [
     {
       ...customColumnProps,
@@ -52,10 +71,23 @@ const getColumns = (
             isShow={MapBtnAuthority('configCenter_bigDataConfig_3_update')}
           >
             <EditModal
+              btnText="修改"
               onSuccess={() => setState({ reload: !state.reload })}
               details={row}
               id={row.id}
             />
+          </AuthorityBtn>
+          <AuthorityBtn
+            isShow={MapBtnAuthority('configCenter_authorityConfig_4_delete')}
+          >
+            <Popconfirm
+              onConfirm={() => handleDelete(row.id)}
+              title="确认删除吗?"
+            >
+              <Button className="mg-l1x" type="link">
+                删除
+                </Button>
+            </Popconfirm>
           </AuthorityBtn>
         </Fragment>
       )

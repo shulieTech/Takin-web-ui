@@ -45,3 +45,13 @@ export enum DbBean {
   minldle = 'shadowDbMinIdle',
   maxActive = 'shadowDbMaxActive'
 }
+
+/**
+ * @name 中间件状态颜色
+ */
+export const middlewareStatusColorMap = {
+  1: '#11D0C5',
+  2: '#FFA800',
+  3: '#C9C9C9',
+  4: '#ED6047'
+};

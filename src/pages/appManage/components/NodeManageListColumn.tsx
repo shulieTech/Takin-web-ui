@@ -62,7 +62,7 @@ const getNodeManageListColumns = (
       render: (text, row) => {
         return (
           <TableTwoRows
-            extra={
+            prefix={
               row.probeStatus === 0 ? (
                 <Tooltip
                   title="该节点未安装探针，请及时处理"
@@ -76,7 +76,7 @@ const getNodeManageListColumns = (
               ) : null
             }
             title={text}
-            content={[
+            secondLineContent={[
               {
                 label: 'IP:',
                 value: row.ip
