@@ -2,7 +2,13 @@
 // @import './custom.less';
 @import './assets/fonts/iconfont/iconfont.css';
 
-#root {
+#root-master {
+  #app-slave > div:only-child {
+    &,
+    [id^='__qiankun_subapp_wrapper_for'] {
+      height: 100%;
+    }
+  }
   // 品牌主色 BrandPrimary
   --BrandPrimary-50: #f4fffe; // 文字条的背景色
   --BrandPrimary-100: #d2eff3;

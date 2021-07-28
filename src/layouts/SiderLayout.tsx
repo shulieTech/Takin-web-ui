@@ -10,9 +10,10 @@ import { AppModelState } from 'src/models/app';
 import UserService from 'src/services/user';
 import { Basic } from 'src/types';
 import venomBasicConfig from 'src/venom.config';
-import { router } from 'umi';
+import { router, qiankunStart } from 'umi';
 import ContentNode from './components/ContentNode';
 import SiderMenu from './components/SiderMenu';
+
 declare var window: any;
 
 interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
@@ -26,7 +27,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const popupDom = useRef(null);
 
   const { location } = props;
-
+  useEffect(() => {
+    qiankunStart();
+  }, []);
   useEffect(() => {
     handleDispatch({
       type: 'app/filterBreadCrumbs',
