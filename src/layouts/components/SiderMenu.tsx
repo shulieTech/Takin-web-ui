@@ -43,7 +43,7 @@ const SiderMenu: React.FC<Props> = props => {
   const { breadCrumbs, collapsed } = props;
   const keys = breadCrumbs.map(item => item.path);
 
-  const dismissPopover = (e) => {
+  const dismissPopover = e => {
     e.stopPropagation();
     if (visible) {
       setVisible(false);
@@ -97,7 +97,13 @@ const SiderMenu: React.FC<Props> = props => {
   );
 
   const title = (
-    <span style={{ color: 'white' }} onClick={(e) => { e.stopPropagation(); setVisible(true); }}>
+    <span
+      style={{ color: 'white' }}
+      onClick={e => {
+        e.stopPropagation();
+        setVisible(true);
+      }}
+    >
       {!props.collapsedStatus && (
         <span> {localStorage.getItem('troweb-userName')}</span>
       )}
@@ -119,7 +125,7 @@ const SiderMenu: React.FC<Props> = props => {
         // paddingTop: venomBasicConfig.fixHeader && venomBasicConfig.headerHeight,
         backgroundColor: 'var(--BrandPrimary-500)'
       }}
-    // onCollapse={}
+      // onCollapse={}
     >
       {/* {!venomBasicConfig.fixHeader && <TitleNode />} */}
       <TitleNode
@@ -128,6 +134,7 @@ const SiderMenu: React.FC<Props> = props => {
         location={props.location}
       />
       <Menu
+        inlineIndent={15}
         theme={venomBasicConfig.theme}
         mode="inline"
         className={`flex-1 of-x-hd`}
@@ -282,11 +289,11 @@ const SystemInformationModal: React.FC<Props> = props => {
         title: '关于系统',
         footer: false,
         style: { top: 30 },
-        width: 600,
+        width: 600
       }}
     >
-      {
-        fileList && fileList.map((item, index) => {
+      {fileList &&
+        fileList.map((item, index) => {
           return (
             <div key={index}>
               <TableTitle title={item.title} />
@@ -297,19 +304,30 @@ const SystemInformationModal: React.FC<Props> = props => {
                 return (
                   <div
                     className={
-                      ite === 'AMDB版本' || ite === 'tro地址' || ite === '用户user-app-key' ?
-                        styles.lineDivs : styles.lineDiv}
+                      ite === 'AMDB版本' ||
+                      ite === 'tro地址' ||
+                      ite === '用户user-app-key'
+                        ? styles.lineDivs
+                        : styles.lineDiv
+                    }
                     key={ind}
                   >
-                    <span style={{ float: 'left', color: '#888', marginLeft: '10px' }}>{ite}</span>
+                    <span
+                      style={{
+                        float: 'left',
+                        color: '#888',
+                        marginLeft: '10px'
+                      }}
+                    >
+                      {ite}
+                    </span>
                     <span style={{ float: 'right' }}>{item.dataMap[ite]}</span>
                   </div>
                 );
               })}
             </div>
           );
-        })
-      }
-    </CommonModal >
+        })}
+    </CommonModal>
   );
 };

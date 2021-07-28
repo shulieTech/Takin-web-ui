@@ -1,0 +1,35 @@
+# roadhog-api-doc ignore
+/src/utils/request-temp.js
+
+.DS_Store
+node_modules/
+app/
+.idea/
+npm-debug.log*
+yarn.lock
+yarn-debug.log*
+yarn-error.log*
+src/pages/.umi/
+mock/
+dist/
+/.umi
+page/.umi
+# zip
+/.zip
+.zip
+*.zip
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+/.gitignore.swp
+/.vscode
+/package-lock.json
+
+# zip
+/.zip
+.zip
+*.zip

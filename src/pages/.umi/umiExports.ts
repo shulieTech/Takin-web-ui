@@ -1,0 +1,1 @@
+export { qiankunStart } from '@tmp/qiankunDefer';

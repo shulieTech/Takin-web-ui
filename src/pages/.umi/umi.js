@@ -1,15 +1,13 @@
 import './polyfills';
-import history from './history';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import findRoute, {
   getUrlQuery,
-} from '/Users/xieshuyu/Desktop/full-link/node_modules/umi-build-dev/lib/findRoute.js';
+} from '/Users/chuxu/shulie_project/full-link-public/node_modules/umi-build-dev/lib/findRoute.js';
 
 // runtime plugins
 const plugins = require('umi/_runtimePlugin');
-window.g_plugins = plugins;
 plugins.init({
   validKeys: [
     'patchRoutes',
@@ -19,9 +17,13 @@ plugins.init({
     'onRouteChange',
     'modifyInitialProps',
     'initialProps',
+    'qiankun',
     'dva',
   ],
 });
+plugins.use(
+  require('../../../node_modules/@umijs/plugin-qiankun/lib/master/runtimePlugin.js'),
+);
 plugins.use(require('../../../node_modules/umi-plugin-dva/lib/runtime'));
 
 const app = require('@tmp/dva')._onCreate();
@@ -63,7 +65,7 @@ let clientRender = async () => {
   });
   ReactDOM[window.g_useSSR ? 'hydrate' : 'render'](
     rootContainer,
-    document.getElementById('root'),
+    document.getElementById('root-master'),
   );
 };
 const render = plugins.compose(
