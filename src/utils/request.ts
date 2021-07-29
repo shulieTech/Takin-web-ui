@@ -71,7 +71,7 @@ function checkStatus(response: BaseResponse) {
 
   // 权限判断
   if (response.status === 401) {
-    if (getTakinAuthority() === 'true') {
+    if (getTakinAuthority() === 'true' && window.location.href.indexOf('/pro/') === -1) {
       if (!outloginFlag) {
         getBackLogin(response);
       }
