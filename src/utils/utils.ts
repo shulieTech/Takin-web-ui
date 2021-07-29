@@ -118,3 +118,8 @@ export const flatten = arr => {
       })
     );
 };
+
+/** @name 获取是否需要权限 */
+export const getTakinAuthority = () => {
+  return localStorage.getItem('takinAuthority');
+};

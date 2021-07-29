@@ -1,10 +1,10 @@
 import React, { Fragment, ReactNode } from 'react';
-import styles from './index.less';
+import { getTakinAuthority } from 'src/utils/utils';
 interface Props {
   isShow: boolean;
 }
 const AuthorityBtn: React.FC<Props> = props => {
-  if (localStorage.getItem('takinAuthority') === 'false') {
+  if (getTakinAuthority() === 'false') {
     return <Fragment>{props.children}</Fragment>;
   }
   return <Fragment>{props.isShow && props.children}</Fragment>;
