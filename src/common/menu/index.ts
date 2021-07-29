@@ -35,7 +35,7 @@ const menuList: MenuBean[] = [
           },
           {
             title: '白名单列表',
-            path: '/appWhiteList',
+            path: '/pro/appWhiteList',
             type: MenuType.Item,
             key: 'appWhiteList'
           }

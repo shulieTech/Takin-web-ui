@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { message, Modal } from 'antd';
 import { Basic } from 'src/types';
 import BaseResponse = Basic.BaseResponse;
+import { getTakinAuthority } from './utils';
 declare var window: Window;
 declare var serverUrl: string;
 
@@ -67,10 +68,14 @@ function checkStatus(response: BaseResponse) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
+
+  // 权限判断
   if (response.status === 401) {
-    if (!outloginFlag) {
-      getBackLogin(response);
-    }
+    if (getTakinAuthority() === 'true') {
+      if (!outloginFlag) {
+        getBackLogin(response);
+      }
+    } 
   }
   return {
     config: response.config,
@@ -80,16 +85,7 @@ function checkStatus(response: BaseResponse) {
     data: response.data
   };
 }
-function getAuthorization() {
-  // let idToken = localStorage.getItem('jhi-authenticationToken'); // eslint-disable-line
-  // let idToken = getToken();
-  // if (idToken !== undefined && idToken !== 'undefined' && idToken !== null) {
-  //   idToken = idToken.replace('"', '');
-  //   idToken = idToken.replace('"', '');
-  //   return `Bearer ${idToken}`;
-  // }
-  return undefined;
-}
+
 export enum Method {
   GET = 'GET',
   POST = 'POST',
@@ -173,6 +169,8 @@ export default function request(options: AxiosRequestConfig) {
 export function errorProcess(response: BaseResponse) {
   const { status, data, config } = response;
   const statusFilter = config.headers.statusFilter;
+  const takinAuthority = config.headers.takinAuthority;
+  localStorage.setItem('takinAuthority', 'true');
   if (statusFilter) {
     switch (statusFilter.type) {
       case 'all':

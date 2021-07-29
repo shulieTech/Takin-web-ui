@@ -3,9 +3,11 @@ import { connect } from 'dva';
 import { CommonForm } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
 import React, { Fragment } from 'react';
+import Loading from 'src/common/loading';
 import DvaComponent from 'src/components/basic-component/DvaComponent';
 import UserService from 'src/services/user';
 import request from 'src/utils/request';
+import { getTakinAuthority } from 'src/utils/utils';
 import router from 'umi/router';
 import styles from './indexPage.less';
 interface Props {}
@@ -99,39 +101,7 @@ export default class Login extends DvaComponent<Props, State> {
   state = state;
 
   componentDidMount = () => {
-    // this.setState(this.initState());
     this.queryCode();
-  };
-
-  getRandom = (max, min, num?) => {
-    const asciiNum = Math.random() * (max - min + 1) + min;
-    if (!Boolean(num)) {
-      return Math.floor(asciiNum);
-    }
-    const arr = [];
-    // tslint:disable-next-line:no-increment-decrement
-    for (let i = 0; i < num; i++) {
-      arr.push(this.getRandom(max, min));
-    }
-    return arr;
-  };
-
-  color16 = () => {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    // tslint:disable-next-line:prefer-template
-    const color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
-    return color;
-  };
-
-  initState = () => {
-    return {
-      nums: this.getRandom(9, 0, 4),
-      rotate: this.getRandom(30, -30, 4),
-      fz: this.getRandom(16, 20, 4),
-      color: [this.color16(), this.color16(), this.color16(), this.color16()]
-    };
   };
 
   refresh = () => {
@@ -152,13 +122,16 @@ export default class Login extends DvaComponent<Props, State> {
       imgSrc: url
     });
     localStorage.setItem('Access-Token', headers['access-token']);
+    // 权限判断
+    if (getTakinAuthority() === null) {
+      router.push('/');
+    }
   };
 
   handleSubmit = async (err, value) => {
     if (err) {
       return;
     }
-    // this.handleDispatch('troLogin', value);
 
     const {
       data: { success, data }
@@ -195,6 +168,10 @@ export default class Login extends DvaComponent<Props, State> {
   };
 
   render() {
+    // 权限判断
+    if (getTakinAuthority() === null) {
+      return <Loading />;
+    }
     return (
       <div className={styles.mainWrap}>
         <img
