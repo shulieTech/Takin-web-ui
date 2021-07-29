@@ -27,6 +27,7 @@ import router from 'umi/router';
 import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
+import { getTakinAuthority } from 'src/utils/utils';
 
 const { Sider } = Layout;
 
@@ -43,7 +44,7 @@ const SiderMenu: React.FC<Props> = props => {
   const { breadCrumbs, collapsed } = props;
   const keys = breadCrumbs.map(item => item.path);
 
-  const dismissPopover = (e) => {
+  const dismissPopover = e => {
     e.stopPropagation();
     if (visible) {
       setVisible(false);
@@ -97,7 +98,13 @@ const SiderMenu: React.FC<Props> = props => {
   );
 
   const title = (
-    <span style={{ color: 'white' }} onClick={(e) => { e.stopPropagation(); setVisible(true); }}>
+    <span
+      style={{ color: 'white' }}
+      onClick={e => {
+        e.stopPropagation();
+        setVisible(true);
+      }}
+    >
       {!props.collapsedStatus && (
         <span> {localStorage.getItem('troweb-userName')}</span>
       )}
@@ -119,7 +126,7 @@ const SiderMenu: React.FC<Props> = props => {
         // paddingTop: venomBasicConfig.fixHeader && venomBasicConfig.headerHeight,
         backgroundColor: 'var(--BrandPrimary-500)'
       }}
-    // onCollapse={}
+      // onCollapse={}
     >
       {/* {!venomBasicConfig.fixHeader && <TitleNode />} */}
       <TitleNode
@@ -148,24 +155,25 @@ const SiderMenu: React.FC<Props> = props => {
       >
         {renderMenuNode()}
       </Menu>
-
-      <Card className={styles.menuCard}>
-        <Popover
-          content={content}
-          placement="topLeft"
-          title="注销"
-          visible={visible}
-          trigger="click"
-          arrowPointAtCenter
-          onVisibleChange={v => setVisible(v)}
-        >
-          <Meta
-            avatar={<Avatar style={{ backgroundColor: 'white' }} />}
-            title={title}
-            className={styles.menuMeta}
-          />
-        </Popover>
-      </Card>
+      {getTakinAuthority() === 'true' && (
+        <Card className={styles.menuCard}>
+          <Popover
+            content={content}
+            placement="topLeft"
+            title="注销"
+            visible={visible}
+            trigger="click"
+            arrowPointAtCenter
+            onVisibleChange={v => setVisible(v)}
+          >
+            <Meta
+              avatar={<Avatar style={{ backgroundColor: 'white' }} />}
+              title={title}
+              className={styles.menuMeta}
+            />
+          </Popover>
+        </Card>
+      )}
     </Sider>
   );
 };
@@ -282,11 +290,11 @@ const SystemInformationModal: React.FC<Props> = props => {
         title: '关于系统',
         footer: false,
         style: { top: 30 },
-        width: 600,
+        width: 600
       }}
     >
-      {
-        fileList && fileList.map((item, index) => {
+      {fileList &&
+        fileList.map((item, index) => {
           return (
             <div key={index}>
               <TableTitle title={item.title} />
@@ -297,19 +305,30 @@ const SystemInformationModal: React.FC<Props> = props => {
                 return (
                   <div
                     className={
-                      ite === 'AMDB版本' || ite === 'tro地址' || ite === '用户user-app-key' ?
-                        styles.lineDivs : styles.lineDiv}
+                      ite === 'AMDB版本' ||
+                      ite === 'tro地址' ||
+                      ite === '用户user-app-key'
+                        ? styles.lineDivs
+                        : styles.lineDiv
+                    }
                     key={ind}
                   >
-                    <span style={{ float: 'left', color: '#888', marginLeft: '10px' }}>{ite}</span>
+                    <span
+                      style={{
+                        float: 'left',
+                        color: '#888',
+                        marginLeft: '10px'
+                      }}
+                    >
+                      {ite}
+                    </span>
                     <span style={{ float: 'right' }}>{item.dataMap[ite]}</span>
                   </div>
                 );
               })}
             </div>
           );
-        })
-      }
-    </CommonModal >
+        })}
+    </CommonModal>
   );
 };
