@@ -17,7 +17,8 @@ const state = {
   color: null,
   rotate: null,
   fz: null,
-  imgSrc: ''
+  imgSrc: '',
+  takinAuthority: null
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -95,6 +96,7 @@ const getFormData = (that: Login): FormDataType[] => {
   ];
 };
 declare var serverUrl: string;
+
 @connect()
 export default class Login extends DvaComponent<Props, State> {
   namespace = 'user';
@@ -119,11 +121,18 @@ export default class Login extends DvaComponent<Props, State> {
 
     const url = URL.createObjectURL(data);
     this.setState({
-      imgSrc: url
+      imgSrc: url,
+      takinAuthority: 'true'
     });
     localStorage.setItem('Access-Token', headers['access-token']);
+    // Todo:后端确认返回header字段，后改动
+    const headerTakin = 'false';
+    if (headerTakin === 'true') {
+      localStorage.setItem('takinAuthority', 'true');
+    }
+
     // 权限判断
-    if (getTakinAuthority() === null) {
+    if (getTakinAuthority() === null && headerTakin === 'false') {
       router.push('/');
     }
   };
@@ -169,7 +178,7 @@ export default class Login extends DvaComponent<Props, State> {
 
   render() {
     // 权限判断
-    if (getTakinAuthority() === null) {
+    if (this.state.takinAuthority === null) {
       return <Loading />;
     }
     return (

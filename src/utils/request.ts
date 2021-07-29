@@ -69,7 +69,7 @@ function checkStatus(response: BaseResponse) {
     return response;
   }
 
-  // 权限判断
+  // 权限判断（微应用跳转主应用）
   if (response.status === 401) {
     if (getTakinAuthority() === 'true' && window.location.href.indexOf('/pro/') === -1) {
       if (!outloginFlag) {
@@ -170,7 +170,7 @@ export function errorProcess(response: BaseResponse) {
   const { status, data, config } = response;
   const statusFilter = config.headers.statusFilter;
   const takinAuthority = config.headers.takinAuthority;
-  localStorage.setItem('takinAuthority', 'true');
+  localStorage.setItem('takinAuthority', 'false');
   if (statusFilter) {
     switch (statusFilter.type) {
       case 'all':
