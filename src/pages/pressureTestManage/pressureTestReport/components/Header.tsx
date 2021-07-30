@@ -8,14 +8,16 @@ const Header: React.FC<Props> = props => {
   return (
     <Row type="flex" style={{ position: 'relative' }}>
       {props.list.map((item, k) => {
-        return (
-          <Col key={k} style={{ marginRight: 40 }}>
-            <span style={{ color: '#A2A6B1' }}>{item.label}</span>：
-            <span style={{ color: '#646676' }}>
-              {item.value ? item.value : '-'}
-            </span>
-          </Col>
-        );
+        if (!item.notShow) {
+          return (
+            <Col key={k} style={{ marginRight: 40 }}>
+              <span style={{ color: '#A2A6B1' }}>{item.label}</span>：
+              <span style={{ color: '#646676' }}>
+                {item.value ? item.value : '-'}
+              </span>
+            </Col>
+          );
+        }
       })}
       {props.isExtra && (
         <p

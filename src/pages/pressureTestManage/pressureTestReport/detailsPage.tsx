@@ -4,6 +4,7 @@ import React, { Fragment, useEffect } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
+import { getTakinAuthority } from 'src/utils/utils';
 import { router } from 'umi';
 import { TestMode } from '../pressureTestScene/enum';
 import Header from './components/Header';
@@ -188,7 +189,8 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     },
     {
       label: '执行人',
-      value: detailData.operateName
+      value: detailData.operateName,
+      notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
     }
   ];
 
@@ -324,7 +326,6 @@ const PressureTestReportDetail: React.FC<Props> = props => {
             )}
           </div>}
       >
-        {/* <Button onClick={() => exportPdf()}>导出PDF</Button> */}
         <Header list={headList} isExtra={false} />
         <Summary
           id={id}

@@ -2,8 +2,6 @@ import { Col, Modal, Row } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useState } from 'react';
 import SearchTable from 'src/components/search-table';
-import BusinessFlowService from '../businessFlow/service';
-import LinkMarkService from '../linkMark/service';
 import _ from 'lodash';
 import getScriptManageFormData from './components/ScriptManageSearch';
 import getScriptManageColumns from './components/ScriptManageTable';
@@ -68,7 +66,7 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
       x: 0,
       y: 0
     },
-    row: {},
+    row: {}
   });
 
   useEffect(() => {
@@ -123,7 +121,7 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
     clearTimeout(state.timer3);
     setState({
       visible: false,
-      code: '',
+      code: ''
     });
   };
   return (
@@ -144,13 +142,15 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
           <ScriptManageTableAction state={state} setState={setState} />}
       />
       <Modal
-        title={`脚本执行 - ${{
-          1: '影子库表创建脚本',
-          2: '基础数据准备脚本',
-          3: '铺底数据脚本',
-          4: '影子库表清理脚本',
-          5: '缓存预热脚本',
-        }[state.row.scriptType]}（${state.row.name}）`}
+        title={`脚本执行 - ${
+          {
+            1: '影子库表创建脚本',
+            2: '基础数据准备脚本',
+            3: '铺底数据脚本',
+            4: '影子库表清理脚本',
+            5: '缓存预热脚本'
+          }[state.row.scriptType]
+        }（${state.row.name}）`}
         width={1100}
         visible={state.visible}
         footer={null}

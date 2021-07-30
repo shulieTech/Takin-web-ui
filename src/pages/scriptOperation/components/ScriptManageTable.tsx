@@ -2,28 +2,16 @@
  * @name
  * @author chuxu
  */
-import {
-  Button,
-  Menu, Dropdown,
-  message,
-  Popconfirm,
-  Icon,
-  Modal,
-  Tag,
-  Spin
-} from 'antd';
+import { Button, Menu, Dropdown, message, Icon, Modal, Tag, Spin } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
-import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
-import { Link } from 'umi';
 import EditCodeModal from '../modals/EditCodeModal';
 import ScriptManageService from '../service';
 import ScriptModal from '../modals/ScriptModal';
 import styles from './../index.less';
-
-import request from 'src/utils/request';
+import { getTakinAuthority } from 'src/utils/utils';
 
 const { confirm } = Modal;
 
@@ -37,11 +25,16 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
       okText: '确认执行',
       icon: (
         <span className={styles.fontSize}>
-          <Icon type="exclamation-circle" theme="filled" style={{ color: '#11D0C5' }} />
-        </span>),
+          <Icon
+            type="exclamation-circle"
+            theme="filled"
+            style={{ color: '#11D0C5' }}
+          />
+        </span>
+      ),
       onOk() {
         startImplement(row);
-      },
+      }
     });
   };
 
@@ -51,14 +44,14 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
       content: '是否确认删除？',
       okType: 'danger',
       okText: '确认删除',
-      icon:
-        (
-          <span className={styles.fontSize}>
-            <Icon type="warning" theme="filled" style={{ color: '#ED6047' }} />
-          </span>),
+      icon: (
+        <span className={styles.fontSize}>
+          <Icon type="warning" theme="filled" style={{ color: '#ED6047' }} />
+        </span>
+      ),
       onOk() {
         handleDeleteScript(id);
-      },
+      }
     });
   };
 
@@ -97,15 +90,18 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         timer3 = setTimeout(() => distribution(id), 5000);
         setState({ timer3, code: data.content });
       } else {
-        setState({ code: data.content , scroll: {
-          x: 0,
-          y: 10000000000000000
-        }});
+        setState({
+          code: data.content,
+          scroll: {
+            x: 0,
+            y: 10000000000000000
+          }
+        });
       }
     }
   };
 
-  const menu = (row) => {
+  const menu = row => {
     return (
       <Menu>
         {userType === '0' && expire === 'false' && (
@@ -120,15 +116,19 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                 });
               }}
             />
-          </Menu.Item>)}
-        {
-          row.canDelete &&
-          <Menu.Item>
-            <Button type="link" style={{ marginRight: 8 }} onClick={() => showDelete(row.id)}>
-              删除
-          </Button>
           </Menu.Item>
-        }
+        )}
+        {row.canDelete && (
+          <Menu.Item>
+            <Button
+              type="link"
+              style={{ marginRight: 8 }}
+              onClick={() => showDelete(row.id)}
+            >
+              删除
+            </Button>
+          </Menu.Item>
+        )}
       </Menu>
     );
   };
@@ -148,9 +148,11 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <div style={{ fontSize: '16px', marginTop: 6 }}>
             {text}
-            <div style={{ color: '#8C8C8C', margin: '6px 0' }}>
-              负责人：<span style={{ color: '#000' }}>{row.username}</span>
-            </div>
+            {getTakinAuthority() === 'true' && (
+              <div style={{ color: '#8C8C8C', margin: '6px 0' }}>
+                负责人：<span style={{ color: '#000' }}>{row.username}</span>
+              </div>
+            )}
           </div>
         );
       }
@@ -162,13 +164,15 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Tag>
-            {{
-              1: '影子库表创建脚本',
-              2: '基础数据准备脚本',
-              3: '铺底数据脚本',
-              4: '影子库表清理脚本',
-              5: '缓存预热脚本',
-            }[text]}
+            {
+              {
+                1: '影子库表创建脚本',
+                2: '基础数据准备脚本',
+                3: '铺底数据脚本',
+                4: '影子库表清理脚本',
+                5: '缓存预热脚本'
+              }[text]
+            }
           </Tag>
         );
       }
@@ -180,32 +184,36 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <div>
-            <span style={{ marginRight: 10, display: 'inline-block' }}>{text}</span>
-            {
-              row.statusName === '执行中' ?
-                (<div>
-                  <Spin size="small" />
-                  <span style={{ marginRight: 10 }} />
-                  执行中...
-                  <span style={{ marginRight: 10 }} />
-                  <EditCodeModal
-                    state={state}
-                    setState={setState}
-                    btnText="查看实况"
-                    fileId={row.id}
-                    name={row.name}
-                    type={row.scriptType}
-                  />
-                </div>) : row.statusName === '执行结束' ?
-                  < EditCodeModal
-                    state={state}
-                    setState={setState}
-                    btnText="查看结果"
-                    fileId={row.id}
-                    name={row.name}
-                    type={row.scriptType}
-                  /> : '--'
-            }
+            <span style={{ marginRight: 10, display: 'inline-block' }}>
+              {text}
+            </span>
+            {row.statusName === '执行中' ? (
+              <div>
+                <Spin size="small" />
+                <span style={{ marginRight: 10 }} />
+                执行中...
+                <span style={{ marginRight: 10 }} />
+                <EditCodeModal
+                  state={state}
+                  setState={setState}
+                  btnText="查看实况"
+                  fileId={row.id}
+                  name={row.name}
+                  type={row.scriptType}
+                />
+              </div>
+            ) : row.statusName === '执行结束' ? (
+              <EditCodeModal
+                state={state}
+                setState={setState}
+                btnText="查看结果"
+                fileId={row.id}
+                name={row.name}
+                type={row.scriptType}
+              />
+            ) : (
+              '--'
+            )}
           </div>
         );
       }
@@ -224,11 +232,31 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
           return (
             <Fragment>
               <div>
-                <span style={{ color: '#BABABA', display: row.canExecute ? 'inline-block' : 'none' }}>执行</span>
+                <span
+                  style={{
+                    color: '#BABABA',
+                    display: row.canExecute ? 'inline-block' : 'none'
+                  }}
+                >
+                  执行
+                </span>
                 <span style={{ marginLeft: 15 }} />
-                <span style={{ color: '#BABABA', display: row.canEdit ? 'inline-block' : 'none' }}>编辑</span>
+                <span
+                  style={{
+                    color: '#BABABA',
+                    display: row.canEdit ? 'inline-block' : 'none'
+                  }}
+                >
+                  编辑
+                </span>
                 <span style={{ marginLeft: 15 }} />
-                <span style={{ transform: 'rotate(90deg)', display: 'inline-block', color: '#BABABA' }}>
+                <span
+                  style={{
+                    transform: 'rotate(90deg)',
+                    display: 'inline-block',
+                    color: '#BABABA'
+                  }}
+                >
                   ...
                 </span>
               </div>
@@ -238,15 +266,30 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Fragment>
             <div>
-              {
-                row.canExecute && <Button type="link" onClick={() => showConfirm(row)}>执行</Button>}
+              {row.canExecute && (
+                <Button type="link" onClick={() => showConfirm(row)}>
+                  执行
+                </Button>
+              )}
               <span style={{ marginLeft: 15 }} />
-              {
-                row.canEdit &&
-                <ScriptModal btnText="编辑" type="link" state={state} setState={setState} id={row.id} />}
+              {row.canEdit && (
+                <ScriptModal
+                  btnText="编辑"
+                  type="link"
+                  state={state}
+                  setState={setState}
+                  id={row.id}
+                />
+              )}
               <span style={{ marginLeft: 15 }} />
               <Dropdown overlay={menu(row)} trigger={['click']}>
-                <a style={{ transform: 'rotate(90deg)', display: 'inline-block' }} onClick={e => e.preventDefault()}>
+                <a
+                  style={{
+                    transform: 'rotate(90deg)',
+                    display: 'inline-block'
+                  }}
+                  onClick={e => e.preventDefault()}
+                >
                   ...
                 </a>
               </Dropdown>

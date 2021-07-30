@@ -125,6 +125,13 @@ const PressureTestSceneService = {
     const url = '/scenemanage/scheduler';
     return httpDelete(url, data);
   },
+  /**
+   * @name 获取可用流量账户信息（dictionary）
+   */
+  async queryFlowAccountInfoDic(data = {}) {
+    const url = '/settle/accountbook/dictionary';
+    return httpGet(url, data);
+  }
 };
 
 export default PressureTestSceneService;

@@ -170,7 +170,7 @@ export function errorProcess(response: BaseResponse) {
   const { status, data, config } = response;
   const statusFilter = config.headers.statusFilter;
   const takinAuthority = config.headers.takinAuthority;
-  localStorage.setItem('takinAuthority', 'true');
+  localStorage.setItem('takinAuthority', 'false');
   if (statusFilter) {
     switch (statusFilter.type) {
       case 'all':

@@ -372,28 +372,6 @@ const routes = [
           : require('../scriptOperation/indexPage.tsx').default,
       },
       {
-        path: '/shellManage/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../shellManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../shellManage/indexPage.tsx').default,
-      },
-      {
-        path: '/shellManage/shellConfig',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../shellManage/shellConfigPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../shellManage/shellConfigPage.tsx').default,
-      },
-      {
         path: '/user/login',
         exact: true,
         component: __IS_BROWSER

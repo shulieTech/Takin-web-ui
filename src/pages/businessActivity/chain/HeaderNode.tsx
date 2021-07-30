@@ -4,6 +4,7 @@
  */
 import { Col, Divider, Icon, Row } from 'antd';
 import React, { useContext } from 'react';
+import { getTakinAuthority } from 'src/utils/utils';
 import { router } from 'umi';
 import { BusinessActivityDetailsContext } from '../detailsPage';
 import { ActivityBean } from '../enum';
@@ -53,7 +54,9 @@ const HeaderNode: React.FC<Props> = props => {
           {state.details[ActivityBean.业务活动名称]}
         </span>
       </Col>
-      <Col>负责人：{state.details[ActivityBean.负责人] || '--'}</Col>
+      {getTakinAuthority() === 'true' && (
+        <Col>负责人：{state.details[ActivityBean.负责人] || '--'}</Col>
+      )}
     </Row>
   );
 };

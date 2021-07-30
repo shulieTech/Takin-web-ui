@@ -4,7 +4,6 @@ import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import SearchTable from 'src/components/search-table';
 import AppManageService from 'src/pages/appManage/service';
-import FlowAccountService from 'src/pages/flowAccount/service';
 import { router } from 'umi';
 import getPressureTestSceneColumns from './components/PressureTestSceneColumn';
 import getPressureTestSceneFormData from './components/PressureTestSceneFormData';
@@ -86,7 +85,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
   const queryFlowAccountInfo = async () => {
     const {
       data: { data, success }
-    } = await FlowAccountService.queryFlowAccountInfoDic({});
+    } = await PressureTestSceneService.queryFlowAccountInfoDic({});
     if (success) {
       setState({
         usableFlow: data.balance
@@ -186,8 +185,6 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
           rowNum: 4
         }}
         ajaxProps={{ url: '/scenemanage/list', method: 'GET' }}
-        // searchParams={{ ...state.searchParams }}
-        // onSearch={searchParams => setState({ searchParams })}
         toggleRoload={state.isReload}
         tableAction={
           <PressureTestSceneTableAction state={state} setState={setState} />}

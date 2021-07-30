@@ -17,6 +17,7 @@ import Summary from './components/Summary';
 import WaterLevelLive from './components/WaterLevelLive';
 import styles from './index.less';
 import PressureTestReportService from './service';
+import { getTakinAuthority } from 'src/utils/utils';
 
 interface State {
   isReload?: boolean;
@@ -197,7 +198,8 @@ const PressureTestLive: React.FC<Props> = props => {
     },
     {
       label: '执行人',
-      value: detailData.operateName
+      value: detailData.operateName,
+      notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
     }
   ];
 

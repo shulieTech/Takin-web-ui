@@ -17,19 +17,15 @@ import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
+import { getTakinAuthority } from 'src/utils/utils';
 import Link from 'umi/link';
 import router from 'umi/router';
 import styles from '../../../scriptManage/index.less';
 import { PressureTestSceneEnum } from '../enum';
 import AddTagsModal from '../modals/AddTagsModal';
-import TestRunModal from '../modals/TestRunModal';
 import PressureTestSceneService from '../service';
 
-const getPressureTestSceneColumns = (
-  state,
-  setState,
-  dictionaryMap
-): ColumnProps<any>[] => {
+const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
@@ -39,11 +35,6 @@ const getPressureTestSceneColumns = (
 
   const userType: string = localStorage.getItem('troweb-role');
   const expire: string = localStorage.getItem('troweb-expire');
-  const handleConfirm = () => {
-    setState({
-      visible: true
-    });
-  };
 
   /**
    * @name 删除压测场景
@@ -54,33 +45,8 @@ const getPressureTestSceneColumns = (
     } = await PressureTestSceneService.deletePressureTestScene({ id });
     if (success) {
       message.success('删除压测场景成功！');
-      // router.push('/pressureTestManage/pressureTestScene');
       setState({
         isReload: !state.isReload
-      });
-    }
-  };
-
-  /**
-   * @name 启动检查并开启压测
-   */
-  const handleCheckAndStart = async sceneId => {
-    setState({
-      visible: true,
-      configStatus: 'loading'
-    });
-    const {
-      data: { data, success }
-    } = await PressureTestSceneService.startPressureTestScene({ sceneId });
-    if (success && data.data) {
-      setState({
-        configStatus: 'success'
-      });
-      handleStart(sceneId, data.data);
-    } else {
-      setState({
-        configStatus: 'fail',
-        configErrorList: data.msg
       });
     }
   };
@@ -145,10 +111,6 @@ const getPressureTestSceneColumns = (
         hasMissingData: data
       });
     }
-  };
-
-  const handleSubmit = dataSource => {
-    //
   };
 
   const handleCloseTiming = async (sceneId: number) => {
@@ -270,7 +232,8 @@ const getPressureTestSceneColumns = (
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'managerName'
+      dataIndex: 'managerName',
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
       ...customColumnProps,
@@ -306,9 +269,6 @@ const getPressureTestSceneColumns = (
                 </Link>
               </AuthorityBtn>
             )}
-            {/* <span style={{ marginRight: 8 }}>
-              <TestRunModal btnText="试跑" id={row.id} />
-            </span> */}
             {row.status === 0 && (
               <AuthorityBtn
                 isShow={
@@ -317,19 +277,6 @@ const getPressureTestSceneColumns = (
                   row.canStartStop
                 }
               >
-                {/* <CustomPopconfirm
-                  okText="确认启动"
-                  title={
-                    <div style={{ maxWidth: 150 }}>
-                      是否确认开启压测？本次压测预计消耗{row.estimateFlow}
-                      vum,压测期间不能修改相关应用和链路的配置
-                    </div>}
-                  onConfirm={() => handleCheckAndStart(row.id)}
-                >
-                  <Button type="link" style={{ marginRight: 8 }}>
-                    启动
-                  </Button>
-                </CustomPopconfirm> */}
                 <Button
                   onClick={() => {
                     handleClickStart(row.id);

@@ -3,6 +3,7 @@ import { Button, message, Popconfirm } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { CommonTabs, defaultColumnProps } from 'racc';
 import React, { Fragment } from 'react';
+import { getTakinAuthority } from 'src/utils/utils';
 import { ActivityBean, NodeBean, NodeType } from '../enum';
 import BusinessActivityService from '../service';
 import {
@@ -116,7 +117,8 @@ const renderApp = (nodeInfo: NodeBean) => {
     },
     {
       label: '应用负责人',
-      value: nodeInfo.manager
+      value: nodeInfo.manager,
+      notShow: getTakinAuthority() === 'true' ? false : true
     }
   ];
   return (

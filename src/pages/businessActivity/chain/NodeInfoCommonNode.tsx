@@ -34,7 +34,11 @@ export const OuterService: React.FC<NodeBean> = props => {
   return (
     <Fragment>
       {providerService.map((item, index) => (
-        <NodeDetailsCollapse key={index} num={item.dataSource.length} title={item.label}>
+        <NodeDetailsCollapse
+          key={index}
+          num={item.dataSource.length}
+          title={item.label}
+        >
           <NodeDetailsTable
             columns={getColumns()}
             dataSource={item.dataSource}
@@ -51,7 +55,7 @@ export const OuterService: React.FC<NodeBean> = props => {
  */
 export const NodeDetailsHeader: React.FC<{
   title: string;
-  details: { label: string; value: any }[];
+  details: { label: string; value: any; notShow?: boolean }[];
   actions?: React.ReactNode;
   type: NodeType;
 }> = props => {
@@ -98,14 +102,18 @@ export const NodeDetailsHeader: React.FC<{
               )}
             </div>
             <Row type="flex" gutter={24} className="mg-t1x">
-              {props.details.map((item, index) => (
-                <Col key={index} style={{ fontSize: 13, fontWeight: 400 }}>
-                  <span style={{ color: '#9e9e9e' }}>{item.label}：</span>
-                  <span style={{ color: '#11BBD5', fontWeight: 'bold' }}>
-                    {item.value || '--'}
-                  </span>
-                </Col>
-              ))}
+              {props.details.map((item, index) => {
+                if (!item.notShow) {
+                  return (
+                    <Col key={index} style={{ fontSize: 13, fontWeight: 400 }}>
+                      <span style={{ color: '#9e9e9e' }}>{item.label}：</span>
+                      <span style={{ color: '#11BBD5', fontWeight: 'bold' }}>
+                        {item.value || '--'}
+                      </span>
+                    </Col>
+                  );
+                }
+              })}
             </Row>
           </Col>
         </Row>

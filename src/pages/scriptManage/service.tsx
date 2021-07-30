@@ -168,6 +168,13 @@ const ScriptManageService = {
   async queryAssertDetail(data = {}) {
     const url = '/scriptManage/list';
     return httpPost(url, data);
+  },
+  /**
+   * @name 获取业务流程
+   */
+  async queryBusinessFlow(data = {}) {
+    const url = '/link/businessFlow';
+    return httpGet(url, data);
   }
 };
 

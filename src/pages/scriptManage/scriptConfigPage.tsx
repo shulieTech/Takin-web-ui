@@ -1,16 +1,13 @@
-// import BusinessActivityConfig from './components/BusinessActivityConfig';
 import { Button, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { useEffect } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
-// import getPressureTestSceneConfiFormData from './components/PressureTestSceneConfiFormData';
 import FormCardMultiple from 'src/components/form-card-multiple';
 import { BasePageLayout } from 'src/components/page-layout';
 import BusinessFlowService from 'src/pages/businessFlow/service';
 import { router } from 'umi';
-import LinkMarkService from '../linkMark/service';
 import BaseInfo from './components/BaseInfo';
 import ScriptFileUpload from './components/ScriptFileUpload';
 import ScriptManageService from './service';
@@ -49,9 +46,9 @@ const ScriptConfigPage: React.FC<Props> = props => {
     required: false
   });
 
-  const { location, dictionaryMap } = props;
+  const { location } = props;
   const { query } = location;
-  const { action, id, configType, relatedId } = query;
+  const { action, id } = query;
 
   useEffect(() => {
     queryBussinessActive();
@@ -90,7 +87,7 @@ const ScriptConfigPage: React.FC<Props> = props => {
   const querybusinessFlowList = async () => {
     const {
       data: { success, data }
-    } = await LinkMarkService.queryBusinessFlow({});
+    } = await ScriptManageService.queryBusinessFlow({});
     if (success) {
       setState({
         businessFlowList:

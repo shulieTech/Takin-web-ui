@@ -168,6 +168,13 @@ const ScriptManageService = {
   async write(data = {}) {
     const url = '/opsScriptManage/add';
     return httpPost(url, data);
+  },
+  /**
+   * @name 获取业务流程
+   */
+  async queryBusinessFlow(data = {}) {
+    const url = '/link/businessFlow';
+    return httpGet(url, data);
   }
 };
 

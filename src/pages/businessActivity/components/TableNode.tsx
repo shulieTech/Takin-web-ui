@@ -10,6 +10,7 @@ import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import { CommonModelState } from 'src/models/common';
+import { getTakinAuthority } from 'src/utils/utils';
 import Link from 'umi/link';
 import { ChangeStatus } from '../enum';
 import AddEditActivityModal from '../modals/AddEditActivityModal';
@@ -93,7 +94,8 @@ const getColumns = (
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'managerName'
+      dataIndex: 'managerName',
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
       ...customColumnProps,

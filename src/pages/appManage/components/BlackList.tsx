@@ -1,5 +1,4 @@
 import {
-  Alert,
   Button,
   Col,
   Icon,
@@ -10,20 +9,16 @@ import {
   Popover,
   Row
 } from 'antd';
-import { CommonSelect, useStateReducer } from 'racc';
+import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import TableTitle from 'src/common/table-title/TableTitle';
 import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm';
 import CustomTable from 'src/components/custom-table';
-import WhitelistSwitchService from 'src/pages/configCenter/whitelistSwitch/service';
-import LinkMarkService from 'src/pages/linkMark/service';
 import AppManageService from '../service';
 import styles from './../index.less';
 import AddAndEditBlacklistDrawer from './AddAndEditBlackListDrawer';
-import AddWhiteListDrawer from './AddWhiteListDrawer';
 import getBlackListColumns from './BlackListTableColomn';
-import getWhiteListColumns from './WhiteListTableColomn';
 
 interface Props {
   id?: string;
@@ -63,13 +58,8 @@ const BlackList: React.FC<Props> = props => {
     }
   });
   const { Search } = Input;
-  const { confirm } = Modal;
   const { detailData, id, detailState, action } = props;
   const { selectedRowKeys } = state;
-
-  useEffect(() => {
-    // queryAllSystemFlow();
-  }, []);
 
   useEffect(() => {
     queryBlackListList({ ...state.searchValues, ...state.searchParams });
@@ -155,26 +145,6 @@ const BlackList: React.FC<Props> = props => {
     setState({
       selectedRowKeys: value
     });
-  };
-
-  const handleChangeAll = () => {
-    const array =
-      state.blackListList &&
-      state.blackListList.map((item, k) => {
-        return item.id;
-      });
-    if (
-      state.blackListList &&
-      selectedRowKeys.length === state.blackListList.length
-    ) {
-      setState({
-        selectedRowKeys: []
-      });
-    } else {
-      setState({
-        selectedRowKeys: array
-      });
-    }
   };
 
   const handleChange = (key, value) => {

@@ -25,6 +25,7 @@ import styles from './../index.less';
 import request from 'src/utils/request';
 import DebugScriptModal from '../modals/DebugScriptModal';
 import DebugScriptRecordModal from '../modals/DebugScriptRecordModal';
+import { getTakinAuthority } from 'src/utils/utils';
 
 declare var serverUrl: string;
 const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
@@ -307,7 +308,8 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'managerName'
+      dataIndex: 'managerName',
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
       ...customColumnProps,

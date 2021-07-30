@@ -16,7 +16,6 @@ import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import TableTitle from 'src/common/table-title/TableTitle';
 import CustomTable from 'src/components/custom-table';
 import WhitelistSwitchService from 'src/pages/configCenter/whitelistSwitch/service';
-import LinkMarkService from 'src/pages/linkMark/service';
 import AppManageService from '../service';
 import styles from './../index.less';
 import AddWhiteListDrawer from './AddWhiteListDrawer';
@@ -67,7 +66,6 @@ const WhiteList: React.FC<Props> = props => {
   const { selectedRowKeys } = state;
 
   useEffect(() => {
-    // queryAllSystemFlow();
     querySwitchStatus();
   }, []);
 
@@ -168,26 +166,6 @@ const WhiteList: React.FC<Props> = props => {
     setState({
       selectedRowKeys: value
     });
-  };
-
-  const handleChangeAll = () => {
-    const array =
-      state.whiteListList &&
-      state.whiteListList.map((item, k) => {
-        return item.id;
-      });
-    if (
-      state.whiteListList &&
-      selectedRowKeys.length === state.whiteListList.length
-    ) {
-      setState({
-        selectedRowKeys: []
-      });
-    } else {
-      setState({
-        selectedRowKeys: array
-      });
-    }
   };
 
   const handleChange = (key, value) => {

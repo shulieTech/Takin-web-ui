@@ -3,7 +3,6 @@ import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import SearchTable from 'src/components/search-table';
 import BusinessFlowService from '../businessFlow/service';
-import LinkMarkService from '../linkMark/service';
 import getScriptManageFormData from './components/ScriptManageSearch';
 import getScriptManageColumns from './components/ScriptManageTable';
 import ScriptManageTableAction from './components/ScriptManageTableAction';
@@ -84,7 +83,7 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
   const querybusinessFlowList = async () => {
     const {
       data: { success, data }
-    } = await LinkMarkService.queryBusinessFlow({});
+    } = await ScriptManageService.queryBusinessFlow({});
     if (success) {
       setState({
         businessFlowList:
