@@ -5,7 +5,7 @@
 import { Button, Icon } from 'antd';
 import React, { useContext } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
-import { MapUserAuthority } from 'src/utils/utils';
+import { getTakinAuthority, MapUserAuthority } from 'src/utils/utils';
 import { router } from 'umi';
 import { BusinessActivityDetailsContext } from '../detailsPage';
 import styles from '../index.less';
@@ -33,23 +33,25 @@ const ActionNode: React.FC<Props> = props => {
       <AuthorityBtn isShow={MapUserAuthority('scriptManage')}>
         <FlowVerificateModal id={state.details.activityId} />
       </AuthorityBtn>
-      <AuthorityBtn isShow={MapUserAuthority('debugTool_linkDebug')}>
-        <Button
-          type="primary"
-          className="mg-l1x"
-          onClick={() => {
-            window.g_app._store.dispatch({
-              type: 'app/updateState',
-              payload: {
-                debugToolId: state.details.activityId.toString()
-              }
-            });
-            router.push(`/debugTool/linkDebug`);
-          }}
-        >
-          去调试
-        </Button>
-      </AuthorityBtn>
+      {getTakinAuthority() === 'true' && (
+        <AuthorityBtn isShow={MapUserAuthority('debugTool_linkDebug')}>
+          <Button
+            type="primary"
+            className="mg-l1x"
+            onClick={() => {
+              window.g_app._store.dispatch({
+                type: 'app/updateState',
+                payload: {
+                  debugToolId: state.details.activityId.toString()
+                }
+              });
+              router.push(`/pro/debugTool/linkDebug`);
+            }}
+          >
+            去调试
+          </Button>
+        </AuthorityBtn>
+      )}
     </div>
   );
 };
