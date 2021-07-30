@@ -67,28 +67,6 @@ const routes = [
           : require('../appManage/indexPage.tsx').default,
       },
       {
-        path: '/appTrialManage/details',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../appTrialManage/detailsPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../appTrialManage/detailsPage.tsx').default,
-      },
-      {
-        path: '/appTrialManage/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../appTrialManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../appTrialManage/indexPage.tsx').default,
-      },
-      {
         path: '/appWhiteList/',
         exact: true,
         component: __IS_BROWSER
@@ -155,57 +133,6 @@ const routes = [
           : require('../businessFlow/indexPage.tsx').default,
       },
       {
-        path: '/capacityManage/pressureMeasurementConfig/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () =>
-                import('../capacityManage/pressureMeasurementConfig/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../capacityManage/pressureMeasurementConfig/indexPage.tsx')
-              .default,
-      },
-      {
-        path: '/capacityManage/pressureMeasurementRecord/details',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () =>
-                import('../capacityManage/pressureMeasurementRecord/detailsPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../capacityManage/pressureMeasurementRecord/detailsPage.tsx')
-              .default,
-      },
-      {
-        path: '/capacityManage/pressureMeasurementRecord/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () =>
-                import('../capacityManage/pressureMeasurementRecord/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../capacityManage/pressureMeasurementRecord/indexPage.tsx')
-              .default,
-      },
-      {
-        path: '/configCenter/authorityConfig/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () =>
-                import('../configCenter/authorityConfig/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../configCenter/authorityConfig/indexPage.tsx').default,
-      },
-      {
         path: '/configCenter/bigDataConfig/',
         exact: true,
         component: __IS_BROWSER
@@ -216,17 +143,6 @@ const routes = [
                 .default,
             })
           : require('../configCenter/bigDataConfig/indexPage.tsx').default,
-      },
-      {
-        path: '/configCenter/blacklist/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../configCenter/blacklist/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../configCenter/blacklist/indexPage.tsx').default,
       },
       {
         path: '/configCenter/dataSourceConfig/',
@@ -264,17 +180,6 @@ const routes = [
           : require('../configCenter/globalConfig/indexPage.tsx').default,
       },
       {
-        path: '/configCenter/keyConfig/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../configCenter/keyConfig/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../configCenter/keyConfig/indexPage.tsx').default,
-      },
-      {
         path: '/configCenter/middlewareManage/',
         exact: true,
         component: __IS_BROWSER
@@ -285,18 +190,6 @@ const routes = [
                 .default,
             })
           : require('../configCenter/middlewareManage/indexPage.tsx').default,
-      },
-      {
-        path: '/configCenter/operationLog/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () =>
-                import('../configCenter/operationLog/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../configCenter/operationLog/indexPage.tsx').default,
       },
       {
         path: '/configCenter/pressureMeasureSwitch/',
@@ -335,39 +228,6 @@ const routes = [
           : require('../dashboard/indexPage.tsx').default,
       },
       {
-        path: '/debugTool/linkDebug/detail',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../debugTool/linkDebug/detailPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../debugTool/linkDebug/detailPage.tsx').default,
-      },
-      {
-        path: '/debugTool/linkDebug/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../debugTool/linkDebug/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../debugTool/linkDebug/indexPage.tsx').default,
-      },
-      {
-        path: '/flowAccount/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../flowAccount/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../flowAccount/indexPage.tsx').default,
-      },
-      {
         path: '/',
         exact: true,
         component: __IS_BROWSER
@@ -377,30 +237,6 @@ const routes = [
                 .default,
             })
           : require('../index/indexPage.tsx').default,
-      },
-      {
-        path: '/linkMark/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () => import('../linkMark/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../linkMark/indexPage.tsx').default,
-      },
-      {
-        path: '/pressMachineManage/pressMachineManage/',
-        exact: true,
-        component: __IS_BROWSER
-          ? dynamic({
-              loader: () =>
-                import('../pressMachineManage/pressMachineManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
-                .default,
-            })
-          : require('../pressMachineManage/pressMachineManage/indexPage.tsx')
-              .default,
       },
       {
         path: '/pressureTestManage/pressureTestReport/details',

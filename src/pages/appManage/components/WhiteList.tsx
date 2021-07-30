@@ -151,25 +151,6 @@ const WhiteList: React.FC<Props> = props => {
   };
 
   /**
-   * @name 获取系统流程列表
-   */
-  const queryAllSystemFlow = async () => {
-    const {
-      data: { success, data }
-    } = await LinkMarkService.querySystemFlow({});
-    if (success) {
-      setState({
-        allSystemFlow:
-          data &&
-          data.map((item, key) => {
-            return { label: item.systemProcessName, value: item.id };
-          })
-      });
-      return;
-    }
-  };
-
-  /**
    * @name 获取白名单开关状态
    */
   const querySwitchStatus = async () => {

@@ -28,23 +28,11 @@ const renderMenuNode = (): React.ReactNode => {
       );
     }
 
-    // const newMenusData = menusData.filter(item => {
-    //   if (item.key.includes(localStorage.getItem('troweb-role'))) {
-    //     return item;
-    //   }
-    // });
-
     /**
      * @name 过滤有权限展示的menu
      */
     const userAuthority = localStorage.getItem('trowebUserResource');
-    const newMenusData = menusData.filter(item => {
-      return (
-        userAuthority && JSON.parse(userAuthority).hasOwnProperty(item.key)
-      );
-    });
-    // return menusData.map((item: MenuBean) => {
-    return newMenusData.map((item: MenuBean) => {
+    return menusData.map((item: MenuBean) => {
       let view = null;
       switch (item.type) {
         case MenuType.SubMenu:

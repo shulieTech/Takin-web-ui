@@ -126,7 +126,7 @@ export default class Login extends DvaComponent<Props, State> {
     });
     localStorage.setItem('Access-Token', headers['access-token']);
     // Todo:后端确认返回header字段，后改动
-    const headerTakin = 'false';
+    const headerTakin = 'true';
     if (headerTakin === 'true') {
       localStorage.setItem('takinAuthority', 'true');
     }
