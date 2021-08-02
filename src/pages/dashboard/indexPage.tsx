@@ -15,7 +15,6 @@ import PressureScene from './components/PressureScene';
 import PressureResult from './components/PressureResult';
 import AppManageService from '../appManage/service';
 import { useStateReducer } from 'racc';
-import FlowAccountService from '../flowAccount/service';
 import IndexService from './service';
 interface Props {}
 interface State {
@@ -75,7 +74,7 @@ const DashboardPage: React.FC<Props> = props => {
     const {
       total,
       data: { success, data }
-    } = await FlowAccountService.queryFlowAccountInfoDic({});
+    } = await IndexService.queryFlowAccountInfoDic({});
     if (success) {
       setState({
         flowAccountData: data

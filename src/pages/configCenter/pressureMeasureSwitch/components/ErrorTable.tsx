@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import Header from 'src/pages/linkMark/components/Header';
 import { CommonTable } from 'racc';
 import { Pagination } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { customColumnProps } from 'src/components/custom-table/utils';
+import Header from 'src/common/header/Header';
 
 interface Props {
   state?: any;

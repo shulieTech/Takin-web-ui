@@ -2,11 +2,11 @@ import React, { Fragment, useEffect } from 'react';
 import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
 import { Cascader, Input, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
-import AuthorityConfigService from 'src/pages/configCenter/authorityConfig/service';
 
 import CustomTable from 'src/components/custom-table';
 import getListColumn from './components/ListColumn';
 import { FormDataType } from 'racc/dist/common-form/type';
+import DistributionService from './service';
 
 interface Props {
   btnText?: string | React.ReactNode;
@@ -49,7 +49,7 @@ const AdminDistributeModal: React.FC<Props> = props => {
   const queryDepartmentList = async value => {
     const {
       data: { data, success }
-    } = await AuthorityConfigService.queryDepartmentList({
+    } = await DistributionService.queryDepartmentList({
       ...value
     });
     if (success) {
@@ -68,7 +68,7 @@ const AdminDistributeModal: React.FC<Props> = props => {
     });
     const {
       data: { data, success }
-    } = await AuthorityConfigService.queryAccountList({
+    } = await DistributionService.queryAccountList({
       ...value,
       pageSize: -1
     });
@@ -96,7 +96,7 @@ const AdminDistributeModal: React.FC<Props> = props => {
         }
         const {
           data: { success, data }
-        } = await AuthorityConfigService.allocation({
+        } = await DistributionService.allocation({
           dataId: props.dataId,
           menuCode: props.menuCode,
           userId: state.selectedRowKeys[0]

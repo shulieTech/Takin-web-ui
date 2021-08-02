@@ -4,7 +4,7 @@
  */
 import { CommonTabs } from 'racc';
 import React, { Fragment } from 'react';
-import Header from 'src/pages/linkMark/components/Header';
+import Header from 'src/common/header/Header';
 import ChainDetails from './ChainDetails';
 import ChainGraph from './ChainGraph';
 
@@ -18,7 +18,7 @@ const ChainInfo: React.FC<Props> = props => {
     {
       tab: '链路详情',
       component: <ChainDetails />
-    },
+    }
     // {
     //   tab: '中间件列表',
     //   component: <MiddlewareList />
