@@ -2,7 +2,7 @@
  * @name
  * @author chuxu
  */
-import { message } from 'antd';
+import { Button, message } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
 import { customColumnProps } from 'src/components/custom-table/utils';
@@ -13,7 +13,6 @@ const UploadAdjunctColumn = (
   setState,
   dictionaryMap
 ): ColumnProps<any>[] => {
-
   /**
    * @name 删除新上传文件
    */
@@ -24,7 +23,7 @@ const UploadAdjunctColumn = (
     if (success) {
       message.success('删除文件成功！');
       setState({
-        fileList: state.fileList.filter(item => {
+        attachmentList: state.attachmentList.filter(item => {
           return uploadId !== item.uploadId;
         })
       });
@@ -34,22 +33,19 @@ const UploadAdjunctColumn = (
   /**
    * @name 删除上传文件
    */
-  const handleDelete = async row => {
-    const attachmentList = state.attachmentList.filter(item => item.id !== row.id);
-    setState({ attachmentList });
-    message.success('删除成功');
-    // if (item.id) {
-    //   setState({
-    //     fileList: state.fileList.map(item2 => {
-    //       if (item.id === item2.id) {
-    //         return { ...item2, isDeleted: 1 };
-    //       }
-    //       return { ...item2 };
-    //     })
-    //   });
-    // } else {
-    //   handleDeleteFiles(item.uploadId, item.topic);
-    // }
+  const handleDelete = async item => {
+    if (item.id) {
+      setState({
+        attachmentList: state.attachmentList.map(item2 => {
+          if (item.id === item2.id) {
+            return { ...item2, isDeleted: 1 };
+          }
+          return { ...item2 };
+        })
+      });
+    } else {
+      handleDeleteFiles(item.uploadId, item.topic);
+    }
   };
 
   return [
@@ -58,25 +54,6 @@ const UploadAdjunctColumn = (
       title: '文件名称',
       dataIndex: 'fileName',
       width: 150
-      // render: text => {
-      //   return (
-      //     <Tag style={{ maxWidth: 150 }}>
-      //       <Tooltip title={text}>
-      //         <span
-      //           style={{
-      //             maxWidth: 120,
-      //             overflow: 'hidden',
-      //             textOverflow: ' ellipsis',
-      //             whiteSpace: 'nowrap',
-      //             display: 'inline-block'
-      //           }}
-      //         >
-      //           {text}
-      //         </span>
-      //       </Tooltip>
-      //     </Tag>
-      //   );
-      // }
     },
     {
       ...customColumnProps,
@@ -104,15 +81,15 @@ const UploadAdjunctColumn = (
       render: (text, row) => {
         return (
           <Fragment>
-            <a
+            <Button
+              type="link"
               style={{
-                color: '#29C7D7',
                 marginLeft: 8
               }}
               onClick={() => handleDelete(row)}
             >
               删除
-            </a>
+            </Button>
           </Fragment>
         );
       }

@@ -6,7 +6,7 @@ import React, { Fragment } from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
-import { message, Checkbox, Icon, Tooltip, Tag, Divider } from 'antd';
+import { message, Checkbox, Icon, Tooltip, Tag, Divider, Button } from 'antd';
 import PressureTestSceneService from '../service';
 import EditCodeModal from '../modals/EditCodeModal';
 
@@ -108,25 +108,6 @@ const getUploadFileColumns = (
       title: '文件名称',
       dataIndex: 'fileName',
       width: 150
-      // render: text => {
-      //   return (
-      //     <Tag style={{ maxWidth: 150 }}>
-      //       <Tooltip title={text}>
-      //         <span
-      //           style={{
-      //             maxWidth: 120,
-      //             overflow: 'hidden',
-      //             textOverflow: ' ellipsis',
-      //             whiteSpace: 'nowrap',
-      //             display: 'inline-block'
-      //           }}
-      //         >
-      //           {text}
-      //         </span>
-      //       </Tooltip>
-      //     </Tag>
-      //   );
-      // }
     },
     {
       ...customColumnProps,
@@ -205,15 +186,15 @@ const getUploadFileColumns = (
                 <Divider type="vertical" />
               </Fragment>
             )}
-            <a
+            <Button
+              type="link"
               style={{
-                color: '#29C7D7',
                 marginLeft: 8
               }}
               onClick={() => handleDelete(row)}
             >
               删除
-            </a>
+            </Button>
           </Fragment>
         );
       }
