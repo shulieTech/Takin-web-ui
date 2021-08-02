@@ -7,6 +7,7 @@ import RadioGroup from 'antd/lib/radio/group';
 import { FormDataType } from 'racc/dist/common-form/type';
 import React, { useEffect } from 'react';
 import { FormCardMultipleDataSourceBean } from 'src/components/form-card-multiple/type';
+import { getTakinAuthority } from 'src/utils/utils';
 import { TestMode } from '../enum';
 import PressureTestSceneService from '../service';
 import styles from './../index.less';
@@ -31,7 +32,9 @@ const PressureConfig = (
     const { detailData, pressureMode, testMode } = state;
 
     useEffect(() => {
-      getEstimateFlow();
+      if (getTakinAuthority() === 'true') {
+        getEstimateFlow();
+      }
       handleStepChartsData(state.stepIncreasingTime, state.pressureTestTime);
     }, [
       state.pressureTestTime,
@@ -216,7 +219,6 @@ const PressureConfig = (
       if (!value) {
         return;
       }
-
       const {
         data: { success, data }
       } = await PressureTestSceneService.getMaxMachineNumber({
@@ -479,16 +481,18 @@ const PressureConfig = (
       if (!params) {
         return;
       }
-      const {
-        data: { success, data }
-      } = await PressureTestSceneService.getMaxMachineNumber(params);
-      if (success) {
-        setState({
-          ...params,
-          ipNum: data.min,
-          minIpNum: data.min,
-          maxIpNum: data.max
-        });
+      if (getTakinAuthority() === 'true') {
+        const {
+          data: { success, data }
+        } = await PressureTestSceneService.getMaxMachineNumber(params);
+        if (success) {
+          setState({
+            ...params,
+            ipNum: data.min,
+            minIpNum: data.min,
+            maxIpNum: data.max
+          });
+        }
       }
     };
 
@@ -553,14 +557,8 @@ const PressureConfig = (
             }`}
             onBlur={handleCheckIsComplete}
           />
-          // <InputNumberWithSlider
-          //   disabled={false}
-          //   min={state.minIpNum}
-          //   max={state.maxIpNum}
-          //   onBlur={handleCheckIsComplete}
-          // />
         ),
-        extra: (
+        extra: getTakinAuthority() === 'true' && (
           <div
             className={styles.chartWrap}
             style={{ top: testMode === TestMode.并发模式 ? -60 : -40 }}
@@ -740,7 +738,11 @@ const PressureConfig = (
             min={1}
             max={100000}
             placeholder="请输入1~100,000之间的正整数"
-            onBlur={e => handleBlurConcurrenceNum(e.target.value)}
+            onBlur={e =>
+              getTakinAuthority() === 'true'
+                ? handleBlurConcurrenceNum(e.target.value)
+                : true
+            }
             onChange={value => handleChangeConcurrenceNum(value)}
           />
         )

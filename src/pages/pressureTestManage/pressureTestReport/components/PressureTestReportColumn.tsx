@@ -6,6 +6,7 @@ import { Badge } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
 import { customColumnProps } from 'src/components/custom-table/utils';
+import { getTakinAuthority } from 'src/utils/utils';
 import Link from 'umi/link';
 
 const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
@@ -33,7 +34,8 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '消耗流量（vum）',
-      dataIndex: 'amount'
+      dataIndex: 'amount',
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
       ...customColumnProps,
@@ -48,7 +50,11 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Badge
             text={text === 1 ? '通过' : '不通过'}
-            color={text === 1 ? 'var(--BrandPrimary-500)' : 'var(--FunctionalError-500)'}
+            color={
+              text === 1
+                ? 'var(--BrandPrimary-500)'
+                : 'var(--FunctionalError-500)'
+            }
           />
         );
       }

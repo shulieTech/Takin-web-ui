@@ -19,6 +19,7 @@ import SLAConfig from './components/SLAConfig';
 import { PressureTestSceneEnum, TestMode } from './enum';
 import styles from './index.less';
 import PressureTestSceneService from './service';
+import { getTakinAuthority } from 'src/utils/utils';
 interface Props {
   location?: { query?: any };
   dictionaryMap?: any;
@@ -589,15 +590,17 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         tpsNum
       };
     }
-    const {
-      data: { success, data }
-    } = await PressureTestSceneService.getMaxMachineNumber({ ...params });
-    if (success) {
-      setState({
-        ipNum: data.min,
-        minIpNum: data.min,
-        maxIpNum: data.max
-      });
+    if (getTakinAuthority() === 'true') {
+      const {
+        data: { success, data }
+      } = await PressureTestSceneService.getMaxMachineNumber({ ...params });
+      if (success) {
+        setState({
+          ipNum: data.min,
+          minIpNum: data.min,
+          maxIpNum: data.max
+        });
+      }
     }
   };
 

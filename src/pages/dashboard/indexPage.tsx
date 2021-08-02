@@ -16,6 +16,7 @@ import PressureResult from './components/PressureResult';
 import AppManageService from '../appManage/service';
 import { useStateReducer } from 'racc';
 import IndexService from './service';
+import { getTakinAuthority } from 'src/utils/utils';
 interface Props {}
 interface State {
   switchStatus: any;
@@ -154,8 +155,10 @@ const DashboardPage: React.FC<Props> = props => {
       <Row type="flex">
         <Col span={6}>
           <PressureTestSwitch data={switchStatus} />
-          <Blank />
-          <FlowBalance data={flowAccountData} />
+          {getTakinAuthority() === 'true' && <Blank />}
+          {getTakinAuthority() === 'true' && (
+            <FlowBalance data={flowAccountData} />
+          )}
           <Blank />
           <QuickEntry data={quickEntranceData} />
         </Col>
