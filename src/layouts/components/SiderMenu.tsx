@@ -21,7 +21,6 @@ import { FormDataType } from 'racc/dist/common-form/type';
 import React, { useEffect, useState } from 'react';
 import { AppModelState } from 'src/models/app';
 import UserService from 'src/services/user';
-import TableTitle from 'src/common/table-title/TableTitle';
 import venomBasicConfig from 'src/venom.config';
 import router from 'umi/router';
 import styles from '../index.less';
@@ -85,9 +84,6 @@ const SiderMenu: React.FC<Props> = props => {
 
   const content = (
     <div onClick={dismissPopover}>
-      <div>
-        <SystemInformationModal />
-      </div>
       <div>
         <EditPasswordModal onSuccess={handleLogout} />
       </div>
@@ -266,69 +262,6 @@ const EditPasswordModal: React.FC<Props> = props => {
         formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 16 } }}
         formData={getFormData()}
       />
-    </CommonModal>
-  );
-};
-
-const SystemInformationModal: React.FC<Props> = props => {
-  const [fileList, setFileList] = useState([]);
-
-  const handleClick = async () => {
-    const {
-      data: { success, data }
-    } = await UserService.apiSys({});
-    if (success) {
-      setFileList(data.itemVos);
-    }
-  };
-  return (
-    <CommonModal
-      btnText="系统信息"
-      btnProps={{ type: 'link' }}
-      onClick={() => handleClick()}
-      modalProps={{
-        title: '关于系统',
-        footer: false,
-        style: { top: 30 },
-        width: 600
-      }}
-    >
-      {fileList &&
-        fileList.map((item, index) => {
-          return (
-            <div key={index}>
-              <TableTitle title={item.title} />
-              <div className={styles.line}>
-                <Divider />
-              </div>
-              {Object.keys(item.dataMap).map((ite, ind) => {
-                return (
-                  <div
-                    className={
-                      ite === 'AMDB版本' ||
-                      ite === 'tro地址' ||
-                      ite === '用户user-app-key'
-                        ? styles.lineDivs
-                        : styles.lineDiv
-                    }
-                    key={ind}
-                  >
-                    <span
-                      style={{
-                        float: 'left',
-                        color: '#888',
-                        marginLeft: '10px'
-                      }}
-                    >
-                      {ite}
-                    </span>
-                    <span style={{ float: 'right' }}>{item.dataMap[ite]}</span>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
     </CommonModal>
   );
 };
