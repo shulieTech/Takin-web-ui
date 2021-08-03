@@ -10,11 +10,13 @@ const menuList: MenuBean[] = [
   {
     title: '仿真平台',
     type: MenuType.SubMenu,
+    path: '/shop',
     icon: 'shop',
     children: [ 
       {
         title: '应用配置',
         type: MenuType.SubMenu,
+        path: '/appConfig',
         children: [
           {
             title: '应用管理',
@@ -38,6 +40,7 @@ const menuList: MenuBean[] = [
       {
         title: '链路管理',
         type: MenuType.SubMenu,
+        path: '/linkManage',
         children: [
           {
             title: '入口规则',
@@ -73,6 +76,7 @@ const menuList: MenuBean[] = [
       {
         title: '脚本管理',
         type: MenuType.SubMenu,
+        path: '/scriptManages',
         children: [
           {
             title: '测试脚本',
@@ -101,6 +105,7 @@ const menuList: MenuBean[] = [
       {
         title: '数据源管理',
         type: MenuType.SubMenu,
+        path: '/dataSourceManage',
         children: [{
           title: '数据源配置',
           path: '/configCenter/dataSourceConfig',
@@ -112,11 +117,13 @@ const menuList: MenuBean[] = [
   {
     title: '压测平台',
     type: MenuType.SubMenu,
+    path: '/hourglass',
     icon: 'hourglass',
     children: [
       {
         title: '压测管理',
         type: MenuType.SubMenu,
+        path: '/pressureTestManage',
         children: [
           {
             title: '压测场景',
@@ -155,10 +162,12 @@ const menuList: MenuBean[] = [
   {
     title: '设置中心',
     type: MenuType.SubMenu,
+    path: '/setting',
     icon: 'setting',
     children: [{
       title: '系统管理',
       type: MenuType.SubMenu,
+      path: '/configCenter',
       children: [
         {
           title: '系统信息',
@@ -177,7 +186,7 @@ const menuList: MenuBean[] = [
         },
         {
           title: '开关配置',
-          path: '/pro/configCenter/bigDataConfig',
+          path: '/configCenter/bigDataConfig',
           type: MenuType.Item,
         }
       ]

@@ -205,6 +205,17 @@ const routes = [
               .default,
       },
       {
+        path: '/configCenter/systemInfo/',
+        exact: true,
+        component: __IS_BROWSER
+          ? dynamic({
+              loader: () => import('../configCenter/systemInfo/indexPage.tsx'),
+              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+                .default,
+            })
+          : require('../configCenter/systemInfo/indexPage.tsx').default,
+      },
+      {
         path: '/configCenter/whitelistSwitch/',
         exact: true,
         component: __IS_BROWSER
