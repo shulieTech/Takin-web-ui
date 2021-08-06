@@ -23,8 +23,14 @@ const UserService = {
     const url = '/user/menu/list';
     return httpGet(url, data);
   },
+  // menu key
   async queryUserResource(data) {
-    const url = '/auth/user/resource';
+    const url = '/menu/keys';
+    return httpGet(url, data);
+  },
+  // menu
+  async queryMenuList(data) {
+    const url = '/menu/list';
     return httpGet(url, data);
   },
   async queryBtnResource(data) {

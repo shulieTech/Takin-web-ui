@@ -66,6 +66,19 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
     }
   }, []);
 
+  useEffect(() => {
+    queryMenuList();
+  }, []);
+
+  const queryMenuList = async () => {
+    const {
+      data: { data, success }
+    } = await UserService.queryMenuList({});
+    if (success) {
+      localStorage.setItem('trowebUserMenu', JSON.stringify(data));
+    }
+  };
+
   /**
    * @name 获取菜单权限
    */

@@ -31,7 +31,7 @@ const renderMenuNode = (): React.ReactNode => {
     /**
      * @name 过滤有权限展示的menu
      */
-    const userAuthority = localStorage.getItem('trowebUserResource');
+
     return menusData.map((item: MenuBean) => {
       let view = null;
       switch (item.type) {
@@ -75,7 +75,8 @@ const renderMenuNode = (): React.ReactNode => {
       return view;
     });
   };
-  return renderMenuItem(menuList);
+  const menuLists = localStorage.getItem('trowebUserMenu');
+  return renderMenuItem(JSON.parse(menuLists));
 };
 export default renderMenuNode;
 
