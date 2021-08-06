@@ -8,3 +8,8 @@ export enum PressureTestSceneEnum {
   是否定时 = 'isScheduler',
   定时时间 = 'executeTime'
 }
+
+export enum PressureSource {
+  本地发压,
+  云端发压,
+}

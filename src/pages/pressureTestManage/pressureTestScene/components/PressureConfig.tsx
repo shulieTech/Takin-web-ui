@@ -8,11 +8,10 @@ import { FormDataType } from 'racc/dist/common-form/type';
 import React, { useEffect } from 'react';
 import { FormCardMultipleDataSourceBean } from 'src/components/form-card-multiple/type';
 import { getTakinAuthority } from 'src/utils/utils';
-import { TestMode } from '../enum';
+import { PressureSource, TestMode } from '../enum';
 import PressureTestSceneService from '../service';
 import styles from './../index.less';
 import FixLineCharts from './FixLineCharts';
-import InputNumberWithSlider from './InputNumberWithSlider';
 import StepCharts from './StepCharts';
 import TimeInputWithUnit from './TimeInputWithUnit';
 
@@ -29,13 +28,13 @@ const PressureConfig = (
     const { query } = location;
     const { action } = query;
 
-    const { detailData, pressureMode, testMode } = state;
+    const { detailData, pressureMode, testMode, pressureSource } = state;
 
     useEffect(() => {
       if (getTakinAuthority() === 'true') {
         getEstimateFlow();
+        handleStepChartsData(state.stepIncreasingTime, state.pressureTestTime);
       }
-      handleStepChartsData(state.stepIncreasingTime, state.pressureTestTime);
     }, [
       state.pressureTestTime,
       state.concurrenceNum,
@@ -348,14 +347,8 @@ const PressureConfig = (
      * @name 比较压测时长和递增时长
      */
     const handleCompareTime = (pressureTestTime, lineIncreasingTime) => {
-      // debugger;
       let pt;
       let lt;
-      // console.log(
-      //   'pressureTestTime, lineIncreasingTime',
-      //   pressureTestTime,
-      //   lineIncreasingTime
-      // );
       if (state.pressureMode === 2) {
         if (
           pressureTestTime &&
@@ -421,21 +414,17 @@ const PressureConfig = (
       }
     };
 
-    const handleChangeMode = async (mode: TestMode) => {
-      // setState({ testMode: mode });
+    const handleChangePressureSource = async (value: PressureSource) => {
+      setState({
+        pressureSource: value
+      });
+    };
 
+    const handleChangeMode = async (mode: TestMode) => {
       setState({
         pressureMode: 1,
         /** 压力模式 */
         testMode: mode,
-        // /** 最大并发数 */
-        // concurrenceNum: undefined,
-        // /** 指定机器IP数 */
-        // ipNum: undefined,
-        /** 指定机器IP最小数 */
-        // minIpNum: 0,
-        // /** 指定机器IP最Da数 */
-        // maxIpNum: undefined,
         /** 压测时长 */
         pressureTestTime: { time: undefined, unit: 'm' },
         /** 递增时长（线性） */
@@ -496,6 +485,28 @@ const PressureConfig = (
       }
     };
 
+    const pressureSourceFormData: FormDataType[] = [
+      {
+        key: 'pressureSource',
+        label: <span style={{ fontSize: 14 }}>发压来源</span>,
+        options: {
+          initialValue:
+            action !== 'add' ? detailData.pressureSource : pressureSource,
+          rules: [{ required: true, message: '请选择发压来源' }]
+        },
+        formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
+        node: (
+          <RadioGroup
+            onChange={e => handleChangePressureSource(e.target.value)}
+            options={[
+              { label: '本地发压', value: PressureSource.本地发压 },
+              { label: '云端发压', value: PressureSource.云端发压 }
+            ]}
+          />
+        )
+      }
+    ];
+
     const basicFormData: FormDataType[] = [
       {
         key: 'pressureType',
@@ -545,19 +556,36 @@ const PressureConfig = (
           </span>
         ),
         options: {
-          initialValue: action !== 'add' ? detailData.ipNum : state.ipNum,
+          initialValue:
+            getTakinAuthority() === 'false' &&
+            pressureSource === PressureSource.本地发压
+              ? 1
+              : action !== 'add'
+              ? detailData.ipNum
+              : state.ipNum,
           rules: [{ required: true, message: '请输入指定Pod数' }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
-        node: (
-          <Input
-            min={1}
-            addonAfter={`建议Pod数：${
-              !state.minIpNum ? '-' : `${state.minIpNum}-${state.maxIpNum}`
-            }`}
-            onBlur={handleCheckIsComplete}
-          />
-        ),
+        node:
+          getTakinAuthority() === 'true' ? (
+            <Input
+              min={1}
+              addonAfter={`建议Pod数：${
+                !state.minIpNum ? '-' : `${state.minIpNum}-${state.maxIpNum}`
+              }`}
+              onBlur={handleCheckIsComplete}
+            />
+          ) : (
+            <Input
+              min={1}
+              disabled={
+                getTakinAuthority() === 'false' &&
+                pressureSource === PressureSource.本地发压
+                  ? true
+                  : false
+              }
+            />
+          ),
         extra: getTakinAuthority() === 'true' && (
           <div
             className={styles.chartWrap}
@@ -843,6 +871,10 @@ const PressureConfig = (
     ];
 
     let formData = [...basicFormData];
+
+    if (getTakinAuthority() === 'false') {
+      formData = [...pressureSourceFormData, ...formData];
+    }
 
     /** @name 根据压力模式渲染 */
     if (testMode === TestMode.并发模式) {

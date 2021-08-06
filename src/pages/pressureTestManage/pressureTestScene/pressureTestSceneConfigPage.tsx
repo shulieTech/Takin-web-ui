@@ -16,7 +16,7 @@ import BusinessActivityConfig from './components/BusinessActivityConfig';
 import DataVerificationConfig from './components/DataVerificationConfig';
 import PressureConfig from './components/PressureConfig';
 import SLAConfig from './components/SLAConfig';
-import { PressureTestSceneEnum, TestMode } from './enum';
+import { PressureSource, PressureTestSceneEnum, TestMode } from './enum';
 import styles from './index.less';
 import PressureTestSceneService from './service';
 import { getTakinAuthority } from 'src/utils/utils';
@@ -38,6 +38,7 @@ interface PressureTestSceneConfigState {
   concurrenceNum: Number;
   ipNum: Number;
   minIpNum: Number;
+  pressureSource: Number;
   testMode: Number;
   maxIpNum: Number;
   pressureTestTime: any;
@@ -75,6 +76,8 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
     businessFlowId: undefined,
     /** 施压模式 */
     pressureMode: 1,
+    /** 发压来源 */
+    pressureSource: PressureSource.本地发压,
     /** 压力模式 */
     testMode: TestMode.并发模式,
     /** 最大并发数 */
