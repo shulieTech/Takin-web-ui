@@ -24,103 +24,73 @@ interface Props {
   location?: { query?: any };
   dictionaryMap?: any;
 }
-interface PressureTestSceneConfigState {
-  form: any;
-  fileList: any[];
-  bussinessActiveList: any[];
-  selectedBussinessActivityIds: any[];
-  selectedBussinessActiveList: any[];
-  uploadFileNum: number;
-  detailData: any;
-  configType: Number;
-  businessFlowId: String;
-  pressureMode: Number;
-  concurrenceNum: Number;
-  ipNum: Number;
-  minIpNum: Number;
-  pressureSource: Number;
-  testMode: Number;
-  maxIpNum: Number;
-  pressureTestTime: any;
-  lineIncreasingTime: any;
-  stepIncreasingTime: any;
-  step: Number;
-  stepChartsData: any;
-  flag: boolean;
-  indexss: Number;
-  estimateFlow: Number;
-  downloadUrl: string;
-  loading: boolean;
-  initList: any;
-  businessFlowList: any[];
-  bussinessActivityAndScriptList: any[];
-  bussinessFlowAndScriptList: any[];
-  missingDataScriptList: any;
-  isInterval: number;
-  businessList: any;
-  tpsNum: any;
-}
+
+const getInitState = () => ({
+  form: null as WrappedFormUtils,
+  fileList: [],
+  bussinessActiveList: null,
+  selectedBussinessActiveList: null,
+  selectedBussinessActivityIds: null,
+  uploadFileNum: 0,
+  detailData: {} as any,
+  /** 配置类型 */
+  configType: 1,
+  /** 业务流程id */
+  businessFlowId: undefined,
+  /** 施压模式 */
+  pressureMode: 1,
+  /** 发压来源 */
+  pressureSource: PressureSource.本地发压,
+  /** 压力模式 */
+  testMode: TestMode.并发模式,
+  /** 最大并发数 */
+  concurrenceNum: undefined,
+  /** 指定机器IP数 */
+  ipNum: undefined,
+  /** 指定机器IP最小数 */
+  minIpNum: 0,
+  /** 指定机器IP最Da数 */
+  maxIpNum: undefined,
+  /** 压测时长 */
+  pressureTestTime: { time: undefined, unit: 'm' },
+  /** 递增时长（线性） */
+  lineIncreasingTime: { time: undefined, unit: 'm' },
+  /** 递增时长(阶梯) */
+  stepIncreasingTime: { time: undefined, unit: 'm' },
+  /** 阶梯层数 */
+  step: undefined,
+  stepChartsData: null,
+  flag: false,
+  indexss: 0,
+  estimateFlow: null,
+  downloadUrl: null,
+  loading: false,
+  initList: [
+    {
+      businessActivityId: '',
+      businessActivityName: '',
+      scriptId: '',
+      targetTPS: '',
+      targetRT: '',
+      targetSuccessRate: '',
+      targetSA: ''
+    }
+  ],
+  businessFlowList: [],
+  bussinessActivityAndScriptList: [],
+  bussinessFlowAndScriptList: [],
+  missingDataScriptList: [],
+  isInterval: 0,
+  businessList: [],
+  tpsNum: null
+});
+
 declare var serverUrls: string;
+export type PressureTestSceneConfigState = ReturnType<typeof getInitState>;
 const PressureTestSceneConfig: React.FC<Props> = props => {
-  const [state, setState] = useStateReducer<PressureTestSceneConfigState>({
-    form: null as WrappedFormUtils,
-    fileList: [],
-    bussinessActiveList: null,
-    selectedBussinessActiveList: null,
-    selectedBussinessActivityIds: null,
-    uploadFileNum: 0,
-    detailData: {} as any,
-    /** 配置类型 */
-    configType: 1,
-    /** 业务流程id */
-    businessFlowId: undefined,
-    /** 施压模式 */
-    pressureMode: 1,
-    /** 发压来源 */
-    pressureSource: PressureSource.本地发压,
-    /** 压力模式 */
-    testMode: TestMode.并发模式,
-    /** 最大并发数 */
-    concurrenceNum: undefined,
-    /** 指定机器IP数 */
-    ipNum: undefined,
-    /** 指定机器IP最小数 */
-    minIpNum: 0,
-    /** 指定机器IP最Da数 */
-    maxIpNum: undefined,
-    /** 压测时长 */
-    pressureTestTime: { time: undefined, unit: 'm' },
-    /** 递增时长（线性） */
-    lineIncreasingTime: { time: undefined, unit: 'm' },
-    /** 递增时长(阶梯) */
-    stepIncreasingTime: { time: undefined, unit: 'm' },
-    /** 阶梯层数 */
-    step: undefined,
-    stepChartsData: null,
-    flag: false,
-    indexss: 0,
-    estimateFlow: null,
-    downloadUrl: null,
-    loading: false,
-    initList: [
-      {
-        businessActivityId: '',
-        businessActivityName: '',
-        scriptId: '',
-        targetTPS: '',
-        targetRT: '',
-        targetSuccessRate: '',
-        targetSA: ''
-      }
-    ],
-    businessFlowList: [],
-    bussinessActivityAndScriptList: [],
-    bussinessFlowAndScriptList: [],
-    missingDataScriptList: [],
-    isInterval: 0,
-    businessList: [],
-    tpsNum: null
-  });
+  const [state, setState] = useStateReducer<PressureTestSceneConfigState>(
+    getInitState()
+  );
 
   const { location, dictionaryMap } = props;
   const { query } = location;
@@ -465,20 +435,6 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
             return {
               id: item.id,
               name: item.name,
-              // <span>
-              //   {item.name}
-              //   {!item.scriptList && (
-              //     <a
-              //       target="_blank"
-              //       href={`${serverUrls}/#/scriptManage/scriptConfig?action=add&configType=2&relatedId=${item.id}`}
-              //       style={{ float: 'right', marginLeft: 16 }}
-              //     >
-              //       <Button type="primary" size="small">
-              //         配置脚本
-              //       </Button>
-              //     </a>
-              //   )}
-              // </span>
               disabled: item.scriptList ? false : true,
               scriptList: item.scriptList
             };

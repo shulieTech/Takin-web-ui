@@ -11,11 +11,15 @@ interface InputNumberProProps extends InputNumberProps {
 }
 const InputNumberPro: React.FC<InputNumberProProps> = props => {
   return (
-    <Fragment>
-      {props.addonBefore && <span className={styles.addon}>{props.addonBefore}</span>}
+    <div style={{ display: 'flex', height: 32 }}>
+      {props.addonBefore && (
+        <span className={styles.addon}>{props.addonBefore}</span>
+      )}
       <InputNumber {...props} />
-      {props.addonAfter && <span className={styles.addon}>{props.addonAfter}</span>}
-    </Fragment>
+      {props.addonAfter && (
+        <span className={styles.addon}>{props.addonAfter}</span>
+      )}
+    </div>
   );
 };
 export default InputNumberPro;
