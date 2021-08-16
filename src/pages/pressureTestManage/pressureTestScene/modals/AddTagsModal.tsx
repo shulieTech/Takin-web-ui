@@ -30,7 +30,6 @@ const AddTagsModal: React.FC<Props> = props => {
   const { sceneId, tags } = props;
 
   const handleClick = () => {
-    // queryScriptTagList({ applicationId: appId });
     const tagsArr =
       tags &&
       tags.map((item, k) => {

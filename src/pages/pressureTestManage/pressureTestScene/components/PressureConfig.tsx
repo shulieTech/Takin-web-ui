@@ -9,7 +9,7 @@ import React, { useEffect } from 'react';
 import InputNumberPro from 'src/common/inputNumber-pro';
 import { FormCardMultipleDataSourceBean } from 'src/components/form-card-multiple/type';
 import { getTakinAuthority } from 'src/utils/utils';
-import { PressureSource, TestMode } from '../enum';
+import { PressureMode, PressureSource, TestMode } from '../enum';
 import { PressureTestSceneConfigState } from '../pressureTestSceneConfigPage';
 import PressureTestSceneService from '../service';
 import styles from './../index.less';
@@ -34,18 +34,270 @@ const PressureConfig = (
 
     useEffect(() => {
       if (getTakinAuthority() === 'true') {
-        // getEstimateFlow();
-        // handleStepChartsData(state.stepIncreasingTime, state.pressureTestTime);
+        getEstimateFlow();
+        handleStepChartsData();
       }
     }, [
       state.pressureTestTime,
       state.concurrenceNum,
       state.pressureMode,
-      state.lineIncreasingTime,
-      state.stepIncreasingTime,
+      state.increasingTime,
       state.step,
       state.testMode
     ]);
+
+    /**
+     * @name 切换施压模式
+     */
+    const handleChangePressureMode = value => {
+      setState({
+        pressureMode: value,
+        step: null,
+        increasingTime: { time: undefined, unit: 'm' }
+      });
+      state.form.setFieldsValue({
+        increasingTime: undefined,
+        pressureMode: value
+      });
+      handleCheckIsComplete(value);
+    };
+
+    /**
+     * @name 切换压力模式，初始化相关变量
+     */
+    const handleChangeMode = async (mode: TestMode) => {
+      setState({
+        pressureMode: 1,
+        /** 压力模式 */
+        testMode: mode,
+        /** 压测时长 */
+        pressureTestTime: { time: undefined, unit: 'm' },
+        /** 递增时长 */
+        increasingTime: { time: undefined, unit: 'm' },
+        ipNum: undefined,
+        /** 阶梯层数 */
+        step: undefined,
+        stepChartsData: null,
+        flag: false,
+        estimateFlow: null
+      });
+      state.form.setFieldsValue({
+        pressureMode: 1,
+        pressureTestTime: undefined
+      });
+
+      if (mode === TestMode.自定义模式) {
+        return;
+      }
+      let params = null;
+      if (mode === TestMode.并发模式) {
+        params = state.concurrenceNum
+          ? { concurrenceNum: state.concurrenceNum }
+          : null;
+      }
+      if (mode === TestMode.TPS模式) {
+        const list = state.businessList;
+        if (!list) {
+          return;
+        }
+        const isEmpty = list.find(item => !item.targetTPS);
+        if (isEmpty) {
+          return;
+        }
+        let tpsNum = 0;
+        list.forEach(item => {
+          tpsNum += item.targetTPS;
+        });
+        params = { tpsNum };
+      }
+      if (!params) {
+        return;
+      }
+      if (getTakinAuthority() === 'true') {
+        const {
+          data: { success, data }
+        } = await PressureTestSceneService.getMaxMachineNumber(params);
+        if (success) {
+          setState({
+            ...params,
+            ipNum: data.min,
+            minIpNum: data.min,
+            maxIpNum: data.max
+          });
+        }
+      }
+    };
+
+    /**
+     * @name 最大并发数失去焦点,计算建议pod数
+     */
+    const handleBlurConcurrenceNum = async value => {
+      handleCheckIsComplete();
+      if (testMode === 1) {
+        return;
+      }
+      if (!value) {
+        return;
+      }
+      const {
+        data: { success, data }
+      } = await PressureTestSceneService.getMaxMachineNumber({
+        concurrenceNum: value
+      });
+      if (success) {
+        setState({
+          ipNum: data.min,
+          minIpNum: data.min,
+          maxIpNum: data.max
+        });
+      }
+    };
+
+    /**
+     * @name 检测施压配置字段是否完整
+     */
+    const handleCheckIsComplete = (value?: any) => {
+      const data = state.form && state.form.getFieldsValue();
+      const concurrenceNum = data && data.concurrenceNum;
+      const ipNum = data && data.ipNum;
+      const pressureTestTime = data && data.pressureTestTime;
+      const increasingTime = data && data.increasingTime;
+      const step = data && data.step;
+      const pressureMod = value ? value : state.pressureMode;
+
+      const concurrenceNumFlag =
+        state.testMode !== TestMode.并发模式 || concurrenceNum;
+      if (pressureMod === 1) {
+        if (concurrenceNumFlag && ipNum && pressureTestTime) {
+          setState({
+            flag: true
+          });
+          return;
+        }
+      }
+      if (pressureMod === 2) {
+        if (concurrenceNumFlag && ipNum && pressureTestTime && increasingTime) {
+          setState({
+            flag: true
+          });
+          return;
+        }
+      }
+      if (pressureMod === 3) {
+        if (
+          concurrenceNumFlag &&
+          ipNum &&
+          pressureTestTime &&
+          increasingTime &&
+          step
+        ) {
+          setState({
+            flag: true
+          });
+          handleStepChartsData();
+          return;
+        }
+      }
+
+      setState({
+        flag: false
+      });
+    };
+
+    /**
+     * @name 计算stepChartsData
+     */
+    const handleStepChartsData = () => {
+      const midData = [];
+      // tslint:disable-next-line:no-increment-decrement
+      for (let i = 0; i < state.step; i++) {
+        midData.push([
+          (state.form &&
+            state.form.getFieldsValue() &&
+            state.form.getFieldsValue().increasingTime /
+              (state.form &&
+                state.form.getFieldsValue() &&
+                state.form.getFieldsValue().step)) *
+            (i + 1),
+          ((state.testMode === TestMode.并发模式
+            ? state.form &&
+              state.form.getFieldsValue() &&
+              state.form.getFieldsValue().concurrenceNum
+            : state.tpsNum) /
+            (state.form &&
+              state.form.getFieldsValue() &&
+              state.form.getFieldsValue().step)) *
+            (i + 1)
+        ]);
+      }
+
+      if (midData.length > 0) {
+        setState({
+          stepChartsData: [[0, 0]]
+            .concat(midData)
+            .concat([
+              [
+                state.form &&
+                  state.form.getFieldsValue() &&
+                  state.form.getFieldsValue().pressureTestTime,
+                state.testMode === TestMode.并发模式
+                  ? state.form &&
+                    state.form.getFieldsValue() &&
+                    state.form.getFieldsValue().concurrenceNum
+                  : state.tpsNum
+              ]
+            ])
+        });
+      }
+    };
+
+    /**
+     * @name 获取预计消耗流量
+     */
+    const getEstimateFlow = async () => {
+      let result = {};
+      if (pressureMode === 1) {
+        result = {
+          concurrenceNum: state.concurrenceNum,
+          pressureMode: state.pressureMode,
+          pressureTestTime: state.pressureTestTime,
+          pressureType: state.testMode
+        };
+      }
+      if (pressureMode === 2) {
+        result = {
+          concurrenceNum: state.concurrenceNum,
+          increasingTime: state.increasingTime,
+          pressureMode: state.pressureMode,
+          pressureTestTime: state.pressureTestTime,
+          pressureType: state.testMode
+        };
+      }
+      if (pressureMode === 3) {
+        result = {
+          concurrenceNum: state.concurrenceNum,
+          increasingTime: state.increasingTime,
+          pressureMode: state.pressureMode,
+          pressureTestTime: state.pressureTestTime,
+          step: state.step,
+          pressureType: state.testMode
+        };
+      }
+      if (handleCheckIsComplete()) {
+        const {
+          data: { success, data }
+        } = await PressureTestSceneService.getEstimateFlow(result);
+        if (success) {
+          setState({
+            estimateFlow: data.data
+          });
+        }
+      } else {
+        setState({
+          estimateFlow: null
+        });
+      }
+    };
 
     const basicFormData: FormDataType[] = [
       {
@@ -69,11 +321,10 @@ const PressureConfig = (
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
         node: (
           <RadioGroup
-            // onChange={e => handleChangeMode(e.target.value)}
+            onChange={e => handleChangeMode(e.target.value)}
             options={[
               { label: '并发模式', value: TestMode.并发模式 },
               { label: 'TPS模式', value: TestMode.TPS模式 }
-              // { label: '自定义模式', value: TestMode.自定义模式 }
             ]}
           />
         )
@@ -106,7 +357,7 @@ const PressureConfig = (
             addonAfter={`建议Pod数：${
               !state.minIpNum ? '-' : `${state.minIpNum}-${state.maxIpNum}`
             }`}
-            //   onBlur={handleCheckIsComplete}
+            onBlur={() => handleCheckIsComplete()}
           />
         ),
         extra: (
@@ -136,7 +387,7 @@ const PressureConfig = (
                 '-- vum'
               )}
             </p>
-            {true ? (
+            {state.flag ? (
               <div>
                 {state.pressureMode === 1 && (
                   <FixLineCharts
@@ -144,13 +395,19 @@ const PressureConfig = (
                       [
                         0,
                         state.testMode === TestMode.并发模式
-                          ? state.concurrenceNum
+                          ? state.form &&
+                            state.form.getFieldsValue() &&
+                            state.form.getFieldsValue().concurrenceNum
                           : state.tpsNum
                       ],
                       [
-                        state.pressureTestTime && state.pressureTestTime.time,
+                        state.form &&
+                          state.form.getFieldsValue() &&
+                          state.form.getFieldsValue().pressureTestTime,
                         state.testMode === TestMode.并发模式
-                          ? state.concurrenceNum
+                          ? state.form &&
+                            state.form.getFieldsValue() &&
+                            state.form.getFieldsValue().concurrenceNum
                           : state.tpsNum
                       ]
                     ]}
@@ -161,22 +418,23 @@ const PressureConfig = (
                     chartsInfo={[
                       [0, 0],
                       [
-                        state.lineIncreasingTime &&
-                        state.lineIncreasingTime.unit === 'm'
-                          ? state.lineIncreasingTime.time
-                          : state.lineIncreasingTime.time / 60,
+                        state.form &&
+                          state.form.getFieldsValue() &&
+                          state.form.getFieldsValue().increasingTime,
                         state.testMode === TestMode.并发模式
-                          ? state.concurrenceNum
+                          ? state.form &&
+                            state.form.getFieldsValue() &&
+                            state.form.getFieldsValue().concurrenceNum
                           : state.tpsNum
                       ],
                       [
-                        state.pressureTestTime &&
-                        state.pressureTestTime.unit === 'm'
-                          ? state.pressureTestTime.time
-                          : state.pressureTestTime.time / 60,
-                        // state.pressureTestTime && state.pressureTestTime.time,
+                        state.form &&
+                          state.form.getFieldsValue() &&
+                          state.form.getFieldsValue().pressureTestTime,
                         state.testMode === TestMode.并发模式
-                          ? state.concurrenceNum
+                          ? state.form &&
+                            state.form.getFieldsValue() &&
+                            state.form.getFieldsValue().concurrenceNum
                           : state.tpsNum
                       ]
                     ]}
@@ -214,7 +472,14 @@ const PressureConfig = (
           rules: [{ required: true, message: '请输入压测时长' }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
-        node: <InputNumberPro addonAfter="分" width={90} />
+        node: (
+          <InputNumberPro
+            addonAfter="分"
+            min={1}
+            precision={0}
+            onBlur={() => handleCheckIsComplete()}
+          />
+        )
       },
       {
         key: 'pressureMode',
@@ -243,17 +508,17 @@ const PressureConfig = (
         node:
           state.testMode === 0 ? (
             <Radio.Group
-            //   onChange={e => handleChangePressureMode(e.target.value)}
+              onChange={e => handleChangePressureMode(e.target.value)}
             >
-              <Radio value={1}>固定压力值</Radio>
-              <Radio value={2}>线性递增</Radio>
-              <Radio value={3}>阶梯递增</Radio>
+              <Radio value={PressureMode.固定压力值}>固定压力值</Radio>
+              <Radio value={PressureMode.线性递增}>线性递增</Radio>
+              <Radio value={PressureMode.阶梯递增}>阶梯递增</Radio>
             </Radio.Group>
           ) : (
             <Radio.Group
-            //   onChange={e => handleChangePressureMode(e.target.value)}
+              onChange={e => handleChangePressureMode(e.target.value)}
             >
-              <Radio value={1}>固定压力值</Radio>
+              <Radio value={PressureMode.固定压力值}>固定压力值</Radio>
             </Radio.Group>
           )
       }
@@ -285,20 +550,20 @@ const PressureConfig = (
             min={1}
             max={100000}
             placeholder="请输入1~100,000之间的正整数"
-            // onBlur={e =>
-            //   getTakinAuthority() === 'true'
-            //     ? handleBlurConcurrenceNum(e.target.value)
-            //     : true
-            // }
+            onBlur={e =>
+              getTakinAuthority() === 'true'
+                ? handleBlurConcurrenceNum(e.target.value)
+                : true
+            }
             // onChange={value => handleChangeConcurrenceNum(value)}
           />
         )
       }
     ];
 
-    const lineFormData = [
+    const increasingFormData = [
       {
-        key: 'lineIncreasingTime',
+        key: 'increasingTime',
         label: (
           <span style={{ fontSize: 14 }}>
             递增时长
@@ -312,52 +577,20 @@ const PressureConfig = (
           </span>
         ),
         options: {
-          initialValue: state.lineIncreasingTime,
+          initialValue: state.increasingTime.time,
           rules: [{ required: true, message: '请输入递增时长' }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
         node: (
-          <TimeInputWithUnit
-          // onBlur={handleBlurLineIncreasingTime}
-          // isReload={state.indexss}
-          // onChange={handleChangeLineIncreasingTime}
-          // selectDisabled={
-          //   state.pressureTestTime && state.pressureTestTime.unit === 's'
-          //     ? true
-          //     : false
-          // }
+          <InputNumberPro
+            addonAfter="分"
+            onBlur={() => handleCheckIsComplete()}
           />
         )
       }
     ];
 
     const stepFormData = [
-      {
-        key: 'stepIncreasingTime',
-        label: (
-          <span style={{ fontSize: 14 }}>
-            递增时长
-            <Tooltip
-              title="增压直至最大并发量的时间"
-              placement="right"
-              trigger="click"
-            >
-              <Icon type="question-circle" style={{ marginLeft: 4 }} />
-            </Tooltip>
-          </span>
-        ),
-        options: {
-          initialValue: state.stepIncreasingTime,
-          rules: [{ required: true, message: '请输入递增时长' }]
-        },
-        formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
-        node: (
-          <TimeInputWithUnit
-          // onBlur={handleBlurStepIncreasingTime}
-          // isReload={state.indexss}
-          />
-        )
-      },
       {
         key: 'step',
         label: (
@@ -382,6 +615,7 @@ const PressureConfig = (
             placeholder="请输入1~100的整数"
             min={1}
             max={100}
+            onBlur={() => handleCheckIsComplete()}
             // onChange={handleChangeStep}
             // onBlur={handleBlurStep}
           />
@@ -403,10 +637,10 @@ const PressureConfig = (
     /** @name 根据施压模式渲染 */
     if (testMode !== TestMode.自定义模式) {
       if (pressureMode === 2) {
-        formData = formData.concat(lineFormData);
+        formData = [...formData, ...increasingFormData];
       }
       if (pressureMode === 3) {
-        formData = formData.concat(stepFormData);
+        formData = [...formData, ...increasingFormData, ...stepFormData];
       }
     }
 

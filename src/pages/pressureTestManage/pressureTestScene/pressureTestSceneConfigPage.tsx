@@ -53,17 +53,14 @@ const getInitState = () => ({
   maxIpNum: undefined,
   /** 压测时长 */
   pressureTestTime: { time: undefined, unit: 'm' },
-  /** 递增时长（线性） */
-  lineIncreasingTime: { time: undefined, unit: 'm' },
-  /** 递增时长(阶梯) */
-  stepIncreasingTime: { time: undefined, unit: 'm' },
+  /** 递增时长 */
+  increasingTime: { time: undefined, unit: 'm' },
   /** 阶梯层数 */
   step: undefined,
   stepChartsData: null,
   flag: false,
-  indexss: 0,
+  /** 预估流量 */
   estimateFlow: null,
-  downloadUrl: null,
   loading: false,
   initList: [
     {
@@ -100,7 +97,6 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
     queryBussinessActive();
     queryBussinessActivityAndScript();
     queryBussinessFlowAndScript();
-    queryBigFileDownload();
     if (action === 'edit') {
       queryPressureTestSceneDetail(id);
     }
@@ -176,28 +172,7 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         return;
       }
 
-      // if (state.fileList.length === 0) {
-      //   message.error('请上传压测脚本文件！');
-      //   return;
-      // }
-
       let result;
-      if (state.pressureMode === 1) {
-        result = {
-          ...values
-        };
-      } else if (state.pressureMode === 2) {
-        result = {
-          ...values,
-          increasingTime: values.lineIncreasingTime
-        };
-        delete result.lineIncreasingTime;
-      } else if (state.pressureMode === 3) {
-        result = {
-          ...values,
-          increasingTime: values.stepIncreasingTime
-        };
-      }
 
       if (state.configType === 1) {
         result = {
@@ -214,39 +189,6 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         };
       }
       delete result.businessFlow;
-
-      // console.log('result', result);
-
-      if (state.testMode !== TestMode.自定义模式) {
-        if (
-          !result.pressureTestTime ||
-          !result.pressureTestTime.time ||
-          !result.pressureTestTime.unit
-        ) {
-          message.info('请填写压测时长');
-          return;
-        }
-
-        if (
-          state.pressureMode === 2 &&
-          (!state.lineIncreasingTime ||
-            !state.lineIncreasingTime.time ||
-            !state.lineIncreasingTime.unit)
-        ) {
-          message.info('请填写递增时长');
-          return;
-        }
-
-        if (
-          state.pressureMode === 3 &&
-          (!result.stepIncreasingTime ||
-            !result.stepIncreasingTime.time ||
-            !result.stepIncreasingTime.unit)
-        ) {
-          message.info('请填写递增时长');
-          return;
-        }
-      }
 
       /**
        * @name 检查业务活动配置是否有未填项
@@ -444,20 +386,6 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
   };
 
   /**
-   * @name 获取下载大文件插件地址
-   */
-  const queryBigFileDownload = async () => {
-    const {
-      data: { success, data }
-    } = await PressureTestSceneService.getBigFileDownload({});
-    if (success) {
-      setState({
-        downloadUrl: data.url
-      });
-    }
-  };
-
-  /**
    * @name 获取漏数验证命令
    */
   const queryMissingDataScriptList = async values => {
@@ -489,7 +417,6 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
             ? data.businessActivityConfig
             : state.initList,
         detailData: data,
-        fileList: data.uploadFile,
         pressureMode: data.pressureMode,
         selectedBussinessActiveList: data.businessActivityConfig,
         selectedBussinessActivityIds:
@@ -507,15 +434,7 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
           data.concurrenceNum
         ),
         step: data.step,
-
-        stepIncreasingTime:
-          data.pressureMode === 3
-            ? data.increasingTime
-            : { time: undefined, unit: 'm' },
-        lineIncreasingTime:
-          data.pressureMode === 2
-            ? data.increasingTime
-            : { time: undefined, unit: 'm' },
+        increasingTime: data.increasingTime,
         isInterval: data[PressureTestSceneEnum.是否定时]
       });
     }
