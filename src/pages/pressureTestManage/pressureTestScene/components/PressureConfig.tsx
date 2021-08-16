@@ -15,7 +15,6 @@ import PressureTestSceneService from '../service';
 import styles from './../index.less';
 import FixLineCharts from './FixLineCharts';
 import StepCharts from './StepCharts';
-import TimeInputWithUnit from './TimeInputWithUnit';
 
 interface Props {}
 
@@ -33,18 +32,10 @@ const PressureConfig = (
     const { detailData, pressureMode, testMode, pressureSource } = state;
 
     useEffect(() => {
-      if (getTakinAuthority() === 'true') {
-        getEstimateFlow();
-        handleStepChartsData();
+      if (state.form) {
+        handleCheckIsComplete();
       }
-    }, [
-      state.pressureTestTime,
-      state.concurrenceNum,
-      state.pressureMode,
-      state.increasingTime,
-      state.step,
-      state.testMode
-    ]);
+    }, [state.form]);
 
     /**
      * @name 切换施压模式
@@ -209,24 +200,19 @@ const PressureConfig = (
      */
     const handleStepChartsData = () => {
       const midData = [];
-      // tslint:disable-next-line:no-increment-decrement
-      for (let i = 0; i < state.step; i++) {
+      const values = state.form && state.form.getFieldsValue();
+      for (
+        let i = 0;
+        i < (values && values.step);
+        // tslint:disable-next-line:no-increment-decrement
+        i++
+      ) {
         midData.push([
-          (state.form &&
-            state.form.getFieldsValue() &&
-            state.form.getFieldsValue().increasingTime /
-              (state.form &&
-                state.form.getFieldsValue() &&
-                state.form.getFieldsValue().step)) *
-            (i + 1),
+          (values && values.increasingTime / (values && values.step)) * (i + 1),
           ((state.testMode === TestMode.并发模式
-            ? state.form &&
-              state.form.getFieldsValue() &&
-              state.form.getFieldsValue().concurrenceNum
+            ? values && values.concurrenceNum
             : state.tpsNum) /
-            (state.form &&
-              state.form.getFieldsValue() &&
-              state.form.getFieldsValue().step)) *
+            (values && values.step)) *
             (i + 1)
         ]);
       }
@@ -237,13 +223,9 @@ const PressureConfig = (
             .concat(midData)
             .concat([
               [
-                state.form &&
-                  state.form.getFieldsValue() &&
-                  state.form.getFieldsValue().pressureTestTime,
+                values && values.pressureTestTime,
                 state.testMode === TestMode.并发模式
-                  ? state.form &&
-                    state.form.getFieldsValue() &&
-                    state.form.getFieldsValue().concurrenceNum
+                  ? values && values.concurrenceNum
                   : state.tpsNum
               ]
             ])
@@ -256,35 +238,37 @@ const PressureConfig = (
      */
     const getEstimateFlow = async () => {
       let result = {};
+      const datas = state.form && state.form.getFieldsValue();
       if (pressureMode === 1) {
         result = {
-          concurrenceNum: state.concurrenceNum,
-          pressureMode: state.pressureMode,
-          pressureTestTime: state.pressureTestTime,
-          pressureType: state.testMode
+          concurrenceNum: datas && datas.concurrenceNum,
+          pressureMode: datas && datas.pressureMode,
+          pressureTestTime: datas && datas.pressureTestTime,
+          pressureType: datas && datas.testMode
         };
       }
       if (pressureMode === 2) {
         result = {
-          concurrenceNum: state.concurrenceNum,
-          increasingTime: state.increasingTime,
-          pressureMode: state.pressureMode,
-          pressureTestTime: state.pressureTestTime,
-          pressureType: state.testMode
+          concurrenceNum: datas && datas.concurrenceNum,
+          increasingTime: datas && datas.increasingTime,
+          pressureMode: datas && datas.pressureMode,
+          pressureTestTime: datas && datas.pressureTestTime,
+          pressureType: datas && datas.testMode
         };
       }
       if (pressureMode === 3) {
         result = {
-          concurrenceNum: state.concurrenceNum,
-          increasingTime: state.increasingTime,
-          pressureMode: state.pressureMode,
-          pressureTestTime: state.pressureTestTime,
-          step: state.step,
-          pressureType: state.testMode
+          concurrenceNum: datas && datas.concurrenceNum,
+          increasingTime: datas && datas.increasingTime,
+          pressureMode: datas && datas.pressureMode,
+          pressureTestTime: datas && datas.pressureTestTime,
+          step: datas && datas.step,
+          pressureType: datas && datas.testMode
         };
       }
       if (handleCheckIsComplete()) {
         const {
+          // tslint:disable-next-line:no-shadowed-variable
           data: { success, data }
         } = await PressureTestSceneService.getEstimateFlow(result);
         if (success) {
@@ -360,7 +344,7 @@ const PressureConfig = (
             onBlur={() => handleCheckIsComplete()}
           />
         ),
-        extra: (
+        extra: getTakinAuthority() === 'true' && (
           <div
             className={styles.chartWrap}
             style={{ top: testMode === TestMode.并发模式 ? -60 : -40 }}
@@ -555,7 +539,6 @@ const PressureConfig = (
                 ? handleBlurConcurrenceNum(e.target.value)
                 : true
             }
-            // onChange={value => handleChangeConcurrenceNum(value)}
           />
         )
       }
@@ -616,8 +599,6 @@ const PressureConfig = (
             min={1}
             max={100}
             onBlur={() => handleCheckIsComplete()}
-            // onChange={handleChangeStep}
-            // onBlur={handleBlurStep}
           />
         )
       }
