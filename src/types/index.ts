@@ -10,6 +10,7 @@ export namespace Basic {
     headers: {
       'X-Total-Count'?: number;
       'x-total-count'?: number;
+      'takinAuthority': String;
       totalCount?: number;
       [propName: string]: any;
     };

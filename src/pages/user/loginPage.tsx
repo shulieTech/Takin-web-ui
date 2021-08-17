@@ -7,7 +7,6 @@ import Loading from 'src/common/loading';
 import DvaComponent from 'src/components/basic-component/DvaComponent';
 import UserService from 'src/services/user';
 import request from 'src/utils/request';
-import { getTakinAuthority } from 'src/utils/utils';
 import router from 'umi/router';
 import styles from './indexPage.less';
 interface Props {}
@@ -103,11 +102,27 @@ export default class Login extends DvaComponent<Props, State> {
   state = state;
 
   componentDidMount = () => {
-    this.queryCode();
+    this.queryMenuList();
   };
 
   refresh = () => {
     this.queryCode();
+  };
+
+  queryMenuList = async () => {
+    const {
+      headers,
+      data: { data, success }
+    } = await UserService.queryMenuList({});
+    const headerTakin = headers['takin-authority'];
+    if (headerTakin === 'true') {
+      localStorage.setItem('takinAuthority', 'true');
+      this.queryCode();
+    }
+    // 权限判断
+    if (headerTakin === 'false') {
+      router.push('#/');
+    }
   };
 
   queryCode = async () => {
@@ -125,16 +140,6 @@ export default class Login extends DvaComponent<Props, State> {
       takinAuthority: 'true'
     });
     localStorage.setItem('Access-Token', headers['access-token']);
-    // Todo:后端确认返回header字段，后改动
-    const headerTakin = 'true';
-    if (headerTakin === 'true') {
-      localStorage.setItem('takinAuthority', 'true');
-    }
-
-    // 权限判断
-    if (getTakinAuthority() === null && headerTakin === 'false') {
-      router.push('/');
-    }
   };
 
   handleSubmit = async (err, value) => {

@@ -167,10 +167,10 @@ export default function request(options: AxiosRequestConfig) {
     .then(parseJSON);
 }
 export function errorProcess(response: BaseResponse) {
-  const { status, data, config } = response;
+  const { status, data, config, headers } = response;
   const statusFilter = config.headers.statusFilter;
-  const takinAuthority = config.headers.takinAuthority;
-  localStorage.setItem('takinAuthority', 'true');
+  const takinAuthority = headers['takin-authority'];
+  localStorage.setItem('takinAuthority', takinAuthority);
   if (statusFilter) {
     switch (statusFilter.type) {
       case 'all':
@@ -203,7 +203,6 @@ export function errorProcess(response: BaseResponse) {
         break;
     }
   } else {
-    // console.log(data);
     if (data && data.error && !data.success) {
       message.error(data.error.msg);
       return response;

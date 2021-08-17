@@ -95,13 +95,24 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
       if (!localStorage.getItem('troweb-expire')) {
         localStorage.setItem('troweb-expire', headers['x-expire']);
       }
-
-      const urlString = Object.keys(data) && Object.keys(data)[0];
-      const urls = urlString && urlString.replace(/_/, '/');
-      const url = urls ? `/${urls}` : '/';
-      router.push(url);
+      const menus = JSON.parse(localStorage.getItem('trowebUserMenu'));
+      router.push(getPath([menus[0]]));
     }
   };
+
+  function getPath(lists) {
+    let path = '';
+    const hasChildrenAttr = function (obj: any) {
+      return obj.children !== null;
+    };
+    lists.forEach(list => {
+      path = list.path;
+      if (hasChildrenAttr(list)) {
+        getPath(list.children);
+      }
+    });
+    return path;
+  }
 
   /**
    * @name 获取按钮权限
