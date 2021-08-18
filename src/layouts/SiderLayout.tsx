@@ -71,12 +71,14 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   }, []);
 
   const queryMenuList = async () => {
-    const {
-      data: { data, success }
-    } = await UserService.queryMenuList({});
-    if (success) {
-      localStorage.setItem('trowebUserMenu', JSON.stringify(data));
-      router.push(getPath([data[0]]));
+    if (JSON.parse(localStorage.getItem('trowebUserMenu')) === null) {
+      const {
+        data: { data, success }
+      } = await UserService.queryMenuList({});
+      if (success) {
+        localStorage.setItem('trowebUserMenu', JSON.stringify(data));
+        router.push(getPath([data[0]]));
+      }
     }
   };
 
@@ -97,7 +99,6 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
         localStorage.setItem('troweb-expire', headers['x-expire']);
       }
       const menus = JSON.parse(localStorage.getItem('trowebUserMenu'));
-
       router.push(menus && getPath([menus[0]]));
     }
   };
