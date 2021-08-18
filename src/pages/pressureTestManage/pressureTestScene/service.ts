@@ -79,13 +79,6 @@ const PressureTestSceneService = {
     return httpPost(url, data);
   },
   /**
-   * @name 获取下载大文件插件地址
-   */
-  async getBigFileDownload(data = {}) {
-    const url = '/cloud/client/download';
-    return httpGet(url, data);
-  },
-  /**
    * @name 获取所有业务活动和脚本列表
    */
   async queryBussinessActivityAndScript(data = {}) {

@@ -4,6 +4,7 @@ import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import SearchTable from 'src/components/search-table';
 import AppManageService from 'src/pages/appManage/service';
+import { getTakinAuthority } from 'src/utils/utils';
 import { router } from 'umi';
 import getPressureTestSceneColumns from './components/PressureTestSceneColumn';
 import getPressureTestSceneFormData from './components/PressureTestSceneFormData';
@@ -62,7 +63,9 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
 
   useEffect(() => {
     querySwitchStatus();
-    queryFlowAccountInfo();
+    if (getTakinAuthority() === 'true') {
+      queryFlowAccountInfo();
+    }
   }, []);
 
   /**

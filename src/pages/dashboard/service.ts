@@ -5,7 +5,7 @@ const IndexService = {
    * @name 获取快捷入口数据
    */
   async queryQuickEntrance(data = {}) {
-    const url = '/user/work/bench/access';
+    const url = '/workbench/user/access';
     return httpGet(url, data);
   },
   /**
@@ -26,7 +26,7 @@ const IndexService = {
    * @name 获取应用和系统流程
    */
   async queryAppAndSystemFlow(data = {}) {
-    const url = '/user/work/bench';
+    const url = '/workbench/user';
     return httpGet(url, data);
   },
   /**

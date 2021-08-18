@@ -182,7 +182,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                 btnText={
                   <Icon
                     type="plus-circle"
-                    style={{ color: '#11BBD5', marginLeft: 8 }}
+                    style={{ color: 'var(--BrandPrimary-500)', marginLeft: 8 }}
                   />
                 }
                 onSccuess={() => {

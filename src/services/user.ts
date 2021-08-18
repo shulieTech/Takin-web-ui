@@ -34,7 +34,7 @@ const UserService = {
     return httpGet(url, data);
   },
   async queryBtnResource(data) {
-    const url = '/auth/resource/user/action';
+    const url = '/menu/button';
     return httpGet(url, data);
   },
   async apiSys(data) {

@@ -43,12 +43,6 @@ const Demo: React.FC<Props> = props => {
       if (!localStorage.getItem('troweb-expire')) {
         localStorage.setItem('troweb-expire', headers['x-expire']);
       }
-
-      const urlString = Object.keys(data) && Object.keys(data)[0];
-      const url =
-        flatten(menuList).find(item => item.key === urlString) &&
-        flatten(menuList).find(item => item.key === urlString).path;
-      router.push(url);
     }
   };
 
