@@ -31,7 +31,7 @@ const AddDataSourceConfigModal: React.FC<Props> = props => {
     detailData: null,
     debugPassed: null, // 调试后是否通过
     loading: false,
-    info: '保存前请先进行调试'
+    info: '保存前请先测试连接有效性'
   });
   const { datasourceId, action, dictionaryMap } = props;
 
@@ -62,7 +62,7 @@ const AddDataSourceConfigModal: React.FC<Props> = props => {
       debugStatus: false,
       debugPassed: null,
       loading: false,
-      info: '保存前请先进行调试'
+      info: '保存前请先测试连接有效性'
     });
   };
 

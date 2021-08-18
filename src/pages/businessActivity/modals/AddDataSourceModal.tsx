@@ -32,7 +32,7 @@ const AddDataSourceModal: React.FC<Props> = props => {
     dataSourceList: null,
     dataSourceDetail: null,
     loading: false,
-    info: '保存前请先进行调试',
+    info: '保存前请先测试连接有效性',
     debugStatus: null,
     debugPassed: null
   });
@@ -85,7 +85,7 @@ const AddDataSourceModal: React.FC<Props> = props => {
       debugStatus: false,
       debugPassed: null,
       loading: false,
-      info: '保存前请先进行调试'
+      info: '保存前请先测试连接有效性'
     });
   };
 

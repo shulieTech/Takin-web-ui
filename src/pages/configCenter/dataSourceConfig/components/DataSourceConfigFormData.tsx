@@ -141,13 +141,13 @@ const getAddDataSourceConfigFormData = (
     },
     {
       key: 'debugStatus',
-      label: '调试',
+      label: '测试连接',
       options: {
         initialValue: state.debugStatus,
         rules: [
           {
             required: false,
-            message: '保存前请先进行调试'
+            message: '保存前请先测试连接有效性'
           }
         ]
       },
@@ -155,7 +155,7 @@ const getAddDataSourceConfigFormData = (
         <Row type="flex" justify="start" align="middle">
           <Col>
             <Button loading={state.loading} onClick={handleDebug}>
-              调试
+              测试连接
             </Button>
           </Col>
           <Col>
