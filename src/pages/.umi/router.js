@@ -17,7 +17,7 @@ const routes = [
     component: __IS_BROWSER
       ? dynamic({
           loader: () => import('../../layouts/index.tsx'),
-          loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+          loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
             .default,
         })
       : require('../../layouts/index.tsx').default,
@@ -28,7 +28,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../404.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../404.tsx').default,
@@ -39,7 +39,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../analysisManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../analysisManage/indexPage.tsx').default,
@@ -50,7 +50,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../appManage/detailsPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../appManage/detailsPage.tsx').default,
@@ -61,7 +61,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../appManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../appManage/indexPage.tsx').default,
@@ -72,7 +72,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../appWhiteList/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../appWhiteList/indexPage.tsx').default,
@@ -83,7 +83,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../businessActivity/addEditPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../businessActivity/addEditPage.tsx').default,
@@ -94,7 +94,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../businessActivity/detailsPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../businessActivity/detailsPage.tsx').default,
@@ -105,7 +105,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../businessActivity/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../businessActivity/indexPage.tsx').default,
@@ -116,7 +116,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../businessFlow/addBusinessFlowPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../businessFlow/addBusinessFlowPage.tsx').default,
@@ -127,7 +127,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../businessFlow/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../businessFlow/indexPage.tsx').default,
@@ -139,7 +139,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../configCenter/bigDataConfig/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/bigDataConfig/indexPage.tsx').default,
@@ -151,7 +151,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../configCenter/dataSourceConfig/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/dataSourceConfig/indexPage.tsx').default,
@@ -162,7 +162,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../configCenter/entryRule/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/entryRule/indexPage.tsx').default,
@@ -174,7 +174,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../configCenter/globalConfig/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/globalConfig/indexPage.tsx').default,
@@ -186,7 +186,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../configCenter/middlewareManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/middlewareManage/indexPage.tsx').default,
@@ -198,7 +198,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../configCenter/pressureMeasureSwitch/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/pressureMeasureSwitch/indexPage.tsx')
@@ -210,7 +210,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../configCenter/systemInfo/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/systemInfo/indexPage.tsx').default,
@@ -222,7 +222,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../configCenter/whitelistSwitch/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../configCenter/whitelistSwitch/indexPage.tsx').default,
@@ -233,7 +233,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../dashboard/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../dashboard/indexPage.tsx').default,
@@ -244,7 +244,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../index/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../index/indexPage.tsx').default,
@@ -256,7 +256,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../pressureTestManage/pressureTestReport/detailsPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../pressureTestManage/pressureTestReport/detailsPage.tsx')
@@ -269,7 +269,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../pressureTestManage/pressureTestReport/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../pressureTestManage/pressureTestReport/indexPage.tsx')
@@ -282,7 +282,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../pressureTestManage/pressureTestReport/pressureTestLivePage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../pressureTestManage/pressureTestReport/pressureTestLivePage.tsx')
@@ -295,7 +295,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../pressureTestManage/pressureTestScene/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../pressureTestManage/pressureTestScene/indexPage.tsx')
@@ -308,7 +308,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../pressureTestManage/pressureTestScene/pressureTestSceneConfigPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../pressureTestManage/pressureTestScene/pressureTestSceneConfigPage.tsx')
@@ -321,7 +321,7 @@ const routes = [
           ? dynamic({
               loader: () =>
                 import('../pressureTestManage/pressureTestStatistic/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../pressureTestManage/pressureTestStatistic/indexPage.tsx')
@@ -333,7 +333,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../scriptManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../scriptManage/indexPage.tsx').default,
@@ -344,7 +344,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../scriptManage/scriptConfigPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../scriptManage/scriptConfigPage.tsx').default,
@@ -355,7 +355,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../scriptManage/scriptDebugDetailPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../scriptManage/scriptDebugDetailPage.tsx').default,
@@ -366,7 +366,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../scriptManage/versionPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../scriptManage/versionPage.tsx').default,
@@ -377,7 +377,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../scriptOperation/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../scriptOperation/indexPage.tsx').default,
@@ -388,7 +388,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../user/loginPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../user/loginPage.tsx').default,
@@ -399,7 +399,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../userManage/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../userManage/indexPage.tsx').default,
@@ -410,7 +410,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../visionalize/indexPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../visionalize/indexPage.tsx').default,
@@ -421,7 +421,7 @@ const routes = [
         component: __IS_BROWSER
           ? dynamic({
               loader: () => import('../visionalize/relationPage.tsx'),
-              loading: require('/Users/chuxu/shulie_project/full-link-public/src/common/loading')
+              loading: require('/Users/xieshuyu/Desktop/full-link-public/src/common/loading')
                 .default,
             })
           : require('../visionalize/relationPage.tsx').default,
@@ -431,7 +431,7 @@ const routes = [
   {
     component: () =>
       React.createElement(
-        require('/Users/chuxu/shulie_project/full-link-public/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')
+        require('/Users/xieshuyu/Desktop/full-link-public/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')
           .default,
         { pagesPath: 'src/pages', hasRoutesInConfig: false },
       ),

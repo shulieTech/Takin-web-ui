@@ -25,7 +25,7 @@ const menuList: MenuBean[] = [
             children: [
               {
                 title: '应用详情',
-                path: '/appManages/details',
+                path: '/appManage/details',
                 type: MenuType.NoMenu,
               },
             ]
