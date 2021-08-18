@@ -16,7 +16,7 @@ import SiderMenu from './components/SiderMenu';
 
 declare var window: any;
 
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
 
 const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const [state, setState] = useStateReducer({
@@ -76,6 +76,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
     } = await UserService.queryMenuList({});
     if (success) {
       localStorage.setItem('trowebUserMenu', JSON.stringify(data));
+      router.push(getPath([data[0]]));
     }
   };
 
@@ -96,7 +97,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
         localStorage.setItem('troweb-expire', headers['x-expire']);
       }
       const menus = JSON.parse(localStorage.getItem('trowebUserMenu'));
-      router.push(getPath([menus[0]]));
+
+      router.push(menus && getPath([menus[0]]));
     }
   };
 
