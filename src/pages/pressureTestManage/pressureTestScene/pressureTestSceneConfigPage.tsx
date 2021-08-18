@@ -172,7 +172,9 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         return;
       }
 
-      let result;
+      let result = {
+        ...values
+      };
 
       if (state.configType === 1) {
         result = {
