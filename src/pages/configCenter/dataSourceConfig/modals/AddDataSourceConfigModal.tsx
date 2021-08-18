@@ -120,7 +120,7 @@ const AddDataSourceConfigModal: React.FC<Props> = props => {
   return (
     <CommonModal
       modalProps={{
-        width: 482,
+        width: 600,
         title: action === 'edit' ? '编辑数据源' : '新增数据源',
         maskClosable: false
       }}
