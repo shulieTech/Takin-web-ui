@@ -103,20 +103,22 @@ const getColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType === '0' && expire === 'false' && (
-            <span style={{ marginRight: 8 }}>
-              <AdminDistributeModal
-                dataId={row.activityId}
-                btnText="分配给"
-                menuCode="BUSINESS_ACTIVITY"
-                onSccuess={() => {
-                  setSystemFlowState({
-                    isReload: !systemFlowState.isReload
-                  });
-                }}
-              />
-            </span>
-          )}
+          {userType === '0' &&
+            expire === 'false' &&
+            getTakinAuthority() === 'true' && (
+              <span style={{ marginRight: 8 }}>
+                <AdminDistributeModal
+                  dataId={row.activityId}
+                  btnText="分配给"
+                  menuCode="BUSINESS_ACTIVITY"
+                  onSccuess={() => {
+                    setSystemFlowState({
+                      isReload: !systemFlowState.isReload
+                    });
+                  }}
+                />
+              </span>
+            )}
           {row.canDelete === 0 ? (
             <AuthorityBtn
               isShow={

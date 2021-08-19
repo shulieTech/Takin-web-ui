@@ -54,20 +54,22 @@ const getColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
-            {userType === '0' && expire === 'false' && (
-              <span style={{ marginRight: 8 }}>
-                <AdminDistributeModal
-                  dataId={row.id}
-                  btnText="分配给"
-                  menuCode="APPLICATION_MNT"
-                  onSccuess={() => {
-                    setState({
-                      isReload: !state.isReload
-                    });
-                  }}
-                />
-              </span>
-            )}
+            {userType === '0' &&
+              expire === 'false' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8 }}>
+                  <AdminDistributeModal
+                    dataId={row.id}
+                    btnText="分配给"
+                    menuCode="APPLICATION_MNT"
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                  />
+                </span>
+              )}
 
             <Link to={`/appManage/details?tabKey=0&id=${row.id}`}>
               应用详情

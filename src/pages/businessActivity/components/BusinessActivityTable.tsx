@@ -14,6 +14,7 @@ import Link from 'umi/link';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import MissingDataScriptModal from '../modals/MissingDataScriptModal';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
+import { getTakinAuthority } from 'src/utils/utils';
 
 const getBusinessActivityColumns = (
   BusinessActivityState,
@@ -107,20 +108,22 @@ const getBusinessActivityColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType === '0' && expire === 'false' && (
-            <span style={{ marginRight: 8 }}>
-              <AdminDistributeModal
-                dataId={row.activityId}
-                btnText="分配给"
-                menuCode="BUSINESS_ACTIVITY"
-                onSccuess={() => {
-                  setBusinessActivityState({
-                    isReload: !BusinessActivityState.isReload
-                  });
-                }}
-              />
-            </span>
-          )}
+          {userType === '0' &&
+            expire === 'false' &&
+            getTakinAuthority() === 'true' && (
+              <span style={{ marginRight: 8 }}>
+                <AdminDistributeModal
+                  dataId={row.activityId}
+                  btnText="分配给"
+                  menuCode="BUSINESS_ACTIVITY"
+                  onSccuess={() => {
+                    setBusinessActivityState({
+                      isReload: !BusinessActivityState.isReload
+                    });
+                  }}
+                />
+              </span>
+            )}
           <span style={{ marginRight: 8 }}>
             <MissingDataScriptModal
               btnText="数据验证脚本"

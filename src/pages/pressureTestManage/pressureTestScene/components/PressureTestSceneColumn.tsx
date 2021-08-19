@@ -305,20 +305,22 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                   查看报告
                 </Link>
               )}
-            {userType === '0' && expire === 'false' && (
-              <span style={{ marginRight: 8 }}>
-                <AdminDistributeModal
-                  dataId={row.id}
-                  btnText="分配给"
-                  menuCode="SCENE_MANAGE"
-                  onSccuess={() => {
-                    setState({
-                      isReload: !state.isReload
-                    });
-                  }}
-                />
-              </span>
-            )}
+            {userType === '0' &&
+              expire === 'false' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8 }}>
+                  <AdminDistributeModal
+                    dataId={row.id}
+                    btnText="分配给"
+                    menuCode="SCENE_MANAGE"
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                  />
+                </span>
+              )}
             {row.status === 0 && (
               <AuthorityBtn
                 isShow={

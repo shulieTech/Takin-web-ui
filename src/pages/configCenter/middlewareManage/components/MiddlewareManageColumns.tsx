@@ -35,8 +35,8 @@ const getMiddlewareManageColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <TableMultiRows
             dataSource={[
-              { label: 'Aritifact ID:', value: row.artifactId },
-              { label: 'Group ID:', value: row.groupId }
+              { label: 'Group ID:', value: row.groupId },
+              { label: 'Aritifact ID:', value: row.artifactId }
             ]}
             labelWidth={75}
           />

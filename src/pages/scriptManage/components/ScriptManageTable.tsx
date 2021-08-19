@@ -362,20 +362,22 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
             )}
 
             <DebugScriptRecordModal btnText="调试记录" id={row.id} />
-            {userType === '0' && expire === 'false' && (
-              <span style={{ marginRight: 8, marginLeft: 8 }}>
-                <AdminDistributeModal
-                  dataId={row.id}
-                  btnText="分配给"
-                  menuCode="SCRIPT_MANAGE"
-                  onSccuess={() => {
-                    setState({
-                      isReload: !state.isReload
-                    });
-                  }}
-                />
-              </span>
-            )}
+            {userType === '0' &&
+              expire === 'false' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8, marginLeft: 8 }}>
+                  <AdminDistributeModal
+                    dataId={row.id}
+                    btnText="分配给"
+                    menuCode="SCRIPT_MANAGE"
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                  />
+                </span>
+              )}
 
             <AuthorityBtn
               isShow={

@@ -13,6 +13,7 @@ import Link from 'umi/link';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import { router } from 'umi';
+import { getTakinAuthority } from 'src/utils/utils';
 
 const getColumns = (
   BusinessFlowState,
@@ -98,20 +99,22 @@ const getColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType === '0' && expire === 'false' && (
-            <span style={{ marginRight: 8 }}>
-              <AdminDistributeModal
-                dataId={row.id}
-                btnText="分配给"
-                menuCode="BUSINESS_FLOW"
-                onSccuess={() => {
-                  setBusinessFlowState({
-                    isReload: !BusinessFlowState.isReload
-                  });
-                }}
-              />
-            </span>
-          )}
+          {userType === '0' &&
+            expire === 'false' &&
+            getTakinAuthority() === 'true' && (
+              <span style={{ marginRight: 8 }}>
+                <AdminDistributeModal
+                  dataId={row.id}
+                  btnText="分配给"
+                  menuCode="BUSINESS_FLOW"
+                  onSccuess={() => {
+                    setBusinessFlowState({
+                      isReload: !BusinessFlowState.isReload
+                    });
+                  }}
+                />
+              </span>
+            )}
 
           <AuthorityBtn
             isShow={
