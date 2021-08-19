@@ -46,7 +46,10 @@ const TitleNode: React.FC<Props> = props => {
 
           height: venomBasicConfig.headerHeight,
           marginBottom: 0,
-          background: venomBasicConfig.theme === 'dark' ? 'var(--BrandPrimary-500)' : '#fff',
+          background:
+            venomBasicConfig.theme === 'dark'
+              ? 'var(--BrandPrimary-500)'
+              : '#fff',
           color: venomBasicConfig.theme === 'dark' ? '#fff' : '#1890ff',
           boxShadow:
             venomBasicConfig.theme === 'light' && '1px 1px 0 0 #e8e8e8',
@@ -54,9 +57,10 @@ const TitleNode: React.FC<Props> = props => {
         }}
       >
         <div className={styles.titleName}>
-          <span className={styles.logoImg}>SL</span>
+          <img width={30} src={require('./../../assets/takin_logo.png')} />
+
           {!props.collapsedStatus && (
-            <span className={styles.logoName}>全链路压测</span>
+            <span className={styles.logoName}>Takin</span>
           )}
         </div>
 

@@ -12,11 +12,12 @@ import { Basic } from 'src/types';
 import venomBasicConfig from 'src/venom.config';
 import { router, qiankunStart } from 'umi';
 import ContentNode from './components/ContentNode';
+import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
 
 declare var window: any;
 
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
 
 const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const [state, setState] = useStateReducer({
