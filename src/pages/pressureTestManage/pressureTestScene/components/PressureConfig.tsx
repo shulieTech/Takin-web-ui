@@ -331,19 +331,27 @@ const PressureConfig = (
           </span>
         ),
         options: {
-          initialValue: action !== 'add' ? detailData.ipNum : state.ipNum,
+          initialValue:
+            getTakinAuthority() === 'false'
+              ? 1
+              : action !== 'add'
+              ? detailData.ipNum
+              : state.ipNum,
           rules: [{ required: true, message: '请输入指定Pod数' }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
-        node: (
-          <Input
-            min={1}
-            addonAfter={`建议Pod数：${
-              !state.minIpNum ? '-' : `${state.minIpNum}-${state.maxIpNum}`
-            }`}
-            onBlur={() => handleCheckIsComplete()}
-          />
-        ),
+        node:
+          getTakinAuthority() === 'true' ? (
+            <Input
+              min={1}
+              addonAfter={`建议Pod数：${
+                !state.minIpNum ? '-' : `${state.minIpNum}-${state.maxIpNum}`
+              }`}
+              onBlur={() => handleCheckIsComplete()}
+            />
+          ) : (
+            <Input disabled={true} />
+          ),
         extra: getTakinAuthority() === 'true' && (
           <div
             className={styles.chartWrap}
