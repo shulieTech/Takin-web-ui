@@ -1,7 +1,7 @@
 const siderBg = '#151623';
 const white = '#fff';
 const black = '#000';
-const primaryColor = '#2872f6';
+const primaryColor = '#11bbd5';
 
 export default {
   'font-size-base': '13px',
