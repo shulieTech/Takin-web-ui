@@ -104,20 +104,22 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
   const menu = row => {
     return (
       <Menu>
-        {userType === '0' && expire === 'false' && (
-          <Menu.Item>
-            <AdminDistributeModal
-              dataId={row.id}
-              btnText="分配"
-              menuCode="OPS_SCRIPT_MANAGE"
-              onSccuess={() => {
-                setState({
-                  isReload: !state.isReload
-                });
-              }}
-            />
-          </Menu.Item>
-        )}
+        {userType === '0' &&
+          expire === 'false' &&
+          getTakinAuthority() === 'true' && (
+            <Menu.Item>
+              <AdminDistributeModal
+                dataId={row.id}
+                btnText="分配"
+                menuCode="OPS_SCRIPT_MANAGE"
+                onSccuess={() => {
+                  setState({
+                    isReload: !state.isReload
+                  });
+                }}
+              />
+            </Menu.Item>
+          )}
         {row.canDelete && (
           <Menu.Item>
             <Button
