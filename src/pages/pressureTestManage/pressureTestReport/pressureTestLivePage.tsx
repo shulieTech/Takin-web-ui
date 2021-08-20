@@ -383,11 +383,6 @@ const PressureTestLive: React.FC<Props> = props => {
       <Modal
         title={
           <div>
-            <CustomIcon
-              color={state.stopReasons ? '#ED6047' : '#11BBD5'}
-              imgName={state.stopReasons ? 'warning_icon' : 'info_icon'}
-              imgWidth={15}
-            />
             <span
               style={{
                 fontSize: '16px',
