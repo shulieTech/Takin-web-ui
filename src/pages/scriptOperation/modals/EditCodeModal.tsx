@@ -43,7 +43,17 @@ const EditCodeModal: React.FC<Props> = props => {
 
   const { fileId } = props;
 
-  const handleClick = async () => {
+  const handleClick = () => {
+    if (!props.state.scriptCode) {
+      queryScriptCode();
+    } else {
+      setState({
+        scriptCode: props.state.scriptCode
+      });
+    }
+  };
+
+  const queryScriptCode = async () => {
     if (props.btnText === '编辑') {
       const {
         data: { success, data }
