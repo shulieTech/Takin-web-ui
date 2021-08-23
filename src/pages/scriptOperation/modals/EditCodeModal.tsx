@@ -108,6 +108,9 @@ const EditCodeModal: React.FC<Props> = props => {
       tags: undefined,
       scriptCode: null
     });
+    props.setState({
+      scriptCode: null
+    });
   };
 
   /**
