@@ -44,7 +44,8 @@ const getUploadFileColumns = (
             return { ...item2, isDeleted: 1 };
           }
           return { ...item2 };
-        })
+        }),
+        scriptCode: null
       });
     } else {
       handleDeleteFiles(item.uploadId);
