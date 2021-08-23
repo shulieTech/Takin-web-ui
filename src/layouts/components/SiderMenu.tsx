@@ -130,30 +130,29 @@ const SiderMenu: React.FC<Props> = props => {
         onCollapsed={props.onCollapse}
         location={props.location}
       />
-      {keys.length > 0 && (
-        <Menu
-          theme={venomBasicConfig.theme}
-          mode="inline"
-          className={`flex-1 of-x-hd`}
-          openKeys={
-            !props.collapsedStatus
-              ? openKeys.length
-                ? venomBasicConfig.siderMultiple
-                  ? openKeys
-                  : [[...openKeys].pop()]
-                : keys
-              : openKeys
-          }
-          defaultSelectedKeys={keys}
-          defaultOpenKeys={keys}
-          onOpenChange={values => {
-            setOpenKeys(values);
-          }}
-        >
-          {renderMenuNode()}
-        </Menu>
-      )}
-
+      <Menu
+        theme={venomBasicConfig.theme}
+        mode="inline"
+        className={`flex-1 of-x-hd`}
+        openKeys={
+          !props.collapsedStatus
+            ? openKeys.length
+              ? venomBasicConfig.siderMultiple
+                ? openKeys
+                : [[...openKeys].pop()]
+              : keys
+            : openKeys
+        }
+        selectedKeys={keys}
+        defaultSelectedKeys={keys}
+        defaultOpenKeys={keys}
+        onOpenChange={values => {
+          setOpenKeys(values);
+        }}
+      >
+        {renderMenuNode()}
+      </Menu>
+      }
       {getTakinAuthority() === 'true' && (
         <Card className={styles.menuCard}>
           <Popover
