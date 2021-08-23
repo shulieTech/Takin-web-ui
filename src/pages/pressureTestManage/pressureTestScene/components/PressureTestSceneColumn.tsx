@@ -293,18 +293,19 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                 启动中
               </Button>
             )}
-            {row.hasReport &&
-              row.status !== 2 &&
-              btnAuthority.pressureTestManage_pressureTestScene_5_start_stop &&
-              menuAuthority &&
-              menuAuthority.pressureTestManage_pressureTestReport && (
-                <Link
-                  style={{ marginRight: 8 }}
-                  to={`/pressureTestManage/pressureTestReport?sceneName=${row.sceneName}`}
-                >
-                  查看报告
-                </Link>
-              )}
+            {(getTakinAuthority() === 'false' ||
+              (row.hasReport &&
+                row.status !== 2 &&
+                btnAuthority.pressureTestManage_pressureTestScene_5_start_stop &&
+                menuAuthority &&
+                menuAuthority.pressureTestManage_pressureTestReport)) && (
+              <Link
+                style={{ marginRight: 8 }}
+                to={`/pressureTestManage/pressureTestReport?sceneName=${row.sceneName}`}
+              >
+                查看报告
+              </Link>
+            )}
             {userType === '0' &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
