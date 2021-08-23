@@ -266,33 +266,37 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       {hasMissingData === 1 && (
         <div style={{ padding: '16px 16px 0px', position: 'relative' }}>
           <Alert
-            message={<p>本次压测存在数据泄露，请尽快确认 </p>}
+            message={
+              <p>
+                本次压测存在数据泄露，请尽快确认{' '}
+                <MissingDataListModal
+                  reportId={id}
+                  hasMissingData={1}
+                  btnText="查看详情"
+                />
+              </p>
+            }
             type="error"
             showIcon
           />
-          <div style={{ position: 'absolute', top: 25, left: 250 }}>
-            <MissingDataListModal
-              reportId={id}
-              hasMissingData={1}
-              btnText="查看详情"
-            />
-          </div>
         </div>
       )}
       {(hasMissingData === 2 || hasMissingData === 3) && (
         <div style={{ padding: '16px 16px 0px', position: 'relative' }}>
           <Alert
-            message={<p>数据验证存在执行异常，请尽快查看 </p>}
+            message={
+              <p>
+                数据验证存在执行异常，请尽快查看{' '}
+                <MissingDataListModal
+                  reportId={id}
+                  hasMissingData={hasMissingData}
+                  btnText="查看详情"
+                />
+              </p>
+            }
             type="warning"
             showIcon
           />
-          <div style={{ position: 'absolute', top: 25, left: 250 }}>
-            <MissingDataListModal
-              reportId={id}
-              hasMissingData={hasMissingData}
-              btnText="查看详情"
-            />
-          </div>
         </div>
       )}
 

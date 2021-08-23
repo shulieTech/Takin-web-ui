@@ -39,6 +39,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
     if (!localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
     }
+    if (!localStorage.getItem('trowebUserResource')) {
+      queryUserResource();
+    }
   }, [pathname]);
 
   useEffect(() => {
