@@ -280,7 +280,10 @@ const BusinessActivityPressureTestDetailModal: React.FC<Props> = props => {
                   <span
                     className={styles.timeLine}
                     style={{
+                      display: 'inline-block',
+                      background: 'var(--BrandPrimary-500)',
                       width: (150 / state.totalRT) * text,
+                      height: 12,
                       marginRight: 2
                     }}
                   />
