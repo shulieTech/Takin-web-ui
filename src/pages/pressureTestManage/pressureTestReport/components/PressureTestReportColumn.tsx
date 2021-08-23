@@ -62,7 +62,8 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '执行人',
-      dataIndex: 'managerName'
+      dataIndex: 'managerName',
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
       ...customColumnProps,
