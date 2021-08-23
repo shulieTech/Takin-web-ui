@@ -23,10 +23,11 @@ const ThreadChart: React.FC<Props> = ({
     //     setThreadState({ time: config.target.attrs.text });
     //   }
     // });
+
     chartRef.current.on('element:click', conf => {
-      if (conf.data.shape === 'circle') {
+      if (conf && conf.data && conf.data.shape === 'circle') {
         setThreadState({
-          time: conf.data && conf.data.data && conf.data.data.time
+          time: conf && conf.data && conf.data.data && conf.data.data.time
         });
       }
     });
