@@ -120,7 +120,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
               />
             </Menu.Item>
           )}
-        {row.canDelete && (
+        {row.canRemove && (
           <Menu.Item>
             <Button
               type="link"
@@ -237,7 +237,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                 <span
                   style={{
                     color: '#BABABA',
-                    display: row.canExecute ? 'inline-block' : 'none'
+                    display: row.canEnableDisable ? 'inline-block' : 'none'
                   }}
                 >
                   执行
@@ -268,7 +268,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Fragment>
             <div>
-              {row.canExecute && (
+              {row.canEnableDisable && (
                 <Button type="link" onClick={() => showConfirm(row)}>
                   执行
                 </Button>
