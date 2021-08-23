@@ -25,9 +25,9 @@ const ThreadChart: React.FC<Props> = ({
     // });
 
     chartRef.current.on('element:click', conf => {
-      if (conf && conf.data && conf.data.shape === 'circle') {
+      if (conf.data.shape === 'circle') {
         setThreadState({
-          time: conf && conf.data && conf.data.data && conf.data.data.time
+          time: conf.data.data.time
         });
       }
     });
