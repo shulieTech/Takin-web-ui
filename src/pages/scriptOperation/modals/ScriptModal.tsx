@@ -120,14 +120,8 @@ const ScriptModal: React.FC<Props> = props => {
   };
 
   const handleChange = info => {
-
     const fileLists = [...info.fileList];
-
-    const readyToUploadFileName =
-      fileLists &&
-      fileLists.map(item => {
-        return item.name;
-      });
+    const readyToUploadFileName = [info.file.name];
     /**
      * @name 判断是否是可接受类型
      */
@@ -146,12 +140,11 @@ const ScriptModal: React.FC<Props> = props => {
       message.error('上传的文件含有不可接受类型，请检查后上传');
       return;
     }
-
     /**
      * @name 待上传的元素超过200M大小
      */
     if (
-      fileLists.find(item => {
+      [fileLists[fileLists.length - 1]].find(item => {
         return item.size / 1024 / 1024 > 200;
       })
     ) {
@@ -160,7 +153,7 @@ const ScriptModal: React.FC<Props> = props => {
     }
 
     const formData = new FormData();
-    formData.append('file', fileLists[0].originFileObj);
+    formData.append('file', fileLists[fileLists.length - 1].originFileObj);
 
     if (formData) {
       uploadFiles(formData);
