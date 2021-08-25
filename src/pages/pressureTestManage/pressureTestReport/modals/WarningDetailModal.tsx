@@ -62,7 +62,8 @@ const WarningDetailModal: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: 'SLA名称',
-        dataIndex: 'slaName'
+        dataIndex: 'slaName',
+        width: 300
       },
       {
         ...customColumnProps,

@@ -41,7 +41,6 @@ const getNodeManageListColumns = (
     Modal.confirm({
       title: (
         <div>
-          <CustomIcon color="#ED6047" imgName="warning_icon" />
           <span className={styles.modalTitle}>卸载探针</span>
         </div>
       ),
