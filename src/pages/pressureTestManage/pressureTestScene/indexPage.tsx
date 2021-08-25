@@ -163,7 +163,8 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
       visible: false,
       hasMissingData: false,
       missingDataStatus: false,
-      missingDataSwitch: false
+      missingDataSwitch: false,
+      isReload: !state.isReload
     });
   };
 
