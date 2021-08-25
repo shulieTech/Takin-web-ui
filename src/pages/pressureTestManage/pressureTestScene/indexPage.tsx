@@ -240,8 +240,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
       </Modal>
       <Modal
         title="启动进度"
-        // visible={state.visible}
-        visible={true}
+        visible={state.visible}
         footer={null}
         closable={
           state.configStatus === 'fail' || state.startStatus === 'fail'
