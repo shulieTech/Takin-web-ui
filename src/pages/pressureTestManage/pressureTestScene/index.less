@@ -132,3 +132,25 @@
     }
   }
 }
+
+.loadingLine {
+  // margin-top: 60px;
+  // margin-left: 40px;
+  // margin-right: 40px;
+  padding: 0;
+  text-align: center;
+  .dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: var(--Netural-05);
+    border-radius: 100%;
+    margin-left: 8px;
+    margin-right: 8px;
+    transition: background-color 0.6s ease;
+  }
+
+  .active {
+    background-color: var(--BrandSecondary-500);
+  }
+}

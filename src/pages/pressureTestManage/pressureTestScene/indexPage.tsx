@@ -33,8 +33,9 @@ export interface PressureTestSceneState {
   missingDataStatus: boolean;
   sceneId: Number;
   hasMissingData: boolean;
+  showIndex: number;
 }
-
+const liList = [1, 1, 1, 1, 1, 1, 1, 1];
 const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
   const [state, setState] = useStateReducer<PressureTestSceneState>({
     isReload: false,
@@ -58,7 +59,8 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
     missingDataSwitch: false,
     missingDataStatus: false,
     sceneId: null,
-    hasMissingData: false
+    hasMissingData: false,
+    showIndex: 0
   });
 
   useEffect(() => {
@@ -67,6 +69,30 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
       queryFlowAccountInfo();
     }
   }, []);
+
+  useEffect(() => {
+    // 自动轮播
+    let timer = null;
+    if (state.visible) {
+      timer = setInterval(() => {
+        next();
+      }, 500);
+    }
+    return () => clearInterval(timer);
+  }, [state.showIndex, state.visible]);
+
+  const next = () => {
+    // 下一个
+    let { showIndex } = state;
+    if (showIndex >= 7) {
+      showIndex = 0;
+    } else {
+      showIndex = showIndex + 1;
+    }
+    setState({
+      showIndex
+    });
+  };
 
   /**
    * @name 获取压测开关状态
@@ -320,19 +346,19 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
                   : '压测配置检查中···'}
               </span>
             </Col>
-            <Col style={{ top: -12 }}>
-              <div
-                style={{
-                  width: 80,
-                  height: 1,
-                  border:
-                    state.configStatus === 'success'
-                      ? '1px dotted #29C7D7'
-                      : '1px dotted #CACED5',
-                  marginBottom: 8,
-                  marginRight: 8
-                }}
-              />
+            <Col style={{ top: -12, left: -10 }}>
+              <ul className={`${styles.loadingLine} ${styles.ul} `}>
+                {liList.map((item, k) => {
+                  return (
+                    <li
+                      key={k}
+                      className={`${styles.dot} ${
+                        k === state.showIndex ? styles.active : ''
+                      }`}
+                    />
+                  );
+                })}
+              </ul>
             </Col>
             <Col
               style={{
