@@ -253,8 +253,8 @@ const RequestDetailModal: React.FC<Props> = props => {
             <Button
               onClick={() =>
                 router.push(
-                  `/analysisManage?tab=method&appName=${row.applicationName}
-                  &processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually`
+                  // tslint:disable-next-line:max-line-length
+                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually`
                 )
               }
               style={{ marginLeft: 16 }}
