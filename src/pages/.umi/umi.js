@@ -25,6 +25,7 @@ plugins.use(
   require('../../../node_modules/@umijs/plugin-qiankun/lib/master/runtimePlugin.js'),
 );
 plugins.use(require('../../../node_modules/umi-plugin-dva/lib/runtime'));
+plugins.use(require('@/app'));
 
 const app = require('@tmp/dva')._onCreate();
 window.g_app = app;
