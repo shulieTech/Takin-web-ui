@@ -44,7 +44,7 @@ export default {
       {
         master: {
           defer: true, // 异步加载
-          // jsSandbox: true,
+          jsSandbox: true,
           prefetch: true,
           // apps: [{
           //   name: 'pro', // 子应用唯一id
