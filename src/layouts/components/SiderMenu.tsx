@@ -152,7 +152,6 @@ const SiderMenu: React.FC<Props> = props => {
       >
         {renderMenuNode()}
       </Menu>
-      }
       {getTakinAuthority() === 'true' && (
         <Card className={styles.menuCard}>
           <Popover
