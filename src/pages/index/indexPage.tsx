@@ -58,6 +58,6 @@ const Demo: React.FC<Props> = props => {
     }
   };
 
-  return <Fragment />;
+  return <div />;
 };
 export default Demo;
