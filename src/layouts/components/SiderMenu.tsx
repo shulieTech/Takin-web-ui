@@ -71,7 +71,10 @@ const SiderMenu: React.FC<Props> = props => {
         'trowebBtnResource',
         'auth-cookie',
         'troweb-expire',
-        'troweb-userId'
+        'troweb-userId',
+        'trowebUserMenu',
+        'takinAuthority',
+        'Access-Token'
       ];
       storageList.forEach(item => localStorage.removeItem(item));
       if (data && data.indexUrl) {
