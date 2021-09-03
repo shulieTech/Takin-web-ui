@@ -11,7 +11,7 @@ const getPressureTestReportFormData = (): FormDataType[] => {
       node: <Input placeholder="压测场景名称" />
     },
     {
-      key: 'managerName',
+      key: 'userName',
       label: '',
       node: <Input placeholder="执行人" />
     },

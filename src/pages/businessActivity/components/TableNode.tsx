@@ -94,7 +94,7 @@ const getColumns = (
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'managerName',
+      dataIndex: 'userName',
       className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
