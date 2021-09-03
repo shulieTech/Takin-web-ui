@@ -17,7 +17,7 @@ import AppManageService from '../appManage/service';
 import { useStateReducer } from 'racc';
 import IndexService from './service';
 import { getTakinAuthority } from 'src/utils/utils';
-interface Props {}
+interface Props { }
 interface State {
   switchStatus: any;
   flowAccountData: any;
@@ -48,9 +48,9 @@ const DashboardPage: React.FC<Props> = props => {
 
   useEffect(() => {
     querySwitchStatus();
-    // if (getTakinAuthority() === 'true') {
-    // queryFlowAccountInfo();
-    // }
+    if (getTakinAuthority() === 'true') {
+      queryFlowAccountInfo();
+    }
 
     queryQucikEnterance();
     queryPressureTestSceneList();
@@ -158,10 +158,10 @@ const DashboardPage: React.FC<Props> = props => {
       <Row type="flex">
         <Col span={6}>
           <PressureTestSwitch data={switchStatus} />
-          {/* {getTakinAuthority() === 'true' && <Blank />}
+          {getTakinAuthority() === 'true' && <Blank />}
           {getTakinAuthority() === 'true' && (
             <FlowBalance data={flowAccountData} />
-          )} */}
+          )}
           <Blank />
           <QuickEntry data={quickEntranceData} />
         </Col>
