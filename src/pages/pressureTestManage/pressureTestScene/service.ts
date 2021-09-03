@@ -122,7 +122,7 @@ const PressureTestSceneService = {
    * @name 获取可用流量账户信息（dictionary）
    */
   async queryFlowAccountInfoDic(data = {}) {
-    const url = '/settle/accountbook/dictionary';
+    const url = '/asset/account_book';
     return httpGet(url, data);
   }
 };
