@@ -28,15 +28,10 @@ const ContentNode: React.FC = props => {
     >
       <div
         id="app-slave"
-        className={
-          venomBasicConfig.layout === 'header' &&
-            venomBasicConfig.contentWidthMode === 'fixed'
-            ? styles.wrap
-            : 'flex'
-        }
         style={{
           flexDirection: 'column',
           // padding: '16px',
+          display: 'block',
           backgroundColor: '#fff',
           marginLeft: '8px',
           marginRight: '8px',
