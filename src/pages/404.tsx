@@ -10,6 +10,7 @@ export default class NotFound extends Component {
         style={{
           flexDirection: 'column',
           width: '100%',
+          height: '100%',
           backgroundColor: '#fff',
           borderRadius: '4px 4px 0 0',
           overflow: 'scroll'
