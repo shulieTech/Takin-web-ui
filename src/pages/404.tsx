@@ -5,7 +5,7 @@ import router from 'umi/router';
 export default class NotFound extends Component {
   render() {
     return (
-      <div />
+      <div style={{ display: 'none' }} />
     );
   }
 }

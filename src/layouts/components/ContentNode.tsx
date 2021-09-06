@@ -56,7 +56,7 @@ const ContentNode: React.FC = props => {
           flexDirection: 'column',
           // padding: '16px',
           backgroundColor: '#fff',
-          marginLeft: '8px',
+          marginLeft: '-8px',
           marginRight: '8px',
           marginTop: '8px',
           borderRadius: '4px 4px 0 0',
