@@ -152,7 +152,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
             {text}
             {getTakinAuthority() === 'true' && (
               <div style={{ color: '#8C8C8C', margin: '6px 0' }}>
-                负责人：<span style={{ color: '#000' }}>{row.username}</span>
+                负责人：<span style={{ color: '#000' }}>{row.userName}</span>
               </div>
             )}
           </div>
