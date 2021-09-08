@@ -27,10 +27,9 @@ const ContentNode: React.FC = props => {
       className="flex flex-1 of-x-hd of-y-at"
     >
       <Content
-        id="app-slave"
         className={
           venomBasicConfig.layout === 'header' &&
-          venomBasicConfig.contentWidthMode === 'fixed'
+            venomBasicConfig.contentWidthMode === 'fixed'
             ? styles.wrap
             : 'flex'
         }

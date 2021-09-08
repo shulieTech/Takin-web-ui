@@ -16,8 +16,8 @@ import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
 
 declare var window: any;
-
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
+let path = '';
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
 
 const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const [state, setState] = useStateReducer({
@@ -81,7 +81,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
       } = await UserService.queryMenuList({});
       if (success) {
         localStorage.setItem('trowebUserMenu', JSON.stringify(data));
-        router.push(getPath([data[0]]));
+        router.push(getPath(data));
       }
     }
   };
@@ -103,18 +103,16 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
         localStorage.setItem('troweb-expire', headers['x-expire']);
       }
       const menus = JSON.parse(localStorage.getItem('trowebUserMenu'));
-      router.push(menus && getPath([menus[0]]));
+      router.push(menus && getPath(menus));
     }
   };
 
   function getPath(lists) {
-    let path = '';
-    const hasChildrenAttr = function (obj: any) {
-      return obj.children !== null;
-    };
-    lists.forEach(list => {
-      path = list.path;
-      if (hasChildrenAttr(list)) {
+    if (lists[0].type === 'Item') {
+      path = lists[0].path;
+    }
+    [lists[0]].forEach(list => {
+      if (list.children) {
         getPath(list.children);
       }
     });

@@ -40,8 +40,8 @@ interface Props extends AppModelState {
 const SiderMenu: React.FC<Props> = props => {
   const [openKeys, setOpenKeys] = useState([]);
   const [visible, setVisible] = useState(false);
-  const { breadCrumbs, collapsed } = props;
-  const keys = breadCrumbs.map(item => item.path);
+  const { location, collapsed } = props;
+  const keys = [location.pathname];
 
   const dismissPopover = e => {
     e.stopPropagation();
@@ -137,15 +137,15 @@ const SiderMenu: React.FC<Props> = props => {
         theme={venomBasicConfig.theme}
         mode="inline"
         className={`flex-1 of-x-hd`}
-        openKeys={
-          !props.collapsedStatus
-            ? openKeys.length
-              ? venomBasicConfig.siderMultiple
-                ? openKeys
-                : [[...openKeys].pop()]
-              : keys
-            : openKeys
-        }
+        // openKeys={
+        //   !props.collapsedStatus
+        //     ? openKeys.length
+        //       ? venomBasicConfig.siderMultiple
+        //         ? openKeys
+        //         : [[...openKeys].pop()]
+        //       : keys
+        //     : openKeys
+        // }
         selectedKeys={keys}
         defaultSelectedKeys={keys}
         defaultOpenKeys={keys}
