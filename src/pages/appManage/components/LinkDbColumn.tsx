@@ -14,6 +14,7 @@ import AddAndEditDbDrawer from './AddAndEditDbDrawer';
 import { openNotification } from 'src/common/custom-notification/CustomNotification';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import AddEditDbModal from '../modals/AddEditDbModal';
+import EditDynamicDbDrawer from './EditDynamicDbDrawer';
 
 const getLinkDbColumns = (
   state,
@@ -182,7 +183,7 @@ const getLinkDbColumns = (
                 />
               </AuthorityBtn>
             ) : null}
-
+            <EditDynamicDbDrawer />
             <AuthorityBtn
               isShow={
                 btnAuthority && btnAuthority.appManage_4_delete && row.canRemove

@@ -7,7 +7,7 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { connect } from 'dva';
 import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CommonModelState } from 'src/models/common';
 import { ShadowConsumerBean } from '../enum';
 import AppManageService from '../service';
@@ -20,9 +20,17 @@ interface Props extends CommonModelState {
 const AddEditConsumerModal: React.FC<Props> = props => {
   const [state, setState] = useStateReducer({
     form: null as WrappedFormUtils,
-    details: {}
+    details: {},
+    MQType: [],
+    MQPlan: []
   });
+
   const text = props.id ? '编辑' : '新增';
+  const handleClick = () => {
+    queryMQType();
+    queryMQPlan();
+    getDetails();
+  };
   const getDetails = async () => {
     if (!props.id) {
       return;
@@ -32,6 +40,34 @@ const AddEditConsumerModal: React.FC<Props> = props => {
     } = await AppManageService.getShdowConsumer({ id: props.id });
     if (success) {
       setState({ details: data });
+    }
+  };
+
+  /**
+   * @name 获取MQ类型
+   */
+  const queryMQType = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryMQType({});
+    if (success) {
+      setState({
+        MQType: data
+      });
+    }
+  };
+
+  /**
+   * @name 获取mq隔离方案
+   */
+  const queryMQPlan = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryMQPlan({});
+    if (success) {
+      setState({
+        MQPlan: data
+      });
     }
   };
   const getFormData = (): FormDataType[] => {
@@ -44,10 +80,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
           rules: [{ required: true, message: '请选择MQ类型' }]
         },
         node: (
-          <CommonSelect
-            placeholder="请选择MQ类型"
-            dataSource={props.dictionaryMap.SHADOW_CONSUMER}
-          />
+          <CommonSelect placeholder="请选择MQ类型" dataSource={state.MQType} />
         )
       },
       {
@@ -58,6 +91,20 @@ const AddEditConsumerModal: React.FC<Props> = props => {
         },
         label: '业务的topic#业务的消费组',
         node: <Input placeholder="请输入业务的topic#业务的消费组" />
+      },
+      {
+        key: ShadowConsumerBean.隔离方案,
+        label: '隔离方案',
+        options: {
+          initialValue: state.details[ShadowConsumerBean.隔离方案],
+          rules: [{ required: true, message: '请选择隔离方案' }]
+        },
+        node: (
+          <CommonSelect
+            placeholder="请选择隔离方案"
+            dataSource={state.MQPlan}
+          />
+        )
       }
     ];
   };
@@ -103,7 +150,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       modalProps={{ title: text, width: 720, destroyOnClose: true }}
       btnText={props.btnText}
       btnProps={{ type: props.id ? 'link' : 'primary' }}
-      onClick={getDetails}
+      onClick={handleClick}
     >
       <CommonForm
         rowNum={1}

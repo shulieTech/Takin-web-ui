@@ -337,12 +337,26 @@ const AppManageService = {
     const url = '/application/plugins/config/update';
     return httpPut(url, data);
   },
- 
+
   /**
    * @name 获取应用异常列表
    */
   async queryAppErrorList(data = {}) {
     const url = '/application/error/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取影子消费者MQ类型
+   */
+  async queryMQType(data = {}) {
+    const url = '/';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取影子消费者隔离方案
+   */
+  async queryMQPlan(data = {}) {
+    const url = '/';
     return httpGet(url, data);
   },
   /**
@@ -393,10 +407,10 @@ const AppManageService = {
   async importAppConfig(data = {}) {
     const url = '/application/center/app/config/import';
     return httpPost(url, data);
-  }, 
- /**
-  * @name 获取agent版本
-  */
+  },
+  /**
+   * @name 获取agent版本
+   */
   async queryAgentStatus(data = {}) {
     const url = '/application/center/app/config/ds/isnew';
     return httpGet(url, data);
@@ -556,7 +570,7 @@ const AppManageService = {
     const url = '/';
     return httpGet(url, data);
   },
-  /*
+  /**
    * @name 获取中间件支持概况
    */
   async queryMiddlewareDashboard(data = {}) {
@@ -576,7 +590,14 @@ const AppManageService = {
   async compare(data = {}) {
     const url = '/application/middleware/compare';
     return httpPost(url, data);
-  }   
+  },
+  /**
+   * @name 获取隔离方案数据
+   */
+  async queryType(data = {}) {
+    const url = '/';
+    return httpGet(url, data);
+  }
 };
 
 export default AppManageService;

@@ -17,7 +17,7 @@ import { ColumnProps } from 'antd/lib/table';
 import { connect } from 'dva';
 import { CommonSelect, useStateReducer } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import TableTitle from 'src/common/table-title/TableTitle';
 import { customColumnProps } from 'src/components/custom-table/utils';
@@ -36,11 +36,44 @@ interface Props extends CommonModelState {
 }
 const getInitState = () => ({
   isReload: false,
-  checkedRows: []
+  checkedRows: [],
+  MQType: [],
+  MQPlan: []
 });
 type State = ReturnType<typeof getInitState>;
 const ShadowConsumer: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>(getInitState());
+  useEffect(() => {
+    // queryMQType();
+    // queryMQPlan();
+  }, []);
+  /**
+   * @name 获取MQ类型
+   */
+  const queryMQType = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryMQType({});
+    if (success) {
+      setState({
+        MQType: data
+      });
+    }
+  };
+
+  /**
+   * @name 获取mq隔离方案
+   */
+  const queryMQPlan = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryMQPlan({});
+    if (success) {
+      setState({
+        MQPlan: data
+      });
+    }
+  };
   return (
     <div style={{ paddingBottom: 184 }}>
       <TableTitle
@@ -63,7 +96,11 @@ const ShadowConsumer: React.FC<Props> = props => {
           checkable: true,
           columns: getColumns(state, setState, props),
           className: styles.consumerTable,
-          bodyStyle: { height: document.body.offsetHeight - 300, overflow: 'scroll', paddingBottom: 84 }
+          bodyStyle: {
+            height: document.body.offsetHeight - 300,
+            overflow: 'scroll',
+            paddingBottom: 84
+          }
         }}
         onCheck={(checkedKeys, checkedRows) => setState({ checkedRows })}
         theme="light"
