@@ -1,4 +1,4 @@
-#环境准备：
+# 环境准备：
 首先得有 node【https://nodejs.org/en/】，并确保 node 版本是 10.13 或以上，建议使用版本14.16.1。（mac 下推荐使用 nvm【https://github.com/nvm-sh/nvm】 来管理 node 版本）
 推荐使用 yarn 管理 npm 依赖，并使用国内源
 # 国内源
