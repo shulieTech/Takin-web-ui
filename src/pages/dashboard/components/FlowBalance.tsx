@@ -18,7 +18,7 @@ const FlowBalance: React.FC<Props> = props => {
             <span className={`${styles.boldTitle}`}>流量余额</span>
           </Col>
           <Col>
-            <Link to="/flowAccount" className={styles.more}>
+            <Link to="/pro/flowAccount" className={styles.more}>
               明细 <Icon type="right" />
             </Link>
           </Col>
