@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect } from 'react';
 import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
-import { Icon, Input, message, Tooltip } from 'antd';
+import { Input, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormDataType } from 'racc/dist/common-form/type';
 import AppManageService from '../service';
 import { connect } from 'dva';
-import copy from 'copy-to-clipboard';
+
 interface Props {
   btnText?: string | React.ReactNode;
   onSccuess?: () => void;
@@ -18,56 +18,33 @@ interface Props {
   serverAppName: string;
 }
 
-interface State {
-  isReload?: boolean;
-  form: any;
-  configType: string;
-  detail: any;
-  configTypeData: any;
-  configValue: string;
-}
+const getInitState = () => ({
+  isReload: false,
+  form: null as WrappedFormUtils,
+  configType: undefined,
+  detail: {} as any,
+  configTypeData: null,
+  mockTypeData: null,
+  mockType: undefined
+});
+export type MockConfigModalState = ReturnType<typeof getInitState>;
 const MockConfigModal: React.FC<Props> = props => {
-  const [state, setState] = useStateReducer<State>({
-    isReload: false,
-    form: null as WrappedFormUtils,
-    configType: undefined,
-    detail: {},
-    configTypeData: null,
-    configValue: null
-  });
-  const { dictionaryMap } = props;
-  const { REMOTE_CALL_CONFIG_TYPE, REMOTE_CALL_TYPE } = dictionaryMap;
-  const handleChangeConfigType = value => {
+  const [state, setState] = useStateReducer<MockConfigModalState>(
+    getInitState()
+  );
+  const { detail } = state;
+
+  useEffect(() => {
+    if (state.mockType) {
+      getConfigType();
+    }
+  }, [state.mockType]);
+
+  const handleChangeMockType = value => {
     setState({
-      configType: value
+      mockType: value,
+      configTypeData: []
     });
-    state.form.setFieldsValue({
-      mockReturnValue: null
-    });
-  };
-
-  const handleCopy = async value => {
-    if (copy(value)) {
-      message.success('复制成功');
-    } else {
-      message.error('复制失败');
-    }
-  };
-
-  /**
-   * @name 获取挡板模板
-   */
-  const getBaffleConfig = async () => {
-    const {
-      data: { success, data }
-    } = await AppManageService.queryConfig({
-      configCode: 'PRADAR_GUARD_TEMPLATE'
-    });
-    if (success) {
-      setState({
-        configValue: data
-      });
-    }
   };
 
   const getFormData = (): FormDataType[] => {
@@ -76,28 +53,47 @@ const MockConfigModal: React.FC<Props> = props => {
         key: 'interfaceName',
         label: '接口名称',
         options: {
-          initialValue: props.interfaceName
+          initialValue: props.id ? detail.interfaceName : undefined,
+          rules: [
+            {
+              required: true,
+              message: '请输入接口名称'
+            }
+          ]
         },
-        node: <Input.TextArea autoSize disabled />
+        node: (
+          <Input.TextArea
+            autoSize
+            disabled={props.id ? true : false}
+            placeholder="请输入接口名称"
+          />
+        )
       },
       {
         key: 'interfaceType',
         options: {
-          initialValue: props.interfaceType
+          initialValue: props.id ? detail.interfaceType : undefined,
+          rules: [
+            {
+              required: true,
+              message: '请选择接口类型'
+            }
+          ]
         },
         label: '接口类型',
         node: (
           <CommonSelect
-            disabled
+            disabled={props.id ? true : false}
             placeholder="请选择接口类型"
-            dataSource={REMOTE_CALL_TYPE || []}
+            dataSource={state.mockTypeData || []}
+            onChange={handleChangeMockType}
           />
         )
       },
       {
         key: 'type',
         options: {
-          initialValue: props.type,
+          initialValue: props.id ? detail.type : undefined,
           rules: [
             {
               required: true,
@@ -110,7 +106,6 @@ const MockConfigModal: React.FC<Props> = props => {
           <CommonSelect
             placeholder="请选择配置类型"
             dataSource={state.configTypeData || []}
-            onChange={handleChangeConfigType}
             onRender={item => (
               <CommonSelect.Option
                 key={item.value}
@@ -122,60 +117,22 @@ const MockConfigModal: React.FC<Props> = props => {
             )}
           />
         )
-      }
-    ];
-
-    const mockFormData = [
+      },
       {
-        key: 'mockReturnValue',
+        key: 'remark',
+        label: '备注',
         options: {
-          initialValue: state.detail.mockReturnValue,
-          rules: [
-            {
-              required: true,
-              message: `请输入${
-                state.configType === '3' ? 'URL' : '返回值mock'
-              }`
-            }
-          ]
+          initialValue: props.id ? detail.remark : undefined
         },
-        label:
-          state.configType === '3' ? (
-            'URL'
-          ) : (
-            <Tooltip
-              title={() => {
-                return (
-                  <div>
-                    <div style={{ textAlign: 'right' }}>
-                      <a onClick={() => handleCopy(state.configValue)}>复制</a>
-                    </div>
-                    <div
-                      style={{ width: 250, height: 400, overflow: 'scroll' }}
-                    >
-                      {state.configValue}
-                    </div>
-                  </div>
-                );
-              }}
-            >
-              <span style={{ fontSize: 14 }}>返回值mock</span>
-              <Icon style={{ marginLeft: 4 }} type="question-circle" />
-            </Tooltip>
-          ),
-        node: <Input.TextArea />
+        node: <Input.TextArea autoSize placeholder="请输入备注" />
       }
     ];
 
-    if (state.configType === '2' || state.configType === '3') {
-      return basicFormData.concat(mockFormData);
-    }
     return basicFormData;
   };
 
   const handleClick = () => {
-    getConfigType();
-    getBaffleConfig();
+    getMockType();
     if (props.id) {
       getMockDetail();
     }
@@ -215,6 +172,21 @@ const MockConfigModal: React.FC<Props> = props => {
       });
     }
   };
+
+  /**
+   * @name 获取远程接口类型
+   */
+  const getMockType = async () => {
+    const {
+      data: { data, success }
+    } = await AppManageService.getMockType({});
+    if (success) {
+      setState({
+        mockTypeData: data
+      });
+    }
+  };
+
   /**
    * @name Mock配置
    */
@@ -250,12 +222,12 @@ const MockConfigModal: React.FC<Props> = props => {
     <CommonModal
       modalProps={{
         width: 600,
-        title: '编辑配置',
+        title: '远程调用配置',
         maskClosable: false
         // centered: true
       }}
       btnProps={{
-        type: 'link'
+        type: props.id ? 'link' : 'primary'
       }}
       btnText={props.btnText}
       onClick={() => handleClick()}

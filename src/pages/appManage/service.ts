@@ -349,14 +349,14 @@ const AppManageService = {
    * @name 获取影子消费者MQ类型
    */
   async queryMQType(data = {}) {
-    const url = '/';
+    const url = '/v2/consumers/type';
     return httpGet(url, data);
   },
   /**
    * @name 获取影子消费者隔离方案
    */
   async queryMQPlan(data = {}) {
-    const url = '/';
+    const url = '/v2/consumers/type/programme';
     return httpGet(url, data);
   },
   /**
@@ -553,7 +553,14 @@ const AppManageService = {
    * @name 获取远程接口配置类型
    */
   async getConfigType(data = {}) {
-    const url = '/application/remote/call/config/select';
+    const url = '/v2/application/remote/call/config/select';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取远程接口类型
+   */
+  async getMockType(data = {}) {
+    const url = '/';
     return httpGet(url, data);
   },
   /**

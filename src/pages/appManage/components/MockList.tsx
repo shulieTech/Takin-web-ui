@@ -17,6 +17,7 @@ import AppManageService from '../service';
 import getMockListColumns from './MockListColumn';
 import { connect } from 'dva';
 import CustomAlert from 'src/common/custom-alert/CustomAlert';
+import MockConfigModal from '../modals/MockConfigModal';
 
 interface Props {
   id?: string;
@@ -136,15 +137,6 @@ const MockList: React.FC<Props> = props => {
     });
   };
 
-  const handleChangeTab = async value => {
-    setState({
-      searchParams: {
-        pageSize: state.searchParams.pageSize,
-        current: 0
-      }
-    });
-  };
-
   const handleChangeType = async value => {
     setState({
       type: value,
@@ -246,6 +238,9 @@ const MockList: React.FC<Props> = props => {
               type="redo"
             />
           </Col>
+        </Row>
+        <Row type="flex" justify="end">
+          <MockConfigModal btnText="新增远程调用" action="add" />
         </Row>
         <CustomTable
           rowKey={(row, index) => index.toString()}

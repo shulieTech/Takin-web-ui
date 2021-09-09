@@ -11,6 +11,7 @@ import {
   Modal,
   Popconfirm,
   Switch,
+  Tag,
   Tooltip
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
@@ -37,15 +38,13 @@ interface Props extends CommonModelState {
 const getInitState = () => ({
   isReload: false,
   checkedRows: [],
-  MQType: [],
-  MQPlan: []
+  MQType: []
 });
 type State = ReturnType<typeof getInitState>;
 const ShadowConsumer: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>(getInitState());
   useEffect(() => {
-    // queryMQType();
-    // queryMQPlan();
+    queryMQType();
   }, []);
   /**
    * @name 获取MQ类型
@@ -61,19 +60,6 @@ const ShadowConsumer: React.FC<Props> = props => {
     }
   };
 
-  /**
-   * @name 获取mq隔离方案
-   */
-  const queryMQPlan = async () => {
-    const {
-      data: { success, data }
-    } = await AppManageService.queryMQPlan({});
-    if (success) {
-      setState({
-        MQPlan: data
-      });
-    }
-  };
   return (
     <div style={{ paddingBottom: 184 }}>
       <TableTitle
@@ -93,7 +79,6 @@ const ShadowConsumer: React.FC<Props> = props => {
       />
       <SearchTable
         commonTableProps={{
-          checkable: true,
           columns: getColumns(state, setState, props),
           className: styles.consumerTable,
           bodyStyle: {
@@ -102,7 +87,6 @@ const ShadowConsumer: React.FC<Props> = props => {
             paddingBottom: 84
           }
         }}
-        onCheck={(checkedKeys, checkedRows) => setState({ checkedRows })}
         theme="light"
         commonFormProps={{
           formData: getFormData(state, setState, props),
@@ -125,8 +109,6 @@ const ShadowConsumer: React.FC<Props> = props => {
               onSuccess={() => setState({ isReload: !state.isReload })}
             />
           </AuthorityBtn>}
-        footerAction={
-          <FooterAction id={props.id} {...state} setState={setState} />}
       />
     </div>
   );
@@ -149,24 +131,19 @@ const getColumns = (
       message.success(`删除成功`);
     }
   };
-  const handleChangeStatus = async (enable: boolean, row) => {
-    const {
-      data: { success }
-    } = await AppManageService.batchSetConsumer({
-      enable,
-      applicationId: props.id,
-      requests: [row]
-    });
-    if (success) {
-      setState({ isReload: !state.isReload });
-      message.success(`设置成功${!enable ? ',需要重启应用后生效' : ''}`);
-    }
-  };
   return [
     {
       ...customColumnProps,
       title: '业务的topic#业务的消费组',
-      dataIndex: ShadowConsumerBean.groupId
+      dataIndex: ShadowConsumerBean.groupId,
+      render: (text, row) => {
+        return (
+          <span>
+            {text}
+            {row.isManual && <Tag style={{ marginLeft: 8 }}>手工添加</Tag>}
+          </span>
+        );
+      }
     },
     {
       ...customColumnProps,
@@ -175,23 +152,15 @@ const getColumns = (
     },
     {
       ...customColumnProps,
-      title: '状态',
-      dataIndex: ShadowConsumerBean.状态,
-      render: (checked, row) => (
+      title: '隔离方案',
+      dataIndex: ShadowConsumerBean.隔离方案,
+      render: (text, row) => (
         <Fragment>
-          {MapBtnAuthority('appManage_6_enable_disable') ? (
-            <Switch
-              checkedChildren="可消费"
-              onChange={value => handleChangeStatus(value, row)}
-              unCheckedChildren="不消费"
-              checked={checked}
-            />
-          ) : (
-            <Badge
-              text={checked ? '可消费' : '不消费'}
-              status={checked ? 'success' : 'default'}
-            />
-          )}
+          {text === '1'
+            ? '消费影子topic'
+            : text === '0'
+            ? '不消费影子topic'
+            : '-'}
         </Fragment>
       )
     },
@@ -246,22 +215,19 @@ const getFormData = (
       key: ShadowConsumerBean.MQ类型,
       label: '',
       node: (
-        <CommonSelect
-          dataSource={props.dictionaryMap.SHADOW_CONSUMER}
-          placeholder="MQ类型"
-        />
+        <CommonSelect dataSource={state.MQType || []} placeholder="MQ类型" />
       )
     },
     {
-      key: ShadowConsumerBean.状态,
+      key: ShadowConsumerBean.隔离方案,
       label: '',
       node: (
         <CommonSelect
           dataSource={[
-            { label: '可消费', value: true },
-            { label: '不消费', value: false }
+            { label: '可消费', value: '1' },
+            { label: '不消费', value: '0' }
           ]}
-          placeholder="状态"
+          placeholder="隔离方案"
         />
       )
     },
@@ -271,59 +237,4 @@ const getFormData = (
       node: <Input placeholder="业务的topic#业务的消费组" />
     }
   ];
-};
-
-interface FooterActionProps extends State {
-  setState: (state: Partial<State>) => void;
-  id: string;
-}
-
-const FooterAction: React.FC<FooterActionProps> = props => {
-  enum ConsumerType {
-    不消费,
-    消费
-  }
-  const handleConfirm = (status: ConsumerType) => {
-    Modal.confirm({
-      title: `确认批量设置为${ConsumerType[status]}吗?`,
-      icon: ' ',
-      onOk: async () => {
-        const {
-          data: { success }
-        } = await AppManageService.batchSetConsumer({
-          enable: !!status,
-          applicationId: props.id,
-          requests: props.checkedRows
-        });
-        if (success) {
-          message.success('设置成功');
-          props.setState({ isReload: !props.isReload });
-        }
-      }
-    });
-  };
-  const disabled = !props.checkedRows.length;
-  return (
-    <Fragment>
-      <AuthorityBtn isShow={MapBtnAuthority('appManage_6_enable_disable')}>
-        <Button
-          onClick={() => handleConfirm(ConsumerType.消费)}
-          disabled={disabled}
-          type="primary"
-        >
-          批量设置为消费
-        </Button>
-      </AuthorityBtn>
-      <AuthorityBtn isShow={MapBtnAuthority('appManage_6_enable_disable')}>
-        <Button
-          onClick={() => handleConfirm(ConsumerType.不消费)}
-          disabled={disabled}
-          type="primary"
-          style={{ marginLeft: 8 }}
-        >
-          批量设置为不消费
-        </Button>
-      </AuthorityBtn>
-    </Fragment>
-  );
 };

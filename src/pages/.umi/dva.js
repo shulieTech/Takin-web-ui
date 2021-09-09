@@ -21,9 +21,9 @@ export function _onCreate() {
   });
   app.use(require('../../plugins/tagRoutersPlugin/index.ts').default);
 app.use(require('../../plugins/tagRoutersPlugin/template/tagRouters.ts').default);
-  app.model({ namespace: 'app', ...(require('/Users/xieshuyu/Desktop/full-link-public/src/models/app.ts').default) });
-app.model({ namespace: 'common', ...(require('/Users/xieshuyu/Desktop/full-link-public/src/models/common.ts').default) });
-app.model({ namespace: 'user', ...(require('/Users/xieshuyu/Desktop/full-link-public/src/models/user.ts').default) });
+  app.model({ namespace: 'app', ...(require('/Users/chuxu/shulie_project/full-link-public/src/models/app.ts').default) });
+app.model({ namespace: 'common', ...(require('/Users/chuxu/shulie_project/full-link-public/src/models/common.ts').default) });
+app.model({ namespace: 'user', ...(require('/Users/chuxu/shulie_project/full-link-public/src/models/user.ts').default) });
   return app;
 }
 

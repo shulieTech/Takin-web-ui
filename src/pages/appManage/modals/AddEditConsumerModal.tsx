@@ -22,13 +22,18 @@ const AddEditConsumerModal: React.FC<Props> = props => {
     form: null as WrappedFormUtils,
     details: {},
     MQType: [],
-    MQPlan: []
+    MQPlan: [],
+    type: undefined
   });
 
   const text = props.id ? '编辑' : '新增';
+  useEffect(() => {
+    if (state.type) {
+      queryMQPlan();
+    }
+  }, [state.type]);
   const handleClick = () => {
     queryMQType();
-    queryMQPlan();
     getDetails();
   };
   const getDetails = async () => {
@@ -39,7 +44,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       data: { data, success }
     } = await AppManageService.getShdowConsumer({ id: props.id });
     if (success) {
-      setState({ details: data });
+      setState({ details: data, type: data.type });
     }
   };
 
@@ -63,12 +68,21 @@ const AddEditConsumerModal: React.FC<Props> = props => {
   const queryMQPlan = async () => {
     const {
       data: { success, data }
-    } = await AppManageService.queryMQPlan({});
+    } = await AppManageService.queryMQPlan({
+      engName: state.type
+    });
     if (success) {
       setState({
         MQPlan: data
       });
     }
+  };
+
+  const handleChangeMQType = value => {
+    setState({
+      type: value,
+      MQPlan: []
+    });
   };
   const getFormData = (): FormDataType[] => {
     return [
@@ -80,7 +94,11 @@ const AddEditConsumerModal: React.FC<Props> = props => {
           rules: [{ required: true, message: '请选择MQ类型' }]
         },
         node: (
-          <CommonSelect placeholder="请选择MQ类型" dataSource={state.MQType} />
+          <CommonSelect
+            placeholder="请选择MQ类型"
+            dataSource={state.MQType}
+            onChange={handleChangeMQType}
+          />
         )
       },
       {

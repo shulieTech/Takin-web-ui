@@ -101,20 +101,10 @@ const getMockListColumns = (
     },
     {
       ...customColumnProps,
-      title: '配置类型',
+      title: '隔离方案',
       dataIndex: 'typeSelectVO',
-      render: (text, row) => {
-        if (text.value === '0') {
-          return <span>未配置</span>;
-        }
-        return (
-          <Badge
-            text={text && text.label}
-            color={
-              text.value === '2' || text.value === '3' ? '#FFA800' : '#11D0C5'
-            }
-          />
-        );
+      render: text => {
+        return <span>{text && text.label}</span>;
       }
     },
     {
@@ -131,6 +121,7 @@ const getMockListColumns = (
           <Fragment>
             <AuthorityBtn isShow={row.canEdit}>
               <MockConfigModal
+                action="edit"
                 btnText="编辑配置"
                 id={row.id}
                 applicationId={applicationId}

@@ -23,7 +23,7 @@ export enum ShadowConsumerBean {
   状态 = 'enabled',
   groupId = 'topicGroup',
   最后修改时间 = 'gmtUpdate',
-  隔离方案 = '1'
+  隔离方案 = 'shadowconsumerEnable'
 }
 
 /** @name 接口类型 */
