@@ -3,6 +3,7 @@ import styles from './index.less';
 import { getTakinAuthority } from 'src/utils/utils';
 import TitleComponent from 'src/common/title';
 import UserService from 'src/services/user';
+import json from '../../../../public/version.json';
 
 interface EntryRuleProps {
   location?: { query?: any };
@@ -19,7 +20,9 @@ const systemInfo: React.FC<EntryRuleProps> = props => {
   const handleClick = async () => {
     const {
       data: { success, data }
-    } = await UserService.apiSys({});
+    } = await UserService.apiSys({
+      version: json
+    });
     if (success) {
       setFileList(data.itemVos);
     }
