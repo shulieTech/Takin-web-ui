@@ -48,9 +48,9 @@ const getMockListColumns = (
     {
       ...customColumnProps,
       title: '接口类型',
-      dataIndex: 'interfaceTypeSelectVO',
+      dataIndex: 'interfaceChildType',
       render: text => {
-        return <Tag>{text && text.label}</Tag>;
+        return <Tag>{text}</Tag>;
       }
     },
     {
@@ -127,9 +127,11 @@ const getMockListColumns = (
                 applicationId={applicationId}
                 interfaceName={row.interfaceName}
                 interfaceType={
-                  row.interfaceTypeSelectVO && row.interfaceTypeSelectVO.value
+                  row.interfaceChildType
                 }
                 serverAppName={row.serverAppName}
+                remark={row.remark}
+                mockValue={row.mockValue}
                 type={row.typeSelectVO && row.typeSelectVO.value}
                 onSccuess={() => {
                   setState({

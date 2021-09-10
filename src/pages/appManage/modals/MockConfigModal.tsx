@@ -221,7 +221,7 @@ const MockConfigModal: React.FC<Props> = props => {
               <Icon style={{ marginLeft: 4 }} type="question-circle" />
             </Tooltip>
           ),
-        node: <Input.TextArea />
+        node: <Input.TextArea autoSize />
       }
     ];
     if (state.configType === '2' || state.configType === '3') {
@@ -235,7 +235,8 @@ const MockConfigModal: React.FC<Props> = props => {
     getMockType();
     getBaffleConfig();
     setState({
-      mockType: props.interfaceType
+      mockType: props.interfaceType,
+      configType: props.type
     });
   };
 
