@@ -292,7 +292,7 @@ const MockConfigModal: React.FC<Props> = props => {
           return false;
         }
 
-        if (props.id) {
+        if (action === 'edit') {
           const {
             data: { success, data }
           } = await AppManageService.configMock({
@@ -336,7 +336,7 @@ const MockConfigModal: React.FC<Props> = props => {
         // centered: true
       }}
       btnProps={{
-        type: props.id ? 'link' : 'primary'
+        type: action === 'edit' ? 'link' : 'primary'
       }}
       btnText={props.btnText}
       onClick={() => handleClick()}
