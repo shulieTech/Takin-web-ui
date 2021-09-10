@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect } from 'react';
 import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
-import { Input, message } from 'antd';
+import { Icon, Input, message, Tooltip } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormDataType } from 'racc/dist/common-form/type';
 import AppManageService from '../service';
 import { connect } from 'dva';
+import copy from 'copy-to-clipboard';
 
 interface Props {
   btnText?: string | React.ReactNode;
@@ -16,16 +17,20 @@ interface Props {
   interfaceType: string;
   applicationId: string;
   serverAppName: string;
+  action: string;
+  remark: string;
+  mockValue: string;
 }
 
 const getInitState = () => ({
   isReload: false,
   form: null as WrappedFormUtils,
-  configType: undefined,
+  configType: undefined, // 配置类型
   detail: {} as any,
   configTypeData: null,
   mockTypeData: null,
-  mockType: undefined
+  mockType: undefined,
+  configValue: undefined
 });
 export type MockConfigModalState = ReturnType<typeof getInitState>;
 const MockConfigModal: React.FC<Props> = props => {
@@ -33,6 +38,7 @@ const MockConfigModal: React.FC<Props> = props => {
     getInitState()
   );
   const { detail } = state;
+  const { action } = props;
 
   useEffect(() => {
     if (state.mockType) {
@@ -47,13 +53,46 @@ const MockConfigModal: React.FC<Props> = props => {
     });
   };
 
+  /**
+   * @name 获取挡板模板
+   */
+  const getBaffleConfig = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryConfig({
+      configCode: 'PRADAR_GUARD_TEMPLATE'
+    });
+    if (success) {
+      setState({
+        configValue: data
+      });
+    }
+  };
+
+  const handleCopy = async value => {
+    if (copy(value)) {
+      message.success('复制成功');
+    } else {
+      message.error('复制失败');
+    }
+  };
+
+  const handleChangeConfigType = value => {
+    setState({
+      configType: value
+    });
+    state.form.setFieldsValue({
+      mockReturnValue: null
+    });
+  };
+
   const getFormData = (): FormDataType[] => {
     const basicFormData = [
       {
         key: 'interfaceName',
         label: '接口名称',
         options: {
-          initialValue: props.id ? detail.interfaceName : undefined,
+          initialValue: action === 'edit' ? props.interfaceName : undefined,
           rules: [
             {
               required: true,
@@ -64,7 +103,7 @@ const MockConfigModal: React.FC<Props> = props => {
         node: (
           <Input.TextArea
             autoSize
-            disabled={props.id ? true : false}
+            disabled={action === 'edit' ? true : false}
             placeholder="请输入接口名称"
           />
         )
@@ -72,7 +111,7 @@ const MockConfigModal: React.FC<Props> = props => {
       {
         key: 'interfaceType',
         options: {
-          initialValue: props.id ? detail.interfaceType : undefined,
+          initialValue: action === 'edit' ? props.interfaceType : undefined,
           rules: [
             {
               required: true,
@@ -83,7 +122,7 @@ const MockConfigModal: React.FC<Props> = props => {
         label: '接口类型',
         node: (
           <CommonSelect
-            disabled={props.id ? true : false}
+            disabled={action === 'edit' ? true : false}
             placeholder="请选择接口类型"
             dataSource={state.mockTypeData || []}
             onChange={handleChangeMockType}
@@ -99,7 +138,7 @@ const MockConfigModal: React.FC<Props> = props => {
       {
         key: 'type',
         options: {
-          initialValue: props.id ? String(detail.type) : undefined,
+          initialValue: action === 'edit' ? props.type : undefined,
           rules: [
             {
               required: true,
@@ -113,6 +152,7 @@ const MockConfigModal: React.FC<Props> = props => {
             placeholder="请选择配置类型"
             dataSource={state.configTypeData || []}
             showSearch
+            onChange={handleChangeConfigType}
             filterOption={(input, option) =>
               option.props.children
                 .toLowerCase()
@@ -129,45 +169,86 @@ const MockConfigModal: React.FC<Props> = props => {
             )}
           />
         )
-      },
+      }
+    ];
+
+    const remarkFormData = [
       {
-        key: 'mockReturnValue',
+        key: 'remark',
         label: '备注',
         options: {
-          initialValue: props.id ? detail.mockReturnValue : undefined
+          initialValue: action === 'edit' ? props.remark : undefined
         },
         node: <Input.TextArea autoSize placeholder="请输入备注" />
       }
     ];
 
-    return basicFormData;
+    const mockFormData = [
+      {
+        key: 'mockValue',
+        options: {
+          initialValue: action === 'edit' ? props.mockValue : undefined,
+          rules: [
+            {
+              required: true,
+              message: `请输入${
+                state.configType === '3' ? 'URL' : '返回值mock'
+              }`
+            }
+          ]
+        },
+        label:
+          state.configType === '3' ? (
+            'URL'
+          ) : (
+            <Tooltip
+              title={() => {
+                return (
+                  <div>
+                    <div style={{ textAlign: 'right' }}>
+                      <a onClick={() => handleCopy(state.configValue)}>复制</a>
+                    </div>
+                    <div
+                      style={{ width: 250, height: 400, overflow: 'scroll' }}
+                    >
+                      {state.configValue}
+                    </div>
+                  </div>
+                );
+              }}
+            >
+              <span style={{ fontSize: 14 }}>返回值mock</span>
+              <Icon style={{ marginLeft: 4 }} type="question-circle" />
+            </Tooltip>
+          ),
+        node: <Input.TextArea />
+      }
+    ];
+    if (state.configType === '2' || state.configType === '3') {
+      return [...basicFormData, ...mockFormData, ...remarkFormData];
+    }
+
+    return [...basicFormData, ...remarkFormData];
   };
 
   const handleClick = () => {
     getMockType();
-    if (props.id) {
-      getMockDetail();
-    }
+    getBaffleConfig();
+    setState({
+      mockType: props.interfaceType
+    });
   };
 
   const handleCancle = () => {
-    setState({});
+    setState({
+      configType: undefined, // 配置类型
+      configTypeData: null,
+      mockTypeData: null,
+      mockType: undefined,
+      configValue: undefined
+    });
   };
 
-  /**
-   * @name 获取远程调用详情
-   */
-  const getMockDetail = async () => {
-    const {
-      data: { data, success }
-    } = await AppManageService.getMockDetail({ id: props.id });
-    if (success) {
-      setState({
-        detail: data,
-        mockType: data.interfaceType
-      });
-    }
-  };
   /**
    * @name 获取远程接口配置类型
    */
