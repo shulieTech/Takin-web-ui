@@ -363,14 +363,14 @@ const AppManageService = {
    * @name 新增影子消费
    */
   async createShdowConsumer(data = {}) {
-    const url = '/consumers/create';
+    const url = '/v2/consumers/create';
     return httpPost(url, data);
   },
   /**
    * @name 编辑影子消费
    */
   async updateShdowConsumer(data = {}) {
-    const url = '/consumers/update';
+    const url = '/v2/consumers/update';
     return httpPut(url, data);
   },
   /**
@@ -536,17 +536,24 @@ const AppManageService = {
     return httpGet(url, data);
   },
   /**
-   * @name mock配置
+   * @name 编辑远程调用
    */
   async configMock(data = {}) {
-    const url = '/application/remote/call';
+    const url = '/v2/application/remote/call/update';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 新增远程调用
+   */
+  async addMock(data = {}) {
+    const url = '/v2/application/remote/call/add';
     return httpPost(url, data);
   },
   /**
    * @name 获取远程调用详情
    */
   async getMockDetail(data = {}) {
-    const url = '/application/remote/call';
+    const url = '/v2/application/remote/call/detail';
     return httpGet(url, data);
   },
   /**
@@ -560,7 +567,7 @@ const AppManageService = {
    * @name 获取远程接口类型
    */
   async getMockType(data = {}) {
-    const url = '/';
+    const url = '/v2/application/remote/call/interface/type/select';
     return httpGet(url, data);
   },
   /**

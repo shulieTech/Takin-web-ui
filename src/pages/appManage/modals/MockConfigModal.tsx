@@ -87,13 +87,19 @@ const MockConfigModal: React.FC<Props> = props => {
             placeholder="请选择接口类型"
             dataSource={state.mockTypeData || []}
             onChange={handleChangeMockType}
+            showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
           />
         )
       },
       {
         key: 'type',
         options: {
-          initialValue: props.id ? detail.type : undefined,
+          initialValue: props.id ? String(detail.type) : undefined,
           rules: [
             {
               required: true,
@@ -106,6 +112,12 @@ const MockConfigModal: React.FC<Props> = props => {
           <CommonSelect
             placeholder="请选择配置类型"
             dataSource={state.configTypeData || []}
+            showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
             onRender={item => (
               <CommonSelect.Option
                 key={item.value}
@@ -119,10 +131,10 @@ const MockConfigModal: React.FC<Props> = props => {
         )
       },
       {
-        key: 'remark',
+        key: 'mockReturnValue',
         label: '备注',
         options: {
-          initialValue: props.id ? detail.remark : undefined
+          initialValue: props.id ? detail.mockReturnValue : undefined
         },
         node: <Input.TextArea autoSize placeholder="请输入备注" />
       }
@@ -152,7 +164,7 @@ const MockConfigModal: React.FC<Props> = props => {
     if (success) {
       setState({
         detail: data,
-        configType: props.type
+        mockType: data.interfaceType
       });
     }
   };
@@ -163,8 +175,7 @@ const MockConfigModal: React.FC<Props> = props => {
     const {
       data: { data, success }
     } = await AppManageService.getConfigType({
-      interfaceType: props.interfaceType,
-      serverAppName: props.serverAppName
+      interfaceType: state.mockType
     });
     if (success) {
       setState({
@@ -199,20 +210,36 @@ const MockConfigModal: React.FC<Props> = props => {
           return false;
         }
 
-        const {
-          data: { success, data }
-        } = await AppManageService.configMock({
-          ...values,
-          id: props.id,
-          applicationId: props.applicationId,
-          serverAppName: props.serverAppName
-        });
-        if (success) {
-          message.success('操作成功');
-          props.onSccuess();
-          resolve(true);
-          return;
+        if (props.id) {
+          const {
+            data: { success, data }
+          } = await AppManageService.configMock({
+            ...values,
+            id: props.id,
+            applicationId: props.applicationId,
+            serverAppName: props.serverAppName
+          });
+          if (success) {
+            message.success('操作成功');
+            props.onSccuess();
+            resolve(true);
+            return;
+          }
+        } else {
+          const {
+            data: { success, data }
+          } = await AppManageService.addMock({
+            ...values,
+            applicationId: props.applicationId
+          });
+          if (success) {
+            message.success('操作成功');
+            props.onSccuess();
+            resolve(true);
+            return;
+          }
         }
+
         resolve(false);
       });
     });

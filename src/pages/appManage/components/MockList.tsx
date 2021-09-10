@@ -240,7 +240,16 @@ const MockList: React.FC<Props> = props => {
           </Col>
         </Row>
         <Row type="flex" justify="end">
-          <MockConfigModal btnText="新增远程调用" action="add" />
+          <MockConfigModal
+            btnText="新增远程调用"
+            action="add"
+            applicationId={id}
+            onSccuess={() => {
+              setState({
+                isReload: !state.isReload
+              });
+            }}
+          />
         </Row>
         <CustomTable
           rowKey={(row, index) => index.toString()}

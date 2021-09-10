@@ -93,7 +93,7 @@ const ShadowConsumer: React.FC<Props> = props => {
           rowNum: 6
         }}
         ajaxProps={{
-          url: `/consumers/page?applicationId=${props.id}`,
+          url: `/v2/consumers/page?applicationId=${props.id}`,
           method: 'GET'
         }}
         toggleRoload={state.isReload}
