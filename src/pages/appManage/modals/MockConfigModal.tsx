@@ -221,7 +221,7 @@ const MockConfigModal: React.FC<Props> = props => {
               <Icon style={{ marginLeft: 4 }} type="question-circle" />
             </Tooltip>
           ),
-        node: <Input.TextArea />
+        node: <Input.TextArea autoSize />
       }
     ];
     if (state.configType === '2' || state.configType === '3') {
@@ -235,7 +235,8 @@ const MockConfigModal: React.FC<Props> = props => {
     getMockType();
     getBaffleConfig();
     setState({
-      mockType: props.interfaceType
+      mockType: props.interfaceType,
+      configType: props.type
     });
   };
 
@@ -291,7 +292,7 @@ const MockConfigModal: React.FC<Props> = props => {
           return false;
         }
 
-        if (props.id) {
+        if (action === 'edit') {
           const {
             data: { success, data }
           } = await AppManageService.configMock({
@@ -335,7 +336,7 @@ const MockConfigModal: React.FC<Props> = props => {
         // centered: true
       }}
       btnProps={{
-        type: props.id ? 'link' : 'primary'
+        type: action === 'edit' ? 'link' : 'primary'
       }}
       btnText={props.btnText}
       onClick={() => handleClick()}
