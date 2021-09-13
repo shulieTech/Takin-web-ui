@@ -41,6 +41,7 @@ const getMockListColumns = (
               />
             )}
             {text}
+            {row.isManual && <Tag style={{ marginLeft: 8 }}>手工添加</Tag>}
           </span>
         );
       }

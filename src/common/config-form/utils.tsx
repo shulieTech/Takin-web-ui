@@ -48,7 +48,7 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
       );
       break;
     /**
-     * @name 下拉框、输入框
+     * @name 列表（table）
      */
     case 5:
       renderNode = (
