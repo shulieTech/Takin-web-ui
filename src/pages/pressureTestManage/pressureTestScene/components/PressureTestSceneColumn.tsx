@@ -100,7 +100,10 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
     }
   };
 
-  const handleClickStart = async sceneId => {
+  /**
+   * @name 是否有数据验证
+   */
+  const queryHasMissingDataScript = async sceneId => {
     const {
       data: { data, success }
     } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId });
@@ -111,6 +114,25 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
         hasMissingData: data
       });
     }
+  };
+
+  /**
+   * @name 是否位点已经发生偏移
+   */
+  const queryDataScriptNum = async sceneId => {
+    const {
+      data: { data, success }
+    } = await PressureTestSceneService.queryDataScriptNum({ id: sceneId });
+    if (success) {
+      setState({
+        dataScriptNum: data
+      });
+    }
+  };
+
+  const handleClickStart = async sceneId => {
+    queryHasMissingDataScript(sceneId);
+    queryDataScriptNum(sceneId);
   };
 
   const handleCloseTiming = async (sceneId: number) => {
