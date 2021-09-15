@@ -78,7 +78,7 @@ const getColumns = (
             />
           </AuthorityBtn>
           <AuthorityBtn
-            isShow={MapBtnAuthority('configCenter_authorityConfig_4_delete')}
+            isShow={MapBtnAuthority('configCenter_bigDataConfig_4_delete')}
           >
             <Popconfirm
               onConfirm={() => handleDelete(row.id)}
