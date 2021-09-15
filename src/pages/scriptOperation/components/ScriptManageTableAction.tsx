@@ -18,7 +18,7 @@ const ScriptManageTableAction: React.FC<Props> = props => {
     JSON.parse(localStorage.getItem('trowebBtnResource'));
   return (
     <Fragment>
-      <AuthorityBtn isShow={btnAuthority && btnAuthority.scriptManage_2_create}>
+      <AuthorityBtn isShow={btnAuthority && btnAuthority.scriptOperation_2_create}>
         <ScriptModal btnText="新增运维脚本" type="primary" state={props.state} setState={props.setState}/>
       </AuthorityBtn>
     </Fragment>
