@@ -28,7 +28,7 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
     /**
      * @name 下拉框、数值输入框
      */
-    case 3:
+    case 5:
       renderNode = (
         <NodeTypeThree
           keys={node.nodeInfo.keys}
@@ -39,7 +39,7 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
     /**
      * @name 下拉框、Input输入框
      */
-    case 4:
+    case 3:
       renderNode = (
         <NodeTypeFour
           keys={node.nodeInfo.keys}
@@ -50,11 +50,11 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
     /**
      * @name 列表（table）
      */
-    case 5:
+    case 4:
       renderNode = (
         <NodeTypeFive
-          keys={node.nodeInfo.keys}
-          dataSource={node.nodeInfo.dataSource}
+        //   keys={node.nodeInfo.keys}
+        //   dataSource={node.nodeInfo.dataSource}
         />
       );
       break;

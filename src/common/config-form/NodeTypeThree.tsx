@@ -5,7 +5,7 @@ import { DataSourceProps } from './types';
 interface Props {
   value?: any;
   onChange?: (value: any) => void;
-  keys: string;
+  keys: string[];
   dataSource: DataSourceProps[];
   disabled?: boolean;
 }
@@ -13,7 +13,7 @@ const getInitState = () => ({});
 export type NodeTypeOneState = ReturnType<typeof getInitState>;
 const NodeTypeThree: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
-  const keys = props.keys.split(',');
+  const keys = props.keys;
   useEffect(() => {
     setState({
       ...props.value
@@ -33,7 +33,7 @@ const NodeTypeThree: React.FC<Props> = props => {
     });
     let result = null;
     result = !curValues[keys[0]] ? null : curValues;
-    if (value[keys[0]] === '2' || state[keys[0]] === '2') {
+    if (result[keys[0]] === '2') {
       result = keys.find(item => !curValues[item]) ? null : curValues;
     }
 
@@ -46,6 +46,7 @@ const NodeTypeThree: React.FC<Props> = props => {
       <Row type="flex" gutter={12}>
         <Col>
           <CommonSelect
+            allowClear={false}
             dataSource={props.dataSource}
             onChange={value =>
               handleTransmit({ [keys[0]]: value, [keys[1]]: undefined })

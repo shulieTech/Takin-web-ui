@@ -1,7 +1,7 @@
 /**
  * @author chuxu
  */
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { CommonSelect } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
 import { Radio, Input, Icon, Tooltip, message } from 'antd';
@@ -18,6 +18,9 @@ const getDynamicDbFormData = (
   detailData
 ): FormDataType[] => {
   const { dbTableDetail } = state;
+  useEffect(() => {
+    // queryTemplate();
+  }, [state.dsType]);
   /**
    * @name 切换方案类型
    */
@@ -38,6 +41,23 @@ const getDynamicDbFormData = (
     if (success) {
       setState({
         typeRadioData: data
+      });
+    }
+  };
+
+  /**
+   * @name 获取隔离方案动态模板
+   */
+  const queryTemplate = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryTemplate({
+      agentSourceType: '_2',
+      dsType: 2
+    });
+    if (success) {
+      setState({
+        templateData: data
       });
     }
   };
@@ -108,7 +128,7 @@ const getDynamicDbFormData = (
       label: '',
       nodeType: 5,
       nodeInfo: {
-        keys: 'config3,config4',
+        keys: 'config3',
         dataSource: [
           {
             label: '跟随业务配置',
@@ -195,7 +215,7 @@ const getDynamicDbFormData = (
     }
   ];
 
-  const templeteFormData = templateData.map(
+  const templeteFormData = state.templateData.map(
     (item, index): FormDataType => ({
       key: item.key,
       label: item.label,

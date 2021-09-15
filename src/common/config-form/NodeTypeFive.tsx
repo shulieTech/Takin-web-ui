@@ -9,8 +9,6 @@ import { DataSourceProps } from './types';
 interface Props {
   value?: any;
   onChange?: (value: any) => void;
-  keys: string;
-  dataSource: DataSourceProps[];
   disabled?: boolean;
 }
 const getInitState = () => ({
@@ -21,14 +19,16 @@ const getInitState = () => ({
       b: 1,
       c: 1,
       d: 1,
-      isEdit: true
+      isEdit: true,
+      editable: false
     }
-  ]
+  ],
+  originList: []
 });
 export type NodeTypeOneState = ReturnType<typeof getInitState>;
 const NodeTypeFive: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
-  const keys = props.keys.split(',');
+
   useEffect(() => {
     setState({
       ...props.value
@@ -40,17 +40,9 @@ const NodeTypeFive: React.FC<Props> = props => {
       ...value
     });
     const curValues = {};
-    keys.forEach(item => {
-      curValues[item] = {
-        ...state,
-        ...value
-      }[item];
-    });
+
     let result = null;
-    result = !curValues[keys[0]] ? null : curValues;
-    if (value[keys[0]] === '2' || state[keys[0]] === '2') {
-      result = keys.find(item => !curValues[item]) ? null : curValues;
-    }
+    result = curValues;
 
     if (props.onChange) {
       props.onChange(result);
@@ -65,6 +57,51 @@ const NodeTypeFive: React.FC<Props> = props => {
       list: state.list.map(item => {
         if (item.id === checkedId) {
           return { ...item, a: item.a ? false : true };
+        }
+        return { ...item };
+      })
+    });
+  };
+
+  /**
+   * @name 编辑行
+   */
+  const handleEditRow = (originList, id) => {
+    setState({
+      originList: originList.map(item => {
+        return { ...item };
+      }),
+      list: state.list.map(item => {
+        if (item.id === id) {
+          return { ...item, editable: true };
+        }
+        return { ...item };
+      })
+    });
+  };
+
+  const handleSave = id => {
+    setState({
+      list: state.list.map(item => {
+        if (item.id === id) {
+          return { ...item, editable: false };
+        }
+        return { ...item };
+      })
+    });
+  };
+
+  const handleCancle = id => {
+    setState({
+      list: state.originList
+    });
+  };
+
+  const handleChangeData = (id, value, k) => {
+    setState({
+      list: state.list.map(item => {
+        if (item.id === id) {
+          return { ...item, [k]: value };
         }
         return { ...item };
       })
@@ -87,17 +124,80 @@ const NodeTypeFive: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务库',
-        dataIndex: 'b'
+        dataIndex: 'b',
+        render: (text, row) => {
+          return row.editable ? (
+            <Input
+              value={text}
+              onChange={e => handleChangeData(row.id, e.target.value, 'b')}
+            />
+          ) : (
+            text
+          );
+        }
       },
       {
         ...customColumnProps,
         title: '业务表',
-        dataIndex: 'c'
+        dataIndex: 'c',
+        render: (text, row) => {
+          return row.editable ? (
+            <Input
+              value={text}
+              onChange={e => handleChangeData(row.id, e.target.value, 'c')}
+            />
+          ) : (
+            text
+          );
+        }
       },
       {
         ...customColumnProps,
         title: '影子表',
-        dataIndex: 'd'
+        dataIndex: 'd',
+        render: (text, row) => {
+          return row.editable ? (
+            <Input
+              value={text}
+              onChange={e => handleChangeData(row.id, e.target.value, 'd')}
+            />
+          ) : (
+            text
+          );
+        }
+      },
+      {
+        ...customColumnProps,
+        title: '编辑',
+        dataIndex: 'd',
+        render: (text, row) => {
+          return !row.editable ? (
+            <a
+              onClick={() => {
+                handleEditRow(state.list, row.id);
+              }}
+            >
+              编辑
+            </a>
+          ) : (
+            <Fragment>
+              <a
+                onClick={() => {
+                  handleSave(row.id);
+                }}
+              >
+                保存
+              </a>
+              <a
+                onClick={() => {
+                  handleCancle(row.id);
+                }}
+              >
+                取消
+              </a>
+            </Fragment>
+          );
+        }
       }
     ];
   };

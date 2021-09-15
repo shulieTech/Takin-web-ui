@@ -15,7 +15,7 @@ interface NodeInfoType {
   text?: string;
   dataSource?: DataSourceProps[];
   subDataSource?: DataSourceProps[];
-  keys: string;
+  keys: string[];
   isEdit?: boolean;
   formItemProps?: any;
 }

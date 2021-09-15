@@ -86,6 +86,13 @@ const AppManageService = {
     return httpDelete(url, data);
   },
   /**
+   * @name 获取影子库表隔离方案模板
+   */
+  async queryTemplate(data = {}) {
+    const url = '/v2/link/ds/config/template';
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取影子库表详情
    */
   async queryDbTableDetail(data = {}) {

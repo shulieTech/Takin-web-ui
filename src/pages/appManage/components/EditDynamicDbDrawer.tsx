@@ -18,6 +18,7 @@ interface Props {
 const getInitState = () => ({
   form: null as WrappedFormUtils,
   dbTableDetail: {} as any,
+  dsType: '1',
   typeRadioData: [
     {
       label: '影子库影子表',
@@ -30,6 +31,124 @@ const getInitState = () => ({
     {
       label: '影子表',
       value: '3'
+    }
+  ],
+  templateData: [
+    { key: 'shadowUserName', label: '影子数据源用户名', nodeType: 1 },
+    { key: 'shadowUrl', label: '影子数据源', nodeType: 1 },
+    { key: 'shadowPwd', label: '影子数据源密码', nodeType: 2 },
+    {
+      key: 'initialSize',
+      label: 'initialSize',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'maxActive',
+      label: 'maxActive',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'removeAbandoned',
+      label: 'removeAbandoned',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'removeAbandonedTimeout',
+      label: 'removeAbandonedTimeout',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'testWhileIdle',
+      label: 'testWhileIdle',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'testOnBorrow',
+      label: 'testOnBorrow',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'testOnReturn',
+      label: 'testOnReturn',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'validationQuery',
+      label: 'validationQuery',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'driverClassName',
+      label: 'driverClassName',
+      nodeType: 3,
+      nodeInfo: {
+        keys: ['tag', 'context'],
+        dataSource: [
+          { label: '跟随业务配置', value: '1' },
+          { label: '自定义', value: '2' }
+        ]
+      }
+    },
+    {
+      key: 'list',
+      label: '',
+      nodeType: 4
     }
   ]
 });
