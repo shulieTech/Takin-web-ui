@@ -60,10 +60,10 @@ export const middlewareStatusColorMap = {
  * @name 影子库表配置（动态固定部分）
  */
 export enum DbDetailBean {
-  中间件类型 = 'type',
-  中间件名称 = 'enabled',
-  业务数据源 = 'topicGroup',
-  业务集群 = 'gmtUpdate',
-  缓存模式 = '3',
-  隔离方案 = '7'
+  中间件类型 = 'middlewareType',
+  中间件名称 = 'connectionPool',
+  业务数据源 = 'url',
+  业务集群 = 'url',
+  缓存模式 = 'cacheType',
+  隔离方案 = 'dsType'
 }

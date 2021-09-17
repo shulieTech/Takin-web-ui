@@ -5,7 +5,7 @@ const AppManageService = {
    * @name 获取影子库表列表
    */
   async queryDbAndTableList(data = {}) {
-    const url = '/link/ds/manage';
+    const url = '/v2/link/ds/manage';
     return httpGet(url, data);
   },
   /**
@@ -79,6 +79,14 @@ const AppManageService = {
     return httpPut(url, data);
   },
   /**
+   * @name 编辑动态影子库表
+   */
+  async editDynamicDbTable(data = {}) {
+    const url = '/v2/link/ds/config';
+    return httpPost(url, data);
+  },
+
+  /**
    * @name 删除影子库表
    */
   async deleteDbTable(data = {}) {
@@ -100,10 +108,24 @@ const AppManageService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取动态影子库表详情
+   */
+  async queryDynamicDbTableDetail(data = {}) {
+    const url = '/v2/link/ds/manage/detail';
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取影子库表详情(老版本)
    */
   async queryDbTableDetailOld(data = {}) {
     const url = '/link/ds/manage/detail/old';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取动态影子库表隔离方案
+   */
+  async queryDynamicProgramme(data = {}) {
+    const url = '/v2/link/ds/manage/programme';
     return httpGet(url, data);
   },
   /**
@@ -611,13 +633,6 @@ const AppManageService = {
   async compare(data = {}) {
     const url = '/application/middleware/compare';
     return httpPost(url, data);
-  },
-  /**
-   * @name 获取隔离方案数据
-   */
-  async queryType(data = {}) {
-    const url = '/';
-    return httpGet(url, data);
   }
 };
 

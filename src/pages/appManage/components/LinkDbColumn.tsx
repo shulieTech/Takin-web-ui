@@ -64,47 +64,35 @@ const getLinkDbColumns = (
   return [
     {
       ...customColumnProps,
-      title: '服务器地址',
+      title: '业务数据源',
       dataIndex: 'url',
       width: 400
     },
     {
       ...customColumnProps,
-      title: '类型',
-      dataIndex: 'dbType',
+      title: '中间件类型',
+      dataIndex: 'middlewareType',
       render: text => {
-        return <span>{(text && text.label) || '-'}</span>;
+        return <span>{text || '-'}</span>;
       }
     },
     {
       ...customColumnProps,
-      title: '方案类型',
+      title: '连接池名称',
+      dataIndex: 'connectionPool'
+    },
+    {
+      ...customColumnProps,
+      title: '附加信息',
+      dataIndex: 'extMsg'
+    },
+    {
+      ...customColumnProps,
+      title: '隔离方案',
       dataIndex: 'dsType',
       render: text => {
-        return <span>{(text && text.label) || '-'}</span>;
+        return <span>{text || '-'}</span>;
       }
-    },
-    {
-      ...customColumnProps,
-      title: '状态',
-      dataIndex: 'status',
-      render: (text, row) => {
-        return (
-          <Badge
-            text={text === 0 ? '已启用' : '已禁用'}
-            color={
-              text === 0
-                ? 'var(--BrandPrimary-500)'
-                : 'var(--FunctionalError-500)'
-            }
-          />
-        );
-      }
-    },
-    {
-      ...customColumnProps,
-      title: '最后修改时间',
-      dataIndex: 'updateTime'
     },
     {
       ...customColumnProps,
@@ -183,7 +171,19 @@ const getLinkDbColumns = (
                 />
               </AuthorityBtn>
             ) : null}
-            <EditDynamicDbDrawer />
+            <EditDynamicDbDrawer
+              titles="编辑"
+              middlewareType={row.middlewareType}
+              id={row.id}
+              applicationId={appId}
+              connectionPool={row.connectionPool}
+              agentSourceType={row.agentSourceType}
+              onSuccess={() => {
+                setState({
+                  isReload: !state.isReload
+                });
+              }}
+            />
             <AuthorityBtn
               isShow={
                 btnAuthority && btnAuthority.appManage_4_delete && row.canRemove

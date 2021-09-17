@@ -53,8 +53,9 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
     case 4:
       renderNode = (
         <NodeTypeFive
-        //   keys={node.nodeInfo.keys}
-        //   dataSource={node.nodeInfo.dataSource}
+          list={node.list}
+          //   keys={node.nodeInfo.keys}
+          //   dataSource={node.nodeInfo.dataSource}
         />
       );
       break;

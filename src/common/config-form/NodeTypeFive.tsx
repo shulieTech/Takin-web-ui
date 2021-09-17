@@ -12,17 +12,7 @@ interface Props {
   disabled?: boolean;
 }
 const getInitState = () => ({
-  list: [
-    {
-      id: 1,
-      a: true,
-      b: 1,
-      c: 1,
-      d: 1,
-      isEdit: true,
-      editable: false
-    }
-  ],
+  list: [],
   originList: []
 });
 export type NodeTypeOneState = ReturnType<typeof getInitState>;
@@ -31,18 +21,27 @@ const NodeTypeFive: React.FC<Props> = props => {
 
   useEffect(() => {
     setState({
-      ...props.value
+      list:
+        props.value &&
+        props.value.map((item, k) => {
+          return {
+            ...item,
+            shaDowTableName: `pt_${item.bizTableName}`,
+            id: k,
+            editable: false
+          };
+        })
     });
   }, [props.value]);
-  const handleTransmit = value => {
-    setState({
-      ...state,
-      ...value
-    });
-    const curValues = {};
 
-    let result = null;
-    result = curValues;
+  const handleTransmit = value => {
+    const result = value.map((item, k) => {
+      delete item.id;
+      delete item.editable;
+      return {
+        ...item
+      };
+    });
 
     if (props.onChange) {
       props.onChange(result);
@@ -56,11 +55,19 @@ const NodeTypeFive: React.FC<Props> = props => {
     setState({
       list: state.list.map(item => {
         if (item.id === checkedId) {
-          return { ...item, a: item.a ? false : true };
+          return { ...item, isCheck: item.isCheck ? false : true };
         }
         return { ...item };
       })
     });
+    handleTransmit(
+      state.list.map(item => {
+        if (item.id === checkedId) {
+          return { ...item, isCheck: item.isCheck ? false : true };
+        }
+        return { ...item };
+      })
+    );
   };
 
   /**
@@ -89,12 +96,21 @@ const NodeTypeFive: React.FC<Props> = props => {
         return { ...item };
       })
     });
+    handleTransmit(
+      state.list.map(item => {
+        if (item.id === id) {
+          return { ...item, editable: false };
+        }
+        return { ...item };
+      })
+    );
   };
 
   const handleCancle = id => {
     setState({
       list: state.originList
     });
+    handleTransmit(state.originList);
   };
 
   const handleChangeData = (id, value, k) => {
@@ -113,7 +129,8 @@ const NodeTypeFive: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '是否加入影子表',
-        dataIndex: 'a',
+        dataIndex: 'isCheck',
+        width: 120,
         render: (text, row) => {
           return (
             <Checkbox checked={text} onChange={() => handleJoin(row.id)} />
@@ -124,12 +141,14 @@ const NodeTypeFive: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务库',
-        dataIndex: 'b',
+        dataIndex: 'bizDatabase',
         render: (text, row) => {
           return row.editable ? (
             <Input
               value={text}
-              onChange={e => handleChangeData(row.id, e.target.value, 'b')}
+              onChange={e =>
+                handleChangeData(row.id, e.target.value, 'bizDatabase')
+              }
             />
           ) : (
             text
@@ -139,12 +158,14 @@ const NodeTypeFive: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务表',
-        dataIndex: 'c',
+        dataIndex: 'bizTableName',
         render: (text, row) => {
           return row.editable ? (
             <Input
               value={text}
-              onChange={e => handleChangeData(row.id, e.target.value, 'c')}
+              onChange={e =>
+                handleChangeData(row.id, e.target.value, 'bizTableName')
+              }
             />
           ) : (
             text
@@ -154,24 +175,24 @@ const NodeTypeFive: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '影子表',
-        dataIndex: 'd',
+        dataIndex: 'shaDowTableName',
         render: (text, row) => {
           return row.editable ? (
-            <Input
-              value={text}
-              onChange={e => handleChangeData(row.id, e.target.value, 'd')}
-            />
+            <Input value={`pt_${row.bizTableName}`} disabled={true} />
           ) : (
-            text
+            `pt_${row.bizTableName}`
           );
         }
       },
       {
         ...customColumnProps,
         title: '编辑',
-        dataIndex: 'd',
+        dataIndex: 'isManual',
+        width: 80,
         render: (text, row) => {
-          return !row.editable ? (
+          return !text ? (
+            '-'
+          ) : !row.editable ? (
             <a
               onClick={() => {
                 handleEditRow(state.list, row.id);
@@ -189,6 +210,7 @@ const NodeTypeFive: React.FC<Props> = props => {
                 保存
               </a>
               <a
+                style={{ marginLeft: 8 }}
                 onClick={() => {
                   handleCancle(row.id);
                 }}

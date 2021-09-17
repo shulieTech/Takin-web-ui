@@ -15,12 +15,17 @@ const getDynamicDbFormData = (
   state: EditDynamicDbDrawerState,
   action,
   setState,
-  detailData
+  detailData,
+  middlewareType,
+  agentSourceType
 ): FormDataType[] => {
   const { dbTableDetail } = state;
   useEffect(() => {
-    // queryTemplate();
+    if (state.dsType) {
+      queryTemplate();
+    }
   }, [state.dsType]);
+
   /**
    * @name 切换方案类型
    */
@@ -32,168 +37,147 @@ const getDynamicDbFormData = (
   };
 
   /**
-   * @name 获取隔离方案（动态数据）
-   */
-  const queryType = async () => {
-    const {
-      data: { success, data }
-    } = await AppManageService.queryType({});
-    if (success) {
-      setState({
-        typeRadioData: data
-      });
-    }
-  };
-
-  /**
    * @name 获取隔离方案动态模板
    */
   const queryTemplate = async () => {
     const {
       data: { success, data }
     } = await AppManageService.queryTemplate({
-      agentSourceType: '_2',
-      dsType: 2
+      agentSourceType,
+      dsType: state.dsType
     });
     if (success) {
       setState({
-        templateData: data
+        templateData: data || []
       });
     }
   };
 
   /** @name 获取表单initialValue */
   const getFormItemInitialValue = keys => {
-    let result = {};
-    keys.split(',').forEach(item => {
-      result = { ...result, [item]: state.dbTableDetail[item] };
-    });
+    let result = null;
+    result =
+      JSON.parse(state.dbTableDetail.shadowInfo) &&
+      JSON.parse(state.dbTableDetail.shadowInfo)[keys];
     return result;
   };
 
-  const templateData: TempleteType[] = [
-    {
-      key: 'a',
-      label: '影子数据源',
-      nodeType: 1
-    },
-    {
-      key: 'b',
-      label: '影子数据源用户名',
-      nodeType: 1
-    },
-    {
-      key: 'c',
-      label: '影子数据源密码',
-      nodeType: 2
-    },
-    {
-      key: 'd',
-      label: '驱动',
-      nodeType: 4,
-      nodeInfo: {
-        keys: 'config1,config2',
-        dataSource: [
-          {
-            label: '跟随业务配置',
-            value: '1'
+  const basicDbFormData =
+    middlewareType === '连接池'
+      ? [
+        {
+          key: DbDetailBean.中间件类型,
+          label: '中间件类型',
+          options: {
+            initialValue: detailData && detailData[DbDetailBean.中间件类型],
+            rules: [
+              {
+                required: true
+              }
+            ]
           },
-          {
-            label: '自定义',
-            value: '2'
-          }
-        ]
-      }
-    },
-    {
-      key: 'e',
-      label: 'minldle',
-      nodeType: 3,
-      nodeInfo: {
-        keys: 'config3,config4',
-        dataSource: [
-          {
-            label: '跟随业务配置',
-            value: '1'
+          node: (
+              <span>{detailData && detailData[DbDetailBean.中间件类型]}</span>
+            )
+        },
+        {
+          key: DbDetailBean.中间件名称,
+          label: '中间件名称',
+          options: {
+            initialValue: detailData && detailData[DbDetailBean.中间件名称],
+            rules: [
+              {
+                required: true
+              }
+            ]
           },
-          {
-            label: '自定义',
-            value: '2'
-          }
-        ]
-      }
-    },
-    {
-      key: 'f',
-      label: '',
-      nodeType: 5,
-      nodeInfo: {
-        keys: 'config3',
-        dataSource: [
-          {
-            label: '跟随业务配置',
-            value: '1'
+          node: (
+              <span>{detailData && detailData[DbDetailBean.中间件名称]}</span>
+            )
+        },
+        {
+          key: DbDetailBean.业务数据源,
+          label: '业务数据源',
+
+          options: {
+            initialValue: detailData && detailData[DbDetailBean.业务数据源],
+
+            rules: [
+              {
+                required: true
+              }
+            ]
           },
-          {
-            label: '自定义',
-            value: '2'
-          }
-        ]
-      }
-    }
-  ];
-
-  const basicDbFormData = [
-    {
-      key: DbDetailBean.中间件类型,
-      label: '中间件类型',
-      options: {
-        initialValue: detailData && detailData[DbDetailBean.中间件类型],
-        rules: [
-          {
-            required: true
-          }
-        ]
-      },
-      node: <span>{detailData && detailData[DbDetailBean.中间件类型]}</span>
-    },
-    {
-      key: DbDetailBean.中间件名称,
-      label: '中间件名称',
-      options: {
-        initialValue: detailData && detailData[DbDetailBean.中间件名称],
-        rules: [
-          {
-            required: true
-          }
-        ]
-      },
-      node: <span>{detailData && detailData[DbDetailBean.中间件名称]}</span>
-    },
-    {
-      key: DbDetailBean.业务数据源,
-      label: '业务数据源',
-
-      options: {
-        initialValue: detailData && detailData[DbDetailBean.业务数据源],
-
-        rules: [
-          {
-            required: true
-          }
-        ]
-      },
-      node: <span>{detailData && detailData[DbDetailBean.业务数据源]}</span>
-    }
-  ];
+          node: (
+              <span>{detailData && detailData[DbDetailBean.业务数据源]}</span>
+            )
+        }
+      ]
+      : [
+        {
+          key: DbDetailBean.中间件类型,
+          label: '中间件类型',
+          options: {
+            initialValue: detailData && detailData[DbDetailBean.中间件类型],
+            rules: [
+              {
+                required: true
+              }
+            ]
+          },
+          node: (
+              <span>{detailData && detailData[DbDetailBean.中间件类型]}</span>
+            )
+        },
+        {
+          key: DbDetailBean.中间件名称,
+          label: '中间件名称',
+          options: {
+            initialValue: detailData && detailData[DbDetailBean.中间件名称],
+            rules: [
+              {
+                required: true
+              }
+            ]
+          },
+          node: (
+              <span>{detailData && detailData[DbDetailBean.中间件名称]}</span>
+            )
+        },
+        {
+          key: DbDetailBean.业务集群,
+          label: '业务集群',
+          options: {
+            initialValue: detailData && detailData[DbDetailBean.业务集群],
+            rules: [
+              {
+                required: true
+              }
+            ]
+          },
+          node: <span>{detailData && detailData[DbDetailBean.业务集群]}</span>
+        },
+        {
+          key: DbDetailBean.缓存模式,
+          label: '缓存模式',
+          options: {
+            initialValue: detailData && detailData[DbDetailBean.缓存模式],
+            rules: [
+              {
+                required: true
+              }
+            ]
+          },
+          node: <span>{detailData && detailData[DbDetailBean.缓存模式]}</span>
+        }
+      ];
 
   const dynamicFormData = [
     {
       key: DbDetailBean.隔离方案,
       label: '隔离方案',
       options: {
-        initialValue: '1',
-        // initialValue: detailData && detailData[DbDetailBean.隔离方案],
+        initialValue: detailData && String(detailData[DbDetailBean.隔离方案]),
         rules: [
           {
             required: true,
@@ -219,10 +203,11 @@ const getDynamicDbFormData = (
     (item, index): FormDataType => ({
       key: item.key,
       label: item.label,
-
       options: {
-        // initialValue: getFormItemInitialValue(item.nodeInfo.keys),
-
+        initialValue:
+          item.nodeType === 4
+            ? state.dbTableDetail && state.dbTableDetail.tables
+            : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key),
         rules: [
           {
             required: true,
@@ -231,7 +216,7 @@ const getDynamicDbFormData = (
         ]
       },
       formItemProps:
-        item.nodeType === 5
+        item.nodeType === 4
           ? { labelCol: { span: 0 }, wrapperCol: { span: 24 } }
           : { labelCol: { span: 6 }, wrapperCol: { span: 14 } },
       node: getRenderFormNode(item)
