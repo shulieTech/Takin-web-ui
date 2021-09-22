@@ -15,6 +15,7 @@ interface Props {
   applicationId: string;
   connectionPool: string;
   agentSourceType: string;
+  isNewData: boolean;
 }
 
 const getInitState = () => ({
@@ -55,7 +56,8 @@ const EditDynamicDbDrawer: React.FC<Props> = props => {
     } = await AppManageService.queryDynamicDbTableDetail({
       applicationId: props.applicationId,
       middlewareType: props.middlewareType,
-      recordId: id
+      recordId: id,
+      isNewData: props.isNewData
     });
     if (success) {
       setState({

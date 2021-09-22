@@ -129,7 +129,23 @@ const getLinkDbColumns = (
                 </a>
               </CustomPopconfirm>
             </AuthorityBtn>
-            {detailState.isNewAgent === true ? (
+
+            {row.isNewPage ? (
+              <EditDynamicDbDrawer
+                titles="编辑"
+                middlewareType={row.middlewareType}
+                id={row.id}
+                isNewData={row.isNewData}
+                applicationId={appId}
+                connectionPool={row.connectionPool}
+                agentSourceType={row.agentSourceType}
+                onSuccess={() => {
+                  setState({
+                    isReload: !state.isReload
+                  });
+                }}
+              />
+            ) : detailState.isNewAgent === true ? (
               <AuthorityBtn
                 isShow={
                   btnAuthority && btnAuthority.appManage_3_update && row.canEdit
@@ -171,19 +187,7 @@ const getLinkDbColumns = (
                 />
               </AuthorityBtn>
             ) : null}
-            <EditDynamicDbDrawer
-              titles="编辑"
-              middlewareType={row.middlewareType}
-              id={row.id}
-              applicationId={appId}
-              connectionPool={row.connectionPool}
-              agentSourceType={row.agentSourceType}
-              onSuccess={() => {
-                setState({
-                  isReload: !state.isReload
-                });
-              }}
-            />
+
             <AuthorityBtn
               isShow={
                 btnAuthority && btnAuthority.appManage_4_delete && row.canRemove
