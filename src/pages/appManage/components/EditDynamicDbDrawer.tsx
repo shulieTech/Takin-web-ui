@@ -62,7 +62,8 @@ const EditDynamicDbDrawer: React.FC<Props> = props => {
     if (success) {
       setState({
         dbTableDetail: data,
-        dsType: data.dsType ? String(data.dsType) : data.dsType
+        dsType:
+          data.dsType || data.dsType === 0 ? String(data.dsType) : data.dsType
       });
     }
   };
