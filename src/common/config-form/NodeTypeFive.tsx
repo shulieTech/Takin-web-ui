@@ -1,4 +1,4 @@
-import { Checkbox, Col, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Input, message, Row } from 'antd';
 import { ColumnProps } from 'antd/lib/table/interface';
 import { CommonSelect, useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
@@ -13,7 +13,8 @@ interface Props {
 }
 const getInitState = () => ({
   list: [],
-  originList: []
+  originList: [],
+  editingKey: ''
 });
 export type NodeTypeOneState = ReturnType<typeof getInitState>;
 const NodeTypeFive: React.FC<Props> = props => {
@@ -83,18 +84,24 @@ const NodeTypeFive: React.FC<Props> = props => {
           return { ...item, editable: true };
         }
         return { ...item };
-      })
+      }),
+      editingKey: id
     });
   };
 
-  const handleSave = id => {
+  const handleSave = (id, row) => {
+    if (!row.bizDatabase || !row.bizTableName) {
+      message.info('业务库业务表不能为空！');
+      return;
+    }
     setState({
       list: state.list.map(item => {
         if (item.id === id) {
           return { ...item, editable: false };
         }
         return { ...item };
-      })
+      }),
+      editingKey: ''
     });
     handleTransmit(
       state.list.map(item => {
@@ -108,7 +115,8 @@ const NodeTypeFive: React.FC<Props> = props => {
 
   const handleCancle = id => {
     setState({
-      list: state.originList
+      list: state.originList,
+      editingKey: ''
     });
     handleTransmit(state.originList);
   };
@@ -121,6 +129,38 @@ const NodeTypeFive: React.FC<Props> = props => {
         }
         return { ...item };
       })
+    });
+  };
+
+  const handleAdd = () => {
+    handleEditRow(
+      state.list.concat([
+        {
+          id: state.list.length,
+          isCheck: false,
+          bizDatabase: undefined,
+          bizTableName: undefined,
+          shaDowTableName: undefined,
+          isManual: true,
+          editable: true
+        }
+      ]),
+      state.list.length
+    );
+
+    setState({
+      editingKey: state.list.length.toString(),
+      list: state.list.concat([
+        {
+          id: state.list.length,
+          isCheck: false,
+          bizDatabase: undefined,
+          bizTableName: undefined,
+          shaDowTableName: undefined,
+          isManual: true,
+          editable: true
+        }
+      ])
     });
   };
 
@@ -178,9 +218,14 @@ const NodeTypeFive: React.FC<Props> = props => {
         dataIndex: 'shaDowTableName',
         render: (text, row) => {
           return row.editable ? (
-            <Input value={`pt_${row.bizTableName}`} disabled={true} />
-          ) : (
+            <Input
+              value={row.bizTableName ? `pt_${row.bizTableName}` : undefined}
+              disabled={true}
+            />
+          ) : row.bizTableName ? (
             `pt_${row.bizTableName}`
+          ) : (
+            ''
           );
         }
       },
@@ -193,18 +238,20 @@ const NodeTypeFive: React.FC<Props> = props => {
           return !text ? (
             '-'
           ) : !row.editable ? (
-            <a
+            <Button
+              type="link"
+              disabled={state.editingKey !== ''}
               onClick={() => {
                 handleEditRow(state.list, row.id);
               }}
             >
               编辑
-            </a>
+            </Button>
           ) : (
             <Fragment>
               <a
                 onClick={() => {
-                  handleSave(row.id);
+                  handleSave(row.id, row);
                 }}
               >
                 保存
@@ -244,6 +291,14 @@ const NodeTypeFive: React.FC<Props> = props => {
           </span>
         }
       />
+      <Button
+        type="primary"
+        style={{ marginBottom: 8, marginTop: 8 }}
+        onClick={handleAdd}
+        disabled={state.editingKey !== ''}
+      >
+        添加影子表
+      </Button>
       <CustomTable columns={getColumns()} dataSource={state.list} />
     </div>
   );
