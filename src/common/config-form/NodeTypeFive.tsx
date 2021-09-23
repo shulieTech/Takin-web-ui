@@ -2,6 +2,7 @@ import { Button, Checkbox, Col, Input, message, Row } from 'antd';
 import { ColumnProps } from 'antd/lib/table/interface';
 import { CommonSelect, useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
+import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm';
 import CustomTable from 'src/components/custom-table';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import CustomAlert from '../custom-alert/CustomAlert';
@@ -113,7 +114,7 @@ const NodeTypeFive: React.FC<Props> = props => {
     );
   };
 
-  const handleCancle = id => {
+  const handleCancle = (id, row) => {
     setState({
       list: state.originList,
       editingKey: ''
@@ -132,21 +133,25 @@ const NodeTypeFive: React.FC<Props> = props => {
     });
   };
 
-  const handleAdd = () => {
-    handleEditRow(
-      state.list.concat([
-        {
-          id: state.list.length,
-          isCheck: false,
-          bizDatabase: undefined,
-          bizTableName: undefined,
-          shaDowTableName: undefined,
-          isManual: true,
-          editable: true
+  const handleDelete = id => {
+    setState({
+      list: state.list.filter(item => {
+        if (item.id !== id) {
+          return { ...item };
         }
-      ]),
-      state.list.length
+      })
+    });
+    handleTransmit(
+      state.list.filter(item => {
+        if (item.id !== id) {
+          return { ...item };
+        }
+      })
     );
+  };
+
+  const handleAdd = () => {
+    handleEditRow(state.list, state.list.length);
 
     setState({
       editingKey: state.list.length.toString(),
@@ -238,15 +243,26 @@ const NodeTypeFive: React.FC<Props> = props => {
           return !text ? (
             '-'
           ) : !row.editable ? (
-            <Button
-              type="link"
-              disabled={state.editingKey !== ''}
-              onClick={() => {
-                handleEditRow(state.list, row.id);
-              }}
-            >
-              编辑
-            </Button>
+            <Fragment>
+              <Button
+                style={{ margin: 0, padding: 0 }}
+                type="link"
+                disabled={state.editingKey !== ''}
+                onClick={() => {
+                  handleEditRow(state.list, row.id);
+                }}
+              >
+                编辑
+              </Button>
+              <CustomPopconfirm
+                okText="确认删除"
+                title={'是否删除该行？'}
+                okColor="var(--FunctionalError-500)"
+                onConfirm={() => handleDelete(row.id)}
+              >
+                <a style={{ marginLeft: 8 }}>删除</a>
+              </CustomPopconfirm>
+            </Fragment>
           ) : (
             <Fragment>
               <a
@@ -259,7 +275,7 @@ const NodeTypeFive: React.FC<Props> = props => {
               <a
                 style={{ marginLeft: 8 }}
                 onClick={() => {
-                  handleCancle(row.id);
+                  handleCancle(row.id, row);
                 }}
               >
                 取消
@@ -282,7 +298,7 @@ const NodeTypeFive: React.FC<Props> = props => {
             共用业务表{state.list.length}个，加入影子表
             {
               state.list.filter(item => {
-                if (item.a) {
+                if (item.isCheck) {
                   return item;
                 }
               }).length
