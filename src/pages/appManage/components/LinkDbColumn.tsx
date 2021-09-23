@@ -26,24 +26,6 @@ const getLinkDbColumns = (
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
-  /**
-   * @name 确认是否禁用、启用
-   */
-  const handleConfirm = async (id, status) => {
-    const {
-      data: { data, success }
-    } = await AppManageService.openAndClose({
-      id,
-      status
-    });
-    if (success) {
-      const txt = status === 0 ? '启用' : '禁用';
-      openNotification(`${txt}成功`);
-      setState({
-        isReload: !state.isReload
-      });
-    }
-  };
 
   /**
    * @name 确认是否删除
@@ -100,36 +82,8 @@ const getLinkDbColumns = (
       dataIndex: 'action',
       render: (text, row) => {
         const txt = row.status === 0 ? '禁用' : '启用';
-
         return (
           <Fragment>
-            <AuthorityBtn
-              isShow={
-                btnAuthority &&
-                btnAuthority.appManage_6_enable_disable &&
-                row.canEnableDisable
-              }
-            >
-              <CustomPopconfirm
-                title={`是否确认${txt}`}
-                onConfirm={() =>
-                  handleConfirm(row.id, row.status === 0 ? 1 : 0)
-                }
-              >
-                <a
-                  disabled={
-                    detailState.switchStatus === 'OPENING' ||
-                    detailState.switchStatus === 'CLOSING'
-                      ? true
-                      : false
-                  }
-                  style={{ marginRight: 8 }}
-                >
-                  {txt}
-                </a>
-              </CustomPopconfirm>
-            </AuthorityBtn>
-
             {row.isNewPage ? (
               <EditDynamicDbDrawer
                 titles="编辑"
