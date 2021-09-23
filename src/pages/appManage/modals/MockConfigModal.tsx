@@ -177,9 +177,16 @@ const MockConfigModal: React.FC<Props> = props => {
         key: 'remark',
         label: '备注',
         options: {
-          initialValue: action === 'edit' ? props.remark : undefined
+          initialValue: action === 'edit' ? props.remark : undefined,
+          rules: [
+            {
+              required: false,
+              message: '请输入备注（50字以内）',
+              max: 50
+            }
+          ]
         },
-        node: <Input.TextArea autoSize placeholder="请输入备注" />
+        node: <Input.TextArea autoSize placeholder="请输入备注（50字以内）" />
       }
     ];
 

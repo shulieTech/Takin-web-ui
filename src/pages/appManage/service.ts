@@ -90,7 +90,7 @@ const AppManageService = {
    * @name 删除影子库表
    */
   async deleteDbTable(data = {}) {
-    const url = '/link/ds/manage';
+    const url = '/v2/link/ds/config/delete';
     return httpDelete(url, data);
   },
   /**
@@ -417,7 +417,7 @@ const AppManageService = {
     return httpPost(url, data);
   },
   /**
-   * @name 设置批量消费
+   * @name 删除影子消费
    */
   async deleteConsumer(data = {}) {
     const url = '/consumers/delete';
@@ -610,7 +610,7 @@ const AppManageService = {
    * @name 删除远程调用
    */
   async deleteMock(data = {}) {
-    const url = '/';
+    const url = '/v2/application/remote/call/delete';
     return httpDelete(url, data);
   },
 

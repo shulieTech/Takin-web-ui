@@ -159,7 +159,7 @@ const getMockListColumns = (
                 }}
               />
             </AuthorityBtn>
-            <AuthorityBtn isShow={row.canEdit}>
+            <AuthorityBtn isShow={row.canRemove}>
               <CustomPopconfirm
                 title="是否确定删除？"
                 okColor="var(--FunctionalError-500)"
