@@ -8,16 +8,33 @@ import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import styles from './../index.less';
 import TableIndex from 'src/common/table-index/TableIndex';
-import { Badge, Divider, Icon, message, Popover, Tag } from 'antd';
+import { Badge, Button, Divider, Icon, message, Popover, Tag } from 'antd';
 import AppManageService from '../service';
 import MockConfigModal from '../modals/MockConfigModal';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
+import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm';
 
 const getMockListColumns = (
   state,
   setState,
   applicationId
 ): ColumnProps<any>[] => {
+  /**
+   * @name 删除
+   */
+  const handleDelete = async id => {
+    const {
+      data: { data, success }
+    } = await AppManageService.deleteMock({
+      id
+    });
+    if (success) {
+      message.success(`删除成功`);
+      setState({
+        isReload: !state.isReload
+      });
+    }
+  };
   return [
     {
       ...customColumnProps,
@@ -31,6 +48,7 @@ const getMockListColumns = (
       ...customColumnProps,
       title: '接口名称',
       dataIndex: 'interfaceName',
+      width: 300,
       render: (text, row) => {
         return (
           <span>
@@ -104,6 +122,7 @@ const getMockListColumns = (
       ...customColumnProps,
       title: '隔离方案',
       dataIndex: 'typeSelectVO',
+      width: 100,
       render: text => {
         return <span>{text && text.label}</span>;
       }
@@ -117,19 +136,18 @@ const getMockListColumns = (
       ...customColumnProps,
       title: '操作',
       dataIndex: 'action',
+      width: 100,
       render: (text, row) => {
         return (
           <Fragment>
             <AuthorityBtn isShow={row.canEdit}>
               <MockConfigModal
                 action="edit"
-                btnText="编辑配置"
+                btnText="编辑"
                 id={row.id}
                 applicationId={applicationId}
                 interfaceName={row.interfaceName}
-                interfaceType={
-                  row.interfaceChildType
-                }
+                interfaceType={row.interfaceChildType}
                 serverAppName={row.serverAppName}
                 remark={row.remark}
                 mockValue={row.mockValue}
@@ -140,6 +158,17 @@ const getMockListColumns = (
                   });
                 }}
               />
+            </AuthorityBtn>
+            <AuthorityBtn isShow={row.canEdit}>
+              <CustomPopconfirm
+                title="是否确定删除？"
+                okColor="var(--FunctionalError-500)"
+                onConfirm={() => handleDelete(row.id)}
+              >
+                <Button type="link" style={{ marginLeft: 8 }}>
+                  删除
+                </Button>
+              </CustomPopconfirm>
             </AuthorityBtn>
           </Fragment>
         );

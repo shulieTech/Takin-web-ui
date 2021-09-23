@@ -607,6 +607,14 @@ const AppManageService = {
     return httpGet(url, data);
   },
   /**
+   * @name 删除远程调用
+   */
+  async deleteMock(data = {}) {
+    const url = '/';
+    return httpDelete(url, data);
+  },
+
+  /**
    * @name 刷新应用状态
    */
   async refreshAppStatus(data = {}) {
