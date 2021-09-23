@@ -107,7 +107,10 @@ const AgentManage: React.FC<Props> = props => {
             description="探针管理说明"
             extra={
               <AuthorityBtn
-                isShow={MapBtnAuthority('appManage_appAccess_7_download')}
+                isShow={
+                  MapBtnAuthority('appManage_appAccess_7_download') ||
+                  MapBtnAuthority('appManage_appAccess_2_create')
+                }
               >
                 <div style={{ float: 'right' }}>
                   <Button

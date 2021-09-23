@@ -11,6 +11,8 @@ import CustomTable from 'src/components/custom-table';
 import getAgentManageColumns from './AgentManageColumns';
 import EmptyNode from 'src/common/empty-node/EmptyNode';
 import { connect } from 'dva';
+import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
+import { MapBtnAuthority } from 'src/utils/utils';
 interface Props {
   dictionaryMap?: any;
 }
@@ -190,18 +192,25 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
             title="暂无探针,请先接入应用"
             desc="您需要至少接入一台服务节点，才能使用Takin哦～"
             extra={
-              <Button
-                style={{ marginTop: 8 }}
-                type="primary"
-                icon="plus"
-                onClick={() => {
-                  setState({
-                    visible: true
-                  });
-                }}
+              <AuthorityBtn
+                isShow={
+                  MapBtnAuthority('appManage_appAccess_7_download') ||
+                  MapBtnAuthority('appManage_appAccess_2_create')
+                }
               >
-                接入第一个应用
-              </Button>
+                <Button
+                  style={{ marginTop: 8 }}
+                  type="primary"
+                  icon="plus"
+                  onClick={() => {
+                    setState({
+                      visible: true
+                    });
+                  }}
+                >
+                  接入第一个应用
+                </Button>
+              </AuthorityBtn>
             }
           />
         </div>

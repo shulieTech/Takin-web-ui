@@ -79,7 +79,10 @@ const AppAccess: React.FC<Props> = props => {
           <img width={280} src={require('./../../assets/add_app_img.png')} />
           <p className={styles.title}>接入新应用</p>
           <AuthorityBtn
-            isShow={MapBtnAuthority('appManage_appAccess_7_download')}
+            isShow={
+              MapBtnAuthority('appManage_appAccess_7_download') ||
+              MapBtnAuthority('appManage_appAccess_2_create')
+            }
           >
             <Button
               icon="plus"
