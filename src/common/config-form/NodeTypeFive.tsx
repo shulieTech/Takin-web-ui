@@ -178,7 +178,11 @@ const NodeTypeFive: React.FC<Props> = props => {
         width: 120,
         render: (text, row) => {
           return (
-            <Checkbox checked={text} onChange={() => handleJoin(row.id)} />
+            <Checkbox
+              disabled={state.editingKey !== ''}
+              checked={text}
+              onChange={() => handleJoin(row.id)}
+            />
           );
         }
       },

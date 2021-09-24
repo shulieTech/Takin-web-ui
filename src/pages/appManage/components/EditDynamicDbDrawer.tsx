@@ -118,6 +118,7 @@ const EditDynamicDbDrawer: React.FC<Props> = props => {
           data: { success, data }
         } = await AppManageService.editDynamicDbTable({
           applicationId: props.applicationId,
+          isNewData: props.isNewData,
           id: props.id,
           ...result
         });
