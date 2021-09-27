@@ -24,6 +24,7 @@ export interface AppManageState {
     pageSize: string | number;
   };
   searchParamss?: any;
+  checkedKeys: string[];
 }
 
 const AppManage: React.FC<AppManageProps> = props => {
@@ -34,7 +35,8 @@ const AppManage: React.FC<AppManageProps> = props => {
       current: 0,
       pageSize: 10
     },
-    searchParamss: props.location.query
+    searchParamss: props.location.query,
+    checkedKeys: []
   });
 
   useEffect(() => {
@@ -55,11 +57,23 @@ const AppManage: React.FC<AppManageProps> = props => {
     }
   };
 
+  const handleCheck = async (keys, selectedRows) => {
+    setState({
+      checkedKeys: keys
+    });
+  };
+
   return (
     <SearchTable
       commonTableProps={{
-        columns: getColumns(state, setState)
+        columns: getColumns(state, setState),
+        rowKey: 'id',
+        rowSelectProps: {
+          selectedRowKeys: state.checkedKeys
+        },
+        checkable: true
       }}
+      onCheck={(keys, checkedRows) => handleCheck(keys, checkedRows)}
       commonFormProps={{ formData: getFormData(), rowNum: 6 }}
       ajaxProps={{ url: '/application/center/list', method: 'GET' }}
       // searchParams={{ ...state.searchParams }}

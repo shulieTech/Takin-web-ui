@@ -21,7 +21,7 @@ interface Props {
 const TableTwoRows: React.FC<Props> = props => {
   const { icon, title, secondLineContent, prefix, suffix } = props;
   return (
-    <Row type="flex">
+    <Row type="flex" align="middle">
       {icon && <Col>{icon}</Col>}
       <Col>
         <Row>

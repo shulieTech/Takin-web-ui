@@ -17,7 +17,7 @@ const TableAction: React.FC<Props> = props => {
     JSON.parse(localStorage.getItem('trowebBtnResource'));
   return (
     <Fragment>
-      <AuthorityBtn isShow={btnAuthority && btnAuthority.configCenter_authorityConfig_2_create}>
+      <AuthorityBtn isShow={btnAuthority && btnAuthority.configCenter_bigDataConfig_2_create}>
         <EditModal
           btnText="新增"
           onSuccess={() => {
