@@ -16,6 +16,10 @@ interface Props extends CommonModelState {
   btnText: string;
   onSuccess: () => void;
   applicationId: string;
+  action?: string;
+  type?: string;
+  topicGroup?: string;
+  shadowconsumerEnable?: string;
 }
 const AddEditConsumerModal: React.FC<Props> = props => {
   const [state, setState] = useStateReducer({
@@ -25,8 +29,9 @@ const AddEditConsumerModal: React.FC<Props> = props => {
     MQPlan: [],
     type: undefined
   });
+  const { action } = props;
 
-  const text = props.id ? '编辑' : '新增';
+  const text = action === 'edit' ? '编辑' : '新增';
   useEffect(() => {
     if (state.type) {
       queryMQPlan();
@@ -37,15 +42,12 @@ const AddEditConsumerModal: React.FC<Props> = props => {
     getDetails();
   };
   const getDetails = async () => {
-    if (!props.id) {
+    if (action !== 'edit') {
       return;
     }
-    const {
-      data: { data, success }
-    } = await AppManageService.getShdowConsumer({ id: props.id });
-    if (success) {
-      setState({ details: data, type: data.type });
-    }
+    setState({
+      type: props.type
+    });
   };
 
   /**
@@ -90,7 +92,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
         key: ShadowConsumerBean.MQ类型,
         label: 'MQ类型',
         options: {
-          initialValue: state.details[ShadowConsumerBean.MQ类型],
+          initialValue: props.type,
           rules: [{ required: true, message: '请选择MQ类型' }]
         },
         node: (
@@ -104,7 +106,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       {
         key: ShadowConsumerBean.groupId,
         options: {
-          initialValue: state.details[ShadowConsumerBean.groupId],
+          initialValue: props.topicGroup,
           rules: [{ required: true, message: '请输入业务的topic#业务的消费组' }]
         },
         label: '业务的topic#业务的消费组',
@@ -114,7 +116,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
         key: ShadowConsumerBean.隔离方案,
         label: '隔离方案',
         options: {
-          initialValue: state.details[ShadowConsumerBean.隔离方案],
+          initialValue: props.shadowconsumerEnable,
           rules: [{ required: true, message: '请选择隔离方案' }]
         },
         node: (
@@ -143,12 +145,13 @@ const AddEditConsumerModal: React.FC<Props> = props => {
           applicationId: props.applicationId,
           ...values
         };
-        const ajaxEvent = props.id
-          ? AppManageService.updateShdowConsumer({
-            ...state.details,
-            ...result
-          })
-          : AppManageService.createShdowConsumer(result);
+        const ajaxEvent =
+          action === 'edit'
+            ? AppManageService.updateShdowConsumer({
+              ...state.details,
+              ...result
+            })
+            : AppManageService.createShdowConsumer(result);
         const {
           data: { success }
         } = await ajaxEvent;
@@ -167,7 +170,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       beforeOk={handleSubmit}
       modalProps={{ title: text, width: 720, destroyOnClose: true }}
       btnText={props.btnText}
-      btnProps={{ type: props.id ? 'link' : 'primary' }}
+      btnProps={{ type: action === 'edit' ? 'link' : 'primary' }}
       onClick={handleClick}
     >
       <CommonForm

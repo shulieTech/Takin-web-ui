@@ -181,9 +181,13 @@ const getColumns = (
             >
               <AddEditConsumerModal
                 id={row.id}
+                action="edit"
                 btnText="编辑"
                 onSuccess={() => setState({ isReload: !state.isReload })}
                 applicationId={props.id}
+                type={row.type}
+                topicGroup={row.topicGroup}
+                shadowconsumerEnable={row.shadowconsumerEnable}
               />
             </AuthorityBtn>
             <AuthorityBtn
