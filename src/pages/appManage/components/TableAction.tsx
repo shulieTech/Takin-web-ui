@@ -36,51 +36,8 @@ const TableAction: React.FC<Props> = props => {
     }
   };
 
-  /**
-   * @name 恢复
-   */
-  const handleRecover = async values => {
-    const {
-      data: { success, data }
-    } = await AppManageService.recover({
-      appIds: values
-    });
-    if (success) {
-      message.success('恢复成功！');
-      setState({
-        isReload: !state.isReload,
-        checkedKeys: []
-      });
-    }
-  };
   return (
     <Fragment>
-      <AuthorityBtn isShow={btnAuthority && btnAuthority.appManage_2_create}>
-        <CustomPopconfirm
-          title="是否确定恢复？"
-          okColor="var(--FunctionalError-500)"
-          onConfirm={() => handleRecover(state.checkedKeys)}
-          disabled={state.checkedKeys.length > 0 ? false : true}
-        >
-          <Button
-            type="primary"
-            disabled={state.checkedKeys.length > 0 ? false : true}
-          >
-            勾选恢复
-          </Button>
-        </CustomPopconfirm>
-      </AuthorityBtn>
-      <AuthorityBtn isShow={btnAuthority && btnAuthority.appManage_2_create}>
-        <CustomPopconfirm
-          title="是否确定恢复？"
-          okColor="var(--FunctionalError-500)"
-          onConfirm={() => handleRecover([])}
-        >
-          <Button type="primary" style={{ margin: '0px 8px' }}>
-            一键恢复
-          </Button>
-        </CustomPopconfirm>
-      </AuthorityBtn>
       <AuthorityBtn isShow={btnAuthority && btnAuthority.appManage_2_create}>
         <CustomPopconfirm
           title="是否确定卸载？"

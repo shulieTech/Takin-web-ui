@@ -76,7 +76,6 @@ const AppManage: React.FC<AppManageProps> = props => {
       onCheck={(keys, checkedRows) => handleCheck(keys, checkedRows)}
       commonFormProps={{ formData: getFormData(), rowNum: 6 }}
       ajaxProps={{ url: '/application/center/list', method: 'GET' }}
-      // searchParams={{ ...state.searchParams }}
       searchParams={state.searchParamss}
       toggleRoload={state.isReload}
       tableAction={<TableAction state={state} setState={setState} />}
