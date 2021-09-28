@@ -1,4 +1,4 @@
-import { Col, message, Modal, Row, Switch } from 'antd';
+import { Col, message, Modal, Radio, Row, Switch } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
@@ -11,6 +11,7 @@ import getPressureTestSceneFormData from './components/PressureTestSceneFormData
 import PressureTestSceneTableAction from './components/TableAction';
 import styles from './index.less';
 import PressureTestSceneService from './service';
+import { PressureStyle } from './enum';
 
 interface PressureTestSceneProps {
   dictionaryMap?: any;
@@ -34,6 +35,8 @@ export interface PressureTestSceneState {
   sceneId: Number;
   hasMissingData: boolean;
   showIndex: number;
+  pressureStyle: string;
+  dataScriptNum: any[];
 }
 const liList = [1, 1, 1, 1, 1, 1, 1, 1];
 const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
@@ -60,7 +63,9 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
     missingDataStatus: false,
     sceneId: null,
     hasMissingData: false,
-    showIndex: 0
+    showIndex: 0,
+    pressureStyle: PressureStyle.从头开始压测,
+    dataScriptNum: null // 数据脚本数
   });
 
   useEffect(() => {
@@ -135,7 +140,8 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
       data: { data, success }
     } = await PressureTestSceneService.startPressureTestScene({
       sceneId,
-      leakSqlEnable: state.missingDataSwitch
+      leakSqlEnable: state.missingDataSwitch,
+      continueRead: state.pressureStyle
     });
     if (success && data.data) {
       setState({
@@ -190,13 +196,20 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
       hasMissingData: false,
       missingDataStatus: false,
       missingDataSwitch: false,
-      isReload: !state.isReload
+      isReload: !state.isReload,
+      pressureStyle: PressureStyle.继续压测
     });
   };
 
   const handleChangeMissingDataSwitch = () => {
     setState({
       missingDataSwitch: !state.missingDataSwitch
+    });
+  };
+
+  const handleChangePressureStyle = e => {
+    setState({
+      pressureStyle: e.target.value
     });
   };
 
@@ -239,11 +252,37 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
           });
         }}
       >
-        <div style={{ color: '#8C8C8C', lineHeight: '22px', fontSize: 14 }}>
+        <div
+          style={{
+            color: '#8C8C8C',
+            lineHeight: '22px',
+            fontSize: 14,
+            marginBottom: 10
+          }}
+        >
           {state.hasMissingData
             ? '开启数据验证将会产生额外的性能消耗，建议仅在试跑时开启'
-            : '是否确认启动压测？'}
+            : ''}
         </div>
+        <div style={{ marginBottom: 10 }}>
+          {state.dataScriptNum &&
+            state.dataScriptNum.map((item, k) => {
+              return (
+                <p key={k}>
+                  {item.scriptName}数据脚本共{item.scriptSize}，已压测
+                  {item.pressedSize}
+                  ，是否继续压测？
+                </p>
+              );
+            })}
+        </div>
+        <Radio.Group
+          value={state.pressureStyle}
+          onChange={handleChangePressureStyle}
+        >
+          <Radio value={PressureStyle.从头开始压测}>从头开始压测</Radio>
+          <Radio value={PressureStyle.继续压测}>继续压测</Radio>
+        </Radio.Group>
         {state.hasMissingData && (
           <Row
             type="flex"

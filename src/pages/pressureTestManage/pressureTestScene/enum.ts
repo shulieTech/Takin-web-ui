@@ -18,7 +18,7 @@ export enum PressureTestSceneEnum {
  */
 export enum PressureSource {
   本地发压,
-  云端发压,
+  云端发压
 }
 
 /**
@@ -28,4 +28,9 @@ export enum PressureMode {
   固定压力值 = 1,
   线性递增,
   阶梯递增
+}
+
+export enum PressureStyle {
+  继续压测 = '1',
+  从头开始压测 = '0'
 }

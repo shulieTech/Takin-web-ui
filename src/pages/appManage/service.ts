@@ -337,7 +337,7 @@ const AppManageService = {
     const url = '/application/plugins/config/update';
     return httpPut(url, data);
   },
- 
+
   /**
    * @name 获取应用异常列表
    */
@@ -393,10 +393,10 @@ const AppManageService = {
   async importAppConfig(data = {}) {
     const url = '/application/center/app/config/import';
     return httpPost(url, data);
-  }, 
- /**
-  * @name 获取agent版本
-  */
+  },
+  /**
+   * @name 获取agent版本
+   */
   async queryAgentStatus(data = {}) {
     const url = '/application/center/app/config/ds/isnew';
     return httpGet(url, data);
@@ -556,7 +556,7 @@ const AppManageService = {
     const url = '/';
     return httpGet(url, data);
   },
-  /*
+  /**
    * @name 获取中间件支持概况
    */
   async queryMiddlewareDashboard(data = {}) {
@@ -576,7 +576,21 @@ const AppManageService = {
   async compare(data = {}) {
     const url = '/application/middleware/compare';
     return httpPost(url, data);
-  }   
+  },
+  /**
+   * @name 探针一键卸载
+   */
+  async uninstall(data = {}) {
+    const url = '/application/center/unstallAllAgent';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 探针一键恢复
+   */
+  async recover(data = {}) {
+    const url = '/application/center/resumeAllAgent';
+    return httpPost(url, data);
+  }
 };
 
 export default AppManageService;
