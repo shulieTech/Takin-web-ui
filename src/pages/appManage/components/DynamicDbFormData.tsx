@@ -218,7 +218,7 @@ const getDynamicDbFormData = (
       formItemProps:
         item.nodeType === 4
           ? { labelCol: { span: 0 }, wrapperCol: { span: 24 } }
-          : { labelCol: { span: 6 }, wrapperCol: { span: 14 } },
+          : { labelCol: { span: 8 }, wrapperCol: { span: 14 } },
       node: getRenderFormNode(item)
     })
   );

@@ -145,7 +145,7 @@ const EditDynamicDbDrawer: React.FC<Props> = props => {
     <CommonDrawer
       btnText={titles}
       drawerProps={{
-        width: 650,
+        width: 700,
         title: '影子库表配置',
         maskClosable: false
       }}
@@ -179,7 +179,7 @@ const EditDynamicDbDrawer: React.FC<Props> = props => {
           isSubmitBtn: false
         }}
         rowNum={1}
-        formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 14 } }}
+        formItemProps={{ labelCol: { span: 8 }, wrapperCol: { span: 14 } }}
       />
     </CommonDrawer>
   );
