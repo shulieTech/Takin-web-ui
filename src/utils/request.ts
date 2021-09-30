@@ -113,7 +113,8 @@ export function httpGet<T = any>(url: string, data?: any, options?: any) {
     ...options,
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie')
+      'Auth-Cookie': localStorage.getItem('auth-cookie'),
+      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
     }
   });
 }
@@ -126,7 +127,8 @@ export function httpPost<T>(url, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'Access-Token': localStorage.getItem('Access-Token')
+      'Access-Token': localStorage.getItem('Access-Token'),
+      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
     }
   });
 }
@@ -138,7 +140,8 @@ export function httpPut<T>(url, data?: any, options?: any) {
     ...options,
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie')
+      'Auth-Cookie': localStorage.getItem('auth-cookie'),
+      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
     }
   });
 }
@@ -150,7 +153,8 @@ export function httpDelete<T>(url, data?: any, options?: any) {
     ...options,
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie')
+      'Auth-Cookie': localStorage.getItem('auth-cookie'),
+      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
     }
   });
 }
