@@ -100,7 +100,7 @@ const getBusinessActivityColumns = (
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'userName'
+      dataIndex: 'managerName'
     },
     {
       ...customColumnProps,

@@ -2,8 +2,8 @@
  * @name 变更状态
  */
 export const ChangeStatus = {
-  0: 'var(--BrandPrimary-500)',
-  1: 'var(--FunctionalError-500)'
+  0: 'var(--BrandPrimary-500, #3BD9FF)',
+  1: 'var(--FunctionalError-500, #FE7D61)'
 };
 
 export enum SystemFlowEnum {

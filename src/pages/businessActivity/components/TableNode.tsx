@@ -27,13 +27,13 @@ const getColumns = (
   /**
    * @name 删除,刷新列表
    */
-  const handleDelete = async activityId => {
+  const handleDelete = async (activityId) => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await BusinessActivityService.deleteSystemFlow(activityId);
     if (success) {
       setSystemFlowState({
-        isReload: !systemFlowState.isReload
+        isReload: !systemFlowState.isReload,
       });
     }
   };
@@ -47,24 +47,25 @@ const getColumns = (
       ...customColumnProps,
       title: '业务活动名称',
       dataIndex: 'activityName',
-      width: 350
+      width: 350,
     },
     {
       ...customColumnProps,
       title: '类型',
       dataIndex: 'businessType',
-      render: text => {
+      render: (text) => {
         return text === 1 ? '虚拟' : '-';
-      }
+      },
     },
     {
       ...customColumnProps,
       title: '业务域',
       dataIndex: 'businessDomain',
-      render: text =>
+      render: (text) =>
         text && props.dictionaryMap
-          ? props.dictionaryMap.domain.find(item => +item.value === +text).label
-          : '-'
+          ? props.dictionaryMap.domain.find((item) => +item.value === +text)
+            .label
+          : '-',
     },
     {
       ...customColumnProps,
@@ -77,25 +78,25 @@ const getColumns = (
               +text === 0
                 ? '正常'
                 : row.changeType === '1'
-                ? '已变更(入口)'
-                : '已变更(关联链路)'
+                  ? '已变更(入口)'
+                  : '已变更(关联链路)'
             }
             color={ChangeStatus[text]}
           />
         );
-      }
+      },
     },
     {
       ...customColumnProps,
       title: '创建时间',
       dataIndex: 'createTime',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss') || '--'
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss') || '--',
     },
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'userName',
-      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle',
+      dataIndex: 'managerName',
     },
     {
       ...customColumnProps,
@@ -169,7 +170,9 @@ const getColumns = (
             />
           </AuthorityBtn>
           {row.businessType !== 1 && (
-            <Link to={`/businessActivity/details?id=${row.activityId}`}>
+            <Link
+              to={`/businessActivity/details?id=${row.activityId}&pageIndex=${window?._search_table_params?.current}`}
+            >
               <Button type="link" className="mg-l1x">
                 详情
               </Button>
@@ -182,8 +185,8 @@ const getColumns = (
             />
           </span>
         </Fragment>
-      )
-    }
+      ),
+    },
   ];
 };
 
