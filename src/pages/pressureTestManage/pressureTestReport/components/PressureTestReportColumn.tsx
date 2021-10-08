@@ -50,11 +50,7 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Badge
             text={text === 1 ? '通过' : '不通过'}
-            color={
-              text === 1
-                ? 'var(--BrandPrimary-500)'
-                : 'var(--FunctionalError-500)'
-            }
+            color={text === 1 ? 'var(--BrandPrimary-500)' : 'var(--FunctionalError-500)'}
           />
         );
       }
@@ -62,7 +58,7 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '执行人',
-      dataIndex: 'userName',
+      dataIndex: 'managerName',
       className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {

@@ -169,6 +169,13 @@ const PressureTestReportService = {
     const url = '/scene/task/queryTaskTps';
     return httpGet(url, data);
   },
+  /**
+   * @name 压测实况链路图
+   */
+  async getLiveGraphData(data) {
+    const url = '/report/queryTempReportTrendWithTopology';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

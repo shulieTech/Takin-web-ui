@@ -1,4 +1,12 @@
-import { Button, Divider, message, Row, Tooltip, Typography } from 'antd';
+import {
+  Button,
+  Divider,
+
+  message,
+  Row,
+  Tooltip,
+  Typography
+} from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import copy from 'copy-to-clipboard';
 import { CommonModal, useStateReducer } from 'racc';
@@ -253,13 +261,15 @@ const RequestDetailModal: React.FC<Props> = props => {
             <Button
               onClick={() =>
                 router.push(
-                  // tslint:disable-next-line:max-line-length
-                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually`
+                  `/analysisManage?tab=method&appName=${
+                    row.applicationName
+                  }&processName=${row.entryHostIp}|${
+                    row.agentId
+                  }&reportId=${props.reportId}&type=actually`
                 )
               }
               style={{ marginLeft: 16 }}
               type="primary"
-              size="small"
             >
               开启方法追踪
             </Button>

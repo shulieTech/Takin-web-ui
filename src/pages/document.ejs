@@ -8,39 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- <link href="https://www.coty.com/sites/default/files/favicon-32x32.png" rel="shortcut icon" type="image/x-icon"> -->
     <script>
-  
-        // 自动部署dev-2
-        // var serverUrl = 'http://tro-web.forcecop-dev-2.192.168.1.205.nip.io:31439/tro-web/api'
-
-        // 自动部署dev
-        // var serverUrl = 'http://tro-web.forcecop-dev.192.168.1.205.nip.io:30949/tro-web/api'
-
-
-        // 自动部署test
-        // var serverUrl = 'http://tro-web.forcecop-test.192.168.1.205.nip.io:30366/tro-web/api'
-
-        // 演示环境
-        // var serverUrl = 'http://demo.forcecop.shulie.io/tro-web/api'
-        
-        // 开发环境
-        var serverUrl = '<%= process.env.NODE_ENV === "development" ? process.env.DEV_HOST : "" %>/takin-web/api'
-
-        // 晓霞
-        // var serverUrl = 'http://192.168.63.18:10008/takin-web/api'
-
-        // 勇哥
-        // var serverUrl = 'http://192.168.100.249:10008/tro-web/api' 
-
-        // 流川
-        // var serverUrl = 'http://192.168.63.67:10008/tro-web/api' 
-
-        // 无涯
-        // var serverUrl = 'http://192.168.63.35:10008/tro-web/api' 
-
-        // 剑英
-        // var serverUrl = 'http://192.168.63.91:10008/tro-web/api' 
-
-
+        var serverUrl = '<%= process.env.NODE_ENV === "development" ? process.env.DEV_HOST : "" %>/takin-web/api';
     </script>
     <script>
         var _hmt = _hmt || [];
