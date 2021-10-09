@@ -25,7 +25,7 @@ const LineCharts: React.FC<Props> = (props) => {
     },
     {
       name: 'TPS',
-      dataIndex: 'concurrent',
+      dataIndex: 'tps',
     },
     {
       name: 'SA',
@@ -163,7 +163,7 @@ const LineCharts: React.FC<Props> = (props) => {
       name: '并发数',
       xAxisIndex: i,
       yAxisIndex: 4 + i,
-      data: chartsInfo.tps,
+      data: chartsInfo.concurrent,
       color: '#56A4FF',
       ...commonSeriyConfig,
       // ...getAreaLinearConfig('#56A4FF'),
