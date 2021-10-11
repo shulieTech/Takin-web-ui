@@ -655,6 +655,13 @@ const AppManageService = {
   async queryMiddleWareName(data = {}) {
     const url = '/v2/link/ds/support/name/new';
     return httpGet(url, data);
+  },
+  /**
+   * @name 获取缓存模式（新增）
+   */
+  async queryCacheType(data = {}) {
+    const url = '/v2/link/ds/cache/type';
+    return httpGet(url, data);
   }
 };
 

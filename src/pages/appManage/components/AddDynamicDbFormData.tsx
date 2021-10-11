@@ -39,7 +39,7 @@ const getAddDynamicDbFormData = (
     const {
       data: { success, data }
     } = await AppManageService.queryTemplate({
-      agentSourceType,
+      agentSourceType: state.form.getFieldsValue().dbType,
       dsType: state.dsType
     });
     if (success) {
@@ -52,10 +52,10 @@ const getAddDynamicDbFormData = (
   /**
    * @name 切换方案类型
    */
-  const handleChangeMiddleWareType = async value => {
-    queryMiddleWareName(value);
+  const handleChangeMiddleWareType = async (value, options) => {
+    queryMiddleWareName(options.props.children);
     setState({
-      dbType: value,
+      dbType: options.props.children,
       middleWareName: undefined
     });
   };
@@ -105,6 +105,7 @@ const getAddDynamicDbFormData = (
   const getFormItemInitialValue = keys => {
     let result = null;
     result =
+      state.dbTableDetail.shadowInfo &&
       JSON.parse(state.dbTableDetail.shadowInfo) &&
       JSON.parse(state.dbTableDetail.shadowInfo)[keys];
     return result;
@@ -142,7 +143,9 @@ const getAddDynamicDbFormData = (
           placeholder="请选择类型"
           dataSource={state.middleWareType || []}
           allowClear={false}
-          onChange={value => handleChangeMiddleWareType(value)}
+          onChange={(value, options) =>
+            handleChangeMiddleWareType(value, options)
+          }
           onRender={item => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
@@ -168,6 +171,64 @@ const getAddDynamicDbFormData = (
           placeholder="请选择中间件名称"
           dataSource={state.middleWareNameData || []}
           onChange={handleChangeMiddleWareName}
+          onRender={item => (
+            <CommonSelect.Option key={item.value} value={item.value}>
+              {item.label}
+            </CommonSelect.Option>
+          )}
+        />
+      )
+    }
+  ];
+
+  const linkFormData = [
+    {
+      key: DbDetailBean.业务数据源,
+      label: '业务数据源',
+      options: {
+        initialValue: undefined,
+        rules: [
+          {
+            required: true,
+            message: '请输入业务数据源'
+          }
+        ]
+      },
+      node: <Input placeholder="请输入业务数据源" />
+    }
+  ];
+
+  const cacheTypeFormData = [
+    {
+      key: DbDetailBean.业务集群,
+      label: '业务集群',
+      options: {
+        initialValue: undefined,
+        rules: [
+          {
+            required: true,
+            message: '请输入业务集群'
+          }
+        ]
+      },
+      node: <Input placeholder="请输入业务集群" />
+    },
+    {
+      key: DbDetailBean.缓存模式,
+      label: '缓存模式',
+      options: {
+        initialValue: undefined,
+        rules: [
+          {
+            required: true,
+            message: '请选择缓存模式'
+          }
+        ]
+      },
+      node: (
+        <CommonSelect
+          placeholder="请选择缓存模式"
+          dataSource={state.cacheTypeData || []}
           onRender={item => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
@@ -230,7 +291,22 @@ const getAddDynamicDbFormData = (
   );
 
   if (state.dbType && state.middleWareName) {
-    return [...basicDbFormData, ...dynamicFormData, ...templeteFormData];
+    if (state.dbType === '缓存') {
+      return [
+        ...basicDbFormData,
+        ...cacheTypeFormData,
+        ...dynamicFormData,
+        ...templeteFormData
+      ];
+    }
+    if (state.dbType === '连接池') {
+      return [
+        ...basicDbFormData,
+        ...linkFormData,
+        ...dynamicFormData,
+        ...templeteFormData
+      ];
+    }
   }
   return [...basicDbFormData, ...templeteFormData];
 };

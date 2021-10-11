@@ -31,7 +31,9 @@ const getInitState = () => ({
   templateData: [],
   dbAndTableList: [],
   middleWareType: [],
-  middleWareNameData: []
+  middleWareNameData: [],
+  cacheTypeData: [], // 缓存模式
+  dbTableDetail: {} as any
 });
 export type AddDynamicDbDrawerState = ReturnType<typeof getInitState>;
 const AddDynamicDbDrawer: React.FC<Props> = props => {
@@ -64,6 +66,20 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
     if (success) {
       setState({
         middleWareType: data || []
+      });
+    }
+  };
+
+  /**
+   * @name 获取中间件类型
+   */
+  const queryCacheType = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryCacheType({});
+    if (success) {
+      setState({
+        cacheTypeData: data || []
       });
     }
   };
@@ -147,8 +163,7 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
           action,
           setState,
           props.detailData,
-          props.middlewareType,
-          props.agentSourceType
+          props.middlewareType
         )}
         btnProps={{
           isResetBtn: false,

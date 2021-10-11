@@ -52,23 +52,25 @@ const LinkDbTable: React.FC<Props> = props => {
                 <AuthorityBtn
                   isShow={btnAuthority && btnAuthority.appManage_2_create}
                 >
-                  <AddDynamicDbDrawer
-                    disabled={
-                      detailState.switchStatus === 'OPENING' ||
-                      detailState.switchStatus === 'CLOSING'
-                        ? true
-                        : false
-                    }
-                    titles="手动新增"
-                    action="add"
-                    id={id}
-                    detailData={detailData}
-                    onSccuess={() => {
-                      setState({
-                        isReload: !state.isReload
-                      });
-                    }}
-                  />
+                  <span style={{ marginRight: 8 }}>
+                    <AddDynamicDbDrawer
+                      disabled={
+                        detailState.switchStatus === 'OPENING' ||
+                        detailState.switchStatus === 'CLOSING'
+                          ? true
+                          : false
+                      }
+                      titles="新增缓存/连接池"
+                      action="add"
+                      id={id}
+                      detailData={detailData}
+                      onSccuess={() => {
+                        setState({
+                          isReload: !state.isReload
+                        });
+                      }}
+                    />
+                  </span>
                 </AuthorityBtn>
 
                 <AuthorityBtn
