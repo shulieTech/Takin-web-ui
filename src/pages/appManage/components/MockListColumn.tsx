@@ -145,6 +145,7 @@ const getMockListColumns = (
                 action="edit"
                 btnText="编辑"
                 id={row.id}
+                isManual={row.isManual}
                 applicationId={applicationId}
                 interfaceName={row.interfaceName}
                 interfaceType={row.interfaceChildType}

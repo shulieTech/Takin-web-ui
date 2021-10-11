@@ -149,7 +149,8 @@ const AddEditConsumerModal: React.FC<Props> = props => {
           action === 'edit'
             ? AppManageService.updateShdowConsumer({
               ...state.details,
-              ...result
+              ...result,
+              id: props.id
             })
             : AppManageService.createShdowConsumer(result);
         const {

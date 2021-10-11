@@ -20,6 +20,7 @@ interface Props {
   action: string;
   remark: string;
   mockValue: string;
+  isManual: boolean;
 }
 
 const getInitState = () => ({
@@ -306,7 +307,8 @@ const MockConfigModal: React.FC<Props> = props => {
             ...values,
             id: props.id,
             applicationId: props.applicationId,
-            serverAppName: props.serverAppName
+            serverAppName: props.serverAppName,
+            isManual: props.isManual
           });
           if (success) {
             message.success('操作成功');

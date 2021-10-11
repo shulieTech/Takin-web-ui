@@ -57,6 +57,7 @@ const getDynamicDbFormData = (
   const getFormItemInitialValue = keys => {
     let result = null;
     result =
+      state.dbTableDetail.shadowInfo &&
       JSON.parse(state.dbTableDetail.shadowInfo) &&
       JSON.parse(state.dbTableDetail.shadowInfo)[keys];
     return result;
@@ -199,29 +200,31 @@ const getDynamicDbFormData = (
     }
   ];
 
-  const templeteFormData = state.templateData.map(
-    (item, index): FormDataType => ({
-      key: item.key,
-      label: item.label,
-      options: {
-        initialValue:
+  const templeteFormData =
+    state.templateData &&
+    state.templateData.map(
+      (item, index): FormDataType => ({
+        key: item.key,
+        label: item.label,
+        options: {
+          initialValue:
+            item.nodeType === 4
+              ? state.dbTableDetail && state.dbTableDetail.tables
+              : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key),
+          rules: [
+            {
+              required: true,
+              message: '请检查表单必填项'
+            }
+          ]
+        },
+        formItemProps:
           item.nodeType === 4
-            ? state.dbTableDetail && state.dbTableDetail.tables
-            : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key),
-        rules: [
-          {
-            required: true,
-            message: '请检查表单必填项'
-          }
-        ]
-      },
-      formItemProps:
-        item.nodeType === 4
-          ? { labelCol: { span: 0 }, wrapperCol: { span: 24 } }
-          : { labelCol: { span: 8 }, wrapperCol: { span: 14 } },
-      node: getRenderFormNode(item)
-    })
-  );
+            ? { labelCol: { span: 0 }, wrapperCol: { span: 24 } }
+            : { labelCol: { span: 8 }, wrapperCol: { span: 14 } },
+        node: getRenderFormNode(item)
+      })
+    );
 
   return [...basicDbFormData, ...dynamicFormData, ...templeteFormData];
 };

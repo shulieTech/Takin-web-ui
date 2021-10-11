@@ -641,6 +641,20 @@ const AppManageService = {
   async compare(data = {}) {
     const url = '/application/middleware/compare';
     return httpPost(url, data);
+  },
+  /**
+   * @name 获取中间件类型（新增）
+   */
+  async queryMiddleWareType(data = {}) {
+    const url = '/v2/link/ds/support/new';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取中间件名称（新增）
+   */
+  async queryMiddleWareName(data = {}) {
+    const url = '/v2/link/ds/support/name/new';
+    return httpGet(url, data);
   }
 };
 
