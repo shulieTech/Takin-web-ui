@@ -99,7 +99,6 @@ const getDynamicDbFormData = (
         {
           key: DbDetailBean.业务数据源,
           label: '业务数据源',
-
           options: {
             initialValue: detailData && detailData[DbDetailBean.业务数据源],
 
@@ -156,7 +155,7 @@ const getDynamicDbFormData = (
               }
             ]
           },
-          node: <span>{detailData && detailData[DbDetailBean.业务集群]}</span>
+          node: <pre>{detailData && detailData[DbDetailBean.业务集群]}</pre>
         },
         {
           key: DbDetailBean.缓存模式,

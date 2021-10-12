@@ -54,9 +54,14 @@ const getAddDynamicDbFormData = (
    */
   const handleChangeMiddleWareType = async (value, options) => {
     queryMiddleWareName(options.props.children);
+
+    state.form.setFieldsValue({
+      middleWareType: undefined
+    });
     setState({
       dbType: options.props.children,
-      middleWareName: undefined
+      middleWareName: undefined,
+      middleWareNameData: []
     });
   };
   /**
