@@ -94,6 +94,7 @@ const getLinkDbColumns = (
                 applicationId={appId}
                 connectionPool={row.connectionPool}
                 agentSourceType={row.agentSourceType}
+                cacheType={row.cacheType}
                 onSuccess={() => {
                   setState({
                     isReload: !state.isReload

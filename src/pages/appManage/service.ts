@@ -98,7 +98,7 @@ const AppManageService = {
    */
   async queryTemplate(data = {}) {
     const url = '/v2/link/ds/config/template';
-    return httpGet(url, data);
+    return httpPost(url, data);
   },
   /**
    * @name 获取影子库表详情

@@ -2,14 +2,13 @@
  * @author chuxu
  */
 import React, { Fragment, useEffect } from 'react';
-import { CommonSelect } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
-import { Radio, Input, Icon, Tooltip, message } from 'antd';
+import { Radio, Icon, Tooltip, message } from 'antd';
 import { DbDetailBean } from '../enum';
 import AppManageService from '../service';
 import { EditDynamicDbDrawerState } from './EditDynamicDbDrawer';
 import { getRenderFormNode } from 'src/common/config-form/utils';
-import { TempleteType } from 'src/common/config-form/types';
+import copy from 'copy-to-clipboard';
 
 const getDynamicDbFormData = (
   state: EditDynamicDbDrawerState,
@@ -17,7 +16,9 @@ const getDynamicDbFormData = (
   setState,
   detailData,
   middlewareType,
-  agentSourceType
+  agentSourceType,
+  isNewData,
+  cacheType
 ): FormDataType[] => {
   const { dbTableDetail } = state;
   useEffect(() => {
@@ -43,6 +44,8 @@ const getDynamicDbFormData = (
     const {
       data: { success, data }
     } = await AppManageService.queryTemplate({
+      isNewData,
+      cacheType,
       agentSourceType,
       dsType: state.dsType
     });
@@ -61,6 +64,14 @@ const getDynamicDbFormData = (
       JSON.parse(state.dbTableDetail.shadowInfo) &&
       JSON.parse(state.dbTableDetail.shadowInfo)[keys];
     return result;
+  };
+
+  const handleCopy = async value => {
+    if (copy(value)) {
+      message.success('复制成功');
+    } else {
+      message.error('复制失败');
+    }
   };
 
   const basicDbFormData =
@@ -155,7 +166,11 @@ const getDynamicDbFormData = (
               }
             ]
           },
-          node: <pre>{detailData && detailData[DbDetailBean.业务集群]}</pre>
+          node: (
+              <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                {detailData && detailData[DbDetailBean.业务集群]}
+              </pre>
+            )
         },
         {
           key: DbDetailBean.缓存模式,
@@ -204,7 +219,27 @@ const getDynamicDbFormData = (
     state.templateData.map(
       (item, index): FormDataType => ({
         key: item.key,
-        label: item.label,
+        label: item.tips ? (
+          <Tooltip
+            title={() => {
+              return (
+                <div>
+                  <div style={{ textAlign: 'right' }}>
+                    <a onClick={() => handleCopy(item.tips)}>复制</a>
+                  </div>
+                  <div style={{ width: 250, height: 400, overflow: 'scroll' }}>
+                    {item.tips}
+                  </div>
+                </div>
+              );
+            }}
+          >
+            {item.label}
+            <Icon style={{ marginLeft: 4 }} type="question-circle" />
+          </Tooltip>
+        ) : (
+          <span>{item.label}</span>
+        ),
         options: {
           initialValue:
             item.nodeType === 4
@@ -212,7 +247,7 @@ const getDynamicDbFormData = (
               : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key),
           rules: [
             {
-              required: true,
+              required: item.required ? true : false,
               message: '请检查表单必填项'
             }
           ]

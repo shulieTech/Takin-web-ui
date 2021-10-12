@@ -16,6 +16,7 @@ interface Props {
   connectionPool: string;
   agentSourceType: string;
   isNewData: boolean;
+  cacheType: string;
 }
 
 const getInitState = () => ({
@@ -28,7 +29,7 @@ const getInitState = () => ({
 });
 export type EditDynamicDbDrawerState = ReturnType<typeof getInitState>;
 const EditDynamicDbDrawer: React.FC<Props> = props => {
-  const { action, id, titles } = props;
+  const { action, id, titles, isNewData, cacheType } = props;
   const [state, setState] = useStateReducer(getInitState());
 
   const handleClick = async () => {
@@ -172,7 +173,9 @@ const EditDynamicDbDrawer: React.FC<Props> = props => {
           setState,
           state.dbTableDetail,
           props.middlewareType,
-          props.agentSourceType
+          props.agentSourceType,
+          isNewData,
+          cacheType
         )}
         btnProps={{
           isResetBtn: false,
