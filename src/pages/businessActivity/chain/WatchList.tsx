@@ -11,6 +11,7 @@ import {
   Divider,
   Tooltip,
   Modal,
+  Table,
 } from 'antd';
 import BusinessActivityService from '../service';
 import styles from '../index.less';
@@ -53,18 +54,23 @@ const WatchList: React.FC<Props> = (props) => {
       });
     });
     arr = arr.sort((x, y) => {
-      const calcWeight = val => {
-        return ({
+      const calcWeight = (val) => {
+        return {
           '-1': 0,
           0: 0,
           1: 10,
           2: 100,
-        }[val]);
+        }[val];
       };
-      return (calcWeight(y.allSuccessRateBottleneckType) - calcWeight(x.allSuccessRateBottleneckType)) +
-        (calcWeight(y.allTotalRtBottleneckType) - calcWeight(x.allTotalRtBottleneckType)) +
-        (calcWeight(y.allSqlTotalRtBottleneckType) - calcWeight(x.allSqlTotalRtBottleneckType)) +
-        (y.serviceName > x.serviceName ? 1 : 0);
+      return (
+        calcWeight(y.allSuccessRateBottleneckType) -
+        calcWeight(x.allSuccessRateBottleneckType) +
+        (calcWeight(y.allTotalRtBottleneckType) -
+          calcWeight(x.allTotalRtBottleneckType)) +
+        (calcWeight(y.allSqlTotalRtBottleneckType) -
+          calcWeight(x.allSqlTotalRtBottleneckType)) +
+        (y.serviceName > x.serviceName ? 1 : 0)
+      );
     });
     setBottleneckList(arr);
     setFilteredList(arr);
@@ -358,27 +364,29 @@ const WatchList: React.FC<Props> = (props) => {
                     {x.serviceName}
                     <Divider style={{ margin: '10px 0' }} />
                   </div>
-                  <div style={{ paddingLeft: 24 }}>
-                    {x.nodeType === 'APP' && x.middlewareName && <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        调用方中间件：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          wordBreak: 'break-all',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {x.middlewareName || '-'}
-                      </span>
-                    </div>}
+                  <div style={{ padding: '0 8px' }}>
+                    {x.nodeType === 'APP' && x.middlewareName && (
+                      <div style={{ display: 'flex', marginBottom: 8 }}>
+                        <span
+                          style={{
+                            color: 'var(--Netural-10, #8e8e8e)',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          调用方中间件：
+                        </span>
+                        <span
+                          style={{
+                            flex: 1,
+                            textAlign: 'right',
+                            wordBreak: 'break-all',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {x.middlewareName || '-'}
+                        </span>
+                      </div>
+                    )}
                     <div style={{ display: 'flex', marginBottom: 8 }}>
                       <span
                         style={{
@@ -399,44 +407,7 @@ const WatchList: React.FC<Props> = (props) => {
                         {x.ownerApps || '-'}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        上游应用：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {x.beforeApps || '-'}
-                      </span>
-                    </div>
-                    {/* <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        性能概览：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {x.allTotalTps || 0}/{x.allTotalCount || 0}
-                      </span>
-                    </div> */}
+
                     <div style={{ display: 'flex', marginBottom: 8 }}>
                       <span
                         style={{
@@ -455,215 +426,138 @@ const WatchList: React.FC<Props> = (props) => {
                         }}
                       >
                         <Switch
+                          size="small"
                           checked={x.switchState}
                           onChange={(val) => toggleWatchService(val, x)}
                         />
                       </span>
                     </div>
                     <Divider style={{ margin: '10px 0' }} />
-                    <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        成功率
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          wordBreak: 'break-all',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {x.allSuccessRateBottleneckType !== -1 &&
-                          x.successRateBottleneckId && (
-                            <>
-                              <span
-                                style={{
-                                  display: 'inline-block',
-                                  width: 8,
-                                  height: 8,
-                                  marginRight: 8,
-                                  backgroundColor: {
-                                    1: '#FFA800',
-                                    2: '#ed6047',
-                                  }[x.allSuccessRateBottleneckType],
-                                  borderRadius: '100%',
-                                }}
-                              />
-                              {{ 1: '一般瓶颈', 2: '严重瓶颈' }[x.allSuccessRateBottleneckType]}
-                              <Link
-                                style={{ marginLeft: 4 }}
-                                to={`/bottleneckTable/bottleneckDetails?exceptionId=${x.successRateBottleneckId}`}
-                              >
-                                查看
-                              </Link>
-                            </>
-                          )}
-                        <span
-                          style={{
-                            marginLeft: 16,
-                            color: { 1: '#FFA800', 2: '#ed6047' }[x.allSuccessRateBottleneckType],
-                          }}
-                        >
-                          {(x.serviceAllSuccessRate || 0) * 100}%
-                        </span>
-                      </span>
-                    </div>
-
-                    {/* DB类型，RT的值字段名不同 */}
-                    {x.nodeType === 'DB' ? (
-                      <div style={{ display: 'flex', marginBottom: 8 }}>
-                        <span
-                          style={{
-                            color: 'var(--Netural-10, #8e8e8e)',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          RT
-                        </span>
-                        <span
-                          style={{
-                            flex: 1,
-                            textAlign: 'right',
-                            wordBreak: 'break-all',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          {x.allSqlTotalRtBottleneckType !== -1 &&
-                            x.rtSqlBottleneckId && (
-                              <>
-                                <span
+                    <Table
+                      size="small"
+                      columns={[
+                        {
+                          title: '上游应用',
+                          dataIndex: 'beforeApps',
+                          render: (text) => {
+                            return (
+                              <Tooltip title={text}>
+                                <div
                                   style={{
-                                    display: 'inline-block',
-                                    width: 8,
-                                    height: 8,
-                                    marginRight: 8,
-                                    backgroundColor: {
-                                      1: '#FFA800',
-                                      2: '#ed6047',
-                                    }[x.allSqlTotalRtBottleneckType],
-                                    borderRadius: '100%',
+                                    maxWidth: 100,
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
                                   }}
-                                />
-                                {{ 1: '一般瓶颈', 2: '严重瓶颈' }[x.allSqlTotalRtBottleneckType]}
-                                <Link
-                                  style={{ marginLeft: 4 }}
-                                  to={`/bottleneckTable/bottleneckDetails?exceptionId=${x.rtSqlBottleneckId}`}
                                 >
-                                  查看
-                                </Link>
-                              </>
-                            )}
-                          <span
-                            style={{
-                              marginLeft: 16,
-                              color: { 1: '#FFA800', 2: '#ed6047' }[x.allSqlTotalRtBottleneckType],
-                            }}
-                          >
-                            {x.serviceRt || 0}ms
-                          </span>
-                        </span>
-                      </div>
-                    ) : (
-                      <div style={{ display: 'flex', marginBottom: 8 }}>
-                        <span
-                          style={{
-                            color: 'var(--Netural-10, #8e8e8e)',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          RT
-                        </span>
-                        <span
-                          style={{
-                            flex: 1,
-                            textAlign: 'right',
-                            wordBreak: 'break-all',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          {x.allTotalRtBottleneckType !== -1 &&
-                            x.rtBottleneckId && (
-                              <>
-                                <span
-                                  style={{
-                                    display: 'inline-block',
-                                    width: 8,
-                                    height: 8,
-                                    marginRight: 8,
-                                    backgroundColor: {
-                                      1: '#FFA800',
-                                      2: '#ed6047',
-                                    }[x.allTotalRtBottleneckType],
-                                    borderRadius: '100%',
-                                  }}
-                                />
-                                {{ 1: '一般瓶颈', 2: '严重瓶颈' }[x.allTotalRtBottleneckType]}
-                                <Link
-                                  style={{ marginLeft: 4 }}
-                                  to={`/bottleneckTable/bottleneckDetails?exceptionId=${x.rtBottleneckId}`}
-                                >
-                                  查看
-                                </Link>
-                              </>
-                            )}
-                          <span
-                            style={{
-                              marginLeft: 16,
-                              color: { 1: '#FFA800', 2: '#ed6047' }[x.allTotalRtBottleneckType],
-                            }}
-                          >
-                            {x.serviceRt || 0}ms
-                          </span>
-                        </span>
-                      </div>
-                    )}
-
-                    <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        TPS：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          wordBreak: 'break-all',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {x.serviceAllTotalTps || 0}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        请求数：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          wordBreak: 'break-all',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {x.serviceAllTotalCount || 0}
-                      </span>
-                    </div>
+                                  {text}
+                                </div>
+                              </Tooltip>
+                            );
+                          },
+                        },
+                        {
+                          title: '成功率',
+                          dataIndex: 'serviceAllSuccessRate',
+                          align: 'center',
+                          render: (text, record) => {
+                            return (
+                              <span>
+                                {record.allSuccessRateBottleneckType !== -1 &&
+                                  record.successRateBottleneckId && (
+                                    <div>
+                                      <span
+                                        style={{
+                                          display: 'inline-block',
+                                          width: 8,
+                                          height: 8,
+                                          marginRight: 8,
+                                          backgroundColor: {
+                                            1: '#FFA800',
+                                            2: '#ed6047',
+                                          }[record.allSuccessRateBottleneckType
+],
+                                          borderRadius: '100%',
+                                        }}
+                                      />
+                                      <Link
+                                        to={`/pro/bottleneckTable/bottleneckDetails?exceptionId=${record.successRateBottleneckId}`}
+                                      >
+                                        {
+                                          { 1: '一般瓶颈', 2: '严重瓶颈' }[record.allSuccessRateBottleneckType
+]}
+                                      </Link>
+                                    </div>
+                                  )}
+                                {(text || 0) * 100}%
+                              </span>
+                            );
+                          },
+                        },
+                        {
+                          title: 'RT',
+                          dataIndex: 'serviceRt',
+                          align: 'center',
+                          render: (text, record) => {
+                            const rtType =
+                              x.nodeType === 'DB'
+                                ? record.allSqlTotalRtBottleneckType
+                                : record.allTotalRtBottleneckType;
+                            const rtId =
+                              x.nodeType === 'DB'
+                                ? record.rtSqlBottleneckId
+                                : record.rtBottleneckId;
+                            return (
+                              <span>
+                                {rtType !== -1 && rtId && (
+                                  <div>
+                                    <span
+                                      style={{
+                                        display: 'inline-block',
+                                        width: 8,
+                                        height: 8,
+                                        marginRight: 8,
+                                        backgroundColor: {
+                                          1: '#FFA800',
+                                          2: '#ed6047',
+                                        }[rtType],
+                                        borderRadius: '100%',
+                                      }}
+                                    />
+                                    <Link
+                                      to={`/pro/bottleneckTable/bottleneckDetails?exceptionId=${rtId}`}
+                                    >
+                                      {{ 1: '一般瓶颈', 2: '严重瓶颈' }[rtType]}
+                                    </Link>
+                                  </div>
+                                )}
+                                {text || 0}
+                              </span>
+                            );
+                          },
+                        },
+                        {
+                          title: 'TPS',
+                          dataIndex: 'serviceAllTotalTps',
+                          align: 'center',
+                          render: (text) => {
+                            return <span>{text || 0}</span>;
+                          },
+                        },
+                        {
+                          title: '请求数',
+                          dataIndex: 'serviceAllTotalCount',
+                          align: 'center',
+                          render: (text) => {
+                            return <span>{text || 0}</span>;
+                          },
+                        },
+                      ]}
+                      dataSource={[
+                        x
+                      ]}
+                      pagination={false}
+                    />
                   </div>
                 </div>
               );

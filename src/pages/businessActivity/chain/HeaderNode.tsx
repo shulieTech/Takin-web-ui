@@ -1,4 +1,4 @@
-import { Button, Dropdown, Menu, Popover, Icon, Switch, Tooltip } from 'antd';
+import { Button, Dropdown, Menu, Icon, Switch, Tooltip } from 'antd';
 import React, { useContext, useState } from 'react';
 import { BusinessActivityDetailsContext } from '../detailsPage';
 import styles from '../index.less';
@@ -7,6 +7,7 @@ import { router } from 'umi';
 import FlowVerificateModal from '../modals/FlowVerificateModal';
 import ErrorListModal from './ErrorListModal';
 import { FLOW_TYPE_ENUM } from 'src/constants';
+import moment from 'moment';
 
 interface Props {
   onChangeBottleStatus?: (status: number) => void;
@@ -104,6 +105,11 @@ const HeaderNode: React.FC<Props> = (props) => {
           />
         </Popover> */}
             <span style={{ marginLeft: 16 }}>
+              {state?.details?.refreshTime && (
+                <span style={{ marginRight: 8 }}>
+                  最后统计时间：{moment(state?.details?.refreshTime).format('HH:mm:ss')}
+                </span>
+              )}
               5秒刷新一次
               <Switch
                 size="small"
