@@ -28,7 +28,7 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
     /**
      * @name 下拉框、数值输入框
      */
-    case 5:
+    case 6:
       renderNode = (
         <NodeTypeThree
           keys={node.nodeInfo.keys}
@@ -58,6 +58,12 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
           //   dataSource={node.nodeInfo.dataSource}
         />
       );
+      break;
+    /**
+     * @name 文本输入框
+     */
+    case 5:
+      renderNode = <Input.TextArea autoSize />;
       break;
     default:
       break;
