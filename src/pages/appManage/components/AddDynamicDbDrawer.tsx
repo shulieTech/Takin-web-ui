@@ -27,6 +27,7 @@ const getInitState = () => ({
   middleWareName: undefined, // 中间件名称
   dsType: undefined, // 隔离方案
   dbType: undefined, // 类型
+  cacheType: undefined, // 缓存类型
   typeRadioData: [], // 隔离方案枚举数据
   templateData: [],
   dbAndTableList: [],
@@ -49,10 +50,17 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
   const handleCancle = async () => {
     setState({
       form: null as WrappedFormUtils,
-      dsType: undefined,
-      typeRadioData: [],
+      middleWareName: undefined, // 中间件名称
+      dsType: undefined, // 隔离方案
+      dbType: undefined, // 类型
+      cacheType: undefined, // 缓存类型
+      typeRadioData: [], // 隔离方案枚举数据
       templateData: [],
-      dbAndTableList: []
+      dbAndTableList: [],
+      middleWareType: [],
+      middleWareNameData: [],
+      cacheTypeData: [], // 缓存模式
+      dbTableDetail: {} as any
     });
   };
 

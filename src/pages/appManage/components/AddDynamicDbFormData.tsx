@@ -40,7 +40,9 @@ const getAddDynamicDbFormData = (
       data: { success, data }
     } = await AppManageService.queryTemplate({
       agentSourceType: state.form.getFieldsValue().dbType,
-      dsType: state.dsType
+      dsType: state.dsType,
+      cacheType: state.cacheType,
+      isNewData: true
     });
     if (success) {
       setState({
@@ -71,6 +73,14 @@ const getAddDynamicDbFormData = (
     queryType(state.dbType, value);
     setState({
       middleWareName: value
+    });
+  };
+  /**
+   * @name 切换缓存模式
+   */
+  const handleChangeCacheType = async value => {
+    setState({
+      cacheType: value
     });
   };
 
@@ -234,6 +244,7 @@ const getAddDynamicDbFormData = (
         <CommonSelect
           placeholder="请选择缓存模式"
           dataSource={state.cacheTypeData || []}
+          onChange={handleChangeCacheType}
           onRender={item => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
@@ -297,12 +308,15 @@ const getAddDynamicDbFormData = (
 
   if (state.dbType && state.middleWareName) {
     if (state.dbType === '缓存') {
-      return [
-        ...basicDbFormData,
-        ...cacheTypeFormData,
-        ...dynamicFormData,
-        ...templeteFormData
-      ];
+      if (state.cacheType) {
+        return [
+          ...basicDbFormData,
+          ...cacheTypeFormData,
+          ...dynamicFormData,
+          ...templeteFormData
+        ];
+      }
+      return [...basicDbFormData, ...cacheTypeFormData, ...templeteFormData];
     }
     if (state.dbType === '连接池') {
       return [
