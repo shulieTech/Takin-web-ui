@@ -85,6 +85,24 @@ const getLinkDbColumns = (
       title: '连接池名称',
       dataIndex: 'connectionPool'
     },
+
+    {
+      ...customColumnProps,
+      title: '状态',
+      dataIndex: 'status',
+      render: (text, row) => {
+        return (
+          <Badge
+            text={text === 0 ? '已启用' : '已禁用'}
+            color={
+              text === 0
+                ? 'var(--BrandPrimary-500)'
+                : 'var(--FunctionalError-500)'
+            }
+          />
+        );
+      }
+    },
     {
       ...customColumnProps,
       title: '附加信息',

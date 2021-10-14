@@ -23,9 +23,8 @@ const NodeTypeFive: React.FC<Props> = props => {
 
   useEffect(() => {
     setState({
-      list:
-        props.value &&
-        props.value.map((item, k) => {
+      list: props.value
+        ? props.value.map((item, k) => {
           return {
             ...item,
             shaDowTableName: `pt_${item.bizTableName}`,
@@ -33,6 +32,7 @@ const NodeTypeFive: React.FC<Props> = props => {
             editable: false
           };
         })
+        : []
     });
   }, [props.value]);
 
@@ -55,20 +55,23 @@ const NodeTypeFive: React.FC<Props> = props => {
    */
   const handleJoin = async checkedId => {
     setState({
-      list: state.list.map(item => {
-        if (item.id === checkedId) {
-          return { ...item, isCheck: item.isCheck ? false : true };
-        }
-        return { ...item };
-      })
+      list:
+        state.list &&
+        state.list.map(item => {
+          if (item.id === checkedId) {
+            return { ...item, isCheck: item.isCheck ? false : true };
+          }
+          return { ...item };
+        })
     });
     handleTransmit(
-      state.list.map(item => {
-        if (item.id === checkedId) {
-          return { ...item, isCheck: item.isCheck ? false : true };
-        }
-        return { ...item };
-      })
+      state.list &&
+        state.list.map(item => {
+          if (item.id === checkedId) {
+            return { ...item, isCheck: item.isCheck ? false : true };
+          }
+          return { ...item };
+        })
     );
   };
 
@@ -80,12 +83,14 @@ const NodeTypeFive: React.FC<Props> = props => {
       originList: originList.map(item => {
         return { ...item };
       }),
-      list: state.list.map(item => {
-        if (item.id === id) {
-          return { ...item, editable: true };
-        }
-        return { ...item };
-      }),
+      list:
+        state.list &&
+        state.list.map(item => {
+          if (item.id === id) {
+            return { ...item, editable: true };
+          }
+          return { ...item };
+        }),
       editingKey: id
     });
   };
@@ -96,21 +101,24 @@ const NodeTypeFive: React.FC<Props> = props => {
       return;
     }
     setState({
-      list: state.list.map(item => {
-        if (item.id === id) {
-          return { ...item, editable: false };
-        }
-        return { ...item };
-      }),
+      list:
+        state.list &&
+        state.list.map(item => {
+          if (item.id === id) {
+            return { ...item, editable: false };
+          }
+          return { ...item };
+        }),
       editingKey: ''
     });
     handleTransmit(
-      state.list.map(item => {
-        if (item.id === id) {
-          return { ...item, editable: false };
-        }
-        return { ...item };
-      })
+      state.list &&
+        state.list.map(item => {
+          if (item.id === id) {
+            return { ...item, editable: false };
+          }
+          return { ...item };
+        })
     );
   };
 
@@ -299,14 +307,13 @@ const NodeTypeFive: React.FC<Props> = props => {
         types="info"
         title={
           <span>
-            共用业务表{state.list.length}个，加入影子表
-            {
+            共用业务表{state.list && state.list.length}个，加入影子表
+            {state.list &&
               state.list.filter(item => {
                 if (item.isCheck) {
                   return item;
                 }
-              }).length
-            }
+              }).length}
             个
           </span>
         }
@@ -319,7 +326,7 @@ const NodeTypeFive: React.FC<Props> = props => {
       >
         添加影子表
       </Button>
-      <CustomTable columns={getColumns()} dataSource={state.list} />
+      <CustomTable columns={getColumns()} dataSource={state.list || []} />
     </div>
   );
 };
