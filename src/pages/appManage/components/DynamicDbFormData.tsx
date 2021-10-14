@@ -238,7 +238,7 @@ const getDynamicDbFormData = (
             <Icon style={{ marginLeft: 4 }} type="question-circle" />
           </Tooltip>
         ) : (
-          <span>{item.label}</span>
+          item.label
         ),
         options: {
           initialValue:

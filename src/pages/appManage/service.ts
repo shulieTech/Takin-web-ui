@@ -47,7 +47,7 @@ const AppManageService = {
    * @name 禁用、启用影子库表
    */
   async openAndClose(data = {}) {
-    const url = '/link/ds/enable';
+    const url = '/v2/link/ds/enable';
     return httpPut(url, data);
   },
   /**
