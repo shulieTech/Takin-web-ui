@@ -79,20 +79,6 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
   };
 
   /**
-   * @name 获取中间件类型
-   */
-  const queryCacheType = async () => {
-    const {
-      data: { success, data }
-    } = await AppManageService.queryCacheType({});
-    if (success) {
-      setState({
-        cacheTypeData: data || []
-      });
-    }
-  };
-
-  /**
    * @name 提交
    */
   const handleSubmit = async () => {

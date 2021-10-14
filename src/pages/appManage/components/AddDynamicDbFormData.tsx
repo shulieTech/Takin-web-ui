@@ -71,6 +71,9 @@ const getAddDynamicDbFormData = (
    */
   const handleChangeMiddleWareName = async value => {
     queryType(state.dbType, value);
+    if (state.dbType === '缓存') {
+      queryCacheType();
+    }
     setState({
       middleWareName: value
     });
@@ -82,6 +85,20 @@ const getAddDynamicDbFormData = (
     setState({
       cacheType: value
     });
+  };
+
+  /**
+   * @name 获取缓存类型
+   */
+  const queryCacheType = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryCacheType({});
+    if (success) {
+      setState({
+        cacheTypeData: data || []
+      });
+    }
   };
 
   /**
