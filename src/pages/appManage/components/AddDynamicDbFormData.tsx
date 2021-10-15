@@ -3,12 +3,13 @@
  */
 import React, { Fragment, useEffect } from 'react';
 import { FormDataType } from 'racc/dist/common-form/type';
-import { Input, Radio } from 'antd';
+import { Icon, Input, message, Radio, Tooltip } from 'antd';
 import { DbDetailBean } from '../enum';
 import AppManageService from '../service';
 import { getRenderFormNode } from 'src/common/config-form/utils';
 import { AddDynamicDbDrawerState } from './AddDynamicDbDrawer';
 import { CommonSelect } from 'racc';
+import copy from 'copy-to-clipboard';
 
 const getAddDynamicDbFormData = (
   state: AddDynamicDbDrawerState,
@@ -135,6 +136,14 @@ const getAddDynamicDbFormData = (
       setState({
         middleWareNameData: data || []
       });
+    }
+  };
+
+  const handleCopy = async value => {
+    if (copy(value)) {
+      message.success('复制成功');
+    } else {
+      message.error('复制失败');
     }
   };
 
@@ -307,7 +316,28 @@ const getAddDynamicDbFormData = (
   const templeteFormData = state.templateData.map(
     (item, index): FormDataType => ({
       key: item.key,
-      label: item.label,
+      label: item.tips ? (
+        <Tooltip
+          trigger="click"
+          title={() => {
+            return (
+              <div>
+                <div style={{ textAlign: 'right' }}>
+                  <a onClick={() => handleCopy(item.tips)}>复制</a>
+                </div>
+                <div style={{ width: 200, height: 300, overflow: 'scroll' }}>
+                  {item.tips}
+                </div>
+              </div>
+            );
+          }}
+        >
+          {item.label}
+          <Icon style={{ marginLeft: 4 }} type="question-circle" />
+        </Tooltip>
+      ) : (
+        item.label
+      ),
       options: {
         initialValue:
           item.nodeType === 4

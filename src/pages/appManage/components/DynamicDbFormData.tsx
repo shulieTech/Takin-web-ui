@@ -221,13 +221,14 @@ const getDynamicDbFormData = (
         key: item.key,
         label: item.tips ? (
           <Tooltip
+            trigger="click"
             title={() => {
               return (
                 <div>
                   <div style={{ textAlign: 'right' }}>
                     <a onClick={() => handleCopy(item.tips)}>复制</a>
                   </div>
-                  <div style={{ width: 250, height: 400, overflow: 'scroll' }}>
+                  <div style={{ width: 200, height: 300, overflow: 'scroll' }}>
                     {item.tips}
                   </div>
                 </div>
