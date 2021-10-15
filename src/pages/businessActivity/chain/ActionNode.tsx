@@ -45,7 +45,7 @@ const ActionNode: React.FC<Props> = props => {
                 debugToolId: state.details.activityId.toString()
               }
             });
-            router.push(`/debugTool/linkDebug`);
+            router.push(`/pro/debugTool/linkDebug`);
           }}
         >
           去调试
