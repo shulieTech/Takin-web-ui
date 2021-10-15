@@ -51,12 +51,14 @@ const getLinkDbColumns = (
   /**
    * @name 确认是否删除
    */
-  const handleDelete = async (id, middlewareType) => {
+  const handleDelete = async (id, middlewareType, isNewData) => {
     const {
       data: { data, success }
     } = await AppManageService.deleteDbTable({
+      isNewData,
       id,
-      middlewareType
+      middlewareType,
+      applicationId: appId
     });
     if (success) {
       openNotification(`删除成功`);
@@ -224,7 +226,9 @@ const getLinkDbColumns = (
                   title="删除后不可恢复，确定要删除吗？"
                   okText="确定删除"
                   okColor="var(--FunctionalError-500)"
-                  onConfirm={() => handleDelete(row.id, row.middlewareType)}
+                  onConfirm={() =>
+                    handleDelete(row.id, row.middlewareType, row.isNewData)
+                  }
                 >
                   <a
                     disabled={

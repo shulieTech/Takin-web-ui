@@ -85,7 +85,13 @@ const AppManageService = {
     const url = '/v2/link/ds/config';
     return httpPost(url, data);
   },
-
+  /**
+   * @name 新增动态影子库表
+   */
+  async addDynamicDbTable(data = {}) {
+    const url = '/v2/link/ds/config/create';
+    return httpPost(url, data);
+  },
   /**
    * @name 删除影子库表
    */
