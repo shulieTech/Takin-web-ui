@@ -39,7 +39,7 @@ const getAddDynamicDbFormData = (
     const {
       data: { success, data }
     } = await AppManageService.queryTemplate({
-      agentSourceType: state.form.getFieldsValue().middlewareType,
+      agentSourceType: state.form.getFieldsValue().connectionPool,
       dsType: state.dsType,
       cacheType: state.cacheType,
       isNewData: true
@@ -192,7 +192,7 @@ const getAddDynamicDbFormData = (
       )
     },
     {
-      key: 'middleWareType',
+      key: 'connectionPool',
       label: '中间件名称',
       options: {
         initialValue: undefined,

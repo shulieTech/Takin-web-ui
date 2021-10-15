@@ -98,6 +98,7 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
 
         const result = {
           ...values,
+          middlewareType: state.dbType,
           extInfo: JSON.stringify({ ...newResult })
         };
 
