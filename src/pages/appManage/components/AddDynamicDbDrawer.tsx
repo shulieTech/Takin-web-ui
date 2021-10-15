@@ -42,8 +42,6 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
 
   const handleClick = async () => {
-    // queryDbTableDetail();
-    // queryType();
     queryMiddleWareType();
   };
 
@@ -104,7 +102,7 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
         };
 
         /**
-         * @name 编辑影子库表
+         * @name 新增影子库表
          */
 
         const {

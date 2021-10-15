@@ -63,7 +63,8 @@ const getAddDynamicDbFormData = (
     setState({
       dbType: options.props.children,
       middleWareName: undefined,
-      middleWareNameData: []
+      middleWareNameData: [],
+      templateData: []
     });
   };
   /**
@@ -83,7 +84,11 @@ const getAddDynamicDbFormData = (
    */
   const handleChangeCacheType = async value => {
     setState({
-      cacheType: value
+      cacheType: value,
+      templateData: []
+    });
+    state.form.setFieldsValue({
+      dsType: undefined
     });
   };
 
@@ -333,7 +338,7 @@ const getAddDynamicDbFormData = (
           ...templeteFormData
         ];
       }
-      return [...basicDbFormData, ...cacheTypeFormData, ...templeteFormData];
+      return [...basicDbFormData, ...cacheTypeFormData];
     }
     if (state.dbType === '连接池') {
       return [
@@ -344,6 +349,6 @@ const getAddDynamicDbFormData = (
       ];
     }
   }
-  return [...basicDbFormData, ...templeteFormData];
+  return [...basicDbFormData];
 };
 export default getAddDynamicDbFormData;
