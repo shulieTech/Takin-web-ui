@@ -89,6 +89,7 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
         }
 
         const newResult = { ...values };
+        delete newResult[DbDetailBean.业务数据源用户名];
         delete newResult[DbDetailBean.业务数据源];
         delete newResult[DbDetailBean.业务集群];
         delete newResult[DbDetailBean.中间件名称];

@@ -108,6 +108,25 @@ const getDynamicDbFormData = (
             )
         },
         {
+          key: DbDetailBean.业务数据源用户名,
+          label: '业务数据源用户名',
+          options: {
+            initialValue:
+                detailData && detailData[DbDetailBean.业务数据源用户名],
+
+            rules: [
+              {
+                required: true
+              }
+            ]
+          },
+          node: (
+              <span>
+                {detailData && detailData[DbDetailBean.业务数据源用户名]}
+              </span>
+            )
+        },
+        {
           key: DbDetailBean.业务数据源,
           label: '业务数据源',
           options: {

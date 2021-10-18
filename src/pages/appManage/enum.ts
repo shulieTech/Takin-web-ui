@@ -63,6 +63,7 @@ export enum DbDetailBean {
   中间件类型 = 'middlewareType',
   中间件名称 = 'connectionPool',
   业务数据源 = 'url',
+  业务数据源用户名 = 'username',
   业务集群 = 'url',
   缓存模式 = 'cacheType',
   隔离方案 = 'dsType'

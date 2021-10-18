@@ -229,6 +229,20 @@ const getAddDynamicDbFormData = (
 
   const linkFormData = [
     {
+      key: DbDetailBean.业务数据源用户名,
+      label: '业务数据源用户名',
+      options: {
+        initialValue: undefined,
+        rules: [
+          {
+            required: true,
+            message: '请输入业务数据源用户名'
+          }
+        ]
+      },
+      node: <Input placeholder="请输入业务数据源用户名" />
+    },
+    {
       key: DbDetailBean.业务数据源,
       label: '业务数据源',
       options: {
