@@ -100,7 +100,8 @@ const getBusinessActivityColumns = (
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'managerName'
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle',
+      dataIndex: 'userName'
     },
     {
       ...customColumnProps,
