@@ -89,6 +89,7 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
         }
 
         const newResult = { ...values };
+        delete newResult.applicationName;
         delete newResult[DbDetailBean.业务数据源用户名];
         delete newResult[DbDetailBean.业务数据源];
         delete newResult[DbDetailBean.业务集群];
@@ -116,7 +117,7 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
           ...result
         });
         if (success) {
-          openNotification('修改影子库表成功');
+          openNotification('新增影子库表成功');
           setState({
             form: null as WrappedFormUtils,
             dbTableDetail: {} as any,
