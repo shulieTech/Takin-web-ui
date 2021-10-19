@@ -1,221 +1,258 @@
 import ReactEcharts from 'echarts-for-react';
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { Tooltip, Icon } from 'antd';
+
 interface Props {
   chartsInfo: any;
   isLive?: boolean;
+  onEvents?: any;
+  columnNum?: number;
+  tooltip?: string | ReactNode;
 }
-const LineCharts: React.FC<Props> = props => {
-  const { chartsInfo } = props;
+const LineCharts: React.FC<Props> = (props) => {
+  const { chartsInfo, onEvents, columnNum = 1, tooltip } = props;
+
+  const grid = [];
+
+  const seriesConfig = [
+    {
+      name: '请求成功率',
+      dataIndex: 'successRate',
+    },
+    {
+      name: '平均RT',
+      dataIndex: 'rt',
+    },
+    {
+      name: 'TPS',
+      dataIndex: 'tps',
+    },
+    {
+      name: 'SA',
+      dataIndex: 'sa',
+    },
+  ];
+
+  const commonYaxisConfig = {
+    type: 'value',
+    axisLine: {
+      show: false,
+    },
+    axisTick: {
+      show: false,
+    },
+    axisLabel: {
+      color: '#98A1B3',
+      width: 20,
+      overflow: 'truncate',
+      formatter: (val, index) => {
+        return val > 9999 ? `${val / 10000}万` : val;
+      },
+    },
+    splitLine: {
+      show: true,
+      lineStyle: {
+        type: 'dashed',
+        color: ['#E6EAF0', '#fff'],
+      },
+    },
+  };
+
+  const getAreaLinearConfig = (color = '#00CBBF') => ({
+    areaStyle: {
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [
+          {
+            color,
+            offset: 0,
+          },
+          {
+            offset: 1,
+            color: '#fff',
+          },
+        ],
+      },
+    },
+  });
+
+  const commonSeriyConfig = {
+    type: 'line',
+    showSymbol: true,
+    hoverAnimation: false,
+    smooth: true,
+  };
+
+  const xAxis = seriesConfig.map((x, i) => ({
+    type: 'category',
+    boundaryGap: false,
+    axisLine: {
+      onZero: true,
+      lineStyle: {
+        color: '#00BCD4',
+      },
+    },
+    axisTick: {
+      show: false,
+    },
+    axisLabel: {
+      color: '#98A1B3',
+    },
+    data: chartsInfo.time,
+    gridIndex: i,
+  }));
+
+  const yAxis = seriesConfig.map((x, i) => ({
+    gridIndex: i,
+    name: x.name,
+    ...commonYaxisConfig,
+  }));
+
+  const series = seriesConfig.map((x, i) => ({
+    ...commonSeriyConfig,
+    name: x.name,
+    xAxisIndex: i,
+    yAxisIndex: i,
+    data: chartsInfo[x.dataIndex],
+    color: undefined,
+    // ...getAreaLinearConfig(),
+  }));
+
+  // 4个图分别添加重复数据
+  for (let i = 0; i < 4; i += 1) {
+    const colIndex = i % columnNum;
+    const rowIndex = (i - colIndex) / columnNum;
+    if (columnNum === 1) {
+      grid.push({
+        top: 90 + rowIndex * 268,
+        right: 48,
+        height: 180,
+        width: 240,
+        backgroundColor: '#fff',
+        show: true,
+        borderWidth: 80,
+        borderColor: '#fff',
+      });
+    } else {
+      grid.push({
+        top: 90 + rowIndex * 288,
+        left: `${colIndex * (100 / columnNum) + 10 / columnNum}%`,
+        height: 180,
+        width: `${80 / columnNum}%`,
+        backgroundColor: '#fff',
+        show: true,
+        borderWidth: 80,
+        borderColor: '#fff',
+      });
+    }
+
+    yAxis.push({
+      name: '并发数',
+      gridIndex: i,
+      ...commonYaxisConfig,
+      splitLine: {
+        ...commonYaxisConfig.splitLine,
+        show: false,
+      },
+    });
+    series.push({
+      name: '并发数',
+      xAxisIndex: i,
+      yAxisIndex: 4 + i,
+      data: chartsInfo.concurrent,
+      color: '#56A4FF',
+      ...commonSeriyConfig,
+      // ...getAreaLinearConfig('#56A4FF'),
+    });
+  }
+
   return (
-    <ReactEcharts
-      style={{ width: '100%', height: 800 }}
-      option={{
-        color: ['#11BBD5'],
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            animation: false
-          }
-        },
-        // toolbox: {
-        //   feature: {
-        //     dataZoom: {
-        //       yAxisIndex: 'none'
-        //     },
-        //     restore: {},
-        //     saveAsImage: {}
-        //   }
-        // },
-        dataZoom: [
-          {
-            show: true,
-            type: 'slider',
-            top: '10px',
-            left: '60px',
-            right: '60px',
-            // height: '10px',
-            realtime: true,
-            start: 0,
-            end: 100,
-            xAxisIndex: [0, 1, 2, 3, 4]
-          }
-          // {
-          //   type: 'inside',
-          //   realtime: true,
-          //   start: 0,
-          //   end: 100,
-          //   xAxisIndex: [0, 1, 2, 3]
-          // }
-        ],
-        axisPointer: {
-          link: { xAxisIndex: 'all' }
-        },
-        grid: [
-          {
-            top: '13%',
-            left: 50,
-            right: 50,
-            height: '22%',
-            width: '42%'
+    <div style={{ position: 'relative' }}>
+      {tooltip && (
+        <Tooltip title={tooltip} arrowPointAtCenter placement="rightTop">
+          <Icon
+            type="question-circle"
+            className="pointer"
+            style={{
+              marginRight: 16,
+              color: 'var(--Netural-09, #9E9E9E)',
+              position: 'absolute',
+              top: 15,
+              right: 10,
+              zIndex: 1,
+            }}
+          />
+        </Tooltip>
+      )}
+      <ReactEcharts
+        style={{ width: '100%', height: 1110 }}
+        onEvents={onEvents}
+        option={{
+          grid,
+          xAxis,
+          yAxis,
+          series,
+          backgroundColor: '#F5F7F9',
+          color: ['#00CBBF'],
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              animation: false,
+            },
+            formatter: (val) => {
+              let str = `${val[0]?.axisValue} <br>`;
+              let mutiSeriAdded = false;
+              val.forEach((x) => {
+                if (!(x.seriesName === '并发数' && mutiSeriAdded)) {
+                  str += `${x.marker} ${x.seriesName} ${x.value}<br>`;
+                }
+                if (x.seriesName === '并发数') {
+                  mutiSeriAdded = true;
+                }
+              });
+              return str;
+            },
           },
-          {
-            left: '55%',
-            top: '13%',
-            height: '22%',
-            width: '42%'
-          },
-          {
-            left: 50,
-            right: 50,
-            top: '45%',
-            height: '22%',
-            width: '42%'
-          },
-          {
-            left: '55%',
-            top: '45%',
-            height: '22%',
-            width: '42%'
-          },
-          {
-            left: 50,
-            right: 50,
-            top: '75%',
-            height: '22%',
-            width: '42%'
-          }
-        ],
-        xAxis: [
-          {
-            type: 'category',
-            boundaryGap: false,
-            axisLine: { onZero: true },
-            data: chartsInfo.time
-          },
-          {
-            gridIndex: 1,
-            type: 'category',
-            boundaryGap: false,
-            axisLine: { onZero: true },
-            data: chartsInfo.time
-          },
-          {
-            gridIndex: 2,
-            type: 'category',
-            boundaryGap: false,
-            axisLine: { onZero: true },
-            data: chartsInfo.time
-          },
-          {
-            gridIndex: 3,
-            type: 'category',
-            boundaryGap: false,
-            axisLine: { onZero: true },
-            data: chartsInfo.time
-          },
-          {
-            gridIndex: 4,
-            type: 'category',
-            boundaryGap: false,
-            axisLine: { onZero: true },
-            data: chartsInfo.time
-          }
-        ],
-        yAxis: [
-          {
-            name: '并发数',
-            type: 'value'
-          },
-          {
-            gridIndex: 1,
-            name: 'TPS',
-            type: 'value'
-          },
-          {
-            gridIndex: 2,
-            name: '平均RT',
-            type: 'value'
-          },
-          {
-            gridIndex: 3,
-            name: '请求成功率',
-            type: 'value'
-          },
-          {
-            gridIndex: 4,
-            name: 'SA',
-            type: 'value'
-          }
-        ],
-        series: [
-          {
-            name: '并发数',
-            type: 'line',
-            showSymbol: true,
-            hoverAnimation: false,
-            data: chartsInfo.concurrent,
-            smooth: true
-          },
-          {
-            name: 'TPS',
-            type: 'line',
-            showSymbol: true,
-            xAxisIndex: 1,
-            yAxisIndex: 1,
-            // symbolSize: 8,
-            hoverAnimation: false,
-            data: chartsInfo.tps,
-            smooth: true
-            // markLine: {
-            //   symbol: 'none',
-            //   data: [
-            //     {
-            //       silent: false,
-            //       yAxis: 230,
-            //       lineStyle: {
-            //         type: 'dash',
-            //         color: '#FE7D61'
-            //       }
-            //     }
-            //   ]
+          // toolbox: {
+          //   feature: {
+          //     dataZoom: {
+          //       yAxisIndex: 'none'
+          //     },
+          //     restore: {},
+          //     saveAsImage: {}
+          //   }
+          // },
+          dataZoom: [
+            {
+              show: true,
+              type: 'slider',
+              top: 10,
+              left: columnNum === 1 ? undefined : 10,
+              right: tooltip ? 60 : 10,
+              width: columnNum === 1 ? 270 : undefined,
+              realtime: true,
+              start: 0,
+              end: 100,
+              xAxisIndex: [0, 1, 2, 3],
+            },
+            // {
+            //   type: 'inside',
+            //   realtime: true,
+            //   start: 0,
+            //   end: 100,
+            //   xAxisIndex: [0, 1, 2, 3]
             // }
+          ],
+          axisPointer: {
+            link: { xAxisIndex: 'all' },
           },
-          {
-            name: '平均RT',
-            type: 'line',
-            xAxisIndex: 2,
-            yAxisIndex: 2,
-            showSymbol: true,
-            // symbolSize: 8,
-            hoverAnimation: false,
-            data: chartsInfo.rt,
-            smooth: true
-          },
-          {
-            name: '请求成功率',
-            type: 'line',
-            xAxisIndex: 3,
-            yAxisIndex: 3,
-            showSymbol: true,
-            // symbolSize: 8,
-            hoverAnimation: false,
-            data: chartsInfo.successRate,
-            smooth: true
-          },
-          {
-            name: 'SA',
-            type: 'line',
-            xAxisIndex: 4,
-            yAxisIndex: 4,
-            showSymbol: true,
-            // symbolSize: 8,
-            hoverAnimation: false,
-            data: chartsInfo.sa,
-            smooth: true
-          }
-        ]
-      }}
-    />
+        }}
+      />
+    </div>
   );
 };
 export default LineCharts;

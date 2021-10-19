@@ -11,6 +11,7 @@ import { VerifyStatus } from '../enum';
 import BusinessActivityService from '../service';
 interface Props {
   id: string;
+  btnProps?: any;
 }
 const FlowVerificateModal: React.FC<Props> = props => {
   const { state: rootState, setState: rootSetState } = useContext(
@@ -120,7 +121,7 @@ const FlowVerificateModal: React.FC<Props> = props => {
   return (
     <Fragment>
       <CommonModal
-        btnProps={{ style: { marginLeft: 16 }, loading: state.loading }}
+        btnProps={{ style: { marginLeft: 16 }, loading: state.loading, ...props.btnProps }}
         btnText={`流量验证${state.loading ? '中' : ''}`}
         modalProps={{
           title: modalTitle,

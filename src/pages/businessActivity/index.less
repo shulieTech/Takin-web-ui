@@ -353,17 +353,17 @@ canvas {
   background-color: initial !important;
   .collspaneTitle {
     position: relative;
-    &::before {
-      content: '';
-      display: block;
-      position: absolute;
-      width: 4px;
-      height: 16px;
-      background: #11bbd5;
-      border-radius: 0px 100px 100px 0px;
-      top: 0;
-      left: -16px;
-    }
+    // &::before {
+    //   content: '';
+    //   display: block;
+    //   position: absolute;
+    //   width: 4px;
+    //   height: 16px;
+    //   background: #11bbd5;
+    //   border-radius: 0px 100px 100px 0px;
+    //   top: 0;
+    //   left: -16px;
+    // }
   }
   :global {
     .ant-collapse-content {
@@ -405,10 +405,10 @@ canvas {
 .nodeInfoDrawer {
   // margin-right: 8px;
   :global {
-    .ant-drawer-close {
-      right: -15px;
-      top: -10px;
-    }
+    // .ant-drawer-close {
+    //   right: -15px;
+    //   top: -10px;
+    // }
     .ant-drawer-content-wrapper {
       box-shadow: 0px 0px 12px 0px rgba(177, 192, 192, 0.45) !important;
     }
@@ -499,16 +499,16 @@ canvas {
 .infoBar {
   text-align: center;
   line-height: 40px;
-  background: var(--BrandPrimary-50);
+  background: var(--BrandPrimary-50, #d4ebef);
   font-weight: 600;
-  color: var(--BrandPrimary-500);
+  color: var(--BrandPrimary-500, #11bbd5);
   font-size: 13px;
   position: relative;
   .num {
     margin: 0 4px;
     font-weight: bold;
     font-size: 14px;
-    color: var(--Netural-14);
+    color: var(--Netural-14, #474c53);
   }
   .close {
     position: absolute;
@@ -521,6 +521,67 @@ canvas {
 
 .modalTitle {
   font-size: 16px;
-  color: var(--Netural-14);
+  color: var(--Netural-14, #474c53);
   margin-left: 8px;
+}
+
+.splited-tabs :global {
+  .ant-tabs-nav-container {
+    border: 1px solid #f0f0f0;
+    margin-top: 16px;
+    border-radius: 4px;
+  }
+  .ant-tabs-nav {
+    width: 100%;
+    & > div {
+      display: flex;
+      width: 100%;
+    }
+    .ant-tabs-tab {
+      flex: 1;
+    }
+  }
+}
+.splited-tabs {
+  &-1 :global(.ant-tabs-tab) {
+    margin: 0 200px !important;
+  }
+  &-2 :global(.ant-tabs-tab) {
+    margin: 0 70px !important;
+  }
+  &-3 :global(.ant-tabs-tab) {
+    margin: 0 32px !important;
+  }
+  &-4 :global(.ant-tabs-tab) {
+    margin: 0 10px !important;
+  }
+}
+.page-hide-item :global {
+  .ant-pagination-item,
+  .ant-pagination-jump-prev,
+  .ant-pagination-jump-next {
+    display: none !important;
+  }
+}
+.activity-item{
+  cursor: pointer;
+  padding: 8px 16px 12px;
+  border-bottom: 1px solid var(--Netural-02, #F8F8F8);
+  background-color: #fff;
+  // transition: all 0.3s;
+  .active-type-name{
+    color: var(--Netural-08, #ABABAB);
+    margin-bottom: 8px;
+  }
+  .active-name{
+    color: var(--Netural-14, #424242);
+    font-weight: 600;
+    word-break: 'break-all';
+  }
+  &.selected, &:hover{
+    background-color: var(--BrandPrimary-500, #00CDC3);
+    .active-type-name, .active-name {
+      color: #fff;
+    }
+  }
 }
