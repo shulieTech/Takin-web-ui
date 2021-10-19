@@ -497,7 +497,7 @@ const WatchList: React.FC<Props> = (props) => {
                               {{ 1: '一般瓶颈', 2: '严重瓶颈' }[x.allSuccessRateBottleneckType]}
                               <Link
                                 style={{ marginLeft: 4 }}
-                                to={`/bottleneckTable/bottleneckDetails?exceptionId=${x.successRateBottleneckId}`}
+                                to={`/pro/bottleneckTable/bottleneckDetails?exceptionId=${x.successRateBottleneckId}`}
                               >
                                 查看
                               </Link>
@@ -552,7 +552,7 @@ const WatchList: React.FC<Props> = (props) => {
                                 {{ 1: '一般瓶颈', 2: '严重瓶颈' }[x.allSqlTotalRtBottleneckType]}
                                 <Link
                                   style={{ marginLeft: 4 }}
-                                  to={`/bottleneckTable/bottleneckDetails?exceptionId=${x.rtSqlBottleneckId}`}
+                                  to={`/pro/bottleneckTable/bottleneckDetails?exceptionId=${x.rtSqlBottleneckId}`}
                                 >
                                   查看
                                 </Link>
@@ -605,7 +605,7 @@ const WatchList: React.FC<Props> = (props) => {
                                 {{ 1: '一般瓶颈', 2: '严重瓶颈' }[x.allTotalRtBottleneckType]}
                                 <Link
                                   style={{ marginLeft: 4 }}
-                                  to={`/bottleneckTable/bottleneckDetails?exceptionId=${x.rtBottleneckId}`}
+                                  to={`/pro/bottleneckTable/bottleneckDetails?exceptionId=${x.rtBottleneckId}`}
                                 >
                                   查看
                                 </Link>
