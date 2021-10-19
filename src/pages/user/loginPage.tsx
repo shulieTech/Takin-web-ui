@@ -8,8 +8,9 @@ import DvaComponent from 'src/components/basic-component/DvaComponent';
 import UserService from 'src/services/user';
 import request from 'src/utils/request';
 import router from 'umi/router';
+import queryString from 'query-string';
 import styles from './indexPage.less';
-interface Props {}
+interface Props { }
 
 const state = {
   nums: null,
@@ -146,10 +147,10 @@ export default class Login extends DvaComponent<Props, State> {
     if (err) {
       return;
     }
-
+    const { key } = queryString.parse(location.search);
     const {
       data: { success, data }
-    } = await UserService.troLogin(value);
+    } = await UserService.troLogin({ ...value, envCode: key.slice(0, key.length - 1) });
     if (success) {
       notification.success({
         message: '通知',

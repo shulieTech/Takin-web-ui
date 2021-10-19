@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { message, Modal } from 'antd';
 import { Basic } from 'src/types';
 import BaseResponse = Basic.BaseResponse;
+import queryString from 'query-string';
 import { getTakinAuthority } from './utils';
 declare var window: Window;
 declare var serverUrl: string;
@@ -75,7 +76,7 @@ function checkStatus(response: BaseResponse) {
       if (!outloginFlag) {
         getBackLogin(response);
       }
-    } 
+    }
   }
   return {
     config: response.config,
@@ -100,11 +101,11 @@ export interface RequestParams {
 const getUrl = (url: string, options: any) => {
   return `${options && options.domain ? options.domain : serverUrl}${url}`;
 };
+const { key } = queryString.parse(location.search);
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
-  const myurl = `${
-    options && options.domain ? options.domain : serverUrl
-  }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
+  const myurl = `${options && options.domain ? options.domain : serverUrl
+    }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   // const myurl = `${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   return httpRequest<T>({
     url: myurl,
@@ -115,6 +116,7 @@ export function httpGet<T = any>(url: string, data?: any, options?: any) {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
       'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
+      tenant_code: key.slice(0, key.length - 1)
     }
   });
 }
@@ -129,6 +131,7 @@ export function httpPost<T>(url, data?: any, options?: any) {
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
       'Access-Token': localStorage.getItem('Access-Token'),
       'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
+      tenant_code: key.slice(0, key.length - 1)
     }
   });
 }
@@ -142,6 +145,7 @@ export function httpPut<T>(url, data?: any, options?: any) {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
       'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
+      tenant_code: key.slice(0, key.length - 1)
     }
   });
 }
@@ -155,6 +159,7 @@ export function httpDelete<T>(url, data?: any, options?: any) {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
       'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
+      tenant_code: key.slice(0, key.length - 1)
     }
   });
 }
