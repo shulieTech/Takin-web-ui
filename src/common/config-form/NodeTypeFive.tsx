@@ -199,9 +199,11 @@ const NodeTypeFive: React.FC<Props> = props => {
         ...customColumnProps,
         title: '业务库',
         dataIndex: 'bizDatabase',
+        width: 150,
         render: (text, row) => {
           return row.editable ? (
             <Input
+              maxLength={128}
               value={text}
               onChange={e =>
                 handleChangeData(row.id, e.target.value, 'bizDatabase')
@@ -215,10 +217,12 @@ const NodeTypeFive: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务表',
+        width: 150,
         dataIndex: 'bizTableName',
         render: (text, row) => {
           return row.editable ? (
             <Input
+              maxLength={128}
               value={text}
               onChange={e =>
                 handleChangeData(row.id, e.target.value, 'bizTableName')
@@ -232,10 +236,12 @@ const NodeTypeFive: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '影子表',
+        width: 150,
         dataIndex: 'shaDowTableName',
         render: (text, row) => {
           return row.editable ? (
             <Input
+              maxLength={128}
               value={row.bizTableName ? `pt_${row.bizTableName}` : undefined}
               disabled={true}
             />
