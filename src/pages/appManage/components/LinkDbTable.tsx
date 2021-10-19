@@ -64,7 +64,7 @@ const LinkDbTable: React.FC<Props> = props => {
                       action="add"
                       id={id}
                       detailData={detailData}
-                      onSccuess={() => {
+                      onSuccess={() => {
                         setState({
                           isReload: !state.isReload
                         });
