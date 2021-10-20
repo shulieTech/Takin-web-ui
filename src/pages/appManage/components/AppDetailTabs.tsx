@@ -1,6 +1,7 @@
 import { Tabs } from 'antd';
 import React from 'react';
 import DetailTabs from 'src/common/detail-tabs';
+import ApplicationMonitor from './ApplicationMonitor';
 import BasicInfo from './BasicInfo';
 import BlackList from './BlackList';
 import DbAndTable from './DbAndTable';
@@ -155,6 +156,18 @@ const AppDetailTabs: React.FC<Props> = props => {
       title: '插件管理',
       tabNode: (
         <PluginManageList
+          id={id}
+          detailData={detailData}
+          detailState={detailState}
+          action={action}
+        />
+      ),
+      show: true
+    },
+    {
+      title: '应用监控',
+      tabNode: (
+        <ApplicationMonitor
           id={id}
           detailData={detailData}
           detailState={detailState}
