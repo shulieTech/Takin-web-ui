@@ -5,7 +5,7 @@ const AppManageService = {
    * @name 获取影子库表列表
    */
   async queryDbAndTableList(data = {}) {
-    const url = '/link/ds/manage';
+    const url = '/v2/link/ds/manage';
     return httpGet(url, data);
   },
   /**
@@ -47,7 +47,7 @@ const AppManageService = {
    * @name 禁用、启用影子库表
    */
   async openAndClose(data = {}) {
-    const url = '/link/ds/enable';
+    const url = '/v2/link/ds/enable';
     return httpPut(url, data);
   },
   /**
@@ -79,11 +79,32 @@ const AppManageService = {
     return httpPut(url, data);
   },
   /**
+   * @name 编辑动态影子库表
+   */
+  async editDynamicDbTable(data = {}) {
+    const url = '/v2/link/ds/config';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 新增动态影子库表
+   */
+  async addDynamicDbTable(data = {}) {
+    const url = '/v2/link/ds/config/create';
+    return httpPost(url, data);
+  },
+  /**
    * @name 删除影子库表
    */
   async deleteDbTable(data = {}) {
-    const url = '/link/ds/manage';
+    const url = '/v2/link/ds/config/delete';
     return httpDelete(url, data);
+  },
+  /**
+   * @name 获取影子库表隔离方案模板
+   */
+  async queryTemplate(data = {}) {
+    const url = '/v2/link/ds/config/template';
+    return httpPost(url, data);
   },
   /**
    * @name 获取影子库表详情
@@ -93,10 +114,24 @@ const AppManageService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取动态影子库表详情
+   */
+  async queryDynamicDbTableDetail(data = {}) {
+    const url = '/v2/link/ds/manage/detail';
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取影子库表详情(老版本)
    */
   async queryDbTableDetailOld(data = {}) {
     const url = '/link/ds/manage/detail/old';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取动态影子库表隔离方案
+   */
+  async queryDynamicProgramme(data = {}) {
+    const url = '/v2/link/ds/manage/programme';
     return httpGet(url, data);
   },
   /**
@@ -346,17 +381,31 @@ const AppManageService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取影子消费者MQ类型
+   */
+  async queryMQType(data = {}) {
+    const url = '/v2/consumers/type';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取影子消费者隔离方案
+   */
+  async queryMQPlan(data = {}) {
+    const url = '/v2/consumers/type/programme';
+    return httpGet(url, data);
+  },
+  /**
    * @name 新增影子消费
    */
   async createShdowConsumer(data = {}) {
-    const url = '/consumers/create';
+    const url = '/v2/consumers/create';
     return httpPost(url, data);
   },
   /**
    * @name 编辑影子消费
    */
   async updateShdowConsumer(data = {}) {
-    const url = '/consumers/update';
+    const url = '/v2/consumers/update';
     return httpPut(url, data);
   },
   /**
@@ -374,7 +423,7 @@ const AppManageService = {
     return httpPost(url, data);
   },
   /**
-   * @name 设置批量消费
+   * @name 删除影子消费
    */
   async deleteConsumer(data = {}) {
     const url = '/consumers/delete';
@@ -522,24 +571,38 @@ const AppManageService = {
     return httpGet(url, data);
   },
   /**
-   * @name mock配置
+   * @name 编辑远程调用
    */
   async configMock(data = {}) {
-    const url = '/application/remote/call';
+    const url = '/v2/application/remote/call/update';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 新增远程调用
+   */
+  async addMock(data = {}) {
+    const url = '/v2/application/remote/call/add';
     return httpPost(url, data);
   },
   /**
    * @name 获取远程调用详情
    */
   async getMockDetail(data = {}) {
-    const url = '/application/remote/call';
+    const url = '/v2/application/remote/call/detail';
     return httpGet(url, data);
   },
   /**
    * @name 获取远程接口配置类型
    */
   async getConfigType(data = {}) {
-    const url = '/application/remote/call/config/select';
+    const url = '/v2/application/remote/call/config/select';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取远程接口类型
+   */
+  async getMockType(data = {}) {
+    const url = '/v2/application/remote/call/interface/type/select';
     return httpGet(url, data);
   },
   /**
@@ -549,6 +612,14 @@ const AppManageService = {
     const url = '/application/remote/call/getException';
     return httpGet(url, data);
   },
+  /**
+   * @name 删除远程调用
+   */
+  async deleteMock(data = {}) {
+    const url = '/v2/application/remote/call/delete';
+    return httpDelete(url, data);
+  },
+
   /**
    * @name 刷新应用状态
    */
@@ -590,6 +661,27 @@ const AppManageService = {
   async recover(data = {}) {
     const url = '/application/center/resumeAllAgent';
     return httpPost(url, data);
+  },
+  /**
+   * @name 获取中间件类型（新增）
+   */
+  async queryMiddleWareType(data = {}) {
+    const url = '/v2/link/ds/support/new';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取中间件名称（新增）
+   */
+  async queryMiddleWareName(data = {}) {
+    const url = '/v2/link/ds/support/name/new';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取缓存模式（新增）
+   */
+  async queryCacheType(data = {}) {
+    const url = '/v2/link/ds/cache/type';
+    return httpGet(url, data);
   }
 };
 

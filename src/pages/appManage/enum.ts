@@ -22,7 +22,8 @@ export enum ShadowConsumerBean {
   MQ类型 = 'type',
   状态 = 'enabled',
   groupId = 'topicGroup',
-  最后修改时间 = 'gmtUpdate'
+  最后修改时间 = 'gmtUpdate',
+  隔离方案 = 'shadowconsumerEnable'
 }
 
 /** @name 接口类型 */
@@ -55,3 +56,15 @@ export const middlewareStatusColorMap = {
   3: '#C9C9C9',
   4: '#ED6047'
 };
+/**
+ * @name 影子库表配置（动态固定部分）
+ */
+export enum DbDetailBean {
+  中间件类型 = 'middlewareType',
+  中间件名称 = 'connectionPool',
+  业务数据源 = 'url',
+  业务数据源用户名 = 'username',
+  业务集群 = 'url',
+  缓存模式 = 'cacheType',
+  隔离方案 = 'dsType'
+}

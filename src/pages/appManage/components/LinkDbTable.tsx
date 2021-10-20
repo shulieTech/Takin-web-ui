@@ -6,6 +6,7 @@ import AddAndEditDbDrawer from './AddAndEditDbDrawer';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import getLinkDbColumns from './LinkDbColumn';
 import AddEditDbModal from '../modals/AddEditDbModal';
+import AddDynamicDbDrawer from './AddDynamicDbDrawer';
 
 interface Props {
   state?: any;
@@ -47,27 +48,53 @@ const LinkDbTable: React.FC<Props> = props => {
                 />
               </AuthorityBtn>
             ) : detailState.isNewAgent === false ? (
-              <AuthorityBtn
-                isShow={btnAuthority && btnAuthority.appManage_2_create}
-              >
-                <AddAndEditDbDrawer
-                  disabled={
-                    detailState.switchStatus === 'OPENING' ||
-                    detailState.switchStatus === 'CLOSING'
-                      ? true
-                      : false
-                  }
-                  titles="新增影子库表"
-                  action="add"
-                  id={id}
-                  detailData={detailData}
-                  onSccuess={() => {
-                    setState({
-                      isReload: !state.isReload
-                    });
-                  }}
-                />
-              </AuthorityBtn>
+              <Fragment>
+                <AuthorityBtn
+                  isShow={btnAuthority && btnAuthority.appManage_2_create}
+                >
+                  <span style={{ marginRight: 8 }}>
+                    <AddDynamicDbDrawer
+                      disabled={
+                        detailState.switchStatus === 'OPENING' ||
+                        detailState.switchStatus === 'CLOSING'
+                          ? true
+                          : false
+                      }
+                      titles="新增缓存/连接池"
+                      action="add"
+                      id={id}
+                      detailData={detailData}
+                      onSuccess={() => {
+                        setState({
+                          isReload: !state.isReload
+                        });
+                      }}
+                    />
+                  </span>
+                </AuthorityBtn>
+
+                <AuthorityBtn
+                  isShow={btnAuthority && btnAuthority.appManage_2_create}
+                >
+                  <AddAndEditDbDrawer
+                    disabled={
+                      detailState.switchStatus === 'OPENING' ||
+                      detailState.switchStatus === 'CLOSING'
+                        ? true
+                        : false
+                    }
+                    titles="新增影子库表"
+                    action="add"
+                    id={id}
+                    detailData={detailData}
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                  />
+                </AuthorityBtn>
+              </Fragment>
             ) : null}
           </div>}
       />

@@ -11,7 +11,6 @@ interface Props {
 const DbAndTable: React.FC<Props> = props => {
   const [state, setState] = useStateReducer({
     dataSource: null,
-    // planType: null,
     isReload: false,
     loading: false
   });
@@ -33,7 +32,6 @@ const DbAndTable: React.FC<Props> = props => {
     } = await AppManageService.queryDbAndTableList({ applicationId: props.id });
     if (success) {
       setState({
-        // planType: data.planType,
         dataSource: data,
         loading: false
       });
