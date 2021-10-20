@@ -1,461 +1,472 @@
-import { Graph } from '@antv/g6';
-import { Button, message, Popconfirm } from 'antd';
+import { Button, message, Popconfirm, Tabs, Alert, Tooltip, Empty } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
-import { CommonTabs, defaultColumnProps } from 'racc';
-import React, { Fragment } from 'react';
-import { getTakinAuthority } from 'src/utils/utils';
-import { ActivityBean, NodeBean, NodeType } from '../enum';
+import { defaultColumnProps } from 'racc';
+import React from 'react';
+import { ActivityBean, NodeBean } from '../enum';
 import BusinessActivityService from '../service';
-import {
-  NodeDetailsCard,
-  NodeDetailsCollapse,
-  NodeDetailsCustomTable,
-  NodeDetailsHeader,
-  NodeDetailsTab,
-  NodeDetailsTable,
-  OuterService
-} from './NodeInfoCommonNode';
+import { NodeDetailsCollapse, NodeDetailsTable } from './NodeInfoCommonNode';
+import { getDefaultNodeIconConf } from 'src/components/g6-graph/GraphNode';
+import styles from '../index.less';
+import classNames from 'classnames';
+
+const { TabPane } = Tabs;
+
+interface NodeContentConfig {
+  tabs: ('实例' | '对外服务' | '下游调用' | '表' | 'Topic' | '路径')[];
+}
 
 export const RenderNodeInfoByType = (
-  { nodeInfo, details, graph },
+  { nodeInfo, details, graph, labelSetting },
   setState: any
 ) => {
-  let renderNode: React.ReactNode = null;
-  if (!nodeInfo || !nodeInfo) {
-    return null;
-  }
-  switch (nodeInfo.nodeType) {
-    /**
-     * @name 应用
-     */
-    case NodeType.应用:
-      renderNode = renderApp(nodeInfo);
-      break;
-    /**
-     * @name 数据库
-     */
-    case NodeType.数据库:
-      renderNode = renderDb(nodeInfo);
-      break;
-    /**
-     * @name 缓存
-     */
-    case NodeType.缓存:
-      renderNode = renderCache(nodeInfo);
-      break;
-    /**
-     * @name 消息队列
-     */
-    case NodeType.消息队列:
-      renderNode = renderMQ(nodeInfo);
-      break;
-    /**
-     * @name 文件
-     */
-    case NodeType.文件:
-      renderNode = renderOSS(nodeInfo);
-      break;
-    /**
-     * @name 外部应用
-     */
-    case NodeType.外部应用:
-      renderNode = renderOuterApp(nodeInfo);
-      break;
-    /**
-     * @name 未知应用
-     */
-    case NodeType.未知应用:
-      renderNode = renderUnknowApp(nodeInfo, details, graph, setState);
-      break;
-    default:
-      break;
-  }
-  return renderNode;
-};
-
-/**
- * @name ==========================================应用==================================================
- */
-const DownStream: React.FC<NodeBean> = props => {
-  const callService = props.callService;
-  if (!callService) {
-    return null;
-  }
-  return (
-    <Fragment>
-      {callService.map(item => (
-        <NodeDetailsCollapse title={item.label}>
-          <NodeDetailsCustomTable dataSource={item.dataSource} />
-        </NodeDetailsCollapse>
-      ))}
-    </Fragment>
-  );
-};
-const renderApp = (nodeInfo: NodeBean) => {
-  const dataSource = [
-    {
-      tab: '对外服务',
-      component: <OuterService {...nodeInfo} />
+  const iconCfg = getDefaultNodeIconConf(nodeInfo.nodeType);
+  const configMap: Record<string, NodeContentConfig> = {
+    APP: {
+      tabs: ['对外服务', '下游调用', '实例'],
     },
-    {
-      tab: '下游',
-      component: <DownStream {...nodeInfo} />
+    DB: {
+      tabs: ['表', '实例'],
     },
-    {
-      tab: '详情',
-      component: <NodeDetailsCard {...nodeInfo} />
-    }
-  ];
-  const details = [
-    {
-      label: '对外服务',
-      value: nodeInfo.providerService && nodeInfo.providerService.length
+    CACHE: {
+      tabs: ['实例'],
     },
-    {
-      label: '下游节点',
-      value: nodeInfo.callService && nodeInfo.callService.length
+    MQ: {
+      tabs: ['Topic', '实例'],
     },
-    {
-      label: '应用负责人',
-      value: nodeInfo.manager,
-      notShow: getTakinAuthority() === 'true' ? false : true
-    }
-  ];
-  return (
-    <Fragment>
-      <NodeDetailsHeader
-        type={nodeInfo.nodeType}
-        title={nodeInfo._label}
-        details={details}
-      />
-      <NodeDetailsTab
-        dataSource={dataSource}
-        onRender={(item, index) => (
-          <CommonTabs.TabPane tab={item.tab} key={index.toString()}>
-            {item.component}
-          </CommonTabs.TabPane>
-        )}
-      />
-    </Fragment>
-  );
-};
-
-/**
- * @name ==========================================数据库==================================================
- */
-const TableList: React.FC<NodeBean> = props => {
-  const getColumns = (): ColumnProps<any>[] => {
-    return [
-      {
-        ...defaultColumnProps,
-        title: '表名称',
-        dataIndex: ActivityBean.表名称
-      }
-    ];
+    OSS: {
+      tabs: ['路径', '实例'],
+    },
+    OUTER: {
+      tabs: ['对外服务', '实例'],
+    },
+    UNKNOWN: {
+      tabs: ['对外服务', '实例'],
+    },
+    SEARCH: {
+      tabs: ['实例'],
+    },
   };
-  return <NodeDetailsTable columns={getColumns()} dataSource={props.db} />;
-};
-const renderDb = (nodeInfo: NodeBean) => {
-  const dataSource = [
-    {
-      tab: '表',
-      component: <TableList {...nodeInfo} />
-    },
-    {
-      tab: '详情',
-      component: <NodeDetailsCard {...nodeInfo} />
-    }
-  ];
-  const details = [
-    {
-      label: '表',
-      value: nodeInfo.db && nodeInfo.db.length
-    }
-  ];
-  return (
-    <Fragment>
-      <NodeDetailsHeader
-        type={nodeInfo.nodeType}
-        title={nodeInfo._label}
-        details={details}
-      />
-      <NodeDetailsTab
-        dataSource={dataSource}
-        onRender={(item, index) => (
-          <CommonTabs.TabPane tab={item.tab} key={index.toString()}>
-            {item.component}
-          </CommonTabs.TabPane>
-        )}
-      />
-    </Fragment>
-  );
-};
 
-/**
- * @name ==========================================缓存==================================================
- */
-const renderCache = (nodeInfo: NodeBean) => {
-  const dataSource = [
-    {
-      tab: '详情',
-      component: <NodeDetailsCard {...nodeInfo} />
-    }
-  ];
-  const details = [
-    {
-      label: '节点',
-      value: nodeInfo.nodes && nodeInfo.nodes.length
-    }
-  ];
-  return (
-    <Fragment>
-      <NodeDetailsHeader
-        type={nodeInfo.nodeType}
-        title={nodeInfo._label}
-        details={details}
-      />
-      <NodeDetailsTab
-        dataSource={dataSource}
-        onRender={(item, index) => (
-          <CommonTabs.TabPane tab={item.tab} key={index.toString()}>
-            {item.component}
-          </CommonTabs.TabPane>
-        )}
-      />
-    </Fragment>
-  );
-};
+  /**
+   * @name =========================================实例===========================================
+   */
+  const NodeDetailsCard: React.FC<{
+    nodeInfo: NodeBean;
+    extra?: React.ReactNode;
+  }> = (props) => {
+    const { extra } = props;
+    const getColumns = (): ColumnProps<any>[] => {
+      return [
+        {
+          ...defaultColumnProps,
+          title: '地址',
+          dataIndex: ActivityBean.地址,
+        },
+      ];
+    };
 
-/**
- * @name ==========================================消息队列==================================================
- */
-const TopicList: React.FC<NodeBean> = props => {
-  const getColumns = (): ColumnProps<any>[] => {
-    return [
-      {
-        ...defaultColumnProps,
-        title: 'Topic',
-        dataIndex: ActivityBean.Topic
-      }
-    ];
+    return (
+      <>
+        {extra}
+        {props.nodeInfo.nodes && (
+          <NodeDetailsCollapse title="实例" num={props.nodeInfo.nodes.length}>
+            <NodeDetailsTable
+              columns={getColumns()}
+              dataSource={props.nodeInfo.nodes}
+            />
+          </NodeDetailsCollapse>
+        )}
+        {props.children}
+      </>
+    );
   };
-  return <NodeDetailsTable columns={getColumns()} dataSource={props.mq} />;
-};
-const renderMQ = (nodeInfo: NodeBean) => {
-  const dataSource = [
-    {
-      tab: 'Topic',
-      component: <TopicList {...nodeInfo} />
-    },
-    {
-      tab: '详情',
-      component: <NodeDetailsCard {...nodeInfo} />
-    }
-  ];
-  const details = [
-    {
-      label: 'Topic',
-      value: nodeInfo.mq && nodeInfo.mq.length
-    }
-  ];
-  return (
-    <Fragment>
-      <NodeDetailsHeader
-        type={nodeInfo.nodeType}
-        title={nodeInfo._label}
-        details={details}
-      />
-      <NodeDetailsTab
-        dataSource={dataSource}
-        onRender={(item, index) => (
-          <CommonTabs.TabPane tab={item.tab} key={index.toString()}>
-            {item.component}
-          </CommonTabs.TabPane>
-        )}
-      />
-    </Fragment>
-  );
-};
 
-/**
- * @name ==========================================文件OSS==================================================
- */
-const OSSList: React.FC<NodeBean> = props => {
-  const getColumns = (): ColumnProps<any>[] => {
-    return [
-      // {
-      //   ...defaultColumnProps,
-      //   title: '文件名称',
-      //   dataIndex: ActivityBean.文件名称
-      // },
-      {
-        ...defaultColumnProps,
-        title: '文件路径',
-        dataIndex: ActivityBean.文件路径
-      }
-    ];
+  /**
+   * @name ==========================================下游调用==================================================
+   */
+  const DownStream: React.FC<NodeBean> = (props) => {
+    const callService = props.callService;
+    if (!(callService?.length > 0)) {
+      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    }
+    return (
+      <>
+        {callService.map((item, i) => (
+          <NodeDetailsCollapse
+            title={item.label}
+            key={item.label + item.nodeType + i}
+          >
+            <NodeDetailsTable
+              showHeader={false}
+              showOrder={false}
+              columns={[
+                {
+                  dataIndex: 'label',
+                  width: 120,
+                  render: (text) => (
+                    <span style={{ color: 'var(--Netural-10, #8E8E8E)' }}>
+                      {text}
+                    </span>
+                  ),
+                },
+                {
+                  dataIndex: 'dataSource',
+                  render: (text) =>
+                    text?.length > 0
+                      ? text.map((x, j) => <div key={x + j}>{x}</div>)
+                      : '--',
+                },
+              ]}
+              dataSource={item.dataSource}
+            />
+            {/* <NodeDetailsCustomTable dataSource={item.dataSource} /> */}
+          </NodeDetailsCollapse>
+        ))}
+      </>
+    );
   };
-  return <NodeDetailsTable columns={getColumns()} dataSource={props.oss} />;
-};
-const renderOSS = (nodeInfo: NodeBean) => {
-  const dataSource = [
-    {
-      tab: '路径',
-      component: <OSSList {...nodeInfo} />
-    },
-    {
-      tab: '详情',
-      component: <NodeDetailsCard {...nodeInfo} />
-    }
-  ];
-  const details = [
-    {
-      label: '路径',
-      value: nodeInfo.oss && nodeInfo.oss.length
-    }
-  ];
-  return (
-    <Fragment>
-      <NodeDetailsHeader
-        type={nodeInfo.nodeType}
-        title={nodeInfo._label}
-        details={details}
-      />
-      <NodeDetailsTab
-        dataSource={dataSource}
-        onRender={(item, index) => (
-          <CommonTabs.TabPane tab={item.tab} key={index.toString()}>
-            {item.component}
-          </CommonTabs.TabPane>
-        )}
-      />
-    </Fragment>
-  );
-};
 
-/**
- * @name ==========================================外部应用==================================================
- */
-const renderOuterApp = (nodeInfo: NodeBean) => {
-  const dataSource = [
-    {
-      tab: '对外服务',
-      component: <OuterService {...nodeInfo} />
-    },
-    {
-      tab: '详情',
-      component: <NodeDetailsCard {...nodeInfo} />
+  /**
+   * @name ===========================================对外服务====================================================
+   */
+  const OuterService: React.FC<NodeBean> = (props) => {
+    const { providerService } = props;
+    if (!(providerService?.length > 0)) {
+      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
-  ];
-  const details = [
-    {
-      label: '对外服务',
-      value: nodeInfo.providerService && nodeInfo.providerService.length
-    }
-  ];
-  return (
-    <Fragment>
-      <NodeDetailsHeader
-        type={nodeInfo.nodeType}
-        title={nodeInfo._label}
-        details={details}
-      />
-      <NodeDetailsTab
-        dataSource={dataSource}
-        onRender={(item, index) => (
-          <CommonTabs.TabPane tab={item.tab} key={index.toString()}>
-            {item.component}
-          </CommonTabs.TabPane>
-        )}
-      />
-    </Fragment>
-  );
-};
-/**
- * @name ==========================================未知应用==================================================
- */
-const renderUnknowApp = (
-  nodeInfo: NodeBean,
-  activityDetails: any,
-  graph: Graph,
-  setState: any
-) => {
-  const dataSource = [
-    {
-      tab: '对外服务',
-      component: <OuterService {...nodeInfo} />
-    },
-    {
-      tab: '详情',
-      component: <NodeDetailsCard {...nodeInfo} />
-    }
-  ];
-  const details = [
-    {
-      label: '对外服务',
-      value: nodeInfo.providerService && nodeInfo.providerService.length
-    }
-  ];
+    const getColumns = (): ColumnProps<any>[] => {
+      return [
+        {
+          ...defaultColumnProps,
+          title: '服务名称',
+          dataIndex: ActivityBean.服务名称,
+        },
+        {
+          ...defaultColumnProps,
+          title: '上游应用',
+          dataIndex: ActivityBean.上游应用,
+          width: 120,
+        },
+      ];
+    };
+    return (
+      <>
+        {providerService.map((item, index) => (
+          <NodeDetailsCollapse
+            key={index}
+            num={item.dataSource.length}
+            title={item.label}
+          >
+            <NodeDetailsTable
+              columns={getColumns()}
+              dataSource={item.dataSource}
+            />
+          </NodeDetailsCollapse>
+        ))}
+      </>
+    );
+  };
+
+  /**
+   * @name ==========================================数据库==================================================
+   */
+  const TableList: React.FC<NodeBean> = (props) => {
+    const getColumns = (): ColumnProps<any>[] => {
+      return [
+        {
+          ...defaultColumnProps,
+          title: '表名称',
+          dataIndex: ActivityBean.表名称,
+        },
+      ];
+    };
+    return <NodeDetailsTable columns={getColumns()} dataSource={props.db} />;
+  };
+
+  /**
+   * @name ==========================================消息队列==================================================
+   */
+  const TopicList: React.FC<NodeBean> = (props) => {
+    const getColumns = (): ColumnProps<any>[] => {
+      return [
+        {
+          ...defaultColumnProps,
+          title: 'Topic',
+          dataIndex: ActivityBean.Topic,
+        },
+      ];
+    };
+    return <NodeDetailsTable columns={getColumns()} dataSource={props.mq} />;
+  };
+
+  /**
+   * @name ==========================================文件OSS==================================================
+   */
+  const OSSList: React.FC<NodeBean> = (props) => {
+    const getColumns = (): ColumnProps<any>[] => {
+      return [
+        // {
+        //   ...defaultColumnProps,
+        //   title: '文件名称',
+        //   dataIndex: ActivityBean.文件名称
+        // },
+        {
+          ...defaultColumnProps,
+          title: '文件路径',
+          dataIndex: ActivityBean.文件路径,
+        },
+      ];
+    };
+    return <NodeDetailsTable columns={getColumns()} dataSource={props.oss} />;
+  };
+
   /** @name 标记为外部应用 */
   const handleMarkOuterApp = async () => {
     const {
-      data: { success }
+      data: { success },
     } = await BusinessActivityService.markOuterApp({
-      ...activityDetails,
-      nodeId: nodeInfo.id
+      ...details,
+      nodeId: nodeInfo.id,
     });
     if (success) {
       message.success('成功标记为外部应用');
-      const newNodeInfo = {
-        ...nodeInfo,
-        label: '外部应用\n',
-        _label: '外部应用',
-        nodeType: NodeType.外部应用,
-        img: require(`../../../assets/outer_icon.png`)
-      };
-      graph.updateItem(nodeInfo.id, newNodeInfo);
-      setState({ nodeInfo: newNodeInfo, reload: true });
+      // 刷新
+      setState({ reload: Date.now() });
     }
   };
-  const actions: React.ReactNode = (
-    <Popconfirm
-      onConfirm={handleMarkOuterApp}
-      placement="leftBottom"
-      title="确定标记为外部应用吗?"
-    >
-      <Button style={{ border: '1px solid #11BBD5', fontWeight: 500 }}>
-        标记为外部应用
-      </Button>
-    </Popconfirm>
+
+  const toBeOuter = (
+    <Alert
+      style={{
+        marginTop: 16,
+      }}
+      showIcon
+      icon={
+        <span
+          className="iconfont icon-anquandefuben"
+          style={{ color: 'var(--FunctionalError-500, #F15F4A)', top: 13 }}
+        />
+      }
+      closable
+      type="error"
+      message="未知应用"
+      description={
+        <div>
+          该节点为未知应用，若为外部服务请将其标记为外部服务；若为内部应用请将其接入探针
+          <div>
+            <Popconfirm
+              onConfirm={handleMarkOuterApp}
+              title="确定标记为外部应用吗?"
+            >
+              <Button
+                type="danger"
+                style={{
+                  backgroundColor: 'var(--FunctionalError-500, #ED6047)',
+                  color: '#fff',
+                  marginTop: 8,
+                }}
+              >
+                标记为外部应用
+              </Button>
+            </Popconfirm>
+          </div>
+        </div>
+      }
+    />
   );
 
+  const tabPanelMap = {
+    对外服务: {
+      icon: 'icon-waibutiaoyong',
+      num: nodeInfo.providerService?.length,
+      content: <OuterService {...nodeInfo} />,
+    },
+    下游调用: {
+      icon: 'icon-xiayoutiaoyong',
+      num: nodeInfo.callService?.length,
+      content: <DownStream {...nodeInfo} />,
+    },
+    表: {
+      icon: 'icon-biao',
+      num: nodeInfo.db?.length,
+      content: <TableList {...nodeInfo} />,
+    },
+    Topic: {
+      icon: 'icon-Topic',
+      num: nodeInfo.mq?.length,
+      content: <TopicList {...nodeInfo} />,
+    },
+    路径: {
+      icon: 'icon-lujing',
+      num: nodeInfo.oss?.length,
+      content: <OSSList {...nodeInfo} />,
+    },
+    实例: {
+      icon: 'icon-jiedian',
+      num: nodeInfo.nodes?.length,
+      content: <NodeDetailsCard nodeInfo={nodeInfo} />,
+    },
+  };
+
+  const tabConfig = configMap[nodeInfo.nodeType] || configMap.UNKNOWN;
+
+  if (!nodeInfo || !nodeInfo) {
+    return null;
+  }
   return (
-    <Fragment>
-      <NodeDetailsHeader
-        type={nodeInfo.nodeType}
-        actions={actions}
-        title={nodeInfo._label}
-        details={details}
-      />
+    <>
       <div
-        className="mg-b2x"
         style={{
-          color: '#646464',
-          fontWeight: 500,
-          lineHeight: '18px',
-          fontSize: 13
+          backgroundColor: 'var(--FunctionalNetural-50, #F5F7F9)',
+          borderTopLeftRadius: 8,
+          borderTopRightRadius: 8,
+          display: 'flex',
+          // alignItems: 'flex-end',
         }}
       >
-        确认该服务为外部服务或内部应用提供，若为外部服务请讲其标记为外部服务；若为内部应用请将其接入探针
+        <img
+          src={require(`src/assets/node-detail-bg-${
+            nodeInfo.nodeType === 'UNKNOWN' ? 2 : 1
+          }.png`)}
+          alt="app"
+          style={{ height: 114, marginRight: 16 }}
+        />
+        <div
+          style={{
+            flex: 1,
+            padding: '16px 8px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <img
+            src={require(`src/assets/node-detail-bg-3.png`)}
+            alt="app"
+            style={{
+              width: 100,
+              position: 'absolute',
+              top: 16,
+              right: 8,
+              marginBottom: 8,
+              zIndex: 0,
+            }}
+          />
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: '#393B4F',
+                marginBottom: 8,
+              }}
+            >
+              {iconCfg.title}
+            </div>
+            <div
+              style={{
+                color: 'var(--Netural-12, #666)',
+                marginBottom: 8,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              <span style={{ color: 'var(--Netural-10, #8e8e8e)' }}>
+                名称：
+              </span>
+              <Tooltip title={nodeInfo.label}>
+                <span>{nodeInfo.label}</span>
+              </Tooltip>
+            </div>
+            <div
+              style={{
+                color: 'var(--Netural-12, #666)',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              {['APP'].includes(nodeInfo.nodeType) && (
+                <span
+                  style={{
+                    flex: 1,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    paddingRight: 8,
+                  }}
+                >
+                  <Tooltip title={nodeInfo.manager}>
+                    <span style={{ color: 'var(--Netural-10, #8e8e8e)' }}>
+                      负责人：
+                    </span>
+                    {nodeInfo.manager || '-'}
+                  </Tooltip>
+                </span>
+              )}
+              {/* {!['CACHE', 'DB'].includes(nodeInfo.nodeType) && (
+                <>
+                  <span style={{ flex: 1 }}>
+                    <span style={{ color: 'var(--Netural-10, #8e8e8e)' }}>
+                      TPS：
+                    </span>
+                    <span
+                      style={{
+                        color: 'var(--BranSecondary-500, #00D77D)',
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                      }}
+                    >
+                      {nodeInfo.allTotalTps || 0}
+                    </span>
+                  </span>
+                  <span style={{ flex: 1 }}>
+                    <span style={{ color: 'var(--Netural-10, #8e8e8e)' }}>
+                      RT：
+                    </span>
+                    <span
+                      style={{
+                        color: 'var(--BranSecondary-500, #00D77D)',
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                      }}
+                    >
+                      {nodeInfo.allTotalRt || 0}
+                    </span>
+                  </span>
+                </>
+              )} */}
+            </div>
+          </div>
+        </div>
       </div>
-      <NodeDetailsTab
-        dataSource={dataSource}
-        onRender={(item, index) => (
-          <CommonTabs.TabPane tab={item.tab} key={index.toString()}>
-            {item.component}
-          </CommonTabs.TabPane>
+      {nodeInfo.nodeType === 'UNKNOWN' && toBeOuter}
+      <Tabs
+        defaultActiveKey={tabConfig.tabs[0]}
+        className={classNames(
+          styles['splited-tabs'],
+          styles[`splited-tabs-${tabConfig.tabs.length}`]
         )}
-      />
-    </Fragment>
+      >
+        {tabConfig.tabs.map((x) => {
+          const tabPanelConfig = tabPanelMap[x];
+          const tabTitle = (
+            <div style={{ textAlign: 'center' }}>
+              <span
+                className={`iconfont ${tabPanelConfig.icon}`}
+                style={{ fontSize: 24 }}
+              />
+              <div>
+                {x} {tabPanelConfig.num}
+              </div>
+            </div>
+          );
+          return (
+            <TabPane tab={tabTitle} key={x}>
+              {tabPanelConfig.content}
+            </TabPane>
+          );
+        })}
+      </Tabs>
+    </>
   );
 };

@@ -19,7 +19,7 @@ const DataSourceConfigTableAction: React.FC<Props> = props => {
 
   return (
     <Fragment>
-      <AuthorityBtn isShow={btnAuthority && btnAuthority.appManage_2_create}>
+      <AuthorityBtn isShow={btnAuthority && btnAuthority.configCenter_dataSourceConfig_2_create}>
         <AddDataSourceConfigModal
           action="add"
           btnText="新增数据源"

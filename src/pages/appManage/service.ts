@@ -668,6 +668,20 @@ const AppManageService = {
   async queryCacheType(data = {}) {
     const url = '/v2/link/ds/cache/type';
     return httpGet(url, data);
+  },
+  /**
+   * @name 探针一键卸载
+   */
+  async uninstall(data = {}) {
+    const url = '/application/center/unstallAllAgent';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 探针一键恢复
+   */
+  async recover(data = {}) {
+    const url = '/application/center/resumeAllAgent';
+    return httpPost(url, data);
   }
 };
 

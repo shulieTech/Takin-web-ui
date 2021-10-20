@@ -34,23 +34,23 @@ const ActionNode: React.FC<Props> = props => {
         <FlowVerificateModal id={state.details.activityId} />
       </AuthorityBtn>
       {getTakinAuthority() === 'true' && (
-        <AuthorityBtn isShow={MapUserAuthority('debugTool_linkDebug')}>
-          <Button
-            type="primary"
-            className="mg-l1x"
-            onClick={() => {
-              window.g_app._store.dispatch({
-                type: 'app/updateState',
-                payload: {
-                  debugToolId: state.details.activityId.toString()
-                }
-              });
-              router.push(`/pro/debugTool/linkDebug`);
-            }}
-          >
-            去调试
-          </Button>
-        </AuthorityBtn>
+      <AuthorityBtn isShow={MapUserAuthority('debugTool_linkDebug')}>
+        <Button
+          type="primary"
+          className="mg-l1x"
+          onClick={() => {
+            window.g_app._store.dispatch({
+              type: 'app/updateState',
+              payload: {
+                debugToolId: state.details.activityId.toString()
+              }
+            });
+            router.push(`/pro/debugTool/linkDebug`);
+          }}
+        >
+          去调试
+        </Button>
+      </AuthorityBtn>
       )}
     </div>
   );
