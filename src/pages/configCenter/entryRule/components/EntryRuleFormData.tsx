@@ -31,6 +31,7 @@ const getEntryRuleFormData = (
       node: (
         <CommonSelect
           placeholder="请选择"
+          showSearch
           dataSource={allAppList ? allAppList : []}
         />
       )
