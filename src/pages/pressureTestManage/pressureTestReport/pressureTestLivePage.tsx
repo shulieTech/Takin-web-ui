@@ -339,6 +339,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
             closable
           />
           <LinkCharts
+            isLive
             tabList={state.tabList}
             chartsInfo={chartsInfo}
             setState={setState}

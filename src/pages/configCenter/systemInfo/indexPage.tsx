@@ -1,16 +1,17 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import styles from './index.less';
+// import styles from './index.less';
 import { getTakinAuthority } from 'src/utils/utils';
 import TitleComponent from 'src/common/title';
 import UserService from 'src/services/user';
-import json from '../../../../public/version.json';
+import { Table } from 'antd';
+import axios from 'axios';
 
 interface EntryRuleProps {
   location?: { query?: any };
   dictionaryMap?: any;
 }
 
-const systemInfo: React.FC<EntryRuleProps> = props => {
+const SystemInfo: React.FC<EntryRuleProps> = (props) => {
   const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
@@ -18,10 +19,11 @@ const systemInfo: React.FC<EntryRuleProps> = props => {
   }, []);
 
   const handleClick = async () => {
+    const { data: json } = await axios.get('./version.json');
     const {
-      data: { success, data }
+      data: { success, data },
     } = await UserService.apiSys({
-      version: json
+      version: json,
     });
     if (success) {
       setFileList(data.itemVos);
@@ -37,37 +39,32 @@ const systemInfo: React.FC<EntryRuleProps> = props => {
               <div
                 key={index}
                 style={{
-                  display: getTakinAuthority() === 'false'
-                    && item.title === '个人信息' ? 'none' : 'block'
+                  display:
+                    getTakinAuthority() === 'false' && item.title === '个人信息'
+                      ? 'none'
+                      : 'block',
                 }}
               >
                 <TitleComponent content={item.title} />
-                {Object.keys(item.dataMap).map((ite, ind) => {
-                  return (
-                    <div
-                      className={
-                        ite === 'AMDB版本' ||
-                          ite === 'tro地址' ||
-                          ite === '用户user-app-key'
-                          ? styles.lineDivs
-                          : styles.lineDiv
-                      }
-                      key={ind}
-                    >
-                      <span
-                        style={{
-                          float: 'left',
-                          color: '#888',
-                          marginLeft: '10px',
-                          width: '300px'
-                        }}
-                      >
-                        {ite}
-                      </span>
-                      <span>{item.dataMap[ite]}</span>
-                    </div>
-                  );
-                })}
+                <Table
+                  showHeader={false}
+                  pagination={false}
+                  dataSource={Object.entries(item.dataMap).map(
+                    ([key, val]) => ({ key, val })
+                  )}
+                  style={{ marginLeft: 60, marginRight: 60, maxWidth: 800 }}
+                  columns={[
+                    { dataIndex: 'key', width: 200 },
+                    {
+                      dataIndex: 'val',
+                      render: (text) => (
+                        <span style={{ wordBreak: 'break-all' }}>
+                          {text || '-'}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
               </div>
             );
           })}
@@ -75,4 +72,4 @@ const systemInfo: React.FC<EntryRuleProps> = props => {
     </Fragment>
   );
 };
-export default systemInfo;
+export default SystemInfo;
