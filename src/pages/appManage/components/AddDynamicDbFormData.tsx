@@ -86,7 +86,8 @@ const getAddDynamicDbFormData = (
   const handleChangeCacheType = async value => {
     setState({
       cacheType: value,
-      templateData: []
+      templateData: [],
+      dsType: undefined
     });
     state.form.setFieldsValue({
       dsType: undefined
