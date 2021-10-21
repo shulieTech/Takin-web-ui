@@ -43,7 +43,8 @@ const getAddDynamicDbFormData = (
       agentSourceType: state.form.getFieldsValue().middlewareType,
       dsType: state.dsType,
       cacheType: state.cacheType,
-      isNewData: true
+      isNewData: true,
+      connectionPool: state.form.getFieldsValue().connectionPool
     });
     if (success) {
       setState({
