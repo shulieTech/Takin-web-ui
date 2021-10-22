@@ -139,9 +139,9 @@ const getBlackListColumns = (
             <Button
               type="primary"
               key={index}
-              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.successRateBottleneckId}`)}
+              onClick={() => router.push(`/pro/businessActivity/details?id=${ite.id}`)}
             >
-              接口异常
+              {ite.name}
             </Button>
           );
         });

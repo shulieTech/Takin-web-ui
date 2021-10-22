@@ -28,7 +28,7 @@ const AppDetailTabs: React.FC<Props> = props => {
 
   const tabsData = [
     {
-      title: '服务列表',
+      title: '服务监控',
       tabNode: (
         <ApplicationMonitor
           id={id}

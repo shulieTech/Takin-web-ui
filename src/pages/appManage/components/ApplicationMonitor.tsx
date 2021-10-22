@@ -35,6 +35,8 @@ interface State {
   };
   sorter: any;
   clusterTest: any;
+  serviceName: any;
+  serviceNameList: any;
 }
 const ApplicationMonitor: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -50,12 +52,20 @@ const ApplicationMonitor: React.FC<Props> = props => {
     },
     sorter: undefined,
     clusterTest: '-1',
+    serviceName: undefined,
+    serviceNameList: []
   });
   const { Search } = Input;
   const { detailData, id, detailState, action } = props;
+  useEffect(() => { queryService(); }, []);
   useEffect(() => {
-    queryBlackListList({ ...state.searchParams, orderBy: state.sorter, clusterTest: state.clusterTest });
-  }, [state.searchParams.current, state.searchParams.pageSize, state.sorter, state.clusterTest, state.isReload]);
+    queryBlackListList({
+      ...state.searchParams,
+      orderBy: state.sorter,
+      clusterTest: state.clusterTest,
+      label: state.serviceName
+    });
+  }, [state.searchParams, state.sorter, state.clusterTest, state.isReload, state.serviceName]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -83,6 +93,26 @@ const ApplicationMonitor: React.FC<Props> = props => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.reload, state.refreshTime]);
+
+  const queryService = async () => {
+    const {
+      data: { data, success }
+    } = await AppManageService.entrances({
+      appName: detailData.applicationName
+    });
+    if (success) {
+      setState({
+        serviceNameList:
+          data &&
+          data.map((item, k) => {
+            return {
+              label: item.serviceName,
+              value: item.serviceName
+            };
+          }),
+      });
+    }
+  };
 
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
@@ -148,6 +178,12 @@ const ApplicationMonitor: React.FC<Props> = props => {
     });
   };
 
+  const serviceNameChange = (value) => {
+    setState({
+      serviceName: value
+    });
+  };
+
   return (
     <Fragment>
       <div
@@ -155,7 +191,22 @@ const ApplicationMonitor: React.FC<Props> = props => {
         style={{ height: document.body.clientHeight - 160 }}
       >
         <Row type="flex" style={{ marginBottom: 20, marginTop: 20 }}>
-          <Col span={8} offset={13} style={{ marginTop: 5 }}>
+          <Col span={4}>
+            <CommonSelect
+              placeholder="服务"
+              style={{ width: '95%' }}
+              allowClear
+              optionFilterProp="children"
+              showSearch
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                0
+              }
+              onChange={serviceNameChange}
+              dataSource={state.serviceNameList}
+            />
+          </Col>
+          <Col span={8} offset={9} style={{ marginTop: 5 }}>
             <span>
               <span style={{ marginRight: 8, marginLeft: 18 }}>
                 最后统计时间：{moment().format('YYYY-MM-DD HH:mm:ss')}

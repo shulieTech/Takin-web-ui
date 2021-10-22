@@ -599,6 +599,10 @@ const AppManageService = {
   async attendService(data = {}) {
     const url = '/application/center/app/attendService';
     return httpPost(url, data);
+  },
+  async entrances(data = {}) {
+    const url = '/application/entrances/all' ;
+    return httpGet(url, data);
   }
 };
 
