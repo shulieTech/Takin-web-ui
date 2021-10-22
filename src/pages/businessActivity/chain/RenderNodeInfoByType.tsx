@@ -8,6 +8,7 @@ import { NodeDetailsCollapse, NodeDetailsTable } from './NodeInfoCommonNode';
 import { getDefaultNodeIconConf } from 'src/components/g6-graph/GraphNode';
 import styles from '../index.less';
 import classNames from 'classnames';
+import ServiceList, { sortServiceList, toAppDetail } from './ServiceList';
 
 const { TabPane } = Tabs;
 
@@ -25,16 +26,16 @@ export const RenderNodeInfoByType = (
       tabs: ['对外服务', '下游调用', '实例'],
     },
     DB: {
-      tabs: ['表', '实例'],
+      tabs: ['对外服务', '表', '实例'],
     },
     CACHE: {
-      tabs: ['实例'],
+      tabs: ['对外服务', '实例'],
     },
     MQ: {
-      tabs: ['Topic', '实例'],
+      tabs: ['对外服务', 'Topic', '实例'],
     },
     OSS: {
-      tabs: ['路径', '实例'],
+      tabs: ['对外服务', '路径', '实例'],
     },
     OUTER: {
       tabs: ['对外服务', '实例'],
@@ -43,7 +44,7 @@ export const RenderNodeInfoByType = (
       tabs: ['对外服务', '实例'],
     },
     SEARCH: {
-      tabs: ['实例'],
+      tabs: ['对外服务', '实例'],
     },
   };
 
@@ -129,41 +130,13 @@ export const RenderNodeInfoByType = (
   /**
    * @name ===========================================对外服务====================================================
    */
-  const OuterService: React.FC<NodeBean> = (props) => {
-    const { providerService } = props;
-    if (!(providerService?.length > 0)) {
+  const OuterService: React.FC<any> = (props) => {
+    const list = sortServiceList([props.nodeInfo], details.activityId);
+    if (!(list?.length > 0)) {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
-    const getColumns = (): ColumnProps<any>[] => {
-      return [
-        {
-          ...defaultColumnProps,
-          title: '服务名称',
-          dataIndex: ActivityBean.服务名称,
-        },
-        {
-          ...defaultColumnProps,
-          title: '上游应用',
-          dataIndex: ActivityBean.上游应用,
-          width: 120,
-        },
-      ];
-    };
     return (
-      <>
-        {providerService.map((item, index) => (
-          <NodeDetailsCollapse
-            key={index}
-            num={item.dataSource.length}
-            title={item.label}
-          >
-            <NodeDetailsTable
-              columns={getColumns()}
-              dataSource={item.dataSource}
-            />
-          </NodeDetailsCollapse>
-        ))}
-      </>
+      <ServiceList canSwitch={false} list={list} activityDetail={details} />
     );
   };
 
@@ -279,7 +252,7 @@ export const RenderNodeInfoByType = (
     对外服务: {
       icon: 'icon-waibutiaoyong',
       num: nodeInfo.providerService?.length,
-      content: <OuterService {...nodeInfo} />,
+      content: <OuterService nodeInfo={nodeInfo} />,
     },
     下游调用: {
       icon: 'icon-xiayoutiaoyong',
@@ -375,7 +348,9 @@ export const RenderNodeInfoByType = (
                 名称：
               </span>
               <Tooltip title={nodeInfo.label}>
-                <span>{nodeInfo.label}</span>
+                <a onClick={() => toAppDetail(nodeInfo.label, details)}>
+                  {nodeInfo.label}
+                </a>
               </Tooltip>
             </div>
             <div
