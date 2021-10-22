@@ -14,7 +14,7 @@ import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import CustomTable from 'src/components/custom-table';
 import AppManageService from '../service';
 import styles from './../index.less';
-import getBlackListColumns from './BlackListTableColomn';
+import ApplicationMonitorList from './ApplicationMonitorList';
 
 interface Props {
   id?: string;
@@ -33,6 +33,8 @@ interface State {
     current: number;
     pageSize: number;
   };
+  sorter: any;
+  clusterTest: any;
 }
 const ApplicationMonitor: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -45,14 +47,15 @@ const ApplicationMonitor: React.FC<Props> = props => {
     searchParams: {
       current: 0,
       pageSize: 10
-    }
+    },
+    sorter: undefined,
+    clusterTest: '-1',
   });
   const { Search } = Input;
   const { detailData, id, detailState, action } = props;
-
   useEffect(() => {
-    queryBlackListList({ ...state.searchParams });
-  }, [state.searchParams.current, state.searchParams.pageSize]);
+    queryBlackListList({ ...state.searchParams, orderBy: state.sorter, clusterTest: state.clusterTest });
+  }, [state.searchParams.current, state.searchParams.pageSize, state.sorter, state.clusterTest, state.isReload]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -67,7 +70,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
       if (state.refreshTime) {
         timer = setTimeout(refreshData, state.refreshTime);
       }
-      queryBlackListList({ ...state.searchParams });
+      queryBlackListList({ ...state.searchParams, orderBy: state.sorter, clusterTest: state.clusterTest });
     };
 
     refreshData();
@@ -94,8 +97,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
     const {
       total,
       data: { success, data }
-    } = await AppManageService.queryBlackListList({
-      applicationId: id,
+    } = await AppManageService.monitorDetailes({
+      appName: detailData.applicationName,
       ...values
     });
     if (success) {
@@ -126,6 +129,25 @@ const ApplicationMonitor: React.FC<Props> = props => {
     });
   };
 
+  const onChange = (pagination, filters, sorter, extra) => {
+    if (sorter.order) {
+      if (sorter.order === 'ascend') {
+        setState({ sorter: `${sorter.columnKey} asc` });
+      } else {
+        setState({ sorter: `${sorter.columnKey} desc` });
+      }
+    } else {
+      setState({ sorter: undefined });
+    }
+
+  };
+
+  const clusterTestChange = (value) => {
+    setState({
+      clusterTest: value
+    });
+  };
+
   return (
     <Fragment>
       <div
@@ -133,25 +155,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
         style={{ height: document.body.clientHeight - 160 }}
       >
         <Row type="flex" style={{ marginBottom: 20, marginTop: 20 }}>
-          <Col span={4}>
-            <CommonSelect
-              placeholder="服务类型"
-              style={{ width: '95%' }}
-              dataSource={
-                []
-              }
-            />
-          </Col>
-          <Col span={4}>
-            <CommonSelect
-              placeholder="关联业务活动"
-              style={{ width: '95%' }}
-              dataSource={
-                []
-              }
-            />
-          </Col>
-          <Col span={7} offset={7} style={{ marginTop: 5 }}>
+          <Col span={7} offset={15} style={{ marginTop: 5 }}>
             <span>
               <span style={{ marginRight: 8 }}>
                 最后统计时间：{moment().format('YYYY-MM-DD HH:mm:ss')}
@@ -187,16 +191,20 @@ const ApplicationMonitor: React.FC<Props> = props => {
             <CommonSelect
               placeholder="流量类型"
               style={{ width: '95%' }}
+              onChange={clusterTestChange}
+              defaultValue="-1"
               dataSource={
-                []
-              }
+              [{ value: '-1', label: '混合流量', num: 1, disable: false },
+                { value: '0', label: '业务流量', num: 1, disable: false },
+                { value: '1', label: '压测流量', num: 1, disable: false }]}
             />
           </Col>
         </Row>
 
         <CustomTable
           rowKey="blistId"
-          columns={getBlackListColumns(
+          onChange={onChange}
+          columns={ApplicationMonitorList(
             state,
             setState,
             detailState,
