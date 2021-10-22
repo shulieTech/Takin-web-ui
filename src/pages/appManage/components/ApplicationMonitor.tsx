@@ -155,9 +155,9 @@ const ApplicationMonitor: React.FC<Props> = props => {
         style={{ height: document.body.clientHeight - 160 }}
       >
         <Row type="flex" style={{ marginBottom: 20, marginTop: 20 }}>
-          <Col span={7} offset={15} style={{ marginTop: 5 }}>
+          <Col span={8} offset={13} style={{ marginTop: 5 }}>
             <span>
-              <span style={{ marginRight: 8 }}>
+              <span style={{ marginRight: 8, marginLeft: 18 }}>
                 最后统计时间：{moment().format('YYYY-MM-DD HH:mm:ss')}
               </span>
               5秒刷新一次
@@ -187,7 +187,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
               }}
             />
           </Col>
-          <Col span={2}>
+          <Col span={3}>
             <CommonSelect
               placeholder="流量类型"
               style={{ width: '95%' }}

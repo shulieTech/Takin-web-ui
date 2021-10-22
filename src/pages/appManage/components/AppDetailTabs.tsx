@@ -28,8 +28,15 @@ const AppDetailTabs: React.FC<Props> = props => {
 
   const tabsData = [
     {
-      title: '基础信息',
-      tabNode: <BasicInfo detailData={detailData} />,
+      title: '服务列表',
+      tabNode: (
+        <ApplicationMonitor
+          id={id}
+          detailData={detailData}
+          detailState={detailState}
+          action={action}
+        />
+      ),
       show: true
     },
     {
@@ -164,18 +171,6 @@ const AppDetailTabs: React.FC<Props> = props => {
       ),
       show: true
     },
-    {
-      title: '应用监控',
-      tabNode: (
-        <ApplicationMonitor
-          id={id}
-          detailData={detailData}
-          detailState={detailState}
-          action={action}
-        />
-      ),
-      show: true
-    }
   ];
 
   return (
