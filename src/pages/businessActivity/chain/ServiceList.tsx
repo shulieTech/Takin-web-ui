@@ -87,7 +87,7 @@ const ServiceList: React.FC<Props> = (props) => {
 
   const onChangeQuery = (query) => {
     setSearchQuery({
-      ...initailQuery,
+      ...searchQuery,
       ...query,
     });
     setTableExpandMap({});
