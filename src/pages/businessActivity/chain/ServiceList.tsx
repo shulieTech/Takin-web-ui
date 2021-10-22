@@ -53,15 +53,15 @@ export const sortServiceList = (nodes = [], activityId, nodeId: any) => {
 };
 
 export const toAppDetail = async (appName: string, activityDetail: any) => {
-  const {
-    data: { success, data },
-  } = await BusinessActivityService.searchApp({
-    appName,
-    activityName: activityDetail?.activityName,
-  });
-  if (success && data?.[0]) {
-    router.push(`/appManage/details?tabKey=0&id=${data?.[0]?.id}`);
-  }
+  // const {
+  //   data: { success, data },
+  // } = await BusinessActivityService.searchApp({
+  //   appName,
+  //   activityName: activityDetail?.activityName,
+  // });
+  // if (success && data?.[0]) {
+  //   router.push(`/appManage/details?tabKey=0&id=${data?.[0]?.id}`);
+  // }
 };
 
 const ServiceList: React.FC<Props> = (props) => {
@@ -342,13 +342,13 @@ const ServiceList: React.FC<Props> = (props) => {
                       }}
                     >
                       {x.ownerApps ? (
-                        <a
+                        <span
                           onClick={() =>
                             toAppDetail(x.ownerApps, state.details)
                           }
                         >
                           {x.ownerApps}
-                        </a>
+                        </span>
                       ) : (
                         '-'
                       )}
@@ -404,13 +404,13 @@ const ServiceList: React.FC<Props> = (props) => {
                                 }}
                               >
                                 {text ? (
-                                  <a
+                                  <span
                                     onClick={() =>
                                       toAppDetail(text, state.details)
                                     }
                                   >
                                     {text}
-                                  </a>
+                                  </span>
                                 ) : (
                                   '无'
                                 )}
