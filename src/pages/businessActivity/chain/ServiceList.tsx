@@ -77,6 +77,7 @@ const ServiceList: React.FC<Props> = (props) => {
 
   const [filteredList, setFilteredList] = useState([]);
   const [searchQuery, setSearchQuery] = useState(initailQuery);
+  const [tableExpandMap, setTableExpandMap] = useState({});
 
   const initailList = sortServiceList(
     state?.details?.topology?.nodes,
@@ -89,6 +90,7 @@ const ServiceList: React.FC<Props> = (props) => {
       ...initailQuery,
       ...query,
     });
+    setTableExpandMap({});
     if (afterChangeQuery) {
       afterChangeQuery({
         ...initailQuery,
@@ -322,28 +324,6 @@ const ServiceList: React.FC<Props> = (props) => {
                   <Divider style={{ margin: '10px 0' }} />
                 </div>
                 <div style={{ padding: '0 8px' }}>
-                  {x.nodeType === 'APP' && x.middlewareName && (
-                    <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        调用方中间件：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          wordBreak: 'break-all',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {x.middlewareName || '-'}
-                      </span>
-                    </div>
-                  )}
                   <div style={{ display: 'flex', marginBottom: 8 }}>
                     <span
                       style={{
@@ -403,11 +383,15 @@ const ServiceList: React.FC<Props> = (props) => {
                   )}
                   <Divider style={{ margin: '10px 0' }} />
                   <Table
+                    key={JSON.stringify(tableExpandMap)}
                     size="small"
+                    scroll={{ x: 'max-content' }}
                     columns={[
                       {
                         title: '上游应用',
                         dataIndex: 'beforeApps',
+                        width: 100,
+                        fixed: 'left',
                         render: (text) => {
                           return (
                             <Tooltip title={text}>
@@ -430,6 +414,26 @@ const ServiceList: React.FC<Props> = (props) => {
                                 ) : (
                                   '无'
                                 )}
+                              </div>
+                            </Tooltip>
+                          );
+                        },
+                      },
+                      {
+                        title: '中间件',
+                        dataIndex: 'middlewareName',
+                        render: (text) => {
+                          return (
+                            <Tooltip title={text}>
+                              <div
+                                style={{
+                                  maxWidth: 100,
+                                  overflow: 'hidden',
+                                  whiteSpace: 'nowrap',
+                                  textOverflow: 'ellipsis',
+                                }}
+                              >
+                                {text || '-'}
                               </div>
                             </Tooltip>
                           );
@@ -529,9 +533,27 @@ const ServiceList: React.FC<Props> = (props) => {
                         },
                       },
                     ]}
-                    dataSource={x.containRealAppProvider || []}
+                    dataSource={
+                      x.containRealAppProvider?.length > 1 && !tableExpandMap[i]
+                        ? x.containRealAppProvider.slice(0, 1)
+                        : x.containRealAppProvider
+                    }
                     pagination={false}
                   />
+                  {x.containRealAppProvider?.length > 1 && !tableExpandMap[i] && (
+                    <div style={{ textAlign: 'center', marginTop: 8 }}>
+                      <a
+                        onClick={() => {
+                          setTableExpandMap({
+                            ...tableExpandMap,
+                            [i]: true,
+                          });
+                        }}
+                      >
+                        展开
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             );
