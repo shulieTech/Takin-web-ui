@@ -2,7 +2,7 @@
  * @name
  * @author chuxu
  */
-import { Badge, Button, Icon, message, Modal, Popconfirm, Switch, Tag } from 'antd';
+import { Badge, Button, Icon, message, Modal, Popconfirm, Row, Switch, Tag } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
@@ -100,32 +100,45 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '健康度',
       dataIndex: 'response',
+      width: 200,
       render: (text, row) => {
-        if (text.allTotalRtBottleneckType !== -1 || text.allSqlTotalRtBottleneckType !== -1) {
-          if (text.allTotalRtBottleneckType !== -1) {
-            return (
-              <Button
-                type="primary"
-                onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtBottleneckId}`)}
-              >
-                卡慢
-              </Button>);
-          }
-          return (
+        return (
+          <Row>
             <Button
               type="primary"
-              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtSqlBottleneckId}`)}
+              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtBottleneckId}`)}
+              style={{
+                display: text.allTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
+              }}
             >
               卡慢
-            </Button>);
-        }
-        return (
-          <Button
-            type="primary"
-            onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.successRateBottleneckId}`)}
-          >
-            接口异常
-          </Button>);
+            </Button>
+            <div
+              style={{
+                display: text.allTotalRtBottleneckType !== -1 ? 'none' : 'inline-block'
+              }}
+            >
+              <Button
+                type="primary"
+                onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtSqlBottleneckId}`)}
+                style={{
+                  display: text.allSqlTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
+                }}
+              >
+                卡慢
+              </Button>
+            </div>
+            <Button
+              type="primary"
+              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.successRateBottleneckId}`)}
+              style={{
+                display: text.allSuccessRateBottleneckType !== -1 ? 'inline-block' : 'none',
+                marginLeft: 10
+              }}
+            >
+              接口异常
+            </Button>
+          </Row>);
       }
     },
     {
