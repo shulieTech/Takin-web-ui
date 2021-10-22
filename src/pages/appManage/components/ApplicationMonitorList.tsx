@@ -88,7 +88,8 @@ const getBlackListColumns = (
       title: '成功率',
       dataIndex: 'successRatio',
       sorter: true,
-      key: 'SUCCESSRATE'
+      key: 'SUCCESSRATE',
+      render: text => `${text * 100}%`
     },
     {
       ...customColumnProps,
@@ -132,16 +133,16 @@ const getBlackListColumns = (
     {
       ...customColumnProps,
       title: '关联业务活动名称',
-      dataIndex: 'activeList',
+      dataIndex: 'activeIdAndName',
       render: (text, row) => {
-        return text.map((ite, index) => {
+        return Object.keys(text).map((ites, ind) => {
           return (
             <Button
               type="primary"
-              key={index}
-              onClick={() => router.push(`/pro/businessActivity/details?id=${ite.id}`)}
+              key={ind}
+              onClick={() => router.push(`/pro/businessActivity/details?id=${ites}`)}
             >
-              {ite.name}
+              {text[ites]}
             </Button>
           );
         });
@@ -155,7 +156,7 @@ const getBlackListColumns = (
         if (text) {
           return <Icon type="heart" theme="filled" onClick={() => cancel(row)} />;
         }
-        return <Icon type="heart" onClick={() => heart(row)}/>;
+        return <Icon type="heart" onClick={() => heart(row)} />;
       }
     },
   ];
