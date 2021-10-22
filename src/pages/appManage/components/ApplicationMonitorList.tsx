@@ -101,16 +101,16 @@ const getBlackListColumns = (
       title: '健康度',
       dataIndex: 'response',
       render: (text, row) => {
-        if (text.allTotalRtBottleneckType !== -1) {
-          return (
-            <Button
-              type="primary"
-              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtBottleneckId}`)}
-            >
-              卡慢
-            </Button>);
-        }
-        if (text.allSqlTotalRtBottleneckType !== -1) {
+        if (text.allTotalRtBottleneckType !== -1 || text.allSqlTotalRtBottleneckType !== -1) {
+          if (text.allTotalRtBottleneckType !== -1) {
+            return (
+              <Button
+                type="primary"
+                onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtBottleneckId}`)}
+              >
+                卡慢
+              </Button>);
+          }
           return (
             <Button
               type="primary"
@@ -119,15 +119,13 @@ const getBlackListColumns = (
               卡慢
             </Button>);
         }
-        if (text.allSuccessRateBottleneckType !== -1) {
-          return (
-            <Button
-              type="primary"
-              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.successRateBottleneckId}`)}
-            >
-              接口异常
-            </Button>);
-        }
+        return (
+          <Button
+            type="primary"
+            onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.successRateBottleneckId}`)}
+          >
+            接口异常
+          </Button>);
       }
     },
     {
@@ -151,7 +149,7 @@ const getBlackListColumns = (
     {
       ...customColumnProps,
       title: '关注',
-      dataIndex: 'isAttend',
+      dataIndex: 'attend',
       render: (text, row) => {
         if (text) {
           return <Icon type="heart" theme="filled" onClick={() => cancel(row)} />;
