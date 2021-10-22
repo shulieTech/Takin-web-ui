@@ -107,7 +107,10 @@ export const transformNodes = ({
   const newNodes =
     includedTypes?.length > 0
       ? nodes.filter((x: any) => {
-        return includedTypes.includes(x.nodeType as string) || graph?.findById(x.id);
+        return (
+          includedTypes.includes(x.nodeType as string) ||
+          graph?.findById(x.id)
+        );
       })
       : nodes;
   return newNodes.map((x) => {
@@ -120,45 +123,35 @@ export const transformNodes = ({
       );
     }); // 双向线段
 
-    // 瓶颈数据统计
-    let nodeBottleType = -1;
-    let nodeBottleCount = 0;
-    x?.providerService?.forEach((y) => {
-      y?.dataSource?.forEach((z) => {
-        if (
-          z?.allSuccessRateBottleneckType === 2 ||
-          z?.allTotalRtBottleneckType === 2 ||
-          z?.allSqlTotalRtBottleneckType === 2
-        ) {
-          nodeBottleType = 2;
-        }
-        if (
-          (z?.allSuccessRateBottleneckType === 1 ||
-            z?.allTotalRtBottleneckType === 1 ||
-            z?.allSqlTotalRtBottleneckType === 1) &&
-          nodeBottleType !== 2
-        ) {
-          nodeBottleType = 1;
-        }
-        if (
-          z?.allSuccessRateBottleneckType !== -1 ||
-          z?.allTotalRtBottleneckType !== -1 ||
-          z?.allSqlTotalRtBottleneckType !== -1
-        ) {
-          nodeBottleCount += 1;
-        }
-      });
-    });
+    const hasServiceOpened = x?.providerService?.some((y) =>
+      y?.dataSource?.some((z) => !!z.switchState)
+    );
 
-    const hasServiceOpened = x?.providerService?.some(y => y?.dataSource?.some(z => !!z.switchState));
+    let nodeBottleType = 1;
+    let nodeBottleCount = 0;
+
+    switch (true) {
+      case x.hasL2Bottleneck && x.l2bottleneckNum > 0:
+        nodeBottleType = 2;
+        nodeBottleCount = x.l2bottleneckNum;
+        break;
+      case x.hasL1Bottleneck && x.l1bottleneckNum > 0:
+        nodeBottleType = 1;
+        nodeBottleCount = x.l1bottleneckNum;
+        break;
+      default:
+        nodeBottleType = 1;
+        nodeBottleCount = 0;
+    }
 
     return {
       hasOppositeLine,
       ...x,
       // TPS/RT值
       subLabel: hasServiceOpened //
-        ? `${x.serviceAllTotalCount || 0}/${x.serviceAllTotalTps || 0}/${x.serviceRt || 0
-        }/${fixNum(x.serviceAllSuccessRate * 100)}%`
+        ? `${x.serviceAllTotalCount || 0}/${x.serviceAllTotalTps || 0}/${
+            x.serviceRt || 0
+          }/${fixNum(x.serviceAllSuccessRate * 100)}%`
         : undefined,
       // 瓶颈数据
       bottleneckMap: {
@@ -175,7 +168,8 @@ export const transformEdges = (edges, labelSetting, originEdges = edges) => {
     const arr = [];
     if (labelSetting.includes('1') || labelSetting.includes('2')) {
       arr.push(
-        `${labelSetting.includes('1') ? x.label : ''}${labelSetting.includes('1') && labelSetting.includes('2') ? ' ' : ''
+        `${labelSetting.includes('1') ? x.label : ''}${
+          labelSetting.includes('1') && labelSetting.includes('2') ? ' ' : ''
         }${labelSetting.includes('2') ? x.allTotalCount || 0 : ''}`
       );
     }
@@ -200,23 +194,25 @@ export const transformEdges = (edges, labelSetting, originEdges = edges) => {
     return {
       ...x,
       ...(hasOppositeLine
-        ? {
-          labelCfg: {
-            ...defaultEdgeLabelCfg,
-            style: {
-              ...labelStyle,
-              textAlign: 'center',
-            },
-            position: 'start',
-            refX: 70,
+        ? 
+      {
+        labelCfg: {
+          ...defaultEdgeLabelCfg,
+          style: {
+            ...labelStyle,
+            textAlign: 'center',
           },
-        }
-        : {
-          labelCfg: {
-            ...defaultEdgeLabelCfg,
-            style: labelStyle,
-          },
-        }),
+          position: 'start',
+          refX: 70,
+        },
+      }
+      : 
+      {
+        labelCfg: {
+          ...defaultEdgeLabelCfg,
+          style: labelStyle,
+        },
+      }),
       label: edgeLabel,
       style: {
         ...(x.style || {}),
@@ -261,8 +257,8 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
     showBottleneckBtn = false,
   } = props;
   const initalLabelSetting = props?.freezeExpand
-  // ? ['1', '2', '3', '4']
-    ? ['2', '3', '4']
+    ? // ? ['1', '2', '3', '4']
+      ['2', '3', '4']
     : defaultLabelSetting;
   const [graphInstance, setGraphInstance] = useState<Graph>();
   const isExpandedOninit =
@@ -326,15 +322,20 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
         const expanderTypeState = {};
 
         const checkBottleneckType = (nodeModel, bottleneckType) => {
-          return nodeModel?.providerService?.some((y) => {
-            return y?.dataSource?.some((z) => {
-              return (
-                z?.allSuccessRateBottleneckType === bottleneckType ||
-                z?.allTotalRtBottleneckType === bottleneckType ||
-                z?.allSqlTotalRtBottleneckType === bottleneckType
-              );
-            });
-          });
+          return nodeModel[{
+            1: 'hasL1Bottleneck',
+            2: 'hasL2Bottleneck',
+          }[bottleneckType]
+];
+          // return nodeModel?.providerService?.some((y) => {
+          //   return y?.dataSource?.some((z) => {
+          //     return (
+          //       z?.allSuccessRateBottleneckType === bottleneckType ||
+          //       z?.allTotalRtBottleneckType === bottleneckType ||
+          //       z?.allSqlTotalRtBottleneckType === bottleneckType
+          //     );
+          //   });
+          // });
         };
 
         // 获取应用的折叠数
@@ -602,7 +603,10 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
         return source === x.source && target === x.target;
       });
       if (graph.findById(x.source) && graph.findById(x.target) && !edgeAdded) {
-        graph.addItem('edge', transformEdges([x], labelSetting, originData.edges)[0]);
+        graph.addItem(
+          'edge',
+          transformEdges([x], labelSetting, originData.edges)[0]
+        );
       }
       if (
         !(graph.findById(x.source) && graph.findById(x.target)) &&
@@ -701,7 +705,10 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
             return model.source === y.source && model.target === y.target;
           });
           if (y.source === x.id || (y.target === x.id && !edgeExist)) {
-            graph.addItem('edge', transformEdges([y], labelSetting, originData.edges)[0]);
+            graph.addItem(
+              'edge',
+              transformEdges([y], labelSetting, originData.edges)[0]
+            );
           }
         });
       });
@@ -755,8 +762,9 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
         {isExpanded ? '收起' : '展开'}
         {y.title}
         <span
-          className={`iconfont ${isExpanded ? 'icon-a-InlineDelete' : 'icon-a-InlineAdd'
-            }`}
+          className={`iconfont ${
+            isExpanded ? 'icon-a-InlineDelete' : 'icon-a-InlineAdd'
+          }`}
           style={{ marginLeft: 4 }}
         />
       </span>
@@ -930,7 +938,7 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
       graph.off('node:click', nodeClick);
       graph.off('edge:mouseenter', edgeEnter);
       graph.off('edge:mouseleave', edgeLeave);
-      graph.getEdges().forEach(x => {
+      graph.getEdges().forEach((x) => {
         graph.clearItemStates(x);
       });
     };
