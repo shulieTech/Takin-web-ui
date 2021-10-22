@@ -32,6 +32,7 @@ const getEntryRuleFormData = (
         <CommonSelect
           showSearch
           placeholder="请选择"
+          showSearch
           dataSource={allAppList ? allAppList : []}
           showSearch
           filterOption={(input, option) =>
