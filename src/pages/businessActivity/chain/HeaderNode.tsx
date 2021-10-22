@@ -291,7 +291,7 @@ const HeaderNode: React.FC<Props> = (props) => {
                       });
                     }}
                   >
-                    {countMap[2]}
+                    {state.details.topology.l2bottleneckNum}
                   </span>
                 </span>
               )}
@@ -326,7 +326,7 @@ const HeaderNode: React.FC<Props> = (props) => {
                       });
                     }}
                   >
-                    {countMap[1]}
+                    {state.details.topology.l1bottleneckNum}
                   </span>
                 </span>
               )}
