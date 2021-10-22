@@ -16,35 +16,7 @@ const HeaderNode: React.FC<Props> = (props) => {
   const { state, setState } = useContext(BusinessActivityDetailsContext);
   const [showErrorList, setShowErrorList] = useState(false);
 
-  const hasNodes = state?.details?.topology?.nodes?.length > 0;
   const hasError = state?.details?.topology?.exceptions?.length > 0;
-  const isVirtialActivity = state?.details?.businessType === 1;
-
-  const countMap = {
-    1: 0, // 一般瓶颈
-    2: 0, // 严重瓶颈
-  };
-
-  state?.details?.topology?.nodes?.forEach((x) => {
-    x?.providerService?.forEach((y) => {
-      y?.dataSource?.forEach((z) => {
-        if (
-          z?.allSuccessRateBottleneckType === 2 ||
-          z.allTotalRtBottleneckType === 2 ||
-          z.allSqlTotalRtBottleneckType === 2
-        ) {
-          countMap[2] += 1;
-        }
-        if (
-          z?.allSuccessRateBottleneckType === 1 ||
-          z.allTotalRtBottleneckType === 1 ||
-          z.allSqlTotalRtBottleneckType === 1
-        ) {
-          countMap[1] += 1;
-        }
-      });
-    });
-  });
 
   return (
     <div
@@ -107,7 +79,8 @@ const HeaderNode: React.FC<Props> = (props) => {
             <span style={{ marginLeft: 16 }}>
               {state?.details?.refreshTime && (
                 <span style={{ marginRight: 8 }}>
-                  最后统计时间：{moment(state?.details?.refreshTime).format('HH:mm:ss')}
+                  最后统计时间：
+                  {moment(state?.details?.refreshTime).format('HH:mm:ss')}
                 </span>
               )}
               5秒刷新一次
@@ -288,73 +261,75 @@ const HeaderNode: React.FC<Props> = (props) => {
               />
             </span>
 
-            {countMap[2] > 0 && (
-              <span style={{ marginLeft: 16 }}>
-                <span
-                  style={{
-                    color: 'var(--Netural-10, #8e8e8e)',
-                  }}
-                >
-                  严重瓶颈：
+            {state.details.topology.hasL2Bottleneck &&
+              state.details.topology.l2bottleneckNum > 0 && (
+                <span style={{ marginLeft: 16 }}>
+                  <span
+                    style={{
+                      color: 'var(--Netural-10, #8e8e8e)',
+                    }}
+                  >
+                    严重瓶颈：
+                  </span>
+                  <span
+                    style={{
+                      color: 'var(--FunctionalError-500, #ED6047)',
+                      fontWeight: 700,
+                      fontSize: 16,
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      setState({
+                        watchListVisible: true,
+                        watchListQuery: {
+                          ...state.watchListQuery,
+                          bottleneckStatus: 2,
+                          nodeId: undefined,
+                          bottleneckType: -1,
+                          serviceName: undefined,
+                        },
+                      });
+                    }}
+                  >
+                    {state.details.topology.l2bottleneckNum}
+                  </span>
                 </span>
-                <span
-                  style={{
-                    color: 'var(--FunctionalError-500, #ED6047)',
-                    fontWeight: 700,
-                    fontSize: 16,
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    setState({
-                      watchListVisible: true,
-                      watchListQuery: {
-                        ...state.watchListQuery,
-                        bottleneckStatus: 2,
-                        nodeId: undefined,
-                        bottleneckType: -1,
-                        serviceName: undefined,
-                      },
-                    });
-                  }}
-                >
-                  {countMap[2]}
-                </span>
-              </span>
-            )}
+              )}
 
-            {countMap[1] > 0 && (
-              <span style={{ marginLeft: 16 }}>
-                <span
-                  style={{
-                    color: 'var(--Netural-10, #8e8e8e)',
-                  }}
-                >
-                  一般瓶颈：
+            {state.details.topology.hasL1Bottleneck &&
+              state.details.topology.l1bottleneckNum > 0 && (
+                <span style={{ marginLeft: 16 }}>
+                  <span
+                    style={{
+                      color: 'var(--Netural-10, #8e8e8e)',
+                    }}
+                  >
+                    一般瓶颈：
+                  </span>
+                  <span
+                    style={{
+                      color: 'var(--FunctionalAlert-500, #FFA800)',
+                      fontWeight: 700,
+                      fontSize: 16,
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      setState({
+                        watchListVisible: true,
+                        watchListQuery: {
+                          ...state.watchListQuery,
+                          bottleneckStatus: 1,
+                          nodeId: undefined,
+                          bottleneckType: -1,
+                          serviceName: undefined,
+                        },
+                      });
+                    }}
+                  >
+                    {state.details.topology.l1bottleneckNum}
+                  </span>
                 </span>
-                <span
-                  style={{
-                    color: 'var(--FunctionalAlert-500, #FFA800)',
-                    fontWeight: 700,
-                    fontSize: 16,
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    setState({
-                      watchListVisible: true,
-                      watchListQuery: {
-                        ...state.watchListQuery,
-                        bottleneckStatus: 1,
-                        nodeId: undefined,
-                        bottleneckType: -1,
-                        serviceName: undefined,
-                      },
-                    });
-                  }}
-                >
-                  {countMap[1]}
-                </span>
-              </span>
-            )}
+              )}
           </div>
         </div>
       </div>

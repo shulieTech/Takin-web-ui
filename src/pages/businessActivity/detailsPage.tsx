@@ -69,7 +69,7 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
 
   const queryActivityDetails = async () => {
     setState({
-      detailLoading: true
+      detailLoading: true,
     });
     const {
       data: { data, success },
@@ -78,7 +78,7 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
       ...state.queryParams,
     });
     setState({
-      detailLoading: false
+      detailLoading: false,
     });
     if (success && data) {
       if (state.details && data.verifiedFlag) {
@@ -163,12 +163,14 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
           overflow: 'hidden',
         }}
       >
-        <ActivityLeftList
-          initialId={props.location.query.id}
-          currentId={id}
-          onChangeId={setId}
-          currentPageIndex={props.location.query.pageIndex}
-        />
+        {!props.location.query.hideList && (
+          <ActivityLeftList
+            initialId={props.location.query.id}
+            currentId={id}
+            onChangeId={setId}
+            currentPageIndex={props.location.query.pageIndex}
+          />
+        )}
         <div
           style={{
             flex: 1,
@@ -178,7 +180,10 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
           }}
         >
           <HeaderNode />
-          <div style={{ position: 'relative', height: '100%' }} id="detail_graph_box">
+          <div
+            style={{ position: 'relative', height: '100%' }}
+            id="detail_graph_box"
+          >
             <Spin spinning={false} wrapperClassName={'spin-full'}>
               {/* <span
                 style={{
@@ -212,18 +217,21 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
                 onGraphReady={(val) => setState({ graph: val })}
                 onNodeClick={showNodeDetail}
                 onGraphClick={() => {
-                  setState({ nodeVisible: false, watchListVisible: false, });
+                  setState({ nodeVisible: false, watchListVisible: false });
                 }}
                 onLabelSettingChange={(val) => setState({ labelSetting: val })}
                 tooltip={
                   <div>
                     调用量：包含所有业务活动的调用量数据，取最近 5分钟的累加值；
                     <br />
-                    成功率：包含所有业务活动的成功率数据，取最近 5分钟的平均成功率；
+                    成功率：包含所有业务活动的成功率数据，取最近
+                    5分钟的平均成功率；
                     <br />
-                    TPS：包含所有业务活动的TPS数据，取最近 5分钟的平均TPS, 单位次/秒；
+                    TPS：包含所有业务活动的TPS数据，取最近 5分钟的平均TPS,
+                    单位次/秒；
                     <br />
-                    RT：包含所有业务活动的RT数据，取最近 5分钟的平均RT, 单位毫秒；
+                    RT：包含所有业务活动的RT数据，取最近 5分钟的平均RT,
+                    单位毫秒；
                     <br />
                     延迟：链路性能数据涉及大量数据计算与采集，数据存在一定延迟，大概2分钟左右。
                   </div>
