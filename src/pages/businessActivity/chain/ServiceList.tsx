@@ -342,13 +342,13 @@ const ServiceList: React.FC<Props> = (props) => {
                       }}
                     >
                       {x.ownerApps ? (
-                        <a
+                        <span
                           onClick={() =>
                             toAppDetail(x.ownerApps, state.details)
                           }
                         >
                           {x.ownerApps}
-                        </a>
+                        </span>
                       ) : (
                         '-'
                       )}
@@ -404,13 +404,13 @@ const ServiceList: React.FC<Props> = (props) => {
                                 }}
                               >
                                 {text ? (
-                                  <a
+                                  <span
                                     onClick={() =>
                                       toAppDetail(text, state.details)
                                     }
                                   >
                                     {text}
-                                  </a>
+                                  </span>
                                 ) : (
                                   '无'
                                 )}
