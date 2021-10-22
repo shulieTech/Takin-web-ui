@@ -158,13 +158,13 @@ const ServiceList: React.FC<Props> = (props) => {
         // 接口异常是 allSuccessRateBottleneckType 不等于 -1
         // 慢sql 是 allSqlTotalRtBottleneckType 不等于 -1
         if (bottleneckType === 1) {
-          return x.allTotalRtBottleneckType !== -1;
+          return ![0, -1].includes(x.allTotalRtBottleneckType);
         }
         if (bottleneckType === 2) {
-          return x.allSuccessRateBottleneckType !== -1;
+          return ![0, -1].includes(x.allSuccessRateBottleneckType);
         }
         if (bottleneckType === 4) {
-          return x.allSqlTotalRtBottleneckType !== -1;
+          return ![0, -1].includes(x.allSqlTotalRtBottleneckType);
         }
         return false;
       }
