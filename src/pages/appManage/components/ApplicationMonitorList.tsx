@@ -140,7 +140,7 @@ const getBlackListColumns = (
             <Button
               type="primary"
               key={ind}
-              onClick={() => router.push(`/pro/businessActivity/details?id=${ites}`)}
+              onClick={() => router.push(`/businessActivity/details?id=${ites}`)}
             >
               {text[ites]}
             </Button>
