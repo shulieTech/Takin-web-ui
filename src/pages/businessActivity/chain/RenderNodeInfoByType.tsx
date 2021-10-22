@@ -131,13 +131,18 @@ export const RenderNodeInfoByType = (
    * @name ===========================================对外服务====================================================
    */
   const OuterService: React.FC<any> = (props) => {
-    const list = sortServiceList([props.nodeInfo], details.activityId);
+    const list = sortServiceList([props.nodeInfo], details.activityId, props.nodeInfo.id);
+    const initalQuery = {
+      activityId: props.activityId,
+      nodeId: props.nodeInfo.id,
+      serviceName: undefined,
+      bottleneckStatus: -1,
+      bottleneckType: -1,
+    };
     if (!(list?.length > 0)) {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
-    return (
-      <ServiceList canSwitch={false} list={list} activityDetail={details} />
-    );
+    return <ServiceList initailQuery={initalQuery} isInBaseInfoModal />;
   };
 
   /**
