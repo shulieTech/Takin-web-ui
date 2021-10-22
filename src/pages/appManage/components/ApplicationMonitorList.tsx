@@ -29,7 +29,7 @@ const getBlackListColumns = (
       data: { data, success }
     } = await AppManageService.attendService({
       attend: false,
-      appName: detailData.appName,
+      appName: row.appName,
       label: row.serviceAndMethod
     });
     if (success) {
@@ -45,7 +45,7 @@ const getBlackListColumns = (
       data: { data, success }
     } = await AppManageService.attendService({
       attend: true,
-      appName: detailData.appName,
+      appName: row.appName,
       label: row.serviceAndMethod
     });
     if (success) {
