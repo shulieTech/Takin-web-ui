@@ -353,9 +353,9 @@ export const RenderNodeInfoByType = (
                 名称：
               </span>
               <Tooltip title={nodeInfo.label}>
-                <a onClick={() => toAppDetail(nodeInfo.label, details)}>
+                <span onClick={() => toAppDetail(nodeInfo.label, details)}>
                   {nodeInfo.label}
-                </a>
+                </span>
               </Tooltip>
             </div>
             <div
