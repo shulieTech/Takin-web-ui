@@ -415,6 +415,10 @@ const AppManageService = {
     const url = '/application/blacklist/list';
     return httpGet(url, data);
   },
+  async monitorDetailes(data = {}) {
+    const url = '/application/center/app/monitorDetailes';
+    return httpGet(url, data);
+  },
   /**
    * @name 删除黑名单（单个）
    */
@@ -589,6 +593,11 @@ const AppManageService = {
    */
   async recover(data = {}) {
     const url = '/application/center/resumeAllAgent';
+    return httpPost(url, data);
+  },
+
+  async attendService(data = {}) {
+    const url = '/application/center/app/attendService';
     return httpPost(url, data);
   }
 };
