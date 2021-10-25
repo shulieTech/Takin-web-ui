@@ -256,6 +256,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
           rowKey="blistId"
           onChange={onChange}
           loading={state.detailLoading}
+          scroll={{ y: 240 }}
           columns={ApplicationMonitorList(
             state,
             setState,
