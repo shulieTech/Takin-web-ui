@@ -64,7 +64,7 @@ const getBlackListColumns = (
             return (
               <Button
                 key={ind}
-                onClick={() => router.push(`/businessActivity/details?id=${ites}`)}
+                onClick={() => router.push(`/businessActivity/details?id=${ites}&hideList=1`)}
               >
                 {row[ites]}
               </Button>
@@ -192,7 +192,7 @@ const getBlackListColumns = (
             return (
               <Button
                 key={ind}
-                onClick={() => router.push(`/businessActivity/details?id=${ites}`)}
+                onClick={() => router.push(`/businessActivity/details?id=${ites}&hideList=1`)}
               >
                 {text[ites]}
               </Button>
