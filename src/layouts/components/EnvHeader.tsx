@@ -1,30 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import { Dropdown, Menu, Icon } from 'antd';
-
-interface Props {}
+import { Dropdown, Menu, Icon, Button } from 'antd';
+import tenantCode from './service';
+interface Props { }
 
 const EnvHeader: React.FC<Props> = (props) => {
-  const [envList, setEnvList] = useState([
-    {
-      code: 'test',
-      title: '测试环境',
-      desc: '',
-    },
-    {
-      code: 'pro',
-      title: '生产环境',
-      desc: '当前环境为生产环境，请谨慎操作',
-    },
-  ]);
-  const [currentEnv, setCurrentEnv] = useState(
-    localStorage.getItem('current-env')
-      ? JSON.parse(localStorage.getItem('current-env'))
-      : envList[0]
-  );
+  const [envList, setEnvList] = useState([]);
+  const [tenantList, setTenantList] = useState([]);
+  const [desc, setDesc] = useState('');
 
   useEffect(() => {
-    localStorage['current-env'] = JSON.stringify(currentEnv);
-  }, [currentEnv]);
+    queryTenantList();
+  }, []);
+
+  const queryTenantList = async () => {
+    const {
+      data: { success, data }
+    } = await tenantCode.tenant({
+      tenantCode: localStorage.getItem('tenant_code')
+    });
+    if (success) {
+      setTenantList(data);
+      setEnvList(data.envs);
+    }
+  };
+
+  const changeTenant = async (code) => {
+    const {
+      data: { success, data }
+    } = await tenantCode.tenantSwitch({
+      targetTenantCode: code
+    });
+    if (success) {
+      localStorage.setItem('tenant_code', code);
+      setEnvList(data.envs);
+      const arr = data.envs.filter(item => {
+        if (item.isDefault) {
+          return item;
+        }
+      });
+      localStorage.setItem('env_code', arr[0].envCode);
+      setDesc(arr[0].desc);
+      if (window.location.hash === '#/dashboard') {
+        window.location.reload();
+      } else {
+        window.location.hash = '#/dashboard';
+      }
+    }
+  };
+
+  const changeCode = async (code, descs) => {
+    const {
+      data: { success, data }
+    } = await tenantCode.envSwitch({
+      targetEnvCode: code
+    });
+    if (success) {
+      setDesc(descs);
+      localStorage.setItem('env_code', code);
+      if (window.location.hash === '#/dashboard') {
+        window.location.reload();
+      } else {
+        window.location.hash = '#/dashboard';
+      }
+    }
+  };
 
   return (
     <div
@@ -37,55 +76,50 @@ const EnvHeader: React.FC<Props> = (props) => {
       }}
     >
       <span style={{ marginRight: 16, color: '#D0D5DE' }}>
-        {currentEnv.desc}
+        {desc}
       </span>
-      <Dropdown
-        overlay={
-          <Menu>
-            {envList.map((x) => (
-              <Menu.Item
-                key={x.code}
-                onClick={() => {
-                  if (currentEnv?.code !== x.code) {
-                    setCurrentEnv(x);
-                    if (window.location.hash === '#/dashboard') {
-                      window.location.reload();
-                    } else {
-                      window.location.hash = '#/dashboard';
-                    }
-                  }
-                }}
-                style={{
-                  fontWeight: currentEnv.code === x.code ? 'bold' : 'normal',
-                }}
-              >
-                {x.title}{' '}
-              </Menu.Item>
-            ))}
-          </Menu>
-        }
-      >
-        <span
-          style={{
-            backgroundColor:
-              currentEnv.code === 'pro'
-                ? 'var(--FunctionalError-500, #ED6047)'
-                : '#fff',
-            color:
-              currentEnv.code === 'pro'
-                ? '#fff'
-                : 'var(--FunctionalNetural-500, #3D485A)',
-            padding: '0 12px',
-            borderRadius: 4,
-            cursor: 'pointer',
-          }}
+      <Button.Group>
+        <Dropdown
+          overlay={
+            <Menu>
+              {tenantList.map((x) => (
+                <Menu.Item
+                  key={x.tenantId}
+                  onClick={() => changeTenant(x.tenantCode)}
+                >
+                  {x.tenantName}
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
         >
-          环境：{currentEnv.title}
-          {envList?.length > 0 && (
-            <Icon type="caret-down" style={{ marginLeft: 8 }} />
-          )}
-        </span>
-      </Dropdown>
+          <Button type="primary">
+            租户：
+            {localStorage.getItem('tenant_code')}
+            <Icon type="down" />
+          </Button>
+        </Dropdown>
+        <Dropdown
+          overlay={
+            <Menu>
+              {envList.map((x, ind) => (
+                <Menu.Item
+                  key={x.ind}
+                  onClick={() => changeCode(x.envCode, x.desc)}
+                >
+                  {x.envName}
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
+        >
+          <Button type="primary">
+            环境：
+            {localStorage.getItem('env_code')}
+            <Icon type="down" />
+          </Button>
+        </Dropdown>
+      </Button.Group>
     </div>
   );
 };

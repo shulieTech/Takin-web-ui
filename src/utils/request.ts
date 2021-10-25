@@ -115,8 +115,8 @@ export function httpGet<T = any>(url: string, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
-      tenant_code: key.slice(0, key.length - 1)
+      tenant_code: localStorage.getItem('tenant_code'),
+      env_code: localStorage.getItem('env_code'),
     }
   });
 }
@@ -130,8 +130,8 @@ export function httpPost<T>(url, data?: any, options?: any) {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
       'Access-Token': localStorage.getItem('Access-Token'),
-      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
-      tenant_code: key.slice(0, key.length - 1)
+      tenant_code: localStorage.getItem('tenant_code'),
+      env_code: localStorage.getItem('env_code'),
     }
   });
 }
@@ -144,8 +144,8 @@ export function httpPut<T>(url, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
-      tenant_code: key.slice(0, key.length - 1)
+      tenant_code: localStorage.getItem('tenant_code'),
+      env_code: localStorage.getItem('env_code'),
     }
   });
 }
@@ -158,8 +158,8 @@ export function httpDelete<T>(url, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'x-env-code': localStorage.getItem('current-env') ? JSON.parse(localStorage.getItem('current-env'))?.code : '',
-      tenant_code: key.slice(0, key.length - 1)
+      tenant_code: localStorage.getItem('tenant_code'),
+      env_code: localStorage.getItem('env_code'),
     }
   });
 }

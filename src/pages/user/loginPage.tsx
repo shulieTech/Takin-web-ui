@@ -150,7 +150,7 @@ export default class Login extends DvaComponent<Props, State> {
     const { key } = queryString.parse(location.search);
     const {
       data: { success, data }
-    } = await UserService.troLogin({ ...value, envCode: key.slice(0, key.length - 1) });
+    } = await UserService.troLogin({ ...value });
     if (success) {
       notification.success({
         message: '通知',
@@ -160,7 +160,8 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
-
+      localStorage.setItem('tenant_code', data.tenantCode);
+      localStorage.setItem('env_code', data.envCode);
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
