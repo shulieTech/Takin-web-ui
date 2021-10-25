@@ -255,6 +255,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
         <CustomTable
           rowKey="blistId"
           onChange={onChange}
+          loading={state.detailLoading}
           columns={ApplicationMonitorList(
             state,
             setState,

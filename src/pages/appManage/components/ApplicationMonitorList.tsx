@@ -2,7 +2,7 @@
  * @name
  * @author chuxu
  */
-import { Badge, Button, Icon, message, Modal, Popconfirm, Row, Switch, Tag } from 'antd';
+import { Badge, Button, Dropdown, Icon, Menu, message, Modal, Popconfirm, Row, Switch, Tag } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
@@ -56,11 +56,31 @@ const getBlackListColumns = (
     }
   };
 
+  const menu = row => {
+    return (
+      <Menu>
+        {
+          Object.keys(row).map((ites, ind) => {
+            return (
+              <Menu.Item
+                key={ind}
+                onClick={() => router.push(`/businessActivity/details?id=${ites}`)}
+              >
+                {row[ites]}
+              </Menu.Item>
+            );
+          })
+        }
+      </Menu>
+    );
+  };
+
   return [
     {
       ...customColumnProps,
       title: '服务名称',
-      dataIndex: 'serviceAndMethod'
+      dataIndex: 'serviceAndMethod',
+      width: 200
     },
     {
       ...customColumnProps,
@@ -146,17 +166,21 @@ const getBlackListColumns = (
       title: '关联业务活动名称',
       dataIndex: 'activeIdAndName',
       render: (text, row) => {
-        return Object.keys(text).map((ites, ind) => {
-          return (
-            <Button
-              type="primary"
-              key={ind}
-              onClick={() => router.push(`/businessActivity/details?id=${ites}`)}
-            >
-              {text[ites]}
-            </Button>
-          );
-        });
+        if (Object.keys(text).length === 0) {
+          return;
+        }
+        return (
+          <Fragment>
+            <div>
+              <Dropdown overlay={menu(text)} trigger={['click']}>
+                <Button>
+                  关联业务活动 <Icon type="down" />
+                </Button>
+              </Dropdown>
+            </div>
+          </Fragment>
+        );
+
       }
     },
     {
