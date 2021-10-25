@@ -282,7 +282,7 @@ const HeaderNode: React.FC<Props> = (props) => {
                       setState({
                         watchListVisible: true,
                         watchListQuery: {
-                          ...state.watchListQuery,
+                          // ...state.watchListQuery,
                           bottleneckStatus: 2,
                           nodeId: undefined,
                           bottleneckType: -1,
@@ -317,7 +317,7 @@ const HeaderNode: React.FC<Props> = (props) => {
                       setState({
                         watchListVisible: true,
                         watchListQuery: {
-                          ...state.watchListQuery,
+                          // ...state.watchListQuery,
                           bottleneckStatus: 1,
                           nodeId: undefined,
                           bottleneckType: -1,
