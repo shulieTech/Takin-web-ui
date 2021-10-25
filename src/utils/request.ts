@@ -26,6 +26,22 @@ let outloginFlag = false;
 //     return Promise.resolve(error);
 //   }
 // );
+axios.interceptors.request.use((config) => {
+  let url = config.url;
+  // get参数转义
+  if (config.method.toLowerCase() === 'get' && config.params) {
+    url += '?';
+    const keys = Object.keys(config.params);
+    for (const key of keys) {
+      url += `${key}=${encodeURIComponent(config.params[key])}&`;
+    }
+    url = url.substring(0, url.length - 1);
+    config.params = {};
+  }
+  config.url = url;
+  return config;
+});
+
 axios.interceptors.response.use(
   response => {
     return response;
