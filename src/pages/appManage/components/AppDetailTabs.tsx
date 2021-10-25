@@ -1,6 +1,7 @@
 import { Tabs } from 'antd';
 import React from 'react';
 import DetailTabs from 'src/common/detail-tabs';
+import ApplicationMonitor from './ApplicationMonitor';
 import BasicInfo from './BasicInfo';
 import BlackList from './BlackList';
 import DbAndTable from './DbAndTable';
@@ -27,8 +28,15 @@ const AppDetailTabs: React.FC<Props> = props => {
 
   const tabsData = [
     {
-      title: '基础信息',
-      tabNode: <BasicInfo detailData={detailData} />,
+      title: '服务监控',
+      tabNode: (
+        <ApplicationMonitor
+          id={id}
+          detailData={detailData}
+          detailState={detailState}
+          action={action}
+        />
+      ),
       show: true
     },
     {
@@ -162,7 +170,7 @@ const AppDetailTabs: React.FC<Props> = props => {
         />
       ),
       show: true
-    }
+    },
   ];
 
   return (

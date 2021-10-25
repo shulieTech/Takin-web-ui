@@ -13,10 +13,10 @@ interface State {}
 const SwitchExplanationDrawer: React.FC<Props> = props => {
   return (
     <CommonDrawer
-      btnText="「全局压测开关说明」"
+      btnText="「压测流量开关说明」"
       drawerProps={{
         width: 560,
-        title: '全局压测开关说明',
+        title: '压测流量开关说明',
         maskClosable: false
       }}
       footer={null}
@@ -44,7 +44,7 @@ const SwitchExplanationDrawer: React.FC<Props> = props => {
           </p>
           <p>
             02.
-            关闭「压测总开关」后，所有压测配置均会失效，同时也会释放这些配置所占用的机器性能，此时不能执行压测任务，以免出现压测数据写入生产等风险。
+            关闭「压测总开关」后，所有压测配置均会失效，若有压测流量流入，探针将对压测流量进行拦截，抛出异常。
           </p>
         </p>
         <h4 className={styles.h4}>开启操作的影响：</h4>
@@ -62,7 +62,7 @@ const SwitchExplanationDrawer: React.FC<Props> = props => {
         <p className={styles.txts}>
           <p>
             01.
-            压测过程中禁止操作「全局压测开关」，否则会导致一系列的异常，包括压测数据写入生产、挡板失效等。
+            压测过程中禁止操作「压测流量开关」，否则会导致一系列的异常，包括压测数据写入生产、挡板失效等。
           </p>
           <p>
             02.
