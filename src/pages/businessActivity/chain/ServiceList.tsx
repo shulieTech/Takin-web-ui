@@ -7,8 +7,8 @@ import { Link, router } from 'umi';
 
 interface Props {
   initailQuery: any;
-  afterChangeQuery: any;
-  isInBaseInfoModal: boolean;
+  afterChangeQuery?: any;
+  isInBaseInfoModal?: boolean;
 }
 
 const { Option } = Select;
@@ -53,15 +53,15 @@ export const sortServiceList = (nodes = [], activityId, nodeId: any) => {
 };
 
 export const toAppDetail = async (appName: string, activityDetail: any) => {
-  const {
-    data: { success, data },
-  } = await BusinessActivityService.searchApp({
-    appName,
-    activityName: activityDetail?.activityName,
-  });
-  if (success && data?.[0]) {
-    router.push(`/appManage/details?tabKey=0&id=${data?.[0]?.id}`);
-  }
+  // const {
+  //   data: { success, data },
+  // } = await BusinessActivityService.searchApp({
+  //   appName,
+  //   activityName: activityDetail?.activityName,
+  // });
+  // if (success && data?.[0]) {
+  //   router.push(`/appManage/details?tabKey=0&id=${data?.[0]?.id}`);
+  // }
 };
 
 const ServiceList: React.FC<Props> = (props) => {
@@ -134,6 +134,7 @@ const ServiceList: React.FC<Props> = (props) => {
   const getList = async () => {
     const { nodeId, bottleneckStatus, bottleneckType, serviceName } =
       searchQuery;
+
     const list = initailList.filter((x: any) => {
       if (nodeId && x.nodeId !== nodeId) {
         return false;
@@ -145,11 +146,17 @@ const ServiceList: React.FC<Props> = (props) => {
         return false;
       }
       if (bottleneckStatus !== -1) {
+        const checkStatus = (typeName) => {
+          return x.containRealAppProvider.some(y => y[typeName] === bottleneckStatus);
+        };
         if (
           !(
-            x.allSuccessRateBottleneckType === bottleneckStatus ||
-            x.allTotalRtBottleneckType === bottleneckStatus ||
-            x.allSqlTotalRtBottleneckType === bottleneckStatus
+            checkStatus('allSuccessRateBottleneckType') ||
+            checkStatus('allTotalRtBottleneckType') ||
+            checkStatus('allSqlTotalRtBottleneckType')
+            // x.allSuccessRateBottleneckType === bottleneckStatus ||
+            // x.allTotalRtBottleneckType === bottleneckStatus ||
+            // x.allSqlTotalRtBottleneckType === bottleneckStatus
           )
         ) {
           return false;
@@ -160,13 +167,18 @@ const ServiceList: React.FC<Props> = (props) => {
         // 接口异常是 allSuccessRateBottleneckType 不等于 -1
         // 慢sql 是 allSqlTotalRtBottleneckType 不等于 -1
         if (bottleneckType === 1) {
-          return ![0, -1].includes(x.allTotalRtBottleneckType);
+          // return ![0, -1].includes(x.allTotalRtBottleneckType);
+          return !x.containRealAppProvider.every(y => [0, -1].includes(y.allTotalRtBottleneckType));
         }
         if (bottleneckType === 2) {
-          return ![0, -1].includes(x.allSuccessRateBottleneckType);
+          // return ![0, -1].includes(x.allSuccessRateBottleneckType);
+          return !x.containRealAppProvider.every(y => [0, -1].includes(y.allSuccessRateBottleneckType));
+
         }
         if (bottleneckType === 4) {
-          return ![0, -1].includes(x.allSqlTotalRtBottleneckType);
+          // return ![0, -1].includes(x.allSqlTotalRtBottleneckType);
+          return !x.containRealAppProvider.every(y => [0, -1].includes(y.allSqlTotalRtBottleneckType));
+
         }
         return false;
       }
@@ -175,6 +187,10 @@ const ServiceList: React.FC<Props> = (props) => {
 
     setFilteredList(list);
   };
+
+  useEffect(() => {
+    setSearchQuery(initailQuery);
+  }, [JSON.stringify(initailQuery)]);
 
   useEffect(() => {
     getList();
@@ -342,13 +358,13 @@ const ServiceList: React.FC<Props> = (props) => {
                       }}
                     >
                       {x.ownerApps ? (
-                        <a
+                        <span
                           onClick={() =>
                             toAppDetail(x.ownerApps, state.details)
                           }
                         >
                           {x.ownerApps}
-                        </a>
+                        </span>
                       ) : (
                         '-'
                       )}
@@ -404,13 +420,13 @@ const ServiceList: React.FC<Props> = (props) => {
                                 }}
                               >
                                 {text ? (
-                                  <a
+                                  <span
                                     onClick={() =>
                                       toAppDetail(text, state.details)
                                     }
                                   >
                                     {text}
-                                  </a>
+                                  </span>
                                 ) : (
                                   '无'
                                 )}
