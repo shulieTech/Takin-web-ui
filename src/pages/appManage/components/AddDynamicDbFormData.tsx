@@ -395,7 +395,7 @@ const getAddDynamicDbFormData = (
             : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key),
         rules: [
           {
-            required: true,
+            required: item.required ? true : false,
             message: '请检查表单必填项'
           }
         ]
