@@ -603,6 +603,10 @@ const AppManageService = {
   async entrances(data = {}) {
     const url = '/application/entrances/all' ;
     return httpGet(url, data);
+  },
+  async allByActivity(data = {}) {
+    const url = '/allByActivity' ;
+    return httpGet(url, data);
   }
 };
 
