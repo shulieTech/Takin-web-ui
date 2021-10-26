@@ -17,6 +17,7 @@ interface Props {
   traceId?: string;
   isLive?: boolean;
   reportId?: string;
+  totalRt: number;
 }
 
 interface State {
@@ -332,11 +333,14 @@ const RequestDetailModal: React.FC<Props> = props => {
     },
     {
       label: '总耗时',
-      value: state.totalCost ? `${state.totalCost}ms` : null
+      value: props.totalRt ? `${props.totalRt}ms` : null
     },
     {
       label: '网络耗时',
-      value: state.totalCost ? `${state.totalCost}ms` : null
+      value:
+        props.totalRt - state.totalCost
+          ? `${props.totalRt - state.totalCost}ms`
+          : null
     },
     {
       label: '接口耗时',
