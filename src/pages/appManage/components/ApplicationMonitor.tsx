@@ -39,6 +39,7 @@ interface State {
   serviceNameList: any;
   allByActivityName: any;
   allByActivityList: any;
+  val: boolean;
 }
 const ApplicationMonitor: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -57,7 +58,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
     serviceName: undefined,
     serviceNameList: [],
     allByActivityName: undefined,
-    allByActivityList: []
+    allByActivityList: [],
+    val: false
   });
   const { Search } = Input;
   const { detailData, id, detailState, action } = props;
@@ -91,13 +93,15 @@ const ApplicationMonitor: React.FC<Props> = props => {
       if (state.refreshTime) {
         timer = setTimeout(refreshData, state.refreshTime);
       }
-      queryBlackListList({
-        ...state.searchParams,
-        orderBy: state.sorter,
-        clusterTest: state.clusterTest,
-        label: state.serviceName,
-        activityName: state.allByActivityName
-      });
+      if (state.val) {
+        queryBlackListList({
+          ...state.searchParams,
+          orderBy: state.sorter,
+          clusterTest: state.clusterTest,
+          label: state.serviceName,
+          activityName: state.allByActivityName
+        });
+      }
     };
 
     refreshData();
@@ -276,6 +280,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
                 checked={state.refreshTime > 0}
                 onChange={(val) => {
                   setState({
+                    val,
                     refreshTime: val ? 5000 : 0,
                   });
                 }}
