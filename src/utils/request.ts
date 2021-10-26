@@ -33,7 +33,9 @@ axios.interceptors.request.use((config) => {
     url += url.includes('?') ? '&' : '?';
     const keys = Object.keys(config.params);
     for (const key of keys) {
-      url += `${key}=${encodeURIComponent(config.params[key])}&`;
+      if (![undefined, null].includes(config.params[key])) {
+        url += `${key}=${encodeURIComponent(config.params[key])}&`;
+      }
     }
     url = url.substring(0, url.length - 1);
     config.params = {};
