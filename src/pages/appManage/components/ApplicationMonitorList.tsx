@@ -2,7 +2,7 @@
  * @name
  * @author chuxu
  */
-import { Badge, Button, Dropdown, Icon, Menu, message, Modal, Popconfirm, Row, Switch, Tag } from 'antd';
+import { Button, Icon, Menu, message, Modal, Popconfirm, Popover, Row, Switch, Tag, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
@@ -60,14 +60,14 @@ const getBlackListColumns = (
     return (
       <Menu>
         {
-          Object.keys(row).map((ites, ind) => {
+          Object.keys(row).splice(1, 1).map((ites, ind) => {
             return (
-              <Menu.Item
+              <Button
                 key={ind}
-                onClick={() => router.push(`/businessActivity/details?id=${ites}`)}
+                onClick={() => router.push(`/businessActivity/details?id=${ites}&hideList=1`)}
               >
                 {row[ites]}
-              </Menu.Item>
+              </Button>
             );
           })
         }
@@ -80,7 +80,24 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '服务名称',
       dataIndex: 'serviceAndMethod',
-      width: 200
+      render: (text, row) => {
+        return (
+          <Tooltip title={text}>
+            <span
+              style={{
+                display: 'inline-block',
+                width: 100,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                cursor: 'pointer'
+              }}
+            >
+              {text}
+            </span>
+          </Tooltip>
+        );
+      }
     },
     {
       ...customColumnProps,
@@ -165,19 +182,43 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '关联业务活动名称',
       dataIndex: 'activeIdAndName',
+      width: 250,
       render: (text, row) => {
         if (Object.keys(text).length === 0) {
           return;
         }
+        if (Object.keys(text).length < 2) {
+          return Object.keys(text).map((ites, ind) => {
+            return (
+              <Button
+                key={ind}
+                onClick={() => router.push(`/businessActivity/details?id=${ites}&hideList=1`)}
+              >
+                {text[ites]}
+              </Button>
+            );
+          });
+        }
         return (
           <Fragment>
-            <div>
-              <Dropdown overlay={menu(text)} trigger={['click']}>
-                <Button>
-                  关联业务活动 <Icon type="down" />
-                </Button>
-              </Dropdown>
-            </div>
+            {
+              Object.keys(text).map((ites, ind) => {
+                if (ind === 0) {
+                  return (
+                    <Button
+                      key={ind}
+                      onClick={() => router.push(`/businessActivity/details?id=${ites}`)}
+                    >
+                      {text[ites]}
+                    </Button>
+                  );
+                }
+              })
+            }
+            <span style={{ marginLeft: 10 }} />
+            <Popover content={menu(text)}>
+              <Icon type="down" />
+            </Popover>
           </Fragment>
         );
 
@@ -187,6 +228,7 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '关注',
       dataIndex: 'attend',
+      width: 50,
       render: (text, row) => {
         if (text) {
           return <Icon type="heart" theme="filled" onClick={() => cancel(row)} />;

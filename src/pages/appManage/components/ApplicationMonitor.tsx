@@ -37,6 +37,8 @@ interface State {
   clusterTest: any;
   serviceName: any;
   serviceNameList: any;
+  allByActivityName: any;
+  allByActivityList: any;
 }
 const ApplicationMonitor: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -53,19 +55,28 @@ const ApplicationMonitor: React.FC<Props> = props => {
     sorter: undefined,
     clusterTest: '-1',
     serviceName: undefined,
-    serviceNameList: []
+    serviceNameList: [],
+    allByActivityName: undefined,
+    allByActivityList: []
   });
   const { Search } = Input;
   const { detailData, id, detailState, action } = props;
-  useEffect(() => { queryService(); }, []);
+  useEffect(() => { queryService(); queryallByActivity(); }, []);
   useEffect(() => {
     queryBlackListList({
       ...state.searchParams,
       orderBy: state.sorter,
       clusterTest: state.clusterTest,
-      label: state.serviceName
+      label: state.serviceName,
+      activityName: state.allByActivityName
     });
-  }, [state.searchParams, state.sorter, state.clusterTest, state.isReload, state.serviceName]);
+  }, [
+    state.searchParams,
+    state.sorter,
+    state.clusterTest,
+    state.isReload,
+    state.serviceName,
+    state.allByActivityName]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -80,7 +91,13 @@ const ApplicationMonitor: React.FC<Props> = props => {
       if (state.refreshTime) {
         timer = setTimeout(refreshData, state.refreshTime);
       }
-      queryBlackListList({ ...state.searchParams, orderBy: state.sorter, clusterTest: state.clusterTest });
+      queryBlackListList({
+        ...state.searchParams,
+        orderBy: state.sorter,
+        clusterTest: state.clusterTest,
+        label: state.serviceName,
+        activityName: state.allByActivityName
+      });
     };
 
     refreshData();
@@ -103,6 +120,26 @@ const ApplicationMonitor: React.FC<Props> = props => {
     if (success) {
       setState({
         serviceNameList:
+          data &&
+          data.map((item, k) => {
+            return {
+              label: item.serviceName,
+              value: item.serviceName
+            };
+          }),
+      });
+    }
+  };
+
+  const queryallByActivity = async () => {
+    const {
+      data: { data, success }
+    } = await AppManageService.allByActivity({
+      appName: detailData.applicationName
+    });
+    if (success) {
+      setState({
+        allByActivityList:
           data &&
           data.map((item, k) => {
             return {
@@ -184,6 +221,12 @@ const ApplicationMonitor: React.FC<Props> = props => {
     });
   };
 
+  const allByActivityChange = (value) => {
+    setState({
+      allByActivityName: value
+    });
+  };
+
   return (
     <Fragment>
       <div
@@ -206,7 +249,22 @@ const ApplicationMonitor: React.FC<Props> = props => {
               dataSource={state.serviceNameList}
             />
           </Col>
-          <Col span={8} offset={9} style={{ marginTop: 5 }}>
+          <Col span={4}>
+            <CommonSelect
+              placeholder="关联业务活动"
+              style={{ width: '95%' }}
+              allowClear
+              optionFilterProp="children"
+              showSearch
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                0
+              }
+              onChange={allByActivityChange}
+              dataSource={state.allByActivityList}
+            />
+          </Col>
+          <Col span={8} offset={5} style={{ marginTop: 5 }}>
             <span>
               <span style={{ marginRight: 8, marginLeft: 18 }}>
                 最后统计时间：{moment().format('YYYY-MM-DD HH:mm:ss')}
@@ -256,6 +314,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
           rowKey="blistId"
           onChange={onChange}
           loading={state.detailLoading}
+          scroll={{ y: 240 }}
           columns={ApplicationMonitorList(
             state,
             setState,
