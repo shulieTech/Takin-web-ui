@@ -697,7 +697,7 @@ const AppManageService = {
     return httpGet(url, data);
   },
   async allByActivity(data = {}) {
-    const url = '/allByActivity' ;
+    const url = '/application/entrances/allByActivity' ;
     return httpGet(url, data);
   }
 };
