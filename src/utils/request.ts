@@ -30,7 +30,7 @@ axios.interceptors.request.use((config) => {
   let url = config.url;
   // get参数转义
   if (config.method.toLowerCase() === 'get' && config.params) {
-    url += '?';
+    url += url.includes('?') ? '&' : '?';
     const keys = Object.keys(config.params);
     for (const key of keys) {
       url += `${key}=${encodeURIComponent(config.params[key])}&`;
