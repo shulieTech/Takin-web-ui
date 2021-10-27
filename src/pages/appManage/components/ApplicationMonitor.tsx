@@ -69,7 +69,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
       ...state.searchParams,
       orderBy: state.sorter,
       clusterTest: state.clusterTest,
-      label: state.serviceName,
+      serviceName: state.serviceName,
       activityName: state.allByActivityName
     });
   }, [
@@ -98,7 +98,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
           ...state.searchParams,
           orderBy: state.sorter,
           clusterTest: state.clusterTest,
-          label: state.serviceName,
+          serviceName: state.serviceName,
           activityName: state.allByActivityName
         });
       }
