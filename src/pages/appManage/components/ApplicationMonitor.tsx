@@ -147,8 +147,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
           data &&
           data.map((item, k) => {
             return {
-              label: item.serviceName,
-              value: item.serviceName
+              label: item?.activityNameAndId?.linkName,
+              value: item.label
             };
           }),
       });
