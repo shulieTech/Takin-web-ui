@@ -118,7 +118,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         title: '方法名/服务名',
         dataIndex: 'interfaceName',
         ellipsis: true,
-        width: 300,
+        width: 250,
         render: text => {
           return (
             <span>
@@ -132,24 +132,27 @@ const RequestDetailModal: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '客户端/服务端',
-        dataIndex: 'ogTypeName'
+        dataIndex: 'logTypeName',
+        width: 70
       },
       {
         ...customColumnProps,
         title: 'IP',
         dataIndex: 'nodeIp',
-        width: 150
+        width: 140
       },
       {
         ...customColumnProps,
         title: '同步/异步',
-        dataIndex: 'async'
+        dataIndex: 'asyncName',
+        width: 50
       },
       {
         ...customColumnProps,
         title: '应用名/中间件名',
         dataIndex: 'applicationName',
         ellipsis: true,
+        width: 120,
         render: (text, row) => {
           return (
             <Tooltip placement="bottomLeft" title={text}>
@@ -337,10 +340,7 @@ const RequestDetailModal: React.FC<Props> = props => {
     },
     {
       label: '网络耗时',
-      value:
-        props.totalRt - state.totalCost
-          ? `${props.totalRt - state.totalCost}ms`
-          : null
+      value: `${props.totalRt - state.totalCost}ms`
     },
     {
       label: '接口耗时',
