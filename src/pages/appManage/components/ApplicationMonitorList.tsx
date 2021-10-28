@@ -140,43 +140,42 @@ const getBlackListColumns = (
       dataIndex: 'response',
       width: 200,
       render: (text, row) => {
-        return (
-          <Row>
+        const btns = [];
+        if (text?.allTotalRtBottleneckType !== -1) {
+          btns.push(
             <Button
               type="primary"
               onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text?.rtBottleneckId}`)}
-              style={{
-                display: text?.allTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
-              }}
             >
               卡慢
             </Button>
-            <div
-              style={{
-                display: text?.allTotalRtBottleneckType !== -1 ? 'none' : 'inline-block'
-              }}
+          );
+        }
+        if (text?.allTotalRtBottleneckType === -1 && text?.allSqlTotalRtBottleneckType !== -1) {
+          btns.push(
+            <Button
+              type="primary"
+              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text?.rtSqlBottleneckId}`)}
             >
-              <Button
-                type="primary"
-                onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text?.rtSqlBottleneckId}`)}
-                style={{
-                  display: text?.allSqlTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
-                }}
-              >
-                卡慢
-              </Button>
-            </div>
+              卡慢
+            </Button>
+          );
+        }
+        if (text?.allSuccessRateBottleneckType !== -1) {
+          btns.push(
             <Button
               type="primary"
               onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text?.successRateBottleneckId}`)}
               style={{
-                display: text?.allSuccessRateBottleneckType !== -1 ? 'inline-block' : 'none',
                 marginLeft: 10
               }}
             >
               接口异常
             </Button>
-          </Row>);
+          );
+        }
+
+        return btns.length > 0 ? <span>{btns}</span> : '正常';
       }
     },
     {
@@ -186,7 +185,7 @@ const getBlackListColumns = (
       width: 250,
       render: (text, row) => {
         if (Object.keys(text).length === 0) {
-          return;
+          return '-';
         }
         if (Object.keys(text).length < 2) {
           return Object.keys(text).map((ites, ind) => {
