@@ -143,23 +143,23 @@ const getBlackListColumns = (
           <Row>
             <Button
               type="primary"
-              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtBottleneckId}`)}
+              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text?.rtBottleneckId}`)}
               style={{
-                display: text.allTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
+                display: text?.allTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
               }}
             >
               卡慢
             </Button>
             <div
               style={{
-                display: text.allTotalRtBottleneckType !== -1 ? 'none' : 'inline-block'
+                display: text?.allTotalRtBottleneckType !== -1 ? 'none' : 'inline-block'
               }}
             >
               <Button
                 type="primary"
-                onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.rtSqlBottleneckId}`)}
+                onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text?.rtSqlBottleneckId}`)}
                 style={{
-                  display: text.allSqlTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
+                  display: text?.allSqlTotalRtBottleneckType !== -1 ? 'inline-block' : 'none'
                 }}
               >
                 卡慢
@@ -167,9 +167,9 @@ const getBlackListColumns = (
             </div>
             <Button
               type="primary"
-              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text.successRateBottleneckId}`)}
+              onClick={() => router.push(`/pro/bottleneckTable/bottleneckDetails?exceptionId=${text?.successRateBottleneckId}`)}
               style={{
-                display: text.allSuccessRateBottleneckType !== -1 ? 'inline-block' : 'none',
+                display: text?.allSuccessRateBottleneckType !== -1 ? 'inline-block' : 'none',
                 marginLeft: 10
               }}
             >
