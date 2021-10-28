@@ -30,7 +30,7 @@ const getBlackListColumns = (
     } = await AppManageService.attendService({
       attend: false,
       appName: row.appName,
-      label: row.serviceAndMethod
+      serviceName: row.serviceAndMethod
     });
     if (success) {
       message.success('取消关注成功');
@@ -46,7 +46,7 @@ const getBlackListColumns = (
     } = await AppManageService.attendService({
       attend: true,
       appName: row.appName,
-      label: row.serviceAndMethod
+      serviceName: row.serviceAndMethod
     });
     if (success) {
       message.success('关注成功');
@@ -110,6 +110,7 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: 'TPS（次/秒）',
       dataIndex: 'tps',
+      width: 120,
       sorter: true,
       key: 'TPS'
     },

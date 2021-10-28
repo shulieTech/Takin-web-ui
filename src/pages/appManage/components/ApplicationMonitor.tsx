@@ -93,7 +93,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
       if (state.refreshTime) {
         timer = setTimeout(refreshData, state.refreshTime);
       }
-      if (state.val) {
+      if (!state.detailLoading) {
         queryBlackListList({
           ...state.searchParams,
           orderBy: state.sorter,
