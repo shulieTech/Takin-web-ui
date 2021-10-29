@@ -23,7 +23,7 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
     const {
       data: { success, data },
     } = await UserService.apiSys({
-      version: json,
+      version: JSON.stringify(json),
     });
     if (success) {
       setFileList(data.itemVos);
