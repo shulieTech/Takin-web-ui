@@ -198,7 +198,11 @@ const RequestList: React.FC<Props> = props => {
         render: (text, row) => {
           return (
             <Fragment>
-              <RequestDetailModal btnText="请求详情" traceId={row.traceId} />
+              <RequestDetailModal
+                btnText="请求详情"
+                traceId={row.traceId}
+                totalRt={row.totalRt}
+              />
               {row.responseStatus !== 0 && row.responseStatus !== 200 && (
                 <span style={{ marginLeft: 8 }}>
                   <AssertModal

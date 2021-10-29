@@ -1,12 +1,4 @@
-import {
-  Button,
-  Divider,
-
-  message,
-  Row,
-  Tooltip,
-  Typography
-} from 'antd';
+import { Button, Divider, message, Row, Tooltip, Typography } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import copy from 'copy-to-clipboard';
 import { CommonModal, useStateReducer } from 'racc';
@@ -25,6 +17,7 @@ interface Props {
   traceId?: string;
   isLive?: boolean;
   reportId?: string;
+  totalRt: number;
 }
 
 interface State {
@@ -122,10 +115,10 @@ const RequestDetailModal: React.FC<Props> = props => {
     const columns: ColumnProps<any>[] = [
       {
         ...customColumnProps,
-        title: '接口(服务)',
+        title: '方法名/服务名',
         dataIndex: 'interfaceName',
         ellipsis: true,
-        width: 300,
+        width: 250,
         render: text => {
           return (
             <span>
@@ -138,19 +131,34 @@ const RequestDetailModal: React.FC<Props> = props => {
       },
       {
         ...customColumnProps,
-        title: '节点IP',
-        dataIndex: 'nodeIp',
-        width: 150
+        title: '客户端/服务端',
+        dataIndex: 'logTypeName',
+        width: 70
       },
       {
         ...customColumnProps,
-        title: '应用',
+        title: 'IP',
+        dataIndex: 'nodeIp',
+        width: 140
+      },
+      {
+        ...customColumnProps,
+        title: '同步/异步',
+        dataIndex: 'asyncName',
+        width: 50
+      },
+      {
+        ...customColumnProps,
+        title: '应用名/中间件名',
         dataIndex: 'applicationName',
         ellipsis: true,
-        render: text => {
+        width: 120,
+        render: (text, row) => {
           return (
             <Tooltip placement="bottomLeft" title={text}>
-              <span>{text}</span>
+              <span>
+                {text}/{row.methodName}
+              </span>
             </Tooltip>
           );
         }
@@ -261,11 +269,7 @@ const RequestDetailModal: React.FC<Props> = props => {
             <Button
               onClick={() =>
                 router.push(
-                  `/analysisManage?tab=method&appName=${
-                    row.applicationName
-                  }&processName=${row.entryHostIp}|${
-                    row.agentId
-                  }&reportId=${props.reportId}&type=actually`
+                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually`
                 )
               }
               style={{ marginLeft: 16 }}
@@ -331,7 +335,15 @@ const RequestDetailModal: React.FC<Props> = props => {
       value: state.startTime && timestampToTime(state.startTime)
     },
     {
-      label: '调用链路总时长',
+      label: '总耗时',
+      value: props.totalRt ? `${props.totalRt}ms` : null
+    },
+    {
+      label: '网络耗时',
+      value: `${props.totalRt - state.totalCost}ms`
+    },
+    {
+      label: '接口耗时',
       value: state.totalCost ? `${state.totalCost}ms` : null
     }
   ];
