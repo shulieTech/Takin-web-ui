@@ -58,20 +58,21 @@ const getBlackListColumns = (
 
   const menu = row => {
     return (
-      <Menu>
+      <div>
         {
-          Object.keys(row).splice(1, 1).map((ites, ind) => {
+          Object.keys(row).slice(1).map((ites, ind) => {
             return (
-              <Button
-                key={ind}
-                onClick={() => router.push(`/businessActivity/details?id=${ites}&hideList=1`)}
-              >
-                {row[ites]}
-              </Button>
+              <div key={ind} style={{ marginBottom: 8, lineHeight: '20px' }}>
+                <a
+                  onClick={() => router.push(`/businessActivity/details?id=${ites}&hideList=1`)}
+                >
+                  {row[ites]}
+                </a>
+              </div>
             );
           })
         }
-      </Menu>
+      </div>
     );
   };
 
