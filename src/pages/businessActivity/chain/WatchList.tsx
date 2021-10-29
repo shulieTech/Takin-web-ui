@@ -62,7 +62,7 @@ const WatchList: React.FC<Props> = (props) => {
     >
       <Spin spinning={loading}>
         <ServiceList
-          initailQuery={initalQuery}
+          initailQuery={state.watchListQuery}
           afterChangeQuery={(query) => {
             setState({
               ...state.watchListQuery,
