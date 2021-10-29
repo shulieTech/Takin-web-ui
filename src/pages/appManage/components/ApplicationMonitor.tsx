@@ -70,7 +70,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
       orderBy: state.sorter,
       clusterTest: state.clusterTest,
       serviceName: state.serviceName,
-      activityName: state.allByActivityName
+      activityName: state.allByActivityName?.split(':')[0],
+      nameActivity: state.allByActivityName?.split(':')[1],
     });
   }, [
     state.searchParams,
@@ -99,7 +100,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
           orderBy: state.sorter,
           clusterTest: state.clusterTest,
           serviceName: state.serviceName,
-          activityName: state.allByActivityName
+          activityName: state.allByActivityName?.split(':')[0],
+          nameActivity: state.allByActivityName?.split(':')[1],
         });
       }
     };
@@ -148,7 +150,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
           data.map((item, k) => {
             return {
               label: item?.activityNameAndId?.linkName,
-              value: item.label
+              value: `${item.label}:${item?.activityNameAndId?.linkName}`
             };
           }),
       });
