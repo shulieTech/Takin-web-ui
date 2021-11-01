@@ -33,6 +33,7 @@ axios.interceptors.request.use((config) => {
   if (config.method.toLowerCase() === 'get' && config.params) {
     url += url.includes('?') ? '&' : '?';
     const keys = Object.keys(config.params);
+    // tslint:disable-next-line:no-shadowed-variable
     for (const key of keys) {
       if (![undefined, null].includes(config.params[key])) {
         url += `${key}=${encodeURIComponent(config.params[key])}&`;
