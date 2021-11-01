@@ -50,11 +50,7 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Badge
             text={text === 1 ? '通过' : '不通过'}
-            color={
-              text === 1
-                ? 'var(--BrandPrimary-500)'
-                : 'var(--FunctionalError-500)'
-            }
+            color={text === 1 ? 'var(--BrandPrimary-500)' : 'var(--FunctionalError-500)'}
           />
         );
       }

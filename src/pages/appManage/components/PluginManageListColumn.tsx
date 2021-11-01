@@ -23,7 +23,8 @@ const getPluginManageListColumns = (
     {
       ...customColumnProps,
       title: '配置说明',
-      dataIndex: 'configDesc'
+      dataIndex: 'configDesc',
+      width: 400
     },
     {
       ...customColumnProps,

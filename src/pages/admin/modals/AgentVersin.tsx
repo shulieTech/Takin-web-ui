@@ -31,19 +31,24 @@ const AgentVersin: React.FC<Props> = props => {
   });
 
   const handleOk = e => {
-    Modal.info({
-      title: '探针版本新增确认',
-      okText: '确认发布',
-      content: (
-        <div>
-          <p>该版本已存在，继续发布将覆盖老版本。</p>
-          <p>您确认覆盖老版本吗？</p>
-        </div>
-      ),
-      onOk() {
-        onSubmit();
-      },
-    });
+    if (state.extra) {
+      Modal.info({
+        title: '探针版本新增确认',
+        okText: '确认发布',
+        content: (
+          <div>
+            <p>该版本已存在，继续发布将覆盖老版本。</p>
+            <p>您确认覆盖老版本吗？</p>
+          </div>
+        ),
+        onOk() {
+          onSubmit();
+        },
+      });
+    } else {
+      onSubmit();
+    }
+
   };
 
   const onSubmit = () => {

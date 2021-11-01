@@ -8,16 +8,33 @@ import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import styles from './../index.less';
 import TableIndex from 'src/common/table-index/TableIndex';
-import { Badge, Divider, Icon, message, Popover, Tag } from 'antd';
+import { Badge, Button, Divider, Icon, message, Popover, Tag } from 'antd';
 import AppManageService from '../service';
 import MockConfigModal from '../modals/MockConfigModal';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
+import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm';
 
 const getMockListColumns = (
   state,
   setState,
   applicationId
 ): ColumnProps<any>[] => {
+  /**
+   * @name 删除
+   */
+  const handleDelete = async id => {
+    const {
+      data: { data, success }
+    } = await AppManageService.deleteMock({
+      id
+    });
+    if (success) {
+      message.success(`删除成功`);
+      setState({
+        isReload: !state.isReload
+      });
+    }
+  };
   return [
     {
       ...customColumnProps,
@@ -31,6 +48,7 @@ const getMockListColumns = (
       ...customColumnProps,
       title: '接口名称',
       dataIndex: 'interfaceName',
+      width: 300,
       render: (text, row) => {
         return (
           <span>
@@ -41,6 +59,7 @@ const getMockListColumns = (
               />
             )}
             {text}
+            {row.isManual && <Tag style={{ marginLeft: 8 }}>手工添加</Tag>}
           </span>
         );
       }
@@ -48,9 +67,9 @@ const getMockListColumns = (
     {
       ...customColumnProps,
       title: '接口类型',
-      dataIndex: 'interfaceTypeSelectVO',
+      dataIndex: 'interfaceChildType',
       render: text => {
-        return <Tag>{text && text.label}</Tag>;
+        return <Tag>{text}</Tag>;
       }
     },
     {
@@ -101,20 +120,11 @@ const getMockListColumns = (
     },
     {
       ...customColumnProps,
-      title: '配置类型',
+      title: '隔离方案',
       dataIndex: 'typeSelectVO',
-      render: (text, row) => {
-        if (text.value === '0') {
-          return <span>未配置</span>;
-        }
-        return (
-          <Badge
-            text={text && text.label}
-            color={
-              text.value === '2' || text.value === '3' ? '#FFA800' : '#11D0C5'
-            }
-          />
-        );
+      width: 100,
+      render: text => {
+        return <span>{text && text.label}</span>;
       }
     },
     {
@@ -126,19 +136,22 @@ const getMockListColumns = (
       ...customColumnProps,
       title: '操作',
       dataIndex: 'action',
+      width: 100,
       render: (text, row) => {
         return (
           <Fragment>
             <AuthorityBtn isShow={row.canEdit}>
               <MockConfigModal
-                btnText="编辑配置"
+                action="edit"
+                btnText="编辑"
                 id={row.id}
+                isManual={row.isManual}
                 applicationId={applicationId}
                 interfaceName={row.interfaceName}
-                interfaceType={
-                  row.interfaceTypeSelectVO && row.interfaceTypeSelectVO.value
-                }
+                interfaceType={row.interfaceChildType}
                 serverAppName={row.serverAppName}
+                remark={row.remark}
+                mockValue={row.mockValue}
                 type={row.typeSelectVO && row.typeSelectVO.value}
                 onSccuess={() => {
                   setState({
@@ -146,6 +159,17 @@ const getMockListColumns = (
                   });
                 }}
               />
+            </AuthorityBtn>
+            <AuthorityBtn isShow={row.canRemove}>
+              <CustomPopconfirm
+                title="是否确定删除？"
+                okColor="var(--FunctionalError-500)"
+                onConfirm={() => handleDelete(row.id)}
+              >
+                <Button type="link" style={{ marginLeft: 8 }}>
+                  删除
+                </Button>
+              </CustomPopconfirm>
             </AuthorityBtn>
           </Fragment>
         );

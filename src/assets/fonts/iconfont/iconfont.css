@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2556232 */
-  src: url('./iconfont.woff2?t=1625220835338') format('woff2'),
-       url('./iconfont.woff?t=1625220835338') format('woff'),
-       url('./iconfont.ttf?t=1625220835338') format('truetype');
+  src: url('./iconfont.woff2?t=1631073807892') format('woff2'),
+       url('./iconfont.woff?t=1631073807892') format('woff'),
+       url('./iconfont.ttf?t=1631073807892') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-ES:before {
+  content: "\e629";
+}
+
+.icon-Logo:before {
+  content: "\e627";
+}
+
+.icon-Logo-All:before {
+  content: "\e628";
+}
+
+.icon-lujing:before {
+  content: "\e625";
+}
+
+.icon-Topic:before {
+  content: "\e626";
+}
+
+.icon-jiedian:before {
+  content: "\e621";
+}
+
+.icon-waibutiaoyong:before {
+  content: "\e622";
+}
+
+.icon-biao:before {
+  content: "\e623";
+}
+
+.icon-xiayoutiaoyong:before {
+  content: "\e624";
+}
+
+.icon-a-InlineAdd:before {
+  content: "\e61f";
+}
+
+.icon-a-InlineDelete:before {
+  content: "\e620";
 }
 
 .icon-huancun1:before {

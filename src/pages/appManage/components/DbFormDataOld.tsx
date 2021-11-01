@@ -96,8 +96,6 @@ const getDbFormDataOld = (
           placeholder="请选择类型"
           disabled={action === 'edit' ? true : false}
           dataSource={[
-            { label: '数据库', value: 0 },
-            { label: '缓存(redis)', value: 1 },
             { label: '搜索引擎（ES）', value: 2 },
             { label: '数据库(HBase)', value: 3 },
             { label: '消息队列（kafka）', value: 4 }

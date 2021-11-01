@@ -30,8 +30,14 @@ const getEntryRuleFormData = (
       },
       node: (
         <CommonSelect
+          showSearch
           placeholder="请选择"
           dataSource={allAppList ? allAppList : []}
+          showSearch
+          filterOption={(input, option) =>
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+            0
+          }
         />
       )
     },

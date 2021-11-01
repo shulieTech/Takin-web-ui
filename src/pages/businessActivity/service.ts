@@ -179,6 +179,13 @@ const BusinessActivityService = {
     return httpDelete(url, data);
   },
   /**
+   * @name 业务活动列表
+   */
+  async getBusinessActivityList(data = {}) {
+    const url = '/activities';
+    return httpGet(url, data);
+  },
+  /**
    * @name 业务活动详情
    */
   async getBusinessActivityDetails(data = {}) {
@@ -278,6 +285,27 @@ const BusinessActivityService = {
   async editVirtualBusinessActivity(data = {}) {
     const url = '/activities/virtual';
     return httpPut(url, data);
+  },
+  /**
+   * @name 链路图瓶颈列表
+   */
+  async getBottleneckList(data = {}) {
+    const url = '/activities/virtual';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 链路图设置流量监控的服务
+   */
+  async setWatchService(data = {}) {
+    const url = '/activities/setActivityNodeState';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 链路图设置流量监控的服务
+   */
+  async searchApp(data = {}) {
+    const url = '/application/center/app/monitorDetailes';
+    return httpGet(url, data);
   },
 };
 

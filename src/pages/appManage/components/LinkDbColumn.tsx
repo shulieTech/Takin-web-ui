@@ -14,6 +14,7 @@ import AddAndEditDbDrawer from './AddAndEditDbDrawer';
 import { openNotification } from 'src/common/custom-notification/CustomNotification';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import AddEditDbModal from '../modals/AddEditDbModal';
+import EditDynamicDbDrawer from './EditDynamicDbDrawer';
 
 const getLinkDbColumns = (
   state,
@@ -25,15 +26,19 @@ const getLinkDbColumns = (
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
+
   /**
    * @name 确认是否禁用、启用
    */
-  const handleConfirm = async (id, status) => {
+  const handleConfirm = async (id, status, isNewData, middlewareType) => {
     const {
       data: { data, success }
     } = await AppManageService.openAndClose({
       id,
-      status
+      status,
+      isNewData,
+      middlewareType,
+      applicationId: appId
     });
     if (success) {
       const txt = status === 0 ? '启用' : '禁用';
@@ -43,15 +48,17 @@ const getLinkDbColumns = (
       });
     }
   };
-
   /**
    * @name 确认是否删除
    */
-  const handleDelete = async id => {
+  const handleDelete = async (id, middlewareType, isNewData) => {
     const {
       data: { data, success }
     } = await AppManageService.deleteDbTable({
-      id
+      isNewData,
+      id,
+      middlewareType,
+      applicationId: appId
     });
     if (success) {
       openNotification(`删除成功`);
@@ -63,26 +70,24 @@ const getLinkDbColumns = (
   return [
     {
       ...customColumnProps,
-      title: '服务器地址',
+      title: '业务数据源',
       dataIndex: 'url',
       width: 400
     },
     {
       ...customColumnProps,
-      title: '类型',
-      dataIndex: 'dbType',
+      title: '中间件类型',
+      dataIndex: 'middlewareType',
       render: text => {
-        return <span>{(text && text.label) || '-'}</span>;
+        return <span>{text || '-'}</span>;
       }
     },
     {
       ...customColumnProps,
-      title: '方案类型',
-      dataIndex: 'dsType',
-      render: text => {
-        return <span>{(text && text.label) || '-'}</span>;
-      }
+      title: '连接池名称',
+      dataIndex: 'connectionPool'
     },
+
     {
       ...customColumnProps,
       title: '状态',
@@ -102,8 +107,16 @@ const getLinkDbColumns = (
     },
     {
       ...customColumnProps,
-      title: '最后修改时间',
-      dataIndex: 'updateTime'
+      title: '附加信息',
+      dataIndex: 'extMsg'
+    },
+    {
+      ...customColumnProps,
+      title: '隔离方案',
+      dataIndex: 'dsType',
+      render: text => {
+        return <span>{text || '-'}</span>;
+      }
     },
     {
       ...customColumnProps,
@@ -111,7 +124,6 @@ const getLinkDbColumns = (
       dataIndex: 'action',
       render: (text, row) => {
         const txt = row.status === 0 ? '禁用' : '启用';
-
         return (
           <Fragment>
             <AuthorityBtn
@@ -124,7 +136,12 @@ const getLinkDbColumns = (
               <CustomPopconfirm
                 title={`是否确认${txt}`}
                 onConfirm={() =>
-                  handleConfirm(row.id, row.status === 0 ? 1 : 0)
+                  handleConfirm(
+                    row.id,
+                    row.status === 0 ? 1 : 0,
+                    row.isNewData,
+                    row.middlewareType
+                  )
                 }
               >
                 <a
@@ -140,7 +157,23 @@ const getLinkDbColumns = (
                 </a>
               </CustomPopconfirm>
             </AuthorityBtn>
-            {detailState.isNewAgent === true ? (
+            {row.isNewPage ? (
+              <EditDynamicDbDrawer
+                titles="编辑"
+                middlewareType={row.middlewareType}
+                id={row.id}
+                isNewData={row.isNewData}
+                applicationId={appId}
+                connectionPool={row.connectionPool}
+                agentSourceType={row.agentSourceType}
+                cacheType={row.cacheType}
+                onSuccess={() => {
+                  setState({
+                    isReload: !state.isReload
+                  });
+                }}
+              />
+            ) : detailState.isNewAgent === true ? (
               <AuthorityBtn
                 isShow={
                   btnAuthority && btnAuthority.appManage_3_update && row.canEdit
@@ -193,7 +226,9 @@ const getLinkDbColumns = (
                   title="删除后不可恢复，确定要删除吗？"
                   okText="确定删除"
                   okColor="var(--FunctionalError-500)"
-                  onConfirm={() => handleDelete(row.id)}
+                  onConfirm={() =>
+                    handleDelete(row.id, row.middlewareType, row.isNewData)
+                  }
                 >
                   <a
                     disabled={

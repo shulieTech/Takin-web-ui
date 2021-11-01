@@ -129,7 +129,8 @@ const getBlackListColumns = (
                   setState({
                     isReload: !state.isReload,
                     searchParams: {
-                      current: 0
+                      current: 0,
+                      pageSize: 10
                     }
                   });
                 }}

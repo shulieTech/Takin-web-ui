@@ -176,7 +176,7 @@ const MissingDataScriptModal: React.FC<Props> = props => {
                               <CustomPopconfirm
                                 okText="确认删除"
                                 title={'是否确认删除数据源？'}
-                                okColor="var(--FunctionalError-500)"
+                                okColor="var(--FunctionalError-500, #ED6047)"
                                 onConfirm={() =>
                                   handleDelete(
                                     businessActivityId,

@@ -7,7 +7,7 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { connect } from 'dva';
 import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CommonModelState } from 'src/models/common';
 import { ShadowConsumerBean } from '../enum';
 import AppManageService from '../service';
@@ -16,23 +16,75 @@ interface Props extends CommonModelState {
   btnText: string;
   onSuccess: () => void;
   applicationId: string;
+  action?: string;
+  type?: string;
+  topicGroup?: string;
+  shadowconsumerEnable?: string;
 }
 const AddEditConsumerModal: React.FC<Props> = props => {
   const [state, setState] = useStateReducer({
     form: null as WrappedFormUtils,
-    details: {}
+    details: {},
+    MQType: [],
+    MQPlan: [],
+    type: undefined
   });
-  const text = props.id ? '编辑' : '新增';
+  const { action } = props;
+
+  const text = action === 'edit' ? '编辑' : '新增';
+  useEffect(() => {
+    if (state.type) {
+      queryMQPlan();
+    }
+  }, [state.type]);
+  const handleClick = () => {
+    queryMQType();
+    getDetails();
+  };
   const getDetails = async () => {
-    if (!props.id) {
+    if (action !== 'edit') {
       return;
     }
+    setState({
+      type: props.type
+    });
+  };
+
+  /**
+   * @name 获取MQ类型
+   */
+  const queryMQType = async () => {
     const {
-      data: { data, success }
-    } = await AppManageService.getShdowConsumer({ id: props.id });
+      data: { success, data }
+    } = await AppManageService.queryMQType({});
     if (success) {
-      setState({ details: data });
+      setState({
+        MQType: data
+      });
     }
+  };
+
+  /**
+   * @name 获取mq隔离方案
+   */
+  const queryMQPlan = async () => {
+    const {
+      data: { success, data }
+    } = await AppManageService.queryMQPlan({
+      engName: state.type
+    });
+    if (success) {
+      setState({
+        MQPlan: data
+      });
+    }
+  };
+
+  const handleChangeMQType = value => {
+    setState({
+      type: value,
+      MQPlan: []
+    });
   };
   const getFormData = (): FormDataType[] => {
     return [
@@ -40,24 +92,39 @@ const AddEditConsumerModal: React.FC<Props> = props => {
         key: ShadowConsumerBean.MQ类型,
         label: 'MQ类型',
         options: {
-          initialValue: state.details[ShadowConsumerBean.MQ类型],
+          initialValue: props.type,
           rules: [{ required: true, message: '请选择MQ类型' }]
         },
         node: (
           <CommonSelect
             placeholder="请选择MQ类型"
-            dataSource={props.dictionaryMap.SHADOW_CONSUMER}
+            dataSource={state.MQType}
+            onChange={handleChangeMQType}
           />
         )
       },
       {
         key: ShadowConsumerBean.groupId,
         options: {
-          initialValue: state.details[ShadowConsumerBean.groupId],
+          initialValue: props.topicGroup,
           rules: [{ required: true, message: '请输入业务的topic#业务的消费组' }]
         },
         label: '业务的topic#业务的消费组',
         node: <Input placeholder="请输入业务的topic#业务的消费组" />
+      },
+      {
+        key: ShadowConsumerBean.隔离方案,
+        label: '隔离方案',
+        options: {
+          initialValue: props.shadowconsumerEnable,
+          rules: [{ required: true, message: '请选择隔离方案' }]
+        },
+        node: (
+          <CommonSelect
+            placeholder="请选择隔离方案"
+            dataSource={state.MQPlan}
+          />
+        )
       }
     ];
   };
@@ -78,12 +145,14 @@ const AddEditConsumerModal: React.FC<Props> = props => {
           applicationId: props.applicationId,
           ...values
         };
-        const ajaxEvent = props.id
-          ? AppManageService.updateShdowConsumer({
-            ...state.details,
-            ...result
-          })
-          : AppManageService.createShdowConsumer(result);
+        const ajaxEvent =
+          action === 'edit'
+            ? AppManageService.updateShdowConsumer({
+              ...state.details,
+              ...result,
+              id: props.id
+            })
+            : AppManageService.createShdowConsumer(result);
         const {
           data: { success }
         } = await ajaxEvent;
@@ -102,8 +171,8 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       beforeOk={handleSubmit}
       modalProps={{ title: text, width: 720, destroyOnClose: true }}
       btnText={props.btnText}
-      btnProps={{ type: props.id ? 'link' : 'primary' }}
-      onClick={getDetails}
+      btnProps={{ type: action === 'edit' ? 'link' : 'primary' }}
+      onClick={handleClick}
     >
       <CommonForm
         rowNum={1}
