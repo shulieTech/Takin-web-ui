@@ -71,7 +71,6 @@ const ApplicationMonitor: React.FC<Props> = props => {
       clusterTest: state.clusterTest,
       serviceName: state.serviceName,
       activityName: state.allByActivityName?.split(':')[0],
-      nameActivity: state.allByActivityName?.split(':')[1],
     });
   }, [
     state.searchParams,
@@ -101,7 +100,6 @@ const ApplicationMonitor: React.FC<Props> = props => {
           clusterTest: state.clusterTest,
           serviceName: state.serviceName,
           activityName: state.allByActivityName?.split(':')[0],
-          nameActivity: state.allByActivityName?.split(':')[1],
         });
       }
     };
@@ -321,7 +319,6 @@ const ApplicationMonitor: React.FC<Props> = props => {
           rowKey="blistId"
           onChange={onChange}
           loading={state.detailLoading}
-          scroll={{ y: 240 }}
           columns={ApplicationMonitorList(
             state,
             setState,
