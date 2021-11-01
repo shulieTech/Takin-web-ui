@@ -84,10 +84,7 @@ const getDbFormData = (state, id, setState, detailData): FormDataType[] => {
         <CommonSelect
           placeholder="请选择类型"
           disabled={id ? true : false}
-          dataSource={[
-            { label: '数据库', value: 0 },
-            { label: '缓存(redis)', value: 1 }
-          ]}
+          dataSource={[]}
           onChange={handleChangeDbType}
           onRender={item => (
             <CommonSelect.Option key={item.value} value={item.value}>

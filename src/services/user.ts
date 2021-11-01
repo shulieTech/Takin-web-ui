@@ -33,6 +33,10 @@ const UserService = {
     const url = '/menu/list';
     return httpGet(url, data);
   },
+  async queryHealth(data) {
+    const url = '/health';
+    return httpGet(url, data);
+  },
   async queryBtnResource(data) {
     const url = '/menu/button';
     return httpGet(url, data);

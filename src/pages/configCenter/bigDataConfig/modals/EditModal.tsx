@@ -74,7 +74,6 @@ const EditModal: React.FC<Props> = props => {
       beforeOk={handleSubmit}
       modalProps={{ title: props.btnText === '修改' ? '修改' : '新增' }}
     >
-      ;;
       <Form onSubmit={handleSubmit}>
         <Form.Item label="key" required={true} {...formItemLayout}>
           {props.form.getFieldDecorator('zkPath', {

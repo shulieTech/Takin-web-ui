@@ -69,7 +69,7 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
     <SkeletonLoading />
   ) : (
     <div style={{ padding: '24px 16px' }}>
-      <div className={styles.title}>全局压测开关</div>
+      <div className={styles.title}>压测流量开关</div>
       <Alert
         type="warning"
         message={
@@ -78,7 +78,7 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
             <SwitchExplanationDrawer />
           </p>}
         showIcon
-        style={{ marginTop: 40, marginBottom: 10 }}
+        style={{ marginTop: 10, marginBottom: 10 }}
       />
       <SwitchBar state={state} setState={setState} />
       {(state.switchStatus === 'CLOSE_FAILING' ||

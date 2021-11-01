@@ -237,7 +237,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                 <span
                   style={{
                     color: '#BABABA',
-                    display: row.canEnableDisable ? 'inline-block' : 'none'
+                    display: row.canStartStop ? 'inline-block' : 'none'
                   }}
                 >
                   执行
@@ -268,7 +268,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Fragment>
             <div>
-              {row.canEnableDisable && (
+              {row.canStartStop && (
                 <Button type="link" onClick={() => showConfirm(row)}>
                   执行
                 </Button>

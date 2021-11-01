@@ -113,7 +113,7 @@ export default class Login extends DvaComponent<Props, State> {
     const {
       headers,
       data: { data, success }
-    } = await UserService.queryMenuList({});
+    } = await UserService.queryHealth({});
     const headerTakin = headers['takin-authority'];
     if (headerTakin === 'true') {
       localStorage.setItem('takinAuthority', 'true');

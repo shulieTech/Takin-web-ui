@@ -49,7 +49,7 @@ const AddEditActivityModal: React.FC<Props> = props => {
     const {
       data: { data, success }
     } = await BusinessActivityService.querySystemProcess({
-      id
+      activityId: id,
     });
     if (success) {
       setState({

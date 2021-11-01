@@ -124,6 +124,13 @@ const PressureTestSceneService = {
   async queryFlowAccountInfoDic(data = {}) {
     const url = '/asset/account_book';
     return httpGet(url, data);
+  },
+  /**
+   * @name 获取发生偏移数据数
+   */
+  async queryDataScriptNum(data) {
+    const url = '/scenemanage/positionPoint';
+    return httpGet(url, data);
   }
 };
 

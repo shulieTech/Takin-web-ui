@@ -57,6 +57,9 @@ export default {
         localStorage.removeItem('trowebBtnResource');
         localStorage.removeItem('auth-cookie');
         localStorage.removeItem('troweb-expire');
+        localStorage.removeItem('trowebUserMenu');
+        localStorage.removeItem('takinAuthority');
+        localStorage.removeItem('Access-Token');
         yield put({
           type: 'updateState',
           payload: {

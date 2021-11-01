@@ -7,7 +7,6 @@ import AppDetailHeader from './components/AppDetailHeader';
 import AppDetailTabs from './components/AppDetailTabs';
 import CustomSkeleton from 'src/common/custom-skeleton';
 import TableWarning from './components/TableWarning';
-import { Pagination, Checkbox } from 'antd';
 
 interface Props {
   location?: { query?: any };

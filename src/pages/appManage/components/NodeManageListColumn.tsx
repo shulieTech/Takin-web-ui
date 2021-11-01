@@ -142,7 +142,7 @@ const getNodeManageListColumns = (
       title: '探针状态',
       dataIndex: 'probeStatus',
       render: (text, row) => {
-        // 探针状态, 0 未安装, 1 安装中, 2 已安装 , 11 升级中, 21 卸载中
+        // 探针状态, 0 未安装, 1 安装中, 2 已安装 , 11 升级中, 21 卸载中，31 安装失败, 41 卸载失败
         if (text === 1 || text === 11 || text === 21) {
           return (
             <span>
@@ -159,7 +159,15 @@ const getNodeManageListColumns = (
           <Fragment>
             <Badge
               text={row.probeStatusDesc}
-              color={text === 0 ? '#C9C9C9' : text === 2 ? '#11D0C5' : ''}
+              color={
+                text === 0
+                  ? '#C9C9C9'
+                  : text === 2
+                  ? '#11D0C5'
+                  : text === 31 || text === 41
+                  ? 'var(--FunctionalError-500)'
+                  : ''
+              }
             />
             {row.operateStatusDesc && (
               <p>
@@ -185,10 +193,12 @@ const getNodeManageListColumns = (
       title: '操作',
       dataIndex: 'action',
       render: (text, row) => {
-        // 探针状态, 0 未安装, 1 安装中, 2 已安装 , 11 升级中, 21 卸载中
+        // 探针状态, 0 未安装, 1 安装中, 2 已安装 , 11 升级中, 21 卸载中，31 安装失败, 41 卸载失败
         return (
           <Fragment>
-            {row.probeStatus === 0 && (
+            {(row.probeStatus === 0 ||
+              row.probeStatus === 31 ||
+              row.probeStatus === 41) && (
               <InstallAgentModal
                 btnText="安装"
                 applicationName={detailData.applicationName}
@@ -202,7 +212,7 @@ const getNodeManageListColumns = (
                 }}
               />
             )}
-            {row.probeStatus !== 0 && (
+            {row.probeStatus === 2 && (
               <InstallAgentModal
                 btnText="升级"
                 applicationName={detailData.applicationName}
@@ -214,16 +224,11 @@ const getNodeManageListColumns = (
                     isReload: !state.isReload
                   });
                 }}
-                disabled={
-                  row.probeStatus === 1 ||
-                  row.probeStatus === 21 ||
-                  row.probeStatus === 11
-                    ? true
-                    : false
-                }
               />
             )}
-            {row.probeStatus !== 0 && (
+            {(row.probeStatus === 2 ||
+              row.probeStatus === 1 ||
+              row.probeStatus === 41) && (
               <Button
                 type="link"
                 style={{ marginLeft: 8 }}
@@ -233,13 +238,6 @@ const getNodeManageListColumns = (
                     row.agentId,
                     detailData.id
                   )
-                }
-                disabled={
-                  row.probeStatus === 1 ||
-                  row.probeStatus === 21 ||
-                  row.probeStatus === 11
-                    ? true
-                    : false
                 }
               >
                 卸载
