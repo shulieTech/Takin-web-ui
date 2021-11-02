@@ -608,7 +608,7 @@ const AppManageService = {
     const url = '/application/entrances/allByActivity' ;
     return httpGet(url, data);
   },
-  async gotoActivityInfo(data = {}) {
+  async goActivityInfo(data = {}) {
     const url = '/application/center/app/gotoActivityInfo' ;
     return httpPost(url, data);
   },

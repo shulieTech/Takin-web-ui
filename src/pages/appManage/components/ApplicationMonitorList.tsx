@@ -59,7 +59,7 @@ const getBlackListColumns = (
   const hrefClick = async (row) => {
     const {
       data: { data, success }
-    } = await AppManageService.gotoActivityInfo({
+    } = await AppManageService.goActivityInfo({
       applicationName: detailData.applicationName,
       label: row.serviceAndMethod,
       serviceName: row.service,
