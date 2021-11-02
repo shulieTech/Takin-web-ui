@@ -78,8 +78,8 @@ const getBlackListColumns = (
       persistence: false
     });
     if (success) {
-      router.push(`/businessActivity/details?id=${Object.keys(data)[0]}
-      &pageIndex=0&type=${data[Object.keys(data)[0]]}`);
+      router.push(`/businessActivity/details?id=${
+        Object.keys(data)[0]}&pageIndex=0&type=${data[Object.keys(data)[0]]}`);
     }
   };
 
