@@ -30,6 +30,7 @@ const getInitState = () => ({
     // startTime: '',
     // endTime: '',
     flowTypeEnum: 'BLEND',
+    tempActivity: false, // 是否是临时业务活动
   },
   watchListVisible: false,
   watchListQuery: {
@@ -47,7 +48,14 @@ interface Props extends Basic.BaseProps {
   dictionaryMap: { domain: { label: string; value: string }[] };
 }
 const BusinessActivityDetails: React.FC<Props> = (props) => {
-  const [state, setState] = useStateReducer<State>(getInitState());
+  const defaultState = getInitState();
+  const [state, setState] = useStateReducer<State>({ 
+    ...defaultState,
+    queryParams: {
+      ...defaultState.queryParams,
+      tempActivity: props.location.query.type === 'true',
+    },
+  });
 
   const [id, setId] = useState(props.location.query.id);
 
