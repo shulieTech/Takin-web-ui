@@ -83,7 +83,7 @@ const MockConfigModal: React.FC<Props> = props => {
       configType: value
     });
     state.form.setFieldsValue({
-      mockReturnValue: null
+      mockValue: null
     });
   };
 

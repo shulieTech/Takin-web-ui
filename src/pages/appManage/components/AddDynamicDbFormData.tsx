@@ -43,7 +43,8 @@ const getAddDynamicDbFormData = (
       agentSourceType: state.form.getFieldsValue().middlewareType,
       dsType: state.dsType,
       cacheType: state.cacheType,
-      isNewData: true
+      isNewData: true,
+      connectionPool: state.form.getFieldsValue().connectionPool
     });
     if (success) {
       setState({
@@ -86,7 +87,8 @@ const getAddDynamicDbFormData = (
   const handleChangeCacheType = async value => {
     setState({
       cacheType: value,
-      templateData: []
+      templateData: [],
+      dsType: undefined
     });
     state.form.setFieldsValue({
       dsType: undefined
@@ -258,10 +260,44 @@ const getAddDynamicDbFormData = (
     }
   ];
 
+  const tempData = `{
+    /*
+    必填项:
+    哨兵模式:master,nodes;
+    主从模式:master,nodes;
+    单机模式:nodes;
+    集群模式:nodes;
+    选填项:
+    database
+    */
+    "master": "mymaster",
+    "nodes":"192.168.1.227:7002,192.168.1.227:7003",
+    "database":""
+    }`;
+
   const cacheTypeFormData = [
     {
       key: DbDetailBean.业务集群,
-      label: '业务集群',
+      label: (
+        <Tooltip
+          trigger="click"
+          title={() => {
+            return (
+              <div>
+                <div style={{ textAlign: 'right' }}>
+                  <a onClick={() => handleCopy(tempData)}>复制</a>
+                </div>
+                <div style={{ width: 200, height: 300, overflow: 'scroll' }}>
+                  {tempData}
+                </div>
+              </div>
+            );
+          }}
+        >
+          业务集群
+          <Icon style={{ marginLeft: 4 }} type="question-circle" />
+        </Tooltip>
+      ),
       options: {
         initialValue: undefined,
         rules: [
@@ -271,7 +307,7 @@ const getAddDynamicDbFormData = (
           }
         ]
       },
-      node: <Input placeholder="请输入业务集群" />
+      node: <Input.TextArea autoSize placeholder="请输入业务集群" />
     },
     {
       key: DbDetailBean.缓存模式,
@@ -359,7 +395,7 @@ const getAddDynamicDbFormData = (
             : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key),
         rules: [
           {
-            required: true,
+            required: item.required ? true : false,
             message: '请检查表单必填项'
           }
         ]
