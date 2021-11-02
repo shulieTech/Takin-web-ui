@@ -8,7 +8,7 @@ import { NodeDetailsCollapse, NodeDetailsTable } from './NodeInfoCommonNode';
 import { getDefaultNodeIconConf } from 'src/components/g6-graph/GraphNode';
 import styles from '../index.less';
 import classNames from 'classnames';
-import ServiceList, { sortServiceList, toAppDetail } from './ServiceList';
+import ServiceList, { sortServiceList, AppNameLink } from './ServiceList';
 
 const { TabPane } = Tabs;
 
@@ -353,9 +353,7 @@ export const RenderNodeInfoByType = (
                 名称：
               </span>
               <Tooltip title={nodeInfo.label}>
-                <span onClick={() => toAppDetail(nodeInfo.label, details)}>
-                  {nodeInfo.label}
-                </span>
+                <AppNameLink applicationName={nodeInfo.label} activityDetail={details}/>
               </Tooltip>
             </div>
             <div
