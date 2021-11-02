@@ -14,13 +14,31 @@ const EnvHeader: React.FC<Props> = (props) => {
 
   const queryTenantList = async () => {
     const {
+      headers,
       data: { success, data }
     } = await tenantCode.tenant({
       tenantCode: localStorage.getItem('tenant_code')
     });
+    const takinAuthority = headers['takin-authority'];
+    if (takinAuthority === 'false') {
+      localStorage.setItem('tenant_code', data[0].tenantCode);
+      const arr = data[0].envs.filter(item => {
+        if (item.isDefault) {
+          return item;
+        }
+      });
+      localStorage.setItem('env_code', arr[0].envCode);
+    }
     if (success) {
       setTenantList(data);
-      setEnvList(data.envs);
+      setEnvList(data[0].envs);
+      const arr = data[0].envs.filter(item => {
+        if (item.isDefault) {
+          return item;
+        }
+      });
+      localStorage.setItem('env_code', arr[0].envCode);
+      setDesc(arr[0].desc);
     }
   };
 
@@ -64,7 +82,6 @@ const EnvHeader: React.FC<Props> = (props) => {
       }
     }
   };
-
   return (
     <div
       style={{
