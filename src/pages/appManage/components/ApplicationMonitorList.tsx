@@ -56,6 +56,33 @@ const getBlackListColumns = (
     }
   };
 
+  const hrefClick = async (row) => {
+    const {
+      data: { data, success }
+    } = await AppManageService.goActivityInfo({
+      applicationName: detailData.applicationName,
+      label: row.serviceAndMethod,
+      serviceName: row.service,
+      method: row.method,
+      type: 'HTTP',
+      rpcType: row.rpcType,
+      activityName: row.appName,
+      activityNameAndId: null,
+      businessDomain: '0',
+      entranceName: '',
+      extend: '',
+      isCore: '0',
+      linkId: '',
+      link_level: '1',
+      value: '',
+      persistence: false
+    });
+    if (success) {
+      router.push(`/businessActivity/details?id=${
+        Object.keys(data)[0]}&pageIndex=0&type=${data[Object.keys(data)[0]]}&hideList=1`);
+    }
+  };
+
   const menu = row => {
     return (
       <div>
@@ -84,7 +111,7 @@ const getBlackListColumns = (
       render: (text, row) => {
         return (
           <Tooltip title={text}>
-            <span
+            <a
               style={{
                 display: 'inline-block',
                 width: 100,
@@ -93,9 +120,10 @@ const getBlackListColumns = (
                 whiteSpace: 'nowrap',
                 cursor: 'pointer'
               }}
+              onClick={() => hrefClick(row)}
             >
               {text}
-            </span>
+            </a>
           </Tooltip>
         );
       }

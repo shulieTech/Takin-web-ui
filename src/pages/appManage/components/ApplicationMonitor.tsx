@@ -71,7 +71,6 @@ const ApplicationMonitor: React.FC<Props> = props => {
       clusterTest: state.clusterTest,
       serviceName: state.serviceName,
       activityName: state.allByActivityName?.split(':')[0],
-      nameActivity: state.allByActivityName?.split(':')[1],
     });
   }, [
     state.searchParams,
@@ -94,14 +93,13 @@ const ApplicationMonitor: React.FC<Props> = props => {
       if (state.refreshTime) {
         timer = setTimeout(refreshData, state.refreshTime);
       }
-      if (!state.detailLoading) {
+      if (!state.detailLoading && state.total !== 0) {
         queryBlackListList({
           ...state.searchParams,
           orderBy: state.sorter,
           clusterTest: state.clusterTest,
           serviceName: state.serviceName,
           activityName: state.allByActivityName?.split(':')[0],
-          nameActivity: state.allByActivityName?.split(':')[1],
         });
       }
     };
@@ -144,16 +142,17 @@ const ApplicationMonitor: React.FC<Props> = props => {
       appName: detailData.applicationName
     });
     if (success) {
-      setState({
-        allByActivityList:
-          data &&
-          data.map((item, k) => {
-            return {
-              label: item?.activityNameAndId?.linkName,
-              value: `${item.label}:${item?.activityNameAndId?.linkName}`
-            };
-          }),
-      });
+      const arr = [];
+      data.map((item, k) => {
+        const obj = { label: '', value: '' };
+        Object.keys(item).map(ite => {
+          obj.label = item[ite];
+          obj.value = ite;
+          return obj;
+        });
+        arr.push(obj);
+      }),
+        setState({ allByActivityList: arr });
     }
   };
 
@@ -321,7 +320,6 @@ const ApplicationMonitor: React.FC<Props> = props => {
           rowKey="blistId"
           onChange={onChange}
           loading={state.detailLoading}
-          scroll={{ y: 240 }}
           columns={ApplicationMonitorList(
             state,
             setState,
