@@ -142,16 +142,17 @@ const ApplicationMonitor: React.FC<Props> = props => {
       appName: detailData.applicationName
     });
     if (success) {
-      setState({
-        allByActivityList:
-          data &&
-          data.map((item, k) => {
-            return {
-              label: item?.activityNameAndId?.linkName,
-              value: `${item.label}:${item?.activityNameAndId?.linkName}`
-            };
-          }),
-      });
+      const arr = [];
+      data.map((item, k) => {
+        const obj = { label: '', value: '' };
+        Object.keys(item).map(ite => {
+          obj.label = item[ite];
+          obj.value = ite;
+          return obj;
+        });
+        arr.push(obj);
+      }),
+        setState({ allByActivityList: arr });
     }
   };
 
