@@ -653,6 +653,20 @@ const AppManageService = {
     return httpPost(url, data);
   },
   /**
+   * @name 探针一键卸载
+   */
+  async uninstall(data = {}) {
+    const url = '/application/center/unstallAllAgent';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 探针一键恢复
+   */
+  async recover(data = {}) {
+    const url = '/application/center/resumeAllAgent';
+    return httpPost(url, data);
+  },
+  /**
    * @name 获取中间件类型（新增）
    */
   async queryMiddleWareType(data = {}) {
@@ -673,31 +687,16 @@ const AppManageService = {
     const url = '/v2/link/ds/cache/type';
     return httpGet(url, data);
   },
-  /**
-   * @name 探针一键卸载
-   */
-  async uninstall(data = {}) {
-    const url = '/application/center/unstallAllAgent';
-    return httpPost(url, data);
-  },
-  /**
-   * @name 探针一键恢复
-   */
-  async recover(data = {}) {
-    const url = '/application/center/resumeAllAgent';
-    return httpPost(url, data);
-  },
-
   async attendService(data = {}) {
     const url = '/application/center/app/attendService';
     return httpPost(url, data);
   },
   async entrances(data = {}) {
-    const url = '/application/entrances/all' ;
+    const url = '/application/entrances/all';
     return httpGet(url, data);
   },
   async allByActivity(data = {}) {
-    const url = '/application/entrances/allByActivity' ;
+    const url = '/application/entrances/allByActivity';
     return httpGet(url, data);
   },
   async goActivityInfo(data = {}) {

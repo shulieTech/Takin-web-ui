@@ -304,7 +304,7 @@ const BusinessActivityService = {
    * @name 链路图设置流量监控的服务
    */
   async searchApp(data = {}) {
-    const url = '/application/center/app/monitorDetailes';
+    const url = '/application/center/list';
     return httpGet(url, data);
   },
 };
