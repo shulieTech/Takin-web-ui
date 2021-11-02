@@ -699,7 +699,11 @@ const AppManageService = {
   async allByActivity(data = {}) {
     const url = '/application/entrances/allByActivity' ;
     return httpGet(url, data);
-  }
+  },
+  async gotoActivityInfo(data = {}) {
+    const url = '/application/center/app/gotoActivityInfo' ;
+    return httpPost(url, data);
+  },
 };
 
 export default AppManageService;
