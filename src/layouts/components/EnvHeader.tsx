@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Menu, Icon, Button } from 'antd';
+import { getTakinAuthority } from 'src/utils/utils';
 import tenantCode from './service';
 interface Props { }
 
@@ -88,7 +89,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         lineHeight: '32px',
         padding: '0 8px',
         marginTop: 8,
-        display: 'flex',
+        display: getTakinAuthority() === 'false' ? 'none' : 'flex',
         justifyContent: 'flex-end',
       }}
     >
