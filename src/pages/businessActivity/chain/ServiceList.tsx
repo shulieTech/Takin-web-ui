@@ -499,7 +499,7 @@ const ServiceList: React.FC<Props> = (props) => {
                                     </Link>
                                   </div>
                                 )}
-                              {(text || 0) * 100}%
+                              {((text || 0) * 100).toFixed(2)}%
                             </span>
                           );
                         },
