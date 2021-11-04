@@ -63,7 +63,7 @@ const getColumns = (
       dataIndex: 'businessDomain',
       render: (text) =>
         text && props.dictionaryMap
-          ? props.dictionaryMap.domain.find((item) => +item.value === +text)
+          ? props.dictionaryMap?.domain?.find((item) => +item.value === +text)
             .label
           : '-',
     },
