@@ -256,7 +256,8 @@ export const RenderNodeInfoByType = (
   const tabPanelMap = {
     对外服务: {
       icon: 'icon-waibutiaoyong',
-      num: nodeInfo.providerService?.length,
+      // num: nodeInfo.providerService?.length,
+      num: sortServiceList([nodeInfo], details.activityId, nodeInfo.id).length,
       content: <OuterService nodeInfo={nodeInfo} />,
     },
     下游调用: {
