@@ -143,7 +143,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
     });
     if (success) {
       const arr = [];
-      data.map((item, k) => {
+      data?.map((item, k) => {
         const obj = { label: '', value: '' };
         Object.keys(item).map(ite => {
           obj.label = item[ite];

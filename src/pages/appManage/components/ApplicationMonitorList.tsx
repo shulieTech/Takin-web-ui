@@ -108,16 +108,14 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '服务名称',
       dataIndex: 'serviceAndMethod',
+      width: 200,
       render: (text, row) => {
         return (
           <Tooltip title={text}>
             <a
               style={{
                 display: 'inline-block',
-                width: 100,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
+                width: 200,
                 cursor: 'pointer'
               }}
               onClick={() => hrefClick(row)}
@@ -211,7 +209,7 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '关联业务活动名称',
       dataIndex: 'activeIdAndName',
-      width: 250,
+      width: 200,
       render: (text, row) => {
         if (Object.keys(text).length === 0) {
           return '-';
