@@ -263,6 +263,14 @@ const BusinessFlowDetail: React.FC<Props> = props => {
   return (
     <BusinessFlowDetailContext.Provider value={{ state, setState }}>
       <MainPageLayout>
+        {window.history.length > 1 && (
+          <a
+            onClick={() => window.history.go(-1)}
+            style={{ marginBottom: 8, display: 'inline-block' }}
+          >
+            <Icon type="left" style={{ marginRight: 8 }} /> 返回
+          </a>
+        )}
         <div className={styles.borders}>
           <CustomDetailHeader
             title={detailData.businessProcessName}
