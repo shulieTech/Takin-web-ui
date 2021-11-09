@@ -390,33 +390,32 @@ const ServiceList: React.FC<Props> = (props) => {
                         : '-'}
                     </span>
                   </div>
+                  
+                  <div style={{ display: 'flex', marginBottom: 8 }}>
+                    <span
+                      style={{
+                        color: 'var(--Netural-10, #8e8e8e)',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      在链路图中显示：
+                    </span>
+                    <span
+                      style={{
+                        flex: 1,
+                        textAlign: 'right',
+                        wordBreak: 'break-all',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Switch
+                        size="small"
+                        checked={x.switchState}
+                        onChange={(val) => toggleWatchService(val, x)}
+                      />
+                    </span>
+                  </div>
 
-                  {!isInBaseInfoModal && (
-                    <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        在链路图中显示：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          wordBreak: 'break-all',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <Switch
-                          size="small"
-                          checked={x.switchState}
-                          onChange={(val) => toggleWatchService(val, x)}
-                        />
-                      </span>
-                    </div>
-                  )}
                   <Divider style={{ margin: '10px 0' }} />
                   <Table
                     key={JSON.stringify(tableExpandMap)}
