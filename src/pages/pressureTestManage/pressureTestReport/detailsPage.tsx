@@ -191,6 +191,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           />
         </span>
       ),
+      notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
     },
     {
       label: '执行人',
