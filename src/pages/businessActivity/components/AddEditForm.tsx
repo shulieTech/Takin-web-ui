@@ -159,12 +159,12 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         node: (
           <CommonSelect
             dataSource={props.serviceList}
-            onChange={(service, options: any) =>
+            onChange={(service, options: any) => {
               setState({
                 service,
                 serviceName: options && options.props.children
-              })
-            }
+              });
+            }}
             placeholder="请选择服务"
             showSearch
             disabled={disabled}

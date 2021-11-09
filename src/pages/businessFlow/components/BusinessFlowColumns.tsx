@@ -11,10 +11,11 @@ import TableTwoRows from 'src/common/table-two-rows/TableTwoRows';
 import moment from 'moment';
 import styles from './../index.less';
 import {
-  businessActivityStatusColorMap,
-  businessActivityStatusMap,
+  businessFlowStatusColorMap,
+  businessFlowStatusMap,
   BusinessFlowBean
 } from '../enum';
+import { Link } from 'umi';
 
 const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
   return [
@@ -37,9 +38,9 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                 value: (
                   <Badge
                     color={
-                      businessActivityStatusColorMap[row[BusinessFlowBean.状态]]
+                      businessFlowStatusColorMap[row[BusinessFlowBean.状态]]
                     }
-                    text={businessActivityStatusMap[row[BusinessFlowBean.状态]]}
+                    text={businessFlowStatusMap[row[BusinessFlowBean.状态]]}
                   />
                 )
               },
@@ -59,34 +60,24 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '统计',
-      dataIndex: 'type',
-      width: 250,
-      render: text => {
+      dataIndex: BusinessFlowBean.已完成,
+      width: 200,
+      render: (text, row) => {
         return (
           <Row type="flex">
             <Col span={8}>
-              <p className={styles.title}>节点</p>
-              <p className={styles.value}>12</p>
+              <p className={styles.title}>总计</p>
+              <p className={styles.value}>{row[BusinessFlowBean.总计]}</p>
             </Col>
             <Col span={8}>
-              <p className={styles.title}>业务活动</p>
-              <p className={styles.value}>12</p>
-            </Col>
-            <Col span={8}>
-              <p className={styles.title}>匹配进度</p>
-              <p>
-                <span
-                  className={styles.value}
-                  style={{
-                    color: true
-                      ? 'var(--FunctionalSuccess-500)'
-                      : 'var(--FunctionalError-500)'
-                  }}
-                >
-                  40
-                </span>
-                <span className={styles.value}> / </span>
-                <span className={styles.value}>40</span>
+              <p className={styles.title}>已完成</p>
+              <p
+                className={styles.value}
+                style={{
+                  color: 'var(--FunctionalSuccess-500)'
+                }}
+              >
+                {text}
               </p>
             </Col>
           </Row>
@@ -95,9 +86,26 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
     },
     {
       ...customColumnProps,
+      title: '负责人',
+      dataIndex: BusinessFlowBean.负责人
+    },
+    {
+      ...customColumnProps,
       title: '最后更新时间',
-      dataIndex: 'gmtUpdate',
+      dataIndex: BusinessFlowBean.最后更新时间,
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss') || '-'
+    },
+    {
+      ...customColumnProps,
+      title: '操作',
+      dataIndex: 'gmtUpdate',
+      render: (text, row) => {
+        return (
+          <Fragment>
+            <Link to={`/businessFlow/details?id=${row.id}`}>详情</Link>
+          </Fragment>
+        );
+      }
     }
   ];
 };

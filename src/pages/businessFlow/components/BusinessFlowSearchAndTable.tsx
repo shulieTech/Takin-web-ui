@@ -22,17 +22,11 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
   const { MIDDLEWARE_STATUS } = dictionaryMap;
 
   useEffect(() => {
-    // queryBusinessFlowList({
-    //   ...state.searchParams,
-    //   status: state.status,
-    //   q: state.searchInputValue
-    // });
-  }, [
-    state.isReload,
-    state.status,
-    state.searchParams.current,
-    state.searchParams.pageSize
-  ]);
+    queryBusinessFlowList({
+      ...state.searchParams,
+      businessFlowName: state.searchInputValue
+    });
+  }, [state.isReload, state.searchParams.current, state.searchParams.pageSize]);
 
   /**
    * @name 获取业务流程列表
@@ -93,7 +87,6 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
       style={{
         position: 'relative',
         height: 'calc(100%)',
-        // border: '1px solid purple',
         overflow: 'scroll'
       }}
     >
@@ -105,7 +98,7 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
       >
         <Col span={6}>
           <Search
-            placeholder="搜索Artifact ID、Group ID"
+            placeholder="搜索业务流程"
             enterButton
             onSearch={() =>
               setState({
@@ -131,7 +124,6 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
             onClick={() => {
               setState({
                 searchInputValue: null,
-                status: undefined,
                 isReload: !state.isReload,
                 searchParams: {
                   current: 0,
@@ -142,13 +134,6 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
           >
             重置
           </Button>
-          <CommonSelect
-            placeholder="状态:全部"
-            style={{ width: 140, marginRight: 16 }}
-            dataSource={MIDDLEWARE_STATUS || []}
-            onChange={handleChangeStatus}
-            value={state.status}
-          />
           <Icon
             onClick={() => {
               setState({

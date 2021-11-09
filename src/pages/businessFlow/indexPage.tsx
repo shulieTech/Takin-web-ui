@@ -8,9 +8,11 @@ import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import { MainPageLayout } from 'src/components/page-layout';
+import { Link } from 'umi';
 import BusinessFlowBottom from './components/BusinessFlowBottom';
 
 import styles from './index.less';
+import AddJmeterModal from './modals/AddJmeterModal';
 
 interface Props {}
 const getInitState = () => ({
@@ -20,24 +22,32 @@ const getInitState = () => ({
     pageSize: 10
   },
 
-  searchInputValue: null,
+  searchInputValue: null, // 搜索业务流程
   status: undefined,
   loading: false,
   total: 0,
-  businessFlowList: [{ a: 1 }]
+  businessFlowList: null
 });
 export const BusinessFlowContext = useCreateContext<BusinessFlowState>();
 export type BusinessFlowState = ReturnType<typeof getInitState>;
 const BusinessFlow: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
-
+  const btnAuthority: any =
+    localStorage.getItem('trowebBtnResource') &&
+    JSON.parse(localStorage.getItem('trowebBtnResource'));
   const menu = (
     <Menu>
       <Menu.Item>
-        <a>手工新增</a>
+        <AuthorityBtn
+          isShow={btnAuthority && btnAuthority.businessFlow_2_create}
+        >
+          <Link to="/businessFlow/addBusinessFlow?action=add">
+            <Button type="link">手工新增</Button>
+          </Link>
+        </AuthorityBtn>
       </Menu.Item>
       <Menu.Item>
-        <a>Jmeter扫描新增</a>
+        <AddJmeterModal btnText="Jmeter 扫描新增" />
       </Menu.Item>
     </Menu>
   );

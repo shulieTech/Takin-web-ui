@@ -5,14 +5,14 @@ const menuList: MenuBean[] = [
     title: '系统概览',
     path: '/dashboard',
     type: MenuType.Item,
-    icon: 'dashboard',
+    icon: 'dashboard'
   },
   {
     title: '仿真平台',
     type: MenuType.SubMenu,
     path: '/shop',
     icon: 'shop',
-    children: [ 
+    children: [
       {
         title: '应用配置',
         type: MenuType.SubMenu,
@@ -26,14 +26,14 @@ const menuList: MenuBean[] = [
               {
                 title: '应用详情',
                 path: '/appManage/details',
-                type: MenuType.NoMenu,
-              },
+                type: MenuType.NoMenu
+              }
             ]
           },
           {
             title: '白名单列表',
             path: '/appWhiteList',
-            type: MenuType.Item,
+            type: MenuType.Item
           }
         ]
       },
@@ -45,7 +45,7 @@ const menuList: MenuBean[] = [
           {
             title: '入口规则',
             path: '/configCenter/entryRule',
-            type: MenuType.Item,
+            type: MenuType.Item
           },
           {
             title: '业务活动',
@@ -55,7 +55,7 @@ const menuList: MenuBean[] = [
               {
                 title: '新增业务活动',
                 path: '/businessActivity/addEdit',
-                type: MenuType.NoMenu,
+                type: MenuType.NoMenu
               }
             ]
           },
@@ -67,7 +67,12 @@ const menuList: MenuBean[] = [
               {
                 title: '新增业务流程',
                 path: '/businessFlow/addBusinessFlow',
-                type: MenuType.NoMenu,
+                type: MenuType.NoMenu
+              },
+              {
+                title: '编辑业务流程',
+                path: '/businessFlow/details',
+                type: MenuType.NoMenu
               }
             ]
           }
@@ -86,19 +91,19 @@ const menuList: MenuBean[] = [
               {
                 title: '脚本配置',
                 path: '/scriptManage/scriptConfig',
-                type: MenuType.NoMenu,
+                type: MenuType.NoMenu
               },
               {
                 title: '脚本调试详情',
                 path: '/scriptManage/scriptDebugDetail',
-                type: MenuType.NoMenu,
+                type: MenuType.NoMenu
               }
             ]
           },
           {
             title: '运维脚本',
             path: '/scriptOperation',
-            type: MenuType.Item,
+            type: MenuType.Item
           }
         ]
       },
@@ -106,11 +111,13 @@ const menuList: MenuBean[] = [
         title: '数据源管理',
         type: MenuType.SubMenu,
         path: '/dataSourceManage',
-        children: [{
-          title: '数据源配置',
-          path: '/configCenter/dataSourceConfig',
-          type: MenuType.Item,
-        }]
+        children: [
+          {
+            title: '数据源配置',
+            path: '/configCenter/dataSourceConfig',
+            type: MenuType.Item
+          }
+        ]
       }
     ]
   },
@@ -134,7 +141,7 @@ const menuList: MenuBean[] = [
                 title: '压测场景配置',
                 path:
                   '/pressureTestManage/pressureTestScene/pressureTestSceneConfig',
-                type: MenuType.NoMenu,
+                type: MenuType.NoMenu
               }
             ]
           },
@@ -146,12 +153,12 @@ const menuList: MenuBean[] = [
               {
                 title: '压测实况',
                 path: '/pressureTestManage/pressureTestReport/pressureTestLive',
-                type: MenuType.NoMenu,
+                type: MenuType.NoMenu
               },
               {
                 title: '压测报告详请',
                 path: '/pressureTestManage/pressureTestReport/details',
-                type: MenuType.NoMenu,
+                type: MenuType.NoMenu
               }
             ]
           }
@@ -164,33 +171,35 @@ const menuList: MenuBean[] = [
     type: MenuType.SubMenu,
     path: '/setting',
     icon: 'setting',
-    children: [{
-      title: '系统管理',
-      type: MenuType.SubMenu,
-      path: '/configCenter',
-      children: [
-        {
-          title: '系统信息',
-          path: '/configCenter/systemInfo',
-          type: MenuType.Item,
-        },
-        {
-          title: '全局配置',
-          path: '/configCenter/globalConfig',
-          type: MenuType.Item,
-        },
-        {
-          title: '中间件库管理',
-          path: '/configCenter/middlewareManage',
-          type: MenuType.Item,
-        },
-        {
-          title: '开关配置',
-          path: '/configCenter/bigDataConfig',
-          type: MenuType.Item,
-        }
-      ]
-    }]
+    children: [
+      {
+        title: '系统管理',
+        type: MenuType.SubMenu,
+        path: '/configCenter',
+        children: [
+          {
+            title: '系统信息',
+            path: '/configCenter/systemInfo',
+            type: MenuType.Item
+          },
+          {
+            title: '全局配置',
+            path: '/configCenter/globalConfig',
+            type: MenuType.Item
+          },
+          {
+            title: '中间件库管理',
+            path: '/configCenter/middlewareManage',
+            type: MenuType.Item
+          },
+          {
+            title: '开关配置',
+            path: '/configCenter/bigDataConfig',
+            type: MenuType.Item
+          }
+        ]
+      }
+    ]
   }
 ];
 
