@@ -52,7 +52,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         key: ActivityBean.业务活动类型,
         label: '业务活动类型',
         options: {
-          rules: [{ required: true, message: '请选择业务活动类型' }],
+          rules: [{ required: false, message: '请选择业务活动类型' }],
           initialValue: props.isCore
         },
         node: (
@@ -68,7 +68,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         key: ActivityBean.业务活动级别,
         label: '业务活动级别',
         options: {
-          rules: [{ required: true, message: '请选择业务活动级别' }],
+          rules: [{ required: false, message: '请选择业务活动级别' }],
           initialValue: props.link_level
         },
         node: (
@@ -84,7 +84,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         key: ActivityBean.业务域,
         label: '业务域',
         options: {
-          rules: [{ required: true, message: '请选择业务域' }],
+          rules: [{ required: false, message: '请选择业务域' }],
           initialValue: props.businessDomain
         },
         node: (
