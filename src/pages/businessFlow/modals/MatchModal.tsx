@@ -18,7 +18,6 @@ interface Props {
   businessFlowId: string;
 }
 
-const { Option } = Select;
 interface State {
   isReload?: boolean;
   form: any;

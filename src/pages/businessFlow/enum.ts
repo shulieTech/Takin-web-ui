@@ -2,7 +2,7 @@ export enum BusinessFlowBean {
   业务活动名称 = 'sceneName',
   ID = 'id',
   状态 = 'status',
-  来源 = 'commit',
+  来源 = 'type',
   总计 = 'totalNodeNum',
   已完成 = 'linkRelateNum',
   负责人 = 'operateName',

@@ -24,6 +24,7 @@ import BusicInfoModal from './modals/BasicInfoModal';
 import DebugScriptModal from './modals/DebugScriptModal';
 import DebugScriptRecordModal from './modals/DebugScriptRecordModal';
 import MatchModal from './modals/MatchModal';
+import ScriptFileManageModal from './modals/ScriptFileManageModal';
 import BusinessFlowService from './service';
 
 interface Props {
@@ -293,7 +294,11 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                   />
                 </span>
                 <span style={{ marginRight: 8 }}>
-                  <Button>管理文件</Button>
+                  <ScriptFileManageModal
+                    btnText={`管理文件 ${detailData.relatedFiles &&
+                      detailData.relatedFiles.length}`}
+                    fileList={detailData.relatedFiles}
+                  />
                 </span>
                 <span style={{ marginRight: 8 }}>
                   <AddJmeterModal
