@@ -1,8 +1,9 @@
 /**
  * @author chuxu
  */
-import { Button, Row, Tooltip } from 'antd';
+import { Button, Dropdown, Icon, Menu, Row, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
+import { connect } from 'dva';
 import {
   CommonSelect,
   ImportFile,
@@ -19,12 +20,15 @@ import { MainPageLayout } from 'src/components/page-layout';
 import { Link, router } from 'umi';
 import styles from './index.less';
 import AddJmeterModal from './modals/AddJmeterModal';
+import BusicInfoModal from './modals/BasicInfoModal';
 import DebugScriptModal from './modals/DebugScriptModal';
+import DebugScriptRecordModal from './modals/DebugScriptRecordModal';
 import MatchModal from './modals/MatchModal';
 import BusinessFlowService from './service';
 
 interface Props {
   location?: any;
+  dictionaryMap?: any;
 }
 const getInitState = () => ({
   threadGroupList: null, // 线程组列表
@@ -49,7 +53,7 @@ export type BusinessFlowDetailState = ReturnType<typeof getInitState>;
 const BusinessFlowDetail: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
   const { fileModalValues, detailData, threadDetail } = state;
-  const { location } = props;
+  const { location, dictionaryMap } = props;
   const { query } = location;
   const { id, isAuto } = query;
 
@@ -150,6 +154,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
       threadValue: value
     });
   };
+
   const getColumns = (): ColumnProps<any>[] => {
     const columns: ColumnProps<any>[] = [
       {
@@ -236,6 +241,24 @@ const BusinessFlowDetail: React.FC<Props> = props => {
     return columns;
   };
 
+  const menu = (
+    <Menu>
+      <Menu.Item key="1">
+        <DebugScriptRecordModal btnText="调试历史" id={id} />
+      </Menu.Item>
+      <Menu.Item key="0">
+        <BusicInfoModal
+          id={id}
+          btnText="基本信息"
+          dictionaryMap={dictionaryMap}
+          sceneName={detailData.businessProcessName}
+          isCore={detailData.isCore}
+          sceneLevel={detailData.sceneLevel}
+        />
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <BusinessFlowDetailContext.Provider value={{ state, setState }}>
       <MainPageLayout>
@@ -261,23 +284,32 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             }
             extra={
               <div style={{ float: 'right' }}>
-                <DebugScriptModal
-                  btnText="调试"
-                  id={id}
-                  state={state}
-                  setState={setState}
-                />
-                <Button>管理文件</Button>
-                <AddJmeterModal
-                  btnText="管理脚本"
-                  action="edit"
-                  fileList={detailData.scriptFile}
-                  id={detailData.id}
-                />
-
-                {/* <Dropdown overlay={menu} placement="bottomLeft">
-                  <Button type="primary">新增</Button>
-                </Dropdown> */}
+                <span style={{ marginRight: 8 }}>
+                  <DebugScriptModal
+                    btnText="调试"
+                    id={id}
+                    state={state}
+                    setState={setState}
+                  />
+                </span>
+                <span style={{ marginRight: 8 }}>
+                  <Button>管理文件</Button>
+                </span>
+                <span style={{ marginRight: 8 }}>
+                  <AddJmeterModal
+                    btnText="管理脚本"
+                    action="edit"
+                    fileList={detailData.scriptFile}
+                    id={detailData.id}
+                  />
+                </span>
+                <Dropdown
+                  trigger={['click']}
+                  overlay={menu}
+                  placement="bottomLeft"
+                >
+                  <Icon type="more" />
+                </Dropdown>
               </div>}
           />
         </div>
@@ -348,4 +380,4 @@ const BusinessFlowDetail: React.FC<Props> = props => {
     </BusinessFlowDetailContext.Provider>
   );
 };
-export default BusinessFlowDetail;
+export default connect(({ common }) => ({ ...common }))(BusinessFlowDetail);

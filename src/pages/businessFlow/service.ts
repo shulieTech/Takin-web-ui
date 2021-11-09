@@ -80,6 +80,20 @@ const BusinessFlowService = {
     return httpPost(url, data);
   },
   /**
+   * @name 更新业务流程
+   */
+  async editBusinessFlowNew(data = {}) {
+    const url = '/businessFlow/scene';
+    return httpPut(url, data);
+  },
+  /**
+   * @name 获取调试脚本历史记录列表
+   */
+  async queryDebugScriptRecordList(data = {}) {
+    const url = '/scriptDebug/list';
+    return httpGet(url, data);
+  },
+  /**
    * @name 开始调试
    */
   async startDebug(data = {}) {
