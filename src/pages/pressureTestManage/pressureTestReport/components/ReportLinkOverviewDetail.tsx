@@ -193,35 +193,22 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
             dataIndex: 'minRt'
           }
         ]
-      },
-      // {
-      //   ...customColumnProps,
-      //   title: '操作',
-      //   align: 'right',
-      //   render: (text, row) => {
-      //     return (
-      //       <BusinessActivityPressureTestDetailModal
-      //         btnText="链路明细"
-      //         businessActivityId={row.businessActivityId}
-      //         businessActivityName={row.businessActivityName}
-      //         reportId={id}
-      //         detailData={detailData}
-      //       />
-      //     );
-      //   }
-      // }
+      }
     ];
   };
   return (
     <Fragment>
-      <CommonTable
-        loading={state.loading}
-        bordered
-        size="small"
-        style={{ marginTop: 8 }}
-        columns={getReportLinkOverviewColumns()}
-        dataSource={state.data ? state.data : []}
-      />
+      {state.data && (
+        <CommonTable
+          loading={state.loading}
+          bordered
+          size="small"
+          style={{ marginTop: 8 }}
+          defaultExpandAllRows={true}
+          columns={getReportLinkOverviewColumns()}
+          dataSource={state.data ? state.data : []}
+        />
+      )}
     </Fragment>
   );
 };
