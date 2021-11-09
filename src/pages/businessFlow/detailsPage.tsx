@@ -225,6 +225,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 entrancePath={row.entrace}
                 samplerType={row.samplerType}
                 onSuccess={() => queryTreeData()}
+                businessFlowId={id}
               />
             );
           }

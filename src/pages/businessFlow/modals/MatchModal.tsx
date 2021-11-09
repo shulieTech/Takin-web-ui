@@ -15,6 +15,7 @@ interface Props {
   samplerType: string;
   rowDetail: any;
   onSuccess: () => void;
+  businessFlowId: string;
 }
 
 const { Option } = Select;
@@ -303,7 +304,8 @@ const MatchModal: React.FC<Props> = props => {
         } = await BusinessFlowService.confirmMatch({
           ...props.rowDetail,
           ...values,
-          businessActivityId: state.businessActivityId
+          businessActivityId: state.businessActivityId,
+          businessFlowId: props.businessFlowId
         });
         if (success) {
           resolve(true);
