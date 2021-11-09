@@ -113,7 +113,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.reload, state.refreshTime]);
+  }, [state.reload, state.refreshTime, state.searchParams]);
 
   const queryService = async () => {
     const {
