@@ -6,7 +6,7 @@ import React, { Fragment } from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
-import { Badge, Col, Row, Tag } from 'antd';
+import { Badge, Button, Col, Popconfirm, Row, Tag } from 'antd';
 import TableTwoRows from 'src/common/table-two-rows/TableTwoRows';
 import moment from 'moment';
 import styles from './../index.less';
@@ -16,8 +16,28 @@ import {
   BusinessFlowBean
 } from '../enum';
 import { Link } from 'umi';
+import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
+import BusinessFlowService from '../service';
 
 const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
+  const btnAuthority: any =
+    localStorage.getItem('trowebBtnResource') &&
+    JSON.parse(localStorage.getItem('trowebBtnResource'));
+  const userType: string = localStorage.getItem('troweb-role');
+  const expire: string = localStorage.getItem('troweb-expire');
+  /**
+   * @name 删除
+   */
+  const handleDelete = async id => {
+    const {
+      data: { success, data }
+    } = await BusinessFlowService.deleteBusinessFlow({ id });
+    if (success) {
+      setState({
+        isReload: !state.isReload
+      });
+    }
+  };
   return [
     {
       ...customColumnProps,
@@ -104,7 +124,60 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
-            <Link to={`/businessFlow/details?id=${row.id}`}>详情</Link>
+            {/* {userType === '0' &&
+            expire === 'false' &&
+            getTakinAuthority() === 'true' && (
+              <span style={{ marginRight: 8 }}>
+                <AdminDistributeModal
+                  dataId={row.id}
+                  btnText="分配给"
+                  menuCode="BUSINESS_FLOW"
+                  onSccuess={() => {
+                    setBusinessFlowState({
+                      isReload: !BusinessFlowState.isReload
+                    });
+                  }}
+                />
+              </span>
+            )} */}
+            <Link
+              style={{ marginRight: 8 }}
+              to={`/businessFlow/details?id=${row.id}`}
+            >
+              详情
+            </Link>
+            <AuthorityBtn
+              isShow={
+                btnAuthority &&
+                btnAuthority.businessFlow_3_update &&
+                row.canEdit
+              }
+            >
+              <Link
+                style={{ marginRight: 8 }}
+                to={`/businessFlow/details?id=${row.id}`}
+              >
+                编辑
+              </Link>
+            </AuthorityBtn>
+            <AuthorityBtn
+              isShow={
+                btnAuthority &&
+                btnAuthority.businessFlow_4_delete &&
+                row.canRemove
+              }
+            >
+              <Popconfirm
+                title="确定要删除吗？"
+                okText="确认删除"
+                cancelText="取消"
+                onConfirm={() => handleDelete(row.id)}
+              >
+                <Button style={{ marginRight: 8 }} type="link">
+                  删除
+                </Button>
+              </Popconfirm>
+            </AuthorityBtn>
           </Fragment>
         );
       }
