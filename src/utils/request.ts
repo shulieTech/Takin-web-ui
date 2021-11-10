@@ -121,6 +121,10 @@ const getUrl = (url: string, options: any) => {
   return `${options && options.domain ? options.domain : serverUrl}${url}`;
 };
 const { key } = queryString.parse(location.search);
+if (key) {
+  localStorage.setItem('tenant_code', key.replace(/\//, ''));
+  localStorage.setItem('env_code', 'test');
+}
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
   const myurl = `${options && options.domain ? options.domain : serverUrl

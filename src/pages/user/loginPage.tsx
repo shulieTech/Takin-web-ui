@@ -147,7 +147,6 @@ export default class Login extends DvaComponent<Props, State> {
     if (err) {
       return;
     }
-    const { key } = queryString.parse(location.search);
     const {
       data: { success, data }
     } = await UserService.troLogin({ ...value });
