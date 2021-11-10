@@ -108,9 +108,10 @@ export default class Login extends DvaComponent<Props, State> {
     if (key) {
       localStorage.setItem('tenant-code', key.replace(/\//, ''));
       localStorage.setItem('env-code', 'test');
+    } else {
+      localStorage.setItem('tenant-code', 'default');
+      localStorage.setItem('env-code', 'test');
     }
-    localStorage.setItem('tenant-code', 'default');
-    localStorage.setItem('env-code', 'test');
   };
 
   refresh = () => {
