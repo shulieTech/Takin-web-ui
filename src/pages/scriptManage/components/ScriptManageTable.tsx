@@ -71,7 +71,9 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
       responseType: 'blob',
       headers: {
         'x-token': localStorage.getItem('full-link-token'),
-        'Auth-Cookie': localStorage.getItem('auth-cookie')
+        'Auth-Cookie': localStorage.getItem('auth-cookie'),
+        'tenant-code': localStorage.getItem('tenant-code'),
+        'env-code': localStorage.getItem('env-code'),
       }
     });
     const blob = new Blob([data], { type: `` });
