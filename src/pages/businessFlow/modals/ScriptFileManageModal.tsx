@@ -1,16 +1,11 @@
 import React, { Fragment, useEffect } from 'react';
 import { CommonForm, CommonModal, ImportFile, useStateReducer } from 'racc';
-import { Col, Collapse, Divider, Icon, Input, message, Row, Spin } from 'antd';
+import { Icon, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormDataType } from 'racc/dist/common-form/type';
-import { customColumnProps } from 'src/components/custom-table/utils';
-import { ColumnProps } from 'antd/lib/table';
 import CustomTable from 'src/components/custom-table';
 import BusinessFlowService from '../service';
 import { router } from 'umi';
-import styles from './../index.less';
-import EditJmeterModal from './EditJmeterModal';
-import { fileTypeMap } from '../enum';
 import getScriptFileColumns from '../components/ScriptFileColumns';
 import PressureTestSceneService from 'src/pages/pressureTestManage/pressureTestScene/service';
 import ScriptManageService from 'src/pages/scriptManage/service';
@@ -73,7 +68,7 @@ const ScriptFileManageModal: React.FC<Props> = props => {
      * @name 判断是否是可接受类型
      */
     function isAcceptType(ext) {
-      return ['jar', 'csv', 'jmx'].indexOf(ext.toLowerCase()) !== -1;
+      return ['jar', 'csv'].indexOf(ext.toLowerCase()) !== -1;
     }
 
     setState({
@@ -130,9 +125,8 @@ const ScriptFileManageModal: React.FC<Props> = props => {
       }
       return;
     }
-    // console.log('info.fileList', info.fileList);
+
     const newUploadFileList = info.fileList.slice(state.uploadFileNum);
-    // console.log('newUploadFileList', newUploadFileList);
 
     const formData = new FormData();
     info.fileList.slice(state.uploadFileNum).map(item => {
@@ -250,13 +244,13 @@ const ScriptFileManageModal: React.FC<Props> = props => {
                 </span>
               </span>
             </p>
-            <p>支持格式：.csv|.jar</p>
+            <p>支持格式：.csv | .jar</p>
           </ImportFile>
         ),
         extra: (
           <div style={{ marginTop: 8 }}>
             <CustomTable
-              columns={getScriptFileColumns(state, setState, props)}
+              columns={getScriptFileColumns(state, setState)}
               dataSource={
                 state.fileList
                   ? state.fileList.filter(item => {
@@ -290,16 +284,13 @@ const ScriptFileManageModal: React.FC<Props> = props => {
         }
         const {
           data: { data, success }
-        } = await BusinessFlowService.saveAndAnalysis({
-          id: props.action === 'edit' ? props.id : null,
-          scriptFile: {
-            ...(state.fileList && state.fileList[0]),
-            id: state.fileList && state.fileList[0] && state.fileList[0].id
-          }
+        } = await BusinessFlowService.saveUploadDataFile({
+          id: props.id,
+          uploadFiles: state.fileList
         });
         if (success) {
           message.success('保存成功!');
-          router.push(`/businessFlow/details?id=${data.id}&isAuto=true`);
+          props.onSuccess();
 
           resolve(true);
           return;

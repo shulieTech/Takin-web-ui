@@ -87,6 +87,13 @@ const BusinessFlowService = {
     return httpPut(url, data);
   },
   /**
+   * @name 保存业务流程文件
+   */
+  async saveUploadDataFile(data = {}) {
+    const url = '/businessFlow/uploadDataFile';
+    return httpPost(url, data);
+  },
+  /**
    * @name 获取调试脚本历史记录列表
    */
   async queryDebugScriptRecordList(data = {}) {

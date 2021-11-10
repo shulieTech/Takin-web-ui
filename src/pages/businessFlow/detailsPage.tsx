@@ -45,7 +45,8 @@ const getInitState = () => ({
     footerTxt: '业务活动匹配中，请稍后',
     extraNode: null
   },
-  fileName: 'jingsai '
+  fileName: null,
+  isReload: false
 });
 export const BusinessFlowDetailContext = useCreateContext<
   BusinessFlowDetailState
@@ -68,13 +69,13 @@ const BusinessFlowDetail: React.FC<Props> = props => {
     if (id) {
       queryDetail();
     }
-  }, []);
+  }, [state.isReload]);
 
   useEffect(() => {
     if (state.threadValue && id) {
       queryTreeData();
     }
-  }, [state.threadValue]);
+  }, [state.threadValue, state.isReload]);
 
   /**
    * @name 获取业务流程详情,获取线程组列表
@@ -303,6 +304,12 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 </span>
                 <span style={{ marginRight: 8 }}>
                   <ScriptFileManageModal
+                    onSuccess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                    id={id}
                     btnText={`管理文件 ${detailData.relatedFiles &&
                       detailData.relatedFiles.length}`}
                     fileList={detailData.relatedFiles}

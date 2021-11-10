@@ -7,13 +7,10 @@ import { ColumnProps } from 'antd/lib/table';
 import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { message, Checkbox, Icon, Tooltip, Tag, Divider, Button } from 'antd';
-import PressureTestSceneService from '../service';
+import PressureTestSceneService from 'src/pages/pressureTestManage/pressureTestScene/service';
+import { CommonSelect } from 'racc';
 
-const getScriptFileColumns = (
-  state,
-  setState,
-  dictionaryMap
-): ColumnProps<any>[] => {
+const getScriptFileColumns = (state, setState): ColumnProps<any>[] => {
   /**
    * @name 选择是否拆分
    */
@@ -67,18 +64,45 @@ const getScriptFileColumns = (
   };
 
   /**
+   * @name 选择数据类型
+   */
+  const handleChangeFileType = (fileId, uploadId, fileType) => {
+    if (fileId) {
+      setState({
+        fileList: state.fileList.map(item => {
+          if (item.id === fileId) {
+            return { ...item, fileType };
+          }
+          return { ...item };
+        })
+      });
+    }
+    if (uploadId) {
+      setState({
+        fileList: state.fileList.map(item => {
+          if (item.uploadId === uploadId) {
+            return { ...item, fileType };
+          }
+          return { ...item };
+        })
+      });
+    }
+  };
+  /**
    * @name 删除新上传文件
    */
-  const handleDeleteFiles = async (uploadId, topic) => {
+  const handleDeleteFiles = async uploadId => {
     const {
       data: { data, success }
-    } = await PressureTestSceneService.deleteFiles({ uploadId, topic });
+    } = await PressureTestSceneService.deleteFiles({ uploadId });
     if (success) {
       message.success('删除文件成功！');
       setState({
-        fileList: state.fileList.filter(item => {
-          return uploadId !== item.uploadId;
-        })
+        fileList:
+          state.fileList &&
+          state.fileList.filter(item => {
+            return uploadId !== item.uploadId;
+          })
       });
     }
   };
@@ -97,7 +121,7 @@ const getScriptFileColumns = (
         })
       });
     } else {
-      handleDeleteFiles(item.uploadId, item.topic);
+      handleDeleteFiles(item.uploadId);
     }
   };
 
@@ -112,8 +136,26 @@ const getScriptFileColumns = (
       ...customColumnProps,
       title: '文件类型',
       dataIndex: 'fileType',
-      render: text => {
-        return <span>{text === 1 ? '数据' : '脚本'}</span>;
+      width: 110,
+      render: (text, row) => {
+        return (
+          <CommonSelect
+            allowClear={false}
+            onChange={value =>
+              handleChangeFileType(row.id, row.uploadId, value)
+            }
+            value={text}
+            dataSource={[
+              { label: '数据文件', value: 1 },
+              { label: '附件', value: 2 }
+            ]}
+            onRender={item => (
+              <CommonSelect.Option key={item.value} value={item.value}>
+                {item.label}
+              </CommonSelect.Option>
+            )}
+          />
+        );
       }
     },
     {
