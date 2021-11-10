@@ -22,24 +22,24 @@ const EnvHeader: React.FC<Props> = (props) => {
     });
     const takinAuthority = headers['takin-authority'];
     if (takinAuthority === 'false') {
-      localStorage.setItem('tenant-code', data[0].tenantCode);
-      const arr = data[0].envs.filter(item => {
+      localStorage.setItem('tenant-code', data[0]?.tenantCode);
+      const arr = data[0]?.envs.filter(item => {
         if (item.isDefault) {
           return item;
         }
       });
-      localStorage.setItem('env-code', arr[0].envCode);
+      localStorage.setItem('env-code', arr[0]?.envCode);
     }
     if (success) {
       setTenantList(data);
-      setEnvList(data[0].envs);
-      const arr = data[0].envs.filter(item => {
+      setEnvList(data[0]?.envs);
+      const arr = data[0]?.envs.filter(item => {
         if (item.isDefault) {
           return item;
         }
       });
-      localStorage.setItem('env-code', arr[0].envCode);
-      setDesc(arr[0].desc);
+      localStorage.setItem('env-code', arr[0]?.envCode);
+      setDesc(arr[0]?.desc);
     }
   };
 
@@ -57,8 +57,8 @@ const EnvHeader: React.FC<Props> = (props) => {
           return item;
         }
       });
-      localStorage.setItem('env-code', arr[0].envCode);
-      setDesc(arr[0].desc);
+      localStorage.setItem('env-code', arr[0]?.envCode);
+      setDesc(arr[0]?.desc);
       if (window.location.hash === '#/dashboard') {
         window.location.reload();
       } else {

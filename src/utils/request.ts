@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { message, Modal } from 'antd';
 import { Basic } from 'src/types';
 import BaseResponse = Basic.BaseResponse;
-import queryString from 'query-string';
 import { getTakinAuthority } from './utils';
 declare var window: Window;
 declare var serverUrl: string;
@@ -120,11 +119,7 @@ export interface RequestParams {
 const getUrl = (url: string, options: any) => {
   return `${options && options.domain ? options.domain : serverUrl}${url}`;
 };
-const { key } = queryString.parse(location.search);
-if (key) {
-  localStorage.setItem('tenant-code', key.replace(/\//, ''));
-  localStorage.setItem('env-code', 'test');
-}
+
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
   const myurl = `${options && options.domain ? options.domain : serverUrl
