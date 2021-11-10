@@ -122,8 +122,8 @@ const getUrl = (url: string, options: any) => {
 };
 const { key } = queryString.parse(location.search);
 if (key) {
-  localStorage.setItem('tenant_code', key.replace(/\//, ''));
-  localStorage.setItem('env_code', 'test');
+  localStorage.setItem('tenant-code', key.replace(/\//, ''));
+  localStorage.setItem('env-code', 'test');
 }
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
@@ -138,8 +138,8 @@ export function httpGet<T = any>(url: string, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      tenant_code: localStorage.getItem('tenant_code'),
-      env_code: localStorage.getItem('env_code'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }
@@ -153,8 +153,8 @@ export function httpPost<T>(url, data?: any, options?: any) {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
       'Access-Token': localStorage.getItem('Access-Token'),
-      tenant_code: localStorage.getItem('tenant_code'),
-      env_code: localStorage.getItem('env_code'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }
@@ -167,8 +167,8 @@ export function httpPut<T>(url, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      tenant_code: localStorage.getItem('tenant_code'),
-      env_code: localStorage.getItem('env_code'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }
@@ -181,8 +181,8 @@ export function httpDelete<T>(url, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      tenant_code: localStorage.getItem('tenant_code'),
-      env_code: localStorage.getItem('env_code'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }

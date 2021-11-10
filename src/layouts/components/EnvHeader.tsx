@@ -18,17 +18,17 @@ const EnvHeader: React.FC<Props> = (props) => {
       headers,
       data: { success, data }
     } = await tenantCode.tenant({
-      tenantCode: localStorage.getItem('tenant_code')
+      tenantCode: localStorage.getItem('tenant-code')
     });
     const takinAuthority = headers['takin-authority'];
     if (takinAuthority === 'false') {
-      localStorage.setItem('tenant_code', data[0].tenantCode);
+      localStorage.setItem('tenant-code', data[0].tenantCode);
       const arr = data[0].envs.filter(item => {
         if (item.isDefault) {
           return item;
         }
       });
-      localStorage.setItem('env_code', arr[0].envCode);
+      localStorage.setItem('env-code', arr[0].envCode);
     }
     if (success) {
       setTenantList(data);
@@ -38,7 +38,7 @@ const EnvHeader: React.FC<Props> = (props) => {
           return item;
         }
       });
-      localStorage.setItem('env_code', arr[0].envCode);
+      localStorage.setItem('env-code', arr[0].envCode);
       setDesc(arr[0].desc);
     }
   };
@@ -50,14 +50,14 @@ const EnvHeader: React.FC<Props> = (props) => {
       targetTenantCode: code
     });
     if (success) {
-      localStorage.setItem('tenant_code', code);
+      localStorage.setItem('tenant-code', code);
       setEnvList(data.envs);
       const arr = data.envs.filter(item => {
         if (item.isDefault) {
           return item;
         }
       });
-      localStorage.setItem('env_code', arr[0].envCode);
+      localStorage.setItem('env-code', arr[0].envCode);
       setDesc(arr[0].desc);
       if (window.location.hash === '#/dashboard') {
         window.location.reload();
@@ -75,7 +75,7 @@ const EnvHeader: React.FC<Props> = (props) => {
     });
     if (success) {
       setDesc(descs);
-      localStorage.setItem('env_code', code);
+      localStorage.setItem('env-code', code);
       if (window.location.hash === '#/dashboard') {
         window.location.reload();
       } else {
@@ -113,7 +113,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         >
           <Button type="primary">
             租户：
-            {localStorage.getItem('tenant_code')}
+            {localStorage.getItem('tenant-code')}
             <Icon type="down" />
           </Button>
         </Dropdown>
@@ -133,7 +133,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         >
           <Button type="primary">
             环境：
-            {localStorage.getItem('env_code')}
+            {localStorage.getItem('env-code')}
             <Icon type="down" />
           </Button>
         </Dropdown>
