@@ -56,6 +56,33 @@ const getBlackListColumns = (
     }
   };
 
+  const hrefClick = async (row) => {
+    const {
+      data: { data, success }
+    } = await AppManageService.goActivityInfo({
+      applicationName: detailData.applicationName,
+      label: row.serviceAndMethod,
+      serviceName: row.service,
+      method: row.method,
+      type: 'HTTP',
+      rpcType: row.rpcType,
+      activityName: row.appName,
+      activityNameAndId: null,
+      businessDomain: '0',
+      entranceName: '',
+      extend: '',
+      isCore: '0',
+      linkId: '',
+      link_level: '1',
+      value: '',
+      persistence: false
+    });
+    if (success) {
+      router.push(`/businessActivity/details?id=${
+        Object.keys(data)[0]}&pageIndex=0&type=${data[Object.keys(data)[0]]}&hideList=1`);
+    }
+  };
+
   const menu = row => {
     return (
       <div>
@@ -81,21 +108,20 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '服务名称',
       dataIndex: 'serviceAndMethod',
+      width: 200,
       render: (text, row) => {
         return (
           <Tooltip title={text}>
-            <span
+            <a
               style={{
                 display: 'inline-block',
-                width: 100,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
+                width: 200,
                 cursor: 'pointer'
               }}
+              onClick={() => hrefClick(row)}
             >
               {text}
-            </span>
+            </a>
           </Tooltip>
         );
       }
@@ -183,7 +209,7 @@ const getBlackListColumns = (
       ...customColumnProps,
       title: '关联业务活动名称',
       dataIndex: 'activeIdAndName',
-      width: 250,
+      width: 200,
       render: (text, row) => {
         if (Object.keys(text).length === 0) {
           return '-';

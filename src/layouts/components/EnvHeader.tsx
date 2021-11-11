@@ -28,7 +28,9 @@ const EnvHeader: React.FC<Props> = (props) => {
           return item;
         }
       });
-      localStorage.setItem('env-code', arr[0]?.envCode);
+      if (localStorage.getItem('env-code') === null) {
+        localStorage.setItem('env-code', arr[0]?.envCode);
+      }
     }
     if (success) {
       setTenantList(data);
@@ -38,7 +40,9 @@ const EnvHeader: React.FC<Props> = (props) => {
           return item;
         }
       });
-      localStorage.setItem('env-code', arr[0]?.envCode);
+      if (localStorage.getItem('env-code') === null) {
+        localStorage.setItem('env-code', arr[0]?.envCode);
+      }
       setDesc(arr[0]?.desc);
     }
   };
