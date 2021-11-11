@@ -65,7 +65,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   }, [state.isReload]);
 
   useEffect(() => {
-    // queryReportChartsInfo(id, state.tabKey);
+    queryReportChartsInfo(id, state.tabKey);
   }, [state.isReload, state.tabKey]);
 
   /**
@@ -125,8 +125,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     const {
       data: { data, success }
     } = await PressureTestReportService.queryBusinessActivityTree({
-      // reportId: value
-      reportId: 108
+      reportId: value
     });
     if (success) {
       setState({

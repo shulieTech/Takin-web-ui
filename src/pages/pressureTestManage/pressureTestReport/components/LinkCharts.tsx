@@ -29,9 +29,11 @@ const LinkCharts: React.FC<Props> = props => {
   const [targetTps, setTargetTps] = useState<number>(undefined);
 
   const handleChangeTab = value => {
-    setState({
-      tabKey: value
-    });
+    if (value[0]) {
+      setState({
+        tabKey: value[0]
+      });
+    }
   };
   const getDefaultValue = async () => {
     const {
@@ -72,7 +74,10 @@ const LinkCharts: React.FC<Props> = props => {
         if (item.children && item.children.length) {
           return (
             <Tree.TreeNode
-              title={item.testName}
+              title={
+                <Tooltip title={item.testName} placement="right">
+                  <span>{item.testName}</span>
+                </Tooltip>}
               key={item.businessActivityId}
               dataRef={item}
               treeDefaultExpandAll={true}
@@ -85,9 +90,12 @@ const LinkCharts: React.FC<Props> = props => {
         return (
           <Tree.TreeNode
             style={{ color: '#fff' }}
-            key={item.id}
+            key={item.businessActivityId}
             dataRef={item}
-            title={item.testName}
+            title={
+              <Tooltip title={item.testName} placement="right">
+                <span>{item.testName}</span>
+              </Tooltip>}
             children={item.children}
           />
         );
@@ -103,47 +111,13 @@ const LinkCharts: React.FC<Props> = props => {
       }}
     >
       <div className={styles.leftSelected}>
-        {/* {console.log(state.tabList)} */}
-        {/* <Tree>{renderTreeNodes(state.tabList)}</Tree> */}
-        {/* {tabList.map((item, key) => {
-          return (
-            <Tooltip key={key} title={item.label} placement="right">
-              <p
-                className={
-                  state.tabKey === item.value
-                    ? styles.appItemActive
-                    : styles.appItem
-                }
-                onClick={() => handleChangeTab(item.value)}
-              >
-                {item.label}
-              </p>
-            </Tooltip>
-          );
-        })} */}
-        1
+        {state.tabList && state.tabList.length > 0 && (
+          <Tree onSelect={handleChangeTab} defaultExpandAll>
+            {renderTreeNodes(state.tabList)}
+          </Tree>
+        )}
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
-        {/* {state.tabKey !== 0 && (
-          <div
-            style={{
-              height: 750,
-              position: 'absolute',
-              top: 10,
-              left: 0,
-              right: 330,
-              zIndex: 1,
-              backgroundColor: 'var(--FunctionalNetural-50, #F5F7F9)',
-            }}
-          >
-            <GraphNode
-              graphData={state.graphData}
-              graphKey={state.tabKey + state.graphData?.nodes?.length}
-              {...props?.graphConfig}
-              defaultLabelSetting={['2', '3', '4']}
-            />
-          </div>
-        )} */}
         <LineCharts
           // columnNum={state.tabKey === 0 ? 2 : 1}
           columnNum={2}
