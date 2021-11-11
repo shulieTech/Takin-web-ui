@@ -53,7 +53,7 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
     ...defaultState,
     queryParams: {
       ...defaultState.queryParams,
-      tempActivity: props.location.query.type === 'true',
+      ...(props.location.query.jsonParam ? JSON.parse(props.location.query.jsonParam) : {})
     },
   });
 

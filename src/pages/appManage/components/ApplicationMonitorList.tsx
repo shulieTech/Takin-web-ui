@@ -78,8 +78,15 @@ const getBlackListColumns = (
       persistence: false
     });
     if (success) {
+      const tempActivity = data[Object.keys(data)[0]];
       router.push(`/businessActivity/details?id=${
-        Object.keys(data)[0]}&pageIndex=0&type=${data[Object.keys(data)[0]]}&hideList=1`);
+        Object.keys(data)[0]}&pageIndex=0&hideList=1${tempActivity ? 
+          `&jsonParam=${encodeURIComponent(JSON.stringify({
+            tempActivity,
+            startTime: row.startTime,
+            endTime: row.endTime,
+            timeGap: row.timeGap
+          }))}` : ''}`);
     }
   };
 
