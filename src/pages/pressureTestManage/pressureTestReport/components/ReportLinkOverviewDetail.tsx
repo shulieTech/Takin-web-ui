@@ -23,19 +23,19 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
   });
 
   useEffect(() => {
-    queryPressureTestDetailTree({ reportId: id });
+    queryPressureTestDetailList({ reportId: id });
   }, []);
 
   /**
    * @name 获取压测明细列表
    */
-  const queryPressureTestDetailTree = async value => {
+  const queryPressureTestDetailList = async value => {
     setState({
       loading: true
     });
     const {
       data: { success, data }
-    } = await PressureTestReportService.queryPressureTestDetailTree({
+    } = await PressureTestReportService.queryPressureTestDetailList({
       ...value
     });
     if (success) {

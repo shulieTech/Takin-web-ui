@@ -191,12 +191,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             <Tooltip
               placement="bottomLeft"
               title={
-                <div style={{ maxHeight: 300, overflow: 'scroll' }}>
-                  {/* <div style={{ textAlign: 'right' }}>
-                    <a onClick={() => handleCopy(text)}>复制</a>
-                  </div> */}
-                  {text}
-                </div>}
+                <div style={{ maxHeight: 300, overflow: 'scroll' }}>{text}</div>}
             >
               <div style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
                 {text}
@@ -211,8 +206,14 @@ const BusinessFlowDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '状态',
-        dataIndex: 'totalCost',
-        width: 100
+        dataIndex: 'status',
+        width: 100,
+        render: (text, row) => {
+          if (row.type === 'SAMPLER') {
+            return <span>{text === 1 ? '已匹配' : '未匹配'}</span>;
+          }
+          return '-';
+        }
       },
       {
         ...customColumnProps,
@@ -227,11 +228,15 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 btnText="编辑匹配"
                 apiName={row.testName}
                 path={row.identification}
-                isVirtual={row.businessType}
+                isVirtual={String(row.businessType)}
                 entranceApp={row.businessApplicationName}
                 entrancePath={row.entrace}
                 samplerType={row.samplerType}
-                onSuccess={() => queryTreeData()}
+                onSuccess={() => {
+                  setState({
+                    isReload: !state.isReload
+                  });
+                }}
                 businessFlowId={id}
               />
             );
