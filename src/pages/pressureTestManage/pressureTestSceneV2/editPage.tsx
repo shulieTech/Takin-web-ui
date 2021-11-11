@@ -13,13 +13,17 @@ import {
   Select,
   FormStep,
   FormLayout,
+  FormBlock,
   NumberPicker,
   Radio,
+  ArrayTable,
+  FormTextBox,
 } from '@formily/antd-components';
 import { Button } from 'antd';
 import services from './service';
 import TargetMap from './components/TargetMap';
 import ConfigMap from './components/ConfigMap';
+import ConditionTable from './components/ConditionTable';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 
@@ -82,6 +86,9 @@ export default (props) => {
           NumberPicker,
           TargetMap,
           ConfigMap,
+          ArrayTable,
+          FormBlock,
+          FormTextBox,
           Radio,
           RadioGroup: Radio.Group,
         }}
@@ -95,7 +102,7 @@ export default (props) => {
           size="small"
           labelPlacement="vertical"
           // TODO 移除current
-          current={1}
+          current={2}
           dataSource={[
             { title: '压测目标', name: 'step-1' },
             { title: '施压配置', name: 'step-2' },
@@ -153,7 +160,13 @@ export default (props) => {
           <Field type="object" name="goal" x-component="TargetMap" />
         </FormLayout>
 
-        <FormLayout name="step-2" labelCol={4} wrapperCol={10}>
+        <FormLayout
+          name="step-2"
+          labelCol={4}
+          wrapperCol={10}
+          labelAlign={undefined}
+          prefixCls={undefined}
+        >
           <Field type="object" name="config">
             <Field
               name="duration"
@@ -189,8 +202,9 @@ export default (props) => {
                   width: '100%',
                 },
                 min: 1,
+                default: 1,
                 // TODO 获取建议pod数
-                disabled: !getTakinAuthority(),
+                disabled: getTakinAuthority() !== 'true',
               }}
               title={
                 <TipTittle tips="指定压力机pod数量，可参考建议值范围。指定数量过高可能导致硬件资源无法支持；指定数量过低可能导致发起压力达不到要求">
@@ -207,6 +221,16 @@ export default (props) => {
               required
             />
           </Field>
+        </FormLayout>
+
+        <FormLayout
+          name="step-3"
+          labelCol={4}
+          wrapperCol={10}
+          labelAlign={undefined}
+          prefixCls={undefined}
+        >
+          <ConditionTable />
         </FormLayout>
 
         <FormSpy

@@ -45,6 +45,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                           message: '请选择压力模式',
                         },
                       ],
+                      // TODO 这里的联动没生效
                       'x-linkages': [
                         {
                           type: 'value:schema',
