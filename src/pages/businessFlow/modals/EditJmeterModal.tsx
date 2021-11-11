@@ -18,6 +18,7 @@ interface Props {
   state?: any;
   setState?: (value) => void;
   fileData: any;
+  id?: string;
 }
 
 interface State {
@@ -82,6 +83,7 @@ const EditJmeterModal: React.FC<Props> = props => {
         const {
           data: { data, success }
         } = await BusinessFlowService.saveAndAnalysis({
+          id: props.id,
           scriptFile: {
             ...fileData,
             scriptContent: state.scriptCode

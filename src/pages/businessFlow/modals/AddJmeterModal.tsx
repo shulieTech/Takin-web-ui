@@ -70,6 +70,7 @@ const AddJmeterModal: React.FC<Props> = props => {
         render: (text, row) => {
           return (
             <EditJmeterModal
+              id={props.id}
               btnText="编辑"
               fileId={row.downloadUrl}
               fileData={row}

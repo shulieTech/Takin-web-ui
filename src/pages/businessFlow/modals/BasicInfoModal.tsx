@@ -1,22 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
-import {
-  CommonForm,
-  CommonModal,
-  CommonSelect,
-  ImportFile,
-  useStateReducer
-} from 'racc';
-import { Col, Collapse, Divider, Icon, Input, message, Row, Spin } from 'antd';
+import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
+import { Input, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormDataType } from 'racc/dist/common-form/type';
-import { customColumnProps } from 'src/components/custom-table/utils';
-import { ColumnProps } from 'antd/lib/table';
-import CustomTable from 'src/components/custom-table';
 import BusinessFlowService from '../service';
-import { router } from 'umi';
-import styles from './../index.less';
-import EditJmeterModal from './EditJmeterModal';
-import { fileTypeMap } from '../enum';
 
 interface Props {
   btnText?: string | React.ReactNode;
