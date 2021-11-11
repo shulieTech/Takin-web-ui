@@ -164,10 +164,17 @@ const PressureTestSceneService = {
     return httpGet(url, data);
   },
   /**
+   * @name 业务流程详情获取
+   */
+  async sceneDetail(data) {
+    const url = '/businessFlow/scene/detail';
+    return httpGet(url, data);
+  },
+  /**
    * @name 业务流程详情获取线程组内容详情
    */
-  async sceneList(data) {
-    const url = '/businessFlow/scene/list';
+  async threadGroupDetail(data) {
+    const url = '/businessFlow/scene/threadGroupDetail';
     return httpGet(url, data);
   },
 };
