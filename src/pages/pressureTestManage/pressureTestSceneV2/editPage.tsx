@@ -36,6 +36,7 @@ const EditPage = (props) => {
   const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
   const [threadTree, setThreadTree] = useState([]);
+  const [targetList, setTargetList] = useState([]);
 
   const getBusinessFlowList = async () => {
     const {
@@ -68,10 +69,18 @@ const EditPage = (props) => {
     }
   };
 
+  const getTargetList = async (businessFlowId) => {
+    const { data: { success, data } } = await services.queryBussinessActivityListWithBusinessFlow({
+      businessFlowId
+    });
+    setTargetList(data);
+  };
+
   const useFlowIdChangeEffect = () => {
     const { setFieldState, dispatch } = actions;
     onFieldValueChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       getThreadTree(fieldState.value);
+      getTargetList(fieldState.value);
     });
   };
 
@@ -81,6 +90,15 @@ const EditPage = (props) => {
 
   return (
     <div style={{ padding: 20 }}>
+      <div 
+        style={{
+          fontSize: 20,
+          borderBottom: '1px solid #ddd',
+          paddingBottom: 10,
+        }}
+      >
+        压测场景配置
+      </div>
       <SchemaForm
         actions={actions}
         components={{
@@ -237,6 +255,7 @@ const EditPage = (props) => {
         >
           <ConditionTable
             dictionaryMap={dictionaryMap}
+            targetList={targetList}
             name="stopCondition"
             title={<span style={{ fontSize: 16 }}>
                 终止条件
@@ -248,6 +267,7 @@ const EditPage = (props) => {
           />
           <ConditionTable
             dictionaryMap={dictionaryMap}
+            targetList={targetList}
             name="warningCondition"
             title={<span style={{ fontSize: 16 }}>告警条件</span>}
           />

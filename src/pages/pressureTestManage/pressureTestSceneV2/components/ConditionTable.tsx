@@ -5,6 +5,7 @@ import { FormBlock, FormLayout, FormTextBox } from '@formily/antd-components';
 export default (props) => {
   const {
     dictionaryMap: { SLA_TARGER_TYPE, COMPARE_TYPE },
+    targetList = [],
     title,
     name,
   } = props;
@@ -63,7 +64,13 @@ export default (props) => {
               x-component="Select"
               x-component-props={{ placeholder: '请选择' }}
               x-rules={[{ required: true, message: '请输入规则名称' }]}
-              enum={[{ label: '全部', value: 0 }]}
+              enum={[
+                { label: '全部', value: 0 },
+                ...targetList.map((x) => ({
+                  label: x.businessActivityName,
+                  value: x.businessActivityId,
+                })),
+              ]}
             />
             <Field title="规则" type="object" x-component="block">
               <FormTextBox
