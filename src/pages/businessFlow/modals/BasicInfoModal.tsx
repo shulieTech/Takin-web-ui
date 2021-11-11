@@ -65,7 +65,7 @@ const BusicInfoModal: React.FC<Props> = props => {
           initialValue: props.isCore,
           rules: [
             {
-              required: true,
+              required: false,
               message: '请选择类型'
             }
           ]
@@ -81,7 +81,7 @@ const BusicInfoModal: React.FC<Props> = props => {
           initialValue: props.sceneLevel,
           rules: [
             {
-              required: true,
+              required: false,
               message: '请选择级别'
             }
           ]
@@ -122,6 +122,7 @@ const BusicInfoModal: React.FC<Props> = props => {
         });
         if (success) {
           message.success('编辑成功!');
+          props.onSuccess();
           resolve(true);
           return;
         }

@@ -89,9 +89,10 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         detailData: data,
         threadGroupList: data.scriptJmxNodeList,
         threadValue:
-          data.scriptJmxNodeList &&
-          data.scriptJmxNodeList[0] &&
-          data.scriptJmxNodeList[0].value
+          state.threadValue ||
+          (data.scriptJmxNodeList &&
+            data.scriptJmxNodeList[0] &&
+            data.scriptJmxNodeList[0].value)
       });
     }
   };
@@ -202,7 +203,6 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           );
         }
       },
-
       {
         ...customColumnProps,
         title: '状态',
@@ -261,6 +261,11 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           sceneName={detailData.businessProcessName}
           isCore={detailData.isCore}
           sceneLevel={detailData.sceneLevel}
+          onSuccess={() => {
+            setState({
+              isReload: state.isReload
+            });
+          }}
         />
       </Menu.Item>
     </Menu>
@@ -326,6 +331,12 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                     action="edit"
                     fileList={detailData.scriptFile}
                     id={detailData.id}
+                    onSuccess={() => {
+                      setState({
+                        isReload: !state.isReload,
+                        threadValue: undefined
+                      });
+                    }}
                   />
                 </span>
                 <Dropdown

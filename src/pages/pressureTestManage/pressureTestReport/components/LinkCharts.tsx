@@ -1,4 +1,4 @@
-import { InputNumber, message, Tabs, Tooltip } from 'antd';
+import { InputNumber, message, Tabs, Tooltip, Tree } from 'antd';
 import { CommonModal } from 'racc';
 import React, { useState, useEffect, ReactNode } from 'react';
 import { TestMode } from '../../pressureTestScene/enum';
@@ -24,21 +24,21 @@ interface Props {
     tooltip?: string | ReactNode;
   };
 }
-const LinkCharts: React.FC<Props> = (props) => {
+const LinkCharts: React.FC<Props> = props => {
   const { chartsInfo, setState, state, tabList } = props;
   const [targetTps, setTargetTps] = useState<number>(undefined);
 
-  const handleChangeTab = (value) => {
+  const handleChangeTab = value => {
     setState({
-      tabKey: value,
+      tabKey: value
     });
   };
   const getDefaultValue = async () => {
     const {
-      data: { data, success },
+      data: { data, success }
     } = await PressureTestReportService.getTpsValue({
       reportId: state.detailData.id,
-      sceneId: state.detailData.sceneId,
+      sceneId: state.detailData.sceneId
     });
     if (success) {
       setTargetTps(data);
@@ -49,13 +49,13 @@ const LinkCharts: React.FC<Props> = (props) => {
       message.info('请填写TPS');
       return;
     }
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       const {
-        data: { success },
+        data: { success }
       } = await PressureTestReportService.adjustTPS({
         targetTps,
         reportId: state.detailData.id,
-        sceneId: state.detailData.sceneId,
+        sceneId: state.detailData.sceneId
       });
       if (success) {
         message.success('调整成功');
@@ -65,15 +65,47 @@ const LinkCharts: React.FC<Props> = (props) => {
     });
   };
 
+  const renderTreeNodes = data => {
+    return (
+      data &&
+      data.map(item => {
+        if (item.children && item.children.length) {
+          return (
+            <Tree.TreeNode
+              title={item.testName}
+              key={item.businessActivityId}
+              dataRef={item}
+              treeDefaultExpandAll={true}
+              style={{ color: '#fff', width: 100 }}
+            >
+              {renderTreeNodes(item.children)}
+            </Tree.TreeNode>
+          );
+        }
+        return (
+          <Tree.TreeNode
+            style={{ color: '#fff' }}
+            key={item.id}
+            dataRef={item}
+            title={item.testName}
+            children={item.children}
+          />
+        );
+      })
+    );
+  };
+
   return (
     <div
       style={{
         display: 'flex',
-        marginTop: 16,
+        marginTop: 16
       }}
     >
       <div className={styles.leftSelected}>
-        {tabList.map((item, key) => {
+        {/* {console.log(state.tabList)} */}
+        {/* <Tree>{renderTreeNodes(state.tabList)}</Tree> */}
+        {/* {tabList.map((item, key) => {
           return (
             <Tooltip key={key} title={item.label} placement="right">
               <p
@@ -88,7 +120,8 @@ const LinkCharts: React.FC<Props> = (props) => {
               </p>
             </Tooltip>
           );
-        })}
+        })} */}
+        1
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
         {/* {state.tabKey !== 0 && (
@@ -125,7 +158,7 @@ const LinkCharts: React.FC<Props> = (props) => {
             okText: '确定',
             cancelText: '取消',
             title: '调整TPS',
-            destroyOnClose: true,
+            destroyOnClose: true
           }}
           btnText="调整TPS"
           btnProps={{ style: { transform: 'translateY(8px)' } }}
@@ -135,7 +168,7 @@ const LinkCharts: React.FC<Props> = (props) => {
           TPS：
           <InputNumber
             value={targetTps}
-            onChange={(value) => setTargetTps(value)}
+            onChange={value => setTargetTps(value)}
             precision={0}
             min={0}
           />

@@ -35,7 +35,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     detailData: {},
-    tabList: [{ label: '全局趋势', value: 0 }],
+    tabList: [],
     chartsInfo: {},
     tabKey: 0,
     /** 风险机器应用key */
@@ -65,7 +65,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   }, [state.isReload]);
 
   useEffect(() => {
-    queryReportChartsInfo(id, state.tabKey);
+    // queryReportChartsInfo(id, state.tabKey);
   }, [state.isReload, state.tabKey]);
 
   /**
@@ -124,20 +124,13 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   const queryReportBusinessActivity = async value => {
     const {
       data: { data, success }
-    } = await PressureTestReportService.queryReportBusinessActivity({
-      reportId: value
+    } = await PressureTestReportService.queryBusinessActivityTree({
+      // reportId: value
+      reportId: 108
     });
     if (success) {
       setState({
-        tabList: state.tabList.concat(
-          data &&
-            data.map(item => {
-              return {
-                label: item.businessActivityName,
-                value: item.businessActivityId
-              };
-            })
-        )
+        tabList: data
       });
     }
   };
