@@ -177,6 +177,13 @@ const PressureTestSceneService = {
     const url = '/businessFlow/scene/threadGroupDetail';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取漏数验证脚本
+   */
+  async queryMissingDataScriptList(data = {}) {
+    const url = '/leak/sql/batch';
+    return httpPost(url, data);
+  },
 };
 
 export default PressureTestSceneService;

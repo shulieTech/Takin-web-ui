@@ -1,0 +1,76 @@
+import React, { useEffect, useState } from 'react';
+import { Table, Collapse, Empty } from 'antd';
+import services from '../service';
+
+const { Panel } = Collapse;
+
+const ValidateCommand = (props) => {
+  const { businessActivityIds } = props;
+  const [missingDataScriptList, setMissingDataScriptList] = useState([]);
+
+  /**
+   * @name 获取漏数验证命令
+   */
+  const queryMissingDataScriptList = async (values) => {
+    const {
+      data: { success, data },
+    } = await services.queryMissingDataScriptList(values);
+    if (success) {
+      setMissingDataScriptList(data);
+    }
+  };
+
+  useEffect(() => {
+    if (businessActivityIds) {
+      queryMissingDataScriptList({ businessActivityIds });
+    }
+  }, [businessActivityIds]);
+
+  if (!businessActivityIds) {
+    return (
+      <span style={{ textAlign: 'left', display: 'inline-block' }}>
+        <Empty description={'请先选择业务活动或业务流程'} />
+      </span>
+    );
+  }
+
+  return (
+    <Collapse>
+      {missingDataScriptList.map((x) => {
+        return (
+          <Panel
+            key={x.jdbcUrl}
+            header={<div style={{ position: 'relative' }}>
+              <div>{x.datasourceName}</div>
+              url: {x.jdbcUrl}
+            </div>}
+          >
+            <Table
+              defaultExpandAllRows
+              dataSource={x.sqlResponseList}
+              columns={[
+                {
+                  title: '序号',
+                  dataIndex: 'order',
+                  width: 80,
+                },
+                {
+                  title: '命令',
+                  dataIndex: 'sql',
+                },
+              ]}
+              locale={{
+                emptyText:
+                  '当前业务活动/业务流程暂未配置数据验证脚本，请先前往业务活动配置数据验证脚本',
+              }}
+            />
+          </Panel>
+        );
+      })}
+    </Collapse>
+  );
+};
+
+ValidateCommand.isFieldComponent = true;
+
+export default ValidateCommand;

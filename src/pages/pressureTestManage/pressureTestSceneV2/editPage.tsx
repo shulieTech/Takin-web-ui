@@ -25,6 +25,7 @@ import services from './service';
 import TargetMap from './components/TargetMap';
 import ConfigMap from './components/ConfigMap';
 import ConditionTable from './components/ConditionTable';
+import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 
@@ -59,7 +60,7 @@ const EditPage = (props) => {
         data: { success: success2, data: data2 },
       } = await services.threadGroupDetail({
         id: flowId,
-        xpathMd5: data1.scriptJmxNodeList[0].value,
+        xpathMd5: data1?.scriptJmxNodeList?.[0]?.value,
       });
       if (success2) {
         setThreadTree(data2.threadScriptJmxNodes);
@@ -88,6 +89,7 @@ const EditPage = (props) => {
           NumberPicker,
           TargetMap,
           ConfigMap,
+          ValidateCommand,
           ArrayTable,
           FormBlock,
           FormTextBox,
@@ -104,7 +106,7 @@ const EditPage = (props) => {
           size="small"
           labelPlacement="vertical"
           // TODO 移除current
-          current={2}
+          // current={3}
           dataSource={[
             { title: '压测目标', name: 'step-1' },
             { title: '施压配置', name: 'step-2' },
@@ -221,6 +223,7 @@ const EditPage = (props) => {
                 },
               ]}
               required
+              default={1}
             />
           </Field>
         </FormLayout>
@@ -236,17 +239,76 @@ const EditPage = (props) => {
             dictionaryMap={dictionaryMap}
             name="stopCondition"
             title={<span style={{ fontSize: 16 }}>
-              终止条件
-              <span style={{ color: '#f7917a', marginLeft: 8 }}>
-                为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
-              </span>
-            </span>}
+                终止条件
+                <span style={{ color: '#f7917a', marginLeft: 8 }}>
+                  为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+                </span>
+              </span>}
+            
           />
           <ConditionTable
             dictionaryMap={dictionaryMap}
             name="warningCondition"
             title={<span style={{ fontSize: 16 }}>告警条件</span>}
           />
+        </FormLayout>
+
+        <FormLayout
+          name="step-4"
+          labelCol={4}
+          wrapperCol={10}
+          labelAlign={undefined}
+          prefixCls={undefined}
+        >
+          <Field name="dataValidation" type="object">
+            <Field
+              name="timeInterval"
+              type="number"
+              x-component="NumberPicker"
+              x-component-props={{
+                placeholder: '请输入',
+                style: {
+                  width: '100%',
+                },
+                min: 1,
+                max: 59,
+                default: 1,
+              }}
+              title={
+                <TipTittle
+                  tips="时间间隔指数据验证命令循环执行的时间，时间间隔越短，对数据库性能损耗越高，最大不得超过压测总时长。
+
+                根据验证命令实际执行情况，实际间隔时间可能会有少许出入，属于正常情况。"
+                >
+                  时间间隔
+                </TipTittle>
+              }
+              x-rules={[
+                {
+                  required: true,
+                  whitespace: true,
+                  message: '请输入时间间隔',
+                },
+              ]}
+              required
+            />
+            <FormSpy>
+              {({ state, form }) => {
+                return (
+                  <Field
+                    name="content"
+                    title="验证命令"
+                    x-component="ValidateCommand"
+                    x-component-props={{
+                      businessActivityIds: form?.getFieldValue(
+                        'basicInfo.businessFlowId'
+                      ),
+                    }}
+                  />
+                );
+              }}
+            </FormSpy>
+          </Field>
         </FormLayout>
 
         <FormSpy
@@ -264,7 +326,7 @@ const EditPage = (props) => {
           }}
         >
           {({ state }) => {
-            const isLastStep = state.step.value === 4;
+            const isLastStep = state.step.value === 3;
             return (
               <FormButtonGroup align="center" sticky>
                 <Button
