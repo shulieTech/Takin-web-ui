@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Collapse, Row, Col } from 'antd';
-import { SchemaField, FormPath, Schema, IFieldMergeState } from '@formily/antd';
+import {
+  SchemaField,
+  FormPath,
+  Schema,
+  IFieldMergeState,
+  FormSpy,
+} from '@formily/antd';
 import TipTittle from './TipTittle';
 import testData from './testData.json';
+import FlowPreview from './FlowPreview';
 
 const { Panel } = Collapse;
 
 const ConfigMap = (props: IFieldMergeState) => {
-  const {
-    value = {},
-    schema,
-    className,
-    editable,
-    path,
-    mutators,
-    form,
-  } = props;
+  const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
 
   return (
@@ -23,7 +22,7 @@ const ConfigMap = (props: IFieldMergeState) => {
       {testData.map((x) => {
         return (
           <Panel header={x.name} key={x.xpathMd5}>
-            <Row>
+            <Row gutter={16}>
               <Col span={12}>
                 <SchemaField
                   path={FormPath.parse(path).concat(`${x.xpathMd5}.type`)}
@@ -44,6 +43,23 @@ const ConfigMap = (props: IFieldMergeState) => {
                         {
                           required: true,
                           message: '请选择压力模式',
+                        },
+                      ],
+                      'x-linkages': [
+                        {
+                          type: 'value:schema',
+                          target: '.mode',
+                          condition: '{{ $value === 1 }}',
+                          schema: {
+                            enum: [{ label: '固定压力值', value: 1 }],
+                          },
+                          otherwise: {
+                            enum: [
+                              { label: '固定压力值', value: 1 },
+                              { label: '线性递增', value: 2 },
+                              { label: '阶梯递增', value: 3 },
+                            ],
+                          },
                         },
                       ],
                       default: 0,
@@ -76,6 +92,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                           message: '请输入1~100,000之间的正整数',
                         },
                       ],
+                      default: 1,
                     })
                   }
                 />
@@ -95,11 +112,6 @@ const ConfigMap = (props: IFieldMergeState) => {
                           施压模式
                         </TipTittle>
                       ),
-                      enum: [
-                        { label: '固定压力值', value: 0 },
-                        { label: '线性递增', value: 1 },
-                        { label: '阶梯递增', value: 2 },
-                      ],
                       'x-rules': [
                         {
                           required: true,
@@ -111,15 +123,15 @@ const ConfigMap = (props: IFieldMergeState) => {
                           type: 'value:visible',
                           target: '.rampUp',
                           condition:
-                            '{{ $self.value === 1 || $self.value === 2 }}',
+                            '{{ $self.value === 2 || $self.value === 3 }}',
                         },
                         {
                           type: 'value:visible',
                           target: '.steps',
-                          condition: '{{ $self.value === 2 }}',
+                          condition: '{{ $self.value === 3 }}',
                         },
                       ],
-                      default: 0,
+                      default: 1,
                     })
                   }
                 />
@@ -176,7 +188,16 @@ const ConfigMap = (props: IFieldMergeState) => {
                 />
               </Col>
               <Col span={12}>
-                <div>预览图</div>
+                <FormSpy>
+                  {({ state, form }) => {
+                    return (
+                      <FlowPreview
+                        formValue={form.getFormState().values}
+                        xpathMd5={x.xpathMd5}
+                      />
+                    );
+                  }}
+                </FormSpy>
               </Col>
             </Row>
           </Panel>
