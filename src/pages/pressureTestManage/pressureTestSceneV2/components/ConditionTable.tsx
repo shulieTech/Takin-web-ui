@@ -1,24 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SchemaMarkupField as Field } from '@formily/antd';
 import { FormBlock, FormLayout, FormTextBox } from '@formily/antd-components';
 
 export default (props) => {
+  const {
+    dictionaryMap: { SLA_TARGER_TYPE, COMPARE_TYPE },
+    title,
+    name,
+  } = props;
+
+  const [unit, setUnit] = useState('');
+
+  const getUnit = (val) => {
+    switch (val) {
+      case '0':
+        return 'ms';
+      case '1':
+        return '';
+      default:
+        return '%';
+    }
+  };
+
   return (
-    <FormLayout labelCol={0} wrapperCol={24}>
-      <FormBlock
-        title={<span style={{ fontSize: 16 }}>
-            终止条件
-            <span style={{ color: '#f7917a', marginLeft: 8 }}>
-              为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
-            </span>
-          </span>}
-      >
+    <FormLayout
+      labelCol={0}
+      wrapperCol={24}
+      labelAlign={undefined}
+      prefixCls={undefined}
+    >
+      <FormBlock title={title}>
         <Field
-          name="monitoringGoal"
+          name={name}
           type="array"
           x-component="ArrayTable"
-          minItems={2}
-          x-component-props={{ size: 'snall' }}
+          // minItems={2}
+          x-component-props={{
+            operationsWidth: 100,
+            renderMoveUp: () => null,
+            renderMoveDown: () => null,
+          }}
         >
           <Field type="object">
             <Field
@@ -44,15 +65,24 @@ export default (props) => {
               x-rules={[{ required: true, message: '请输入规则名称' }]}
               enum={[{ label: '全部', value: 0 }]}
             />
-            <Field title="规则" type="object">
-              <FormTextBox text={`%s %s %s ${'ms'} 出现 %s次`} gutter={8}>
+            <Field title="规则" type="object" x-component="block">
+              <FormTextBox
+                text={`%s %s %s ${unit} 连续出现 %s次`}
+                gutter={8}
+                name="textBox"
+              >
                 <Field
                   name="formulaTarget"
                   type="number"
                   x-component="Select"
-                  x-component-props={{ placeholder: '指标' }}
+                  x-component-props={{
+                    placeholder: '指标',
+                    // onChange: (val) => {
+                    //   setUnit(getUnit(val));
+                    // },
+                  }}
                   x-rules={[{ required: true, message: '请选择' }]}
-                  enum={[{ label: '全部', value: 0 }]}
+                  enum={SLA_TARGER_TYPE || []}
                 />
                 <Field
                   name="formulaSymbol"
@@ -60,7 +90,7 @@ export default (props) => {
                   x-component="Select"
                   x-component-props={{ placeholder: '条件' }}
                   x-rules={[{ required: true, message: '请选择条件' }]}
-                  enum={[{ label: '全部', value: 0 }]}
+                  enum={COMPARE_TYPE || []}
                 />
                 <Field
                   name="formulaNumber"

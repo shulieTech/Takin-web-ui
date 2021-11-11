@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'dva';
 import {
   SchemaForm,
   SchemaMarkupField as Field,
@@ -30,7 +31,8 @@ import TipTittle from './components/TipTittle';
 const actions = createAsyncFormActions();
 const { onFieldValueChange$, onFormMount$ } = FormEffectHooks;
 
-export default (props) => {
+const EditPage = (props) => {
+  const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
   const [threadTree, setThreadTree] = useState([]);
 
@@ -230,7 +232,21 @@ export default (props) => {
           labelAlign={undefined}
           prefixCls={undefined}
         >
-          <ConditionTable />
+          <ConditionTable
+            dictionaryMap={dictionaryMap}
+            name="stopCondition"
+            title={<span style={{ fontSize: 16 }}>
+              终止条件
+              <span style={{ color: '#f7917a', marginLeft: 8 }}>
+                为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+              </span>
+            </span>}
+          />
+          <ConditionTable
+            dictionaryMap={dictionaryMap}
+            name="warningCondition"
+            title={<span style={{ fontSize: 16 }}>告警条件</span>}
+          />
         </FormLayout>
 
         <FormSpy
@@ -281,3 +297,5 @@ export default (props) => {
     </div>
   );
 };
+
+export default connect(({ common }) => ({ ...common }))(EditPage);
