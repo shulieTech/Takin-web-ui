@@ -18,6 +18,8 @@ import {
 import { Link } from 'umi';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import BusinessFlowService from '../service';
+import AdminDistributeModal from 'src/modals/AdminDistributeModal';
+import { getTakinAuthority } from 'src/utils/utils';
 
 const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
   const btnAuthority: any =
@@ -66,13 +68,14 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
               },
               {
                 label: '来源：',
-                value: row[BusinessFlowBean.来源] ? (
-                  <Tag>
-                    {row[BusinessFlowBean.来源] === 1 ? 'Jmeter' : '手工'}
-                  </Tag>
-                ) : (
-                  '-'
-                )
+                value:
+                  row[BusinessFlowBean.来源] !== null ? (
+                    <Tag>
+                      {row[BusinessFlowBean.来源] === 0 ? '手工' : 'Jmeter'}
+                    </Tag>
+                  ) : (
+                    '-'
+                  )
               }
             ]}
           />
@@ -124,28 +127,22 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
-            {/* {userType === '0' &&
-            expire === 'false' &&
-            getTakinAuthority() === 'true' && (
-              <span style={{ marginRight: 8 }}>
-                <AdminDistributeModal
-                  dataId={row.id}
-                  btnText="分配给"
-                  menuCode="BUSINESS_FLOW"
-                  onSccuess={() => {
-                    setBusinessFlowState({
-                      isReload: !BusinessFlowState.isReload
-                    });
-                  }}
-                />
-              </span>
-            )} */}
-            <Link
-              style={{ marginRight: 8 }}
-              to={`/businessFlow/details?id=${row.id}`}
-            >
-              详情
-            </Link>
+            {userType === '0' &&
+              expire === 'false' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8 }}>
+                  <AdminDistributeModal
+                    dataId={row.id}
+                    btnText="分配给"
+                    menuCode="BUSINESS_FLOW"
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                  />
+                </span>
+              )}
             <AuthorityBtn
               isShow={
                 btnAuthority &&
@@ -153,12 +150,21 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                 row.canEdit
               }
             >
-              <Link
-                style={{ marginRight: 8 }}
-                to={`/businessFlow/details?id=${row.id}`}
-              >
-                编辑
-              </Link>
+              {row[BusinessFlowBean.来源] === 0 ? (
+                <Link
+                  style={{ marginRight: 8 }}
+                  to={`/businessFlow/addBusinessFlow?action=edit&id=${row.id}`}
+                >
+                  编辑
+                </Link>
+              ) : (
+                <Link
+                  style={{ marginRight: 8 }}
+                  to={`/businessFlow/details?id=${row.id}`}
+                >
+                  编辑
+                </Link>
+              )}
             </AuthorityBtn>
             <AuthorityBtn
               isShow={
@@ -177,6 +183,15 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                   删除
                 </Button>
               </Popconfirm>
+            </AuthorityBtn>
+            <AuthorityBtn
+              isShow={
+                btnAuthority &&
+                btnAuthority.businessFlow_3_update &&
+                row.canEdit
+              }
+            >
+              <a>下载</a>
             </AuthorityBtn>
           </Fragment>
         );

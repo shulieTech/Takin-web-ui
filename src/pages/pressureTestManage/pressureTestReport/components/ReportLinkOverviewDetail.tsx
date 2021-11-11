@@ -23,19 +23,19 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
   });
 
   useEffect(() => {
-    queryPressureTestDetailList({ reportId: id });
+    queryPressureTestDetailTree({ reportId: id });
   }, []);
 
   /**
    * @name 获取压测明细列表
    */
-  const queryPressureTestDetailList = async value => {
+  const queryPressureTestDetailTree = async value => {
     setState({
       loading: true
     });
     const {
       data: { success, data }
-    } = await PressureTestReportService.queryPressureTestDetailList({
+    } = await PressureTestReportService.queryPressureTestDetailTree({
       ...value
     });
     if (success) {
@@ -53,7 +53,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务活动',
-        dataIndex: 'businessActivityName'
+        dataIndex: 'testName'
       },
       {
         ...customColumnProps,
@@ -63,117 +63,126 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '平均TPS（实际/目标）',
-        dataIndex: 'tps',
-        render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}</span>
-            </Fragment>
-          );
-        }
+        dataIndex: 'tps'
+        // render: (text, row) => {
+        //   return (
+        //     <Fragment>
+        //       <span
+        //         style={{
+        //           color:
+        //             Number(text && text.result) < Number(text && text.value)
+        //               ? '#FE7D61'
+        //               : ''
+        //         }}
+        //       >
+        //         {text.result}
+        //       </span>
+        //       <span style={{ margin: '0 8px' }}>/</span>
+        //       <span>{text && text.value}</span>
+        //     </Fragment>
+        //   );
+        // }
       },
       {
         ...customColumnProps,
         title: '平均RT（实际/目标）',
-        dataIndex: 'avgRT',
-        render: (text, row) => {
-          return (
-            <Fragment>
-              <div style={{ position: 'relative' }}>
-                <span
-                  style={{
-                    color:
-                      Number(text.result) > Number(text.value) ? '#FE7D61' : ''
-                  }}
-                >
-                  {text.result}ms
-                </span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span>{text.value}ms</span>
-                <Popover
-                  placement="bottomLeft"
-                  content={
-                    <div className={styles.distributionWrap}>
-                      <p className={styles.title}>分布</p>
-                      {row.distribute &&
-                        row.distribute.map((item, key) => {
-                          return (
-                            <p key={key} className={styles.distributionList}>
-                              <span
-                                style={{
-                                  display: 'inline-block',
-                                  width: '50%'
-                                }}
-                              >
-                                {item.lable}
-                              </span>
-                              <span>{item.value}</span>
-                            </p>
-                          );
-                        })}
-                    </div>}
-                >
-                  <Icon
-                    style={{ position: 'absolute', right: 6, top: 2 }}
-                    type="pie-chart"
-                    theme="filled"
-                  />
-                </Popover>
-              </div>
-            </Fragment>
-          );
-        }
+        dataIndex: 'avgRT'
+        // render: (text, row) => {
+        //   return (
+        //     <Fragment>
+        //       <div style={{ position: 'relative' }}>
+        //         <span
+        //           style={{
+        //             color:
+        //               Number(text && text.result) > Number(text && text.value)
+        //                 ? '#FE7D61'
+        //                 : ''
+        //           }}
+        //         >
+        //           {text.result}ms
+        //         </span>
+        //         <span style={{ margin: '0 8px' }}>/</span>
+        //         <span>{text && text.value}ms</span>
+        //         <Popover
+        //           placement="bottomLeft"
+        //           content={
+        //             <div className={styles.distributionWrap}>
+        //               <p className={styles.title}>分布</p>
+        //               {row.distribute &&
+        //                 row.distribute.map((item, key) => {
+        //                   return (
+        //                     <p key={key} className={styles.distributionList}>
+        //                       <span
+        //                         style={{
+        //                           display: 'inline-block',
+        //                           width: '50%'
+        //                         }}
+        //                       >
+        //                         {item.lable}
+        //                       </span>
+        //                       <span>{item.value}</span>
+        //                     </p>
+        //                   );
+        //                 })}
+        //             </div>
+        //           }
+        //         >
+        //           <Icon
+        //             style={{ position: 'absolute', right: 6, top: 2 }}
+        //             type="pie-chart"
+        //             theme="filled"
+        //           />
+        //         </Popover>
+        //       </div>
+        //     </Fragment>
+        //   );
+        // }
       },
       {
         ...customColumnProps,
         title: '请求成功率（实际/目标）',
-        dataIndex: 'sucessRate',
-        render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}%
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
-            </Fragment>
-          );
-        }
+        dataIndex: 'sucessRate'
+        // render: (text, row) => {
+        //   return (
+        //     <Fragment>
+        //       <span
+        //         style={{
+        //           color:
+        //             Number(text && text.result) < Number(text && text.value)
+        //               ? '#FE7D61'
+        //               : ''
+        //         }}
+        //       >
+        //         {text.result}%
+        //       </span>
+        //       <span style={{ margin: '0 8px' }}>/</span>
+        //       <span>{text && text.value}%</span>
+        //     </Fragment>
+        //   );
+        // }
       },
       {
         ...customColumnProps,
         title: 'SA（实际/目标）',
-        dataIndex: 'sa',
-        render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}%
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
-            </Fragment>
-          );
-        }
+        dataIndex: 'sa'
+        // render: (text, row) => {
+        //   return (
+        //     <Fragment>
+        //       <span
+        //         style={{
+        //           color:
+        //             Number(text && text.result) < Number(text && text.value)
+        //               ? '#FE7D61'
+        //               : ''
+        //         }}
+        //       >
+        //         {text.result}%
+        //       </span>
+        //       <span style={{ margin: '0 8px' }}>/</span>
+        //       <span>{text.value}%</span>
+        //     </Fragment>
+        //   );
+        // }
       },
       {
         ...customColumnProps,

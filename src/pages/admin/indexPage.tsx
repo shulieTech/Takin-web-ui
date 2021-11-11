@@ -142,7 +142,9 @@ const Admin: React.FC<AdminProps> = props => {
       title: '操作',
       render: (text, record) => (
         <span>
-          <AuthorityBtn isShow={btnAuthority && btnAuthority.admins_admin_7_download}>
+          <AuthorityBtn
+            isShow={btnAuthority && btnAuthority.admins_admin_7_download}
+          >
             <a
               onClick={e => e.stopPropagation()}
               href={`${serverUrl}/fast/agent/access/download?version=${record.version}`}
@@ -190,7 +192,9 @@ const Admin: React.FC<AdminProps> = props => {
           description="探针管理"
           extra={
             <div style={{ float: 'right' }}>
-              <AuthorityBtn isShow={btnAuthority && btnAuthority.admins_admin_2_create}>
+              <AuthorityBtn
+                isShow={btnAuthority && btnAuthority.admins_admin_2_create}
+              >
                 <Button
                   type="primary"
                   onClick={() => setState({ versinVisible: true })}
@@ -245,7 +249,7 @@ const Admin: React.FC<AdminProps> = props => {
             pageSize={state.searchParams.pageSize}
             showTotal={(t, range) =>
               `共 ${state.total} 条数据 第${state.searchParams.current +
-              1}页 / 共 ${Math.ceil(
+                1}页 / 共 ${Math.ceil(
                 state.total / (state.searchParams.pageSize || 10)
               )}页`
             }
