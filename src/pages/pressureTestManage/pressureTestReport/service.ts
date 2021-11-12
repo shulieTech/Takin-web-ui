@@ -100,13 +100,6 @@ const PressureTestReportService = {
     return httpGet(url, data);
   },
   /**
-   * @name 获取压测明细列表（树）
-   */
-  async queryPressureTestDetailTree(data = {}) {
-    const url = '/report/queryNodeTree';
-    return httpGet(url, data);
-  },
-  /**
    * @name 获取容量水位应用列表
    */
   async queryWaterLevelList(data = {}) {

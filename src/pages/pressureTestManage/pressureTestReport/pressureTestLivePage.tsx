@@ -145,25 +145,18 @@ const PressureTestLive: React.FC<Props> = props => {
   };
 
   /**
-   * @name 获取实况业务活动列表
+   * @name 获取压测报告业务活动列表
    */
   const queryLiveBusinessActivity = async value => {
     const {
       data: { data, success }
-    } = await PressureTestReportService.queryLiveBusinessActivity({
+    } = await PressureTestReportService.queryBusinessActivityTree({
       sceneId: value
     });
     if (success) {
       setState({
-        tabList: state.tabList.concat(
-          data &&
-            data.map(item => {
-              return {
-                label: item.businessActivityName,
-                value: item.businessActivityId
-              };
-            })
-        )
+        tabList: data,
+        tabKey: data && data[0].xpathMd5
       });
     }
   };
@@ -171,12 +164,12 @@ const PressureTestLive: React.FC<Props> = props => {
   /**
    * @name 获取压测实况趋势信息
    */
-  const queryLiveChartsInfo = async (sceneId, businessActivityId) => {
+  const queryLiveChartsInfo = async (sceneId, xpathMd5) => {
     const {
       data: { data, success }
     } = await PressureTestReportService.queryLiveLinkChartsInfo({
       sceneId,
-      businessActivityId
+      xpathMd5
     });
     if (success) {
       setState({
