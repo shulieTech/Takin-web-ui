@@ -115,6 +115,13 @@ const BusinessFlowService = {
     return httpGet(url, data);
   },
   /**
+   * @name 下载脚本文件
+   */
+  async downloadScript(data = {}) {
+    const url = '/scriptManage/getZipFileUrl';
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取所有业务活动
    */
   async queryBussinessActive(data = {}) {
