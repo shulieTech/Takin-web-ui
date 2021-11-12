@@ -320,7 +320,7 @@ const PressureTestLive: React.FC<Props> = props => {
       title: '链路概览',
       component: (
         <Fragment>
-          <LinkOverview dataSource={detailData.businessActivity} />
+          <LinkOverview dataSource={detailData.nodeDetail} />
           <Alert
             showIcon
             style={{ marginTop: 12 }}

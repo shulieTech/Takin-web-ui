@@ -13,7 +13,7 @@ const LinkOverview: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务活动',
-        dataIndex: 'businessActivityName'
+        dataIndex: 'testName'
       },
       {
         ...customColumnProps,
@@ -44,7 +44,7 @@ const LinkOverview: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '平均RT（实际/目标）',
-        dataIndex: 'avgRT',
+        dataIndex: 'avgRt',
         render: (text, row) => {
           return (
             <Fragment>
@@ -65,7 +65,7 @@ const LinkOverview: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '成功率（实际/目标）',
-        dataIndex: 'sucessRate',
+        dataIndex: 'successRate',
         render: (text, row) => {
           return (
             <Fragment>
