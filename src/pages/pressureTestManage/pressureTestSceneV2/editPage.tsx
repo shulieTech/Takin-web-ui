@@ -15,7 +15,6 @@ import {
   FormStep,
   FormLayout,
   FormBlock,
-  NumberPicker,
   Radio,
   ArrayTable,
   FormTextBox,
@@ -25,6 +24,7 @@ import services from './service';
 import TargetMap from './components/TargetMap';
 import ConfigMap from './components/ConfigMap';
 import ConditionTable from './components/ConditionTable';
+import NumberPicker from './components/NumberPicker';
 import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
@@ -235,7 +235,7 @@ const EditPage = (props) => {
                 type="number"
                 x-component="Select"
                 x-component-props={{
-                  placeholder: '请选择',
+                  placeholder: '请选择'
                 }}
                 x-rules={[
                   {
@@ -279,8 +279,12 @@ const EditPage = (props) => {
                   style: {
                     width: '100%',
                   },
+                  min: 1,
+                  precision: 0,
+                  addonAfter: <Button>分</Button>
                 }}
                 title="压测时长"
+                minimum={1}
                 x-rules={[
                   {
                     required: true,
@@ -312,6 +316,7 @@ const EditPage = (props) => {
                   },
                   min: 1,
                   default: 1,
+                  addonAfter: <Button>建议Pod数: -</Button>,
                   // TODO 获取建议pod数
                   disabled: getTakinAuthority() !== 'true',
                 }}
@@ -351,12 +356,29 @@ const EditPage = (props) => {
                     为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
                   </span>
                 </span>}
+              arrayFieldProps={{
+                'x-rules': [
+                  { 
+                    validator: val => {
+                      if (!(val || []).some(x => x.formulaTarget === '0')) {
+                        return '请至少设置1条包含RT的终止条件';
+                      }
+                      if (!(val || []).some(x => x.formulaTarget === '2')) {
+                        return '请至少设置1条包含成功率的终止条件';
+                      }
+                    } 
+                  }
+                ]
+              }}
             />
             <ConditionTable
               dictionaryMap={dictionaryMap}
               targetList={targetList}
               name="warnMonitoringGoal"
               title={<span style={{ fontSize: 16 }}>告警条件</span>}
+              arrayFieldProps={{
+                default: [],
+              }}
             />
           </FormLayout>
 
@@ -380,6 +402,7 @@ const EditPage = (props) => {
                   min: 1,
                   max: 59,
                   default: 1,
+                  addonAfter: <Button>分</Button>,
                 }}
                 title={
                   <TipTittle
@@ -454,6 +477,7 @@ const EditPage = (props) => {
               );
             }}
           </FormSpy>
+          <Submit/>
         </SchemaForm>
       </div>
     </Spin>

@@ -8,6 +8,7 @@ export default (props) => {
     targetList = [],
     title,
     name,
+    arrayFieldProps = {},
   } = props;
 
   const [unit, setUnit] = useState('');
@@ -32,6 +33,7 @@ export default (props) => {
     >
       <FormBlock title={title}>
         <Field
+          {...arrayFieldProps}
           name={name}
           type="array"
           x-component="ArrayTable"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Collapse, Row, Col } from 'antd';
+import { Collapse, Row, Col, Button } from 'antd';
 import {
   SchemaField,
   FormPath,
@@ -26,7 +26,7 @@ const ConfigMap = (props: IFieldMergeState) => {
   });
 
   return (
-    <Collapse {...componentProps} defaultActiveKey={Object.keys(filterEmptyTargetMap)}>
+    <Collapse {...componentProps} defaultActiveKey={Object.keys(filterEmptyTargetMap)?.slice(0, 3)}>
       {Object.keys(filterEmptyTargetMap).map((z) => {
         const x = flatTreeData.find(item => item.xpathMd5 === z) || {};
         return (
@@ -162,6 +162,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                         style: {
                           width: '100%',
                         },
+                        addonAfter: <Button>分</Button>
                       },
                       'x-rules': [
                         {
@@ -186,11 +187,17 @@ const ConfigMap = (props: IFieldMergeState) => {
                       ),
                       'x-component-props': {
                         placeholder: '请输入',
+                        min: 1,
+                        max: 100,
                       },
                       'x-rules': [
                         {
                           required: true,
-                          message: '请输入递增时长',
+                          message: '请输入阶梯层数',
+                        },
+                        {
+                          format: 'integer',
+                          message: '请输入正整数',
                         },
                       ],
                     })

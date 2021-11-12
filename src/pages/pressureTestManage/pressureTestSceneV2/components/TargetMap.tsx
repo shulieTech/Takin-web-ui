@@ -8,7 +8,7 @@ const TargetMap = (props) => {
 
   const { treeData = [] } = componentProps;
 
-  const renderInputTd = (record, fieldName, fieldLabel) => {
+  const renderInputTd = (record, fieldName, fieldLabel, fieldProps = {}) => {
     if (['TEST_PLAN', 'THREAD_GROUP'].includes(record.type)) {
       return null;
     }
@@ -26,6 +26,7 @@ const TargetMap = (props) => {
               style: {
                 width: 'auto',
               },
+              ...fieldProps,
             },
             'x-rules': [
               { required: true, message: `请输入${fieldLabel}` }
@@ -64,12 +65,12 @@ const TargetMap = (props) => {
     {
       title: '目标成功率(%)',
       dataIndex: 'rs',
-      render: (text, record, index) => renderInputTd(record, 'rs', '目标成功率'),
+      render: (text, record, index) => renderInputTd(record, 'rs', '目标成功率', { max: 100 }),
     },
     {
       title: '目标SA(%)',
       dataIndex: 'sa',
-      render: (text, record, index) => renderInputTd(record, 'sa', '目标SA'),
+      render: (text, record, index) => renderInputTd(record, 'sa', '目标SA', { max: 100 }),
     },
   ];
 
