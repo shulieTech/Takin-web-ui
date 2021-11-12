@@ -8,7 +8,6 @@ import {
   FormSpy,
 } from '@formily/antd';
 import TipTittle from './TipTittle';
-import testData from './testData.json';
 import FlowPreview from './FlowPreview';
 
 const { Panel } = Collapse;
@@ -16,10 +15,20 @@ const { Panel } = Collapse;
 const ConfigMap = (props: IFieldMergeState) => {
   const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
+  const { flatTreeData = [], targetValue = {} } = componentProps;
+
+  // 过滤所有值为空的项
+  const filterEmptyTargetMap = { ...targetValue };
+  Object.entries(targetValue).forEach(([x, y]) => {
+    if (Object.values(y).every(z => !Boolean(z))) {
+      delete filterEmptyTargetMap[x];
+    }
+  });
 
   return (
-    <Collapse {...componentProps}>
-      {testData.map((x) => {
+    <Collapse {...componentProps} defaultActiveKey={Object.keys(filterEmptyTargetMap)}>
+      {Object.keys(filterEmptyTargetMap).map((z) => {
+        const x = flatTreeData.find(item => item.xpathMd5 === z) || {};
         return (
           <Panel header={x.name} key={x.xpathMd5}>
             <Row gutter={16}>

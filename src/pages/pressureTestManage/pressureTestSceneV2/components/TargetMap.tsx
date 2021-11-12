@@ -1,28 +1,37 @@
 import React from 'react';
-import { Table, InputNumber } from 'antd';
-import { SchemaField, FormPath } from '@formily/antd';
-import testData from './testData.json';
+import { Table } from 'antd';
+import { SchemaField, FormPath, Schema } from '@formily/antd';
 
 const TargetMap = (props) => {
   const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
 
-  const renderInputTd = (record, fieldName) => {
+  const { treeData = [] } = componentProps;
+
+  const renderInputTd = (record, fieldName, fieldLabel) => {
     if (['TEST_PLAN', 'THREAD_GROUP'].includes(record.type)) {
       return null;
     }
-    const tdPath = `${record.xpathMd5}.${fieldName}`;
+    const tdPath = FormPath.parse(path).concat(`${record.xpathMd5}.${fieldName}`);
     return (
-      <InputNumber
-        style={{
-          width: 'auto',
-        }}
-        min={0}
-        placeholder="请输入"
-        defaultValue={FormPath.getIn(value, tdPath)}
-        onChange={(val) => {
-          mutators.change(FormPath.setIn(value, tdPath, val));
-        }}
+      <SchemaField
+        path={tdPath}
+        schema={
+          new Schema({
+            type: 'number',
+            'x-component': 'NumberPicker',
+            'x-component-props': {
+              placeholder: '请输入',
+              min: 0,
+              style: {
+                width: 'auto',
+              },
+            },
+            'x-rules': [
+              { required: true, message: `请输入${fieldLabel}` }
+            ],
+          })
+        }
       />
     );
   };
@@ -45,30 +54,31 @@ const TargetMap = (props) => {
     {
       title: '目标TPS',
       dataIndex: 'tps',
-      render: (text, record, index) => renderInputTd(record, 'tps'),
+      render: (text, record, index) => renderInputTd(record, 'tps', '目标TPS'),
     },
     {
       title: '目标RT(ms)',
       dataIndex: 'rt',
-      render: (text, record, index) => renderInputTd(record, 'rt'),
+      render: (text, record, index) => renderInputTd(record, 'rt', '目标RT'),
     },
     {
       title: '目标成功率(%)',
       dataIndex: 'rs',
-      render: (text, record, index) => renderInputTd(record, 'rs'),
+      render: (text, record, index) => renderInputTd(record, 'rs', '目标成功率'),
     },
     {
       title: '目标SA(%)',
       dataIndex: 'sa',
-      render: (text, record, index) => renderInputTd(record, 'sa'),
+      render: (text, record, index) => renderInputTd(record, 'sa', '目标SA'),
     },
   ];
 
   return (
     <Table
+      key={JSON.stringify(treeData)}
       columns={columns}
       pagination={false}
-      dataSource={testData}
+      dataSource={treeData}
       rowKey="xpathMd5"
       defaultExpandAllRows
       size="small"

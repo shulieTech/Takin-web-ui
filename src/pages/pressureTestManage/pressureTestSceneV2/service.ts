@@ -164,19 +164,28 @@ const PressureTestSceneService = {
     return httpGet(url, data);
   },
   /**
-   * @name 业务流程详情获取
+   * 
+   * @param data 
+   * @returns 
    */
-  async sceneDetail(data) {
-    const url = '/businessFlow/scene/detail';
+  async getThreadTree(data) {
+    const url = '/v2/scene/business_activity_flow/detail';
     return httpGet(url, data);
   },
-  /**
-   * @name 业务流程详情获取线程组内容详情
-   */
-  async threadGroupDetail(data) {
-    const url = '/businessFlow/scene/threadGroupDetail';
-    return httpGet(url, data);
-  },
+  // /**
+  //  * @name 业务流程详情获取
+  //  */
+  // async sceneDetail(data) {
+  //   const url = '/businessFlow/scene/detail';
+  //   return httpGet(url, data);
+  // },
+  // /**
+  //  * @name 业务流程详情获取线程组内容详情
+  //  */
+  // async threadGroupDetail(data) {
+  //   const url = '/businessFlow/scene/threadGroupDetail';
+  //   return httpGet(url, data);
+  // },
   /**
    * @name 获取漏数验证脚本
    */

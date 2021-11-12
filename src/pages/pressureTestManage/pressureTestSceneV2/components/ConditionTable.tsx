@@ -59,18 +59,15 @@ export default (props) => {
             />
             <Field
               title="对象"
-              name="id"
-              type="string"
+              name="target"
+              type="array"
               x-component="Select"
-              x-component-props={{ placeholder: '请选择' }}
+              x-component-props={{ placeholder: '请选择', multiple: true }}
               x-rules={[{ required: true, message: '请输入规则名称' }]}
-              enum={[
-                { label: '全部', value: 0 },
-                ...targetList.map((x) => ({
-                  label: x.businessActivityName,
-                  value: x.businessActivityId,
-                })),
-              ]}
+              enum={targetList.map((x) => ({
+                label: x.businessActivityName,
+                value: x.businessActivityId,
+              }))}
             />
             <Field title="规则" type="object" x-component="block">
               <FormTextBox

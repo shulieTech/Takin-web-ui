@@ -5,7 +5,9 @@ import services from '../service';
 const { Panel } = Collapse;
 
 const ValidateCommand = (props) => {
-  const { businessActivityIds } = props;
+  const { value = {}, schema, className, editable, path, mutators } = props;
+  const componentProps = schema.getExtendsComponentProps() || {};
+  const { businessActivityIds } = componentProps;
   const [missingDataScriptList, setMissingDataScriptList] = useState([]);
 
   /**
@@ -24,12 +26,20 @@ const ValidateCommand = (props) => {
     if (businessActivityIds) {
       queryMissingDataScriptList({ businessActivityIds });
     }
-  }, [businessActivityIds]);
+  }, [JSON.stringify(businessActivityIds)]);
 
   if (!businessActivityIds) {
     return (
       <span style={{ textAlign: 'left', display: 'inline-block' }}>
         <Empty description={'请先选择业务活动或业务流程'} />
+      </span>
+    );
+  }
+
+  if (!(missingDataScriptList.length > 0)) {
+    return (
+      <span style={{ textAlign: 'left', display: 'inline-block' }}>
+        <Empty description={<div>当前业务活动/业务流程暂未配置数据验证脚本，<br/>请先前往业务活动配置数据验证脚本</div>} />
       </span>
     );
   }
