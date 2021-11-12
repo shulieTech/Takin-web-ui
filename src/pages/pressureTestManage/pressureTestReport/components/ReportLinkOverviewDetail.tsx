@@ -209,7 +209,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
     <Fragment>
       {state.data && (
         <CommonTable
-          key="xpathMd5"
+          rowKey="xpathMd5"
           loading={state.loading}
           bordered
           size="small"

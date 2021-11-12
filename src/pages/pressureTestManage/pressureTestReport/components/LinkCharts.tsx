@@ -112,7 +112,11 @@ const LinkCharts: React.FC<Props> = props => {
     >
       <div className={styles.leftSelected}>
         {state.tabList && state.tabList.length > 0 && (
-          <Tree onSelect={handleChangeTab} defaultExpandAll>
+          <Tree
+            onSelect={handleChangeTab}
+            defaultExpandAll
+            defaultSelectedKeys={[state.tabKey]}
+          >
             {renderTreeNodes(state.tabList)}
           </Tree>
         )}
