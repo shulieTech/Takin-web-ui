@@ -19,6 +19,7 @@ import { customColumnProps } from 'src/components/custom-table/utils';
 import { MainPageLayout } from 'src/components/page-layout';
 import { Link, router } from 'umi';
 import styles from './index.less';
+import customStyles from './../../custom.less';
 import AddJmeterModal from './modals/AddJmeterModal';
 import BusicInfoModal from './modals/BasicInfoModal';
 import DebugScriptModal from './modals/DebugScriptModal';
@@ -288,11 +289,26 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             title={detailData.businessProcessName}
             description={
               <p>
-                <span>线程总数：</span>
-                <span>{detailData.threadGroupNum}</span>
-                <span style={{ marginLeft: 20 }}>匹配进度：</span>
-                <span>{detailData.linkRelateNum}</span>/
-                <span>{detailData.totalNodeNum}</span>
+                <span className={customStyles.alertLabel}>线程总数：</span>
+                <span className={customStyles.alertValueNormal}>
+                  {detailData.threadGroupNum}
+                </span>
+                <span
+                  className={customStyles.alertLabel}
+                  style={{ marginLeft: 20 }}
+                >
+                  匹配进度：
+                </span>
+                <span
+                  className={customStyles.alertValueNormal}
+                  style={{ color: 'var(--FunctionalSuccess-500)' }}
+                >
+                  {detailData.linkRelateNum}
+                </span>
+                <span className={customStyles.alertValueNormal}> / </span>
+                <span className={customStyles.alertValueNormal}>
+                  {detailData.totalNodeNum}
+                </span>
               </p>
             }
             img={
@@ -359,11 +375,15 @@ const BusinessFlowDetail: React.FC<Props> = props => {
               onChange={handleChangeThread}
               allowClear={false}
             />
-            <span>
+            <span className={customStyles.alertLabel}>
               当前线程组匹配进度：
-              <span>{threadDetail.linkRelateNum}</span>
-              <span>/</span>
-              <span>{threadDetail.totalNodeNum}</span>
+              <span className={customStyles.alertValueError}>
+                {threadDetail.linkRelateNum}
+              </span>
+              <span className={customStyles.alertValueNormal}> / </span>
+              <span className={customStyles.alertValueNormal}>
+                {threadDetail.totalNodeNum}
+              </span>
             </span>
           </Row>
           {state.treeData && (
