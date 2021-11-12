@@ -78,7 +78,7 @@ const LinkCharts: React.FC<Props> = props => {
                 <Tooltip title={item.testName} placement="right">
                   <span>{item.testName}</span>
                 </Tooltip>}
-              key={item.businessActivityId}
+              key={item.xpathMd5}
               dataRef={item}
               treeDefaultExpandAll={true}
               style={{ color: '#fff', width: 100 }}
@@ -90,7 +90,7 @@ const LinkCharts: React.FC<Props> = props => {
         return (
           <Tree.TreeNode
             style={{ color: '#fff' }}
-            key={item.businessActivityId}
+            key={item.xpathMd5}
             dataRef={item}
             title={
               <Tooltip title={item.testName} placement="right">

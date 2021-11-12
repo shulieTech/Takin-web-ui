@@ -37,7 +37,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     detailData: {},
     tabList: [],
     chartsInfo: {},
-    tabKey: 0,
+    tabKey: null,
     /** 风险机器应用key */
     riskAppKey: 0,
     /** 风险机器应用明细 */
@@ -65,7 +65,9 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   }, [state.isReload]);
 
   useEffect(() => {
-    queryReportChartsInfo(id, state.tabKey);
+    if (state.tabKey) {
+      queryReportChartsInfo(id, state.tabKey);
+    }
   }, [state.isReload, state.tabKey]);
 
   /**
@@ -129,7 +131,8 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     });
     if (success) {
       setState({
-        tabList: data
+        tabList: data,
+        tabKey: data && data[0].xpathMd5
       });
     }
   };
@@ -137,7 +140,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   /**
    * @name 获取压测报告趋势信息
    */
-  const queryReportChartsInfo = async (reportId, businessActivityId) => {
+  const queryReportChartsInfo = async (reportId, xpathMd5) => {
     const {
       data: {
         data: { activity, ...chartsInfo },
@@ -145,7 +148,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       }
     } = await PressureTestReportService.queryLinkChartsInfo({
       reportId,
-      businessActivityId
+      xpathMd5
     });
     if (success) {
       setState({
@@ -160,10 +163,6 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     {
       label: '压测时长',
       value: detailData.testTotalTime
-    },
-    {
-      label: '压测模式',
-      value: TestMode[detailData.pressureType]
     },
     {
       label: '开始时间',

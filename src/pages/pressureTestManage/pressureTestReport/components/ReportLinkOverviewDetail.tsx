@@ -53,7 +53,8 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务活动',
-        dataIndex: 'testName'
+        dataIndex: 'testName',
+        width: 300
       },
       {
         ...customColumnProps,
@@ -208,6 +209,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
     <Fragment>
       {state.data && (
         <CommonTable
+          key="xpathMd5"
           loading={state.loading}
           bordered
           size="small"
@@ -215,6 +217,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
           defaultExpandAllRows={true}
           columns={getReportLinkOverviewColumns()}
           dataSource={state.data ? state.data : []}
+          indentSize={8}
         />
       )}
     </Fragment>

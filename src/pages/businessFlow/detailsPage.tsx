@@ -135,6 +135,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
     } = await BusinessFlowService.queryMatchProcess({ id });
     if (success) {
       setState({
+        threadValue: undefined,
         fileModalValues: {
           fileTitle: '业务活动匹配',
           status: 'success',
