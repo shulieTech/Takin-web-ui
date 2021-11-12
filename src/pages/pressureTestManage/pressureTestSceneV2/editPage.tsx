@@ -197,6 +197,7 @@ const EditPage = (props) => {
             style={{ width: 600, margin: '40px auto' }}
             size="small"
             labelPlacement="vertical"
+            // current={2}
             dataSource={[
               { title: '压测目标', name: 'step-1' },
               { title: '施压配置', name: 'step-2' },
@@ -342,7 +343,7 @@ const EditPage = (props) => {
             <ConditionTable
               dictionaryMap={dictionaryMap}
               targetList={targetList}
-              name="stopCondition"
+              name="destroyMonitoringGoal"
               title={
                 <span style={{ fontSize: 16 }}>
                   终止条件
@@ -354,7 +355,7 @@ const EditPage = (props) => {
             <ConditionTable
               dictionaryMap={dictionaryMap}
               targetList={targetList}
-              name="warningCondition"
+              name="warnMonitoringGoal"
               title={<span style={{ fontSize: 16 }}>告警条件</span>}
             />
           </FormLayout>
