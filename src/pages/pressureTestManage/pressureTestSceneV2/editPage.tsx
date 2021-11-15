@@ -8,6 +8,7 @@ import {
   Submit,
   createAsyncFormActions,
   FormEffectHooks,
+  FormPath,
 } from '@formily/antd';
 import {
   Input,
@@ -135,6 +136,53 @@ const EditPage = (props) => {
         state.props['x-component-props'].targetValue = fieldState.value;
       });
     });
+
+    // 联动显示规则表格中的的单位
+    const getUnitConfig = (val) => {
+      switch (val) {
+        case '0':
+          return {
+            compact: true,
+            addonAfter: (
+              <Button disabled style={{ paddingLeft: 4, paddingRight: 4 }}>
+                ms
+              </Button>
+            ),
+          };
+        case '1':
+          return {
+            addonAfter: undefined,
+          };
+        default:
+          return {
+            compact: true,
+            addonAfter: (
+              <Button disabled style={{ paddingLeft: 4, paddingRight: 4 }}>
+                %
+              </Button>
+            ),
+          };
+      }
+    };
+    const changeUint = (fieldState) => {
+      const sourcePath = FormPath.parse(fieldState.path);
+      setFieldState(
+        sourcePath.slice(0, sourcePath.length - 1).concat('.formulaNumber'),
+        (state) => {
+          state.props['x-component-props'] = {
+            ...state.props['x-component-props'],
+            ...getUnitConfig(fieldState.value),
+          };
+        }
+      );
+    };
+    onFieldValueChange$('destroyMonitoringGoal.*.formulaTarget').subscribe(
+      changeUint
+    );
+
+    onFieldValueChange$('warnMonitoringGoal.*.formulaTarget').subscribe(
+      changeUint
+    );
   };
 
   /**
@@ -235,7 +283,7 @@ const EditPage = (props) => {
                 type="number"
                 x-component="Select"
                 x-component-props={{
-                  placeholder: '请选择'
+                  placeholder: '请选择',
                 }}
                 x-rules={[
                   {
@@ -281,7 +329,7 @@ const EditPage = (props) => {
                   },
                   min: 1,
                   precision: 0,
-                  addonAfter: <Button>分</Button>
+                  addonAfter: <Button>分</Button>,
                 }}
                 title="压测时长"
                 minimum={1}
@@ -349,26 +397,23 @@ const EditPage = (props) => {
               dictionaryMap={dictionaryMap}
               targetList={targetList}
               name="destroyMonitoringGoal"
-              title={
-                <span style={{ fontSize: 16 }}>
-                  终止条件
-                  <span style={{ color: '#f7917a', marginLeft: 8 }}>
-                    为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
-                  </span>
-                </span>}
+              title={<span style={{ fontSize: 16 }}>
+                终止条件
+                <span style={{ color: '#f7917a', marginLeft: 8 }}>
+                  为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+                </span>
+              </span>}
               arrayFieldProps={{
-                'x-rules': [
-                  { 
-                    validator: val => {
-                      if (!(val || []).some(x => x.formulaTarget === '0')) {
-                        return '请至少设置1条包含RT的终止条件';
-                      }
-                      if (!(val || []).some(x => x.formulaTarget === '2')) {
-                        return '请至少设置1条包含成功率的终止条件';
-                      }
-                    } 
-                  }
-                ]
+                'x-rules': [{
+                  validator: (val) => {
+                    if (!(val || []).some((x) => x.formulaTarget === '0')) {
+                      return '请至少设置1条包含RT的终止条件';
+                    }
+                    if (!(val || []).some((x) => x.formulaTarget === '2')) {
+                      return '请至少设置1条包含成功率的终止条件';
+                    }
+                  },
+                }],
               }}
             />
             <ConditionTable
@@ -477,7 +522,7 @@ const EditPage = (props) => {
               );
             }}
           </FormSpy>
-          <Submit/>
+          {/* <Submit/> */}
         </SchemaForm>
       </div>
     </Spin>
