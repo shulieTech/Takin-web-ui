@@ -51,7 +51,7 @@ const EditPage = (props) => {
     if (id) {
       const {
         data: { success, data },
-      } = await services.getSenceDetailV2({ id });
+      } = await services.getSenceDetailV2({ sceneId: id });
       if (success) {
         setInitialValue(data);
       }
@@ -187,6 +187,14 @@ const EditPage = (props) => {
     onFieldValueChange$('warnMonitoringGoal.*.formulaTarget').subscribe(
       changeUint
     );
+    
+    // 获取建议pod数
+    onFieldValueChange$('*(goal.*.tps, config.threadGroupConfigMap.*.mode)').subscribe(
+      fieldState => {
+        // TODO 获取建议pod数
+      }
+    );
+
   };
 
   /**
