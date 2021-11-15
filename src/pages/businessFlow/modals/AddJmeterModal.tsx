@@ -158,6 +158,12 @@ const AddJmeterModal: React.FC<Props> = props => {
           resolve(false);
           return false;
         }
+
+        if (!state.fileList) {
+          message.error('请检查表单必填项');
+          resolve(false);
+          return false;
+        }
         const {
           data: { data, success }
         } = await BusinessFlowService.saveAndAnalysis({
