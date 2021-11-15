@@ -13,8 +13,8 @@ export enum BusinessFlowBean {
  * @name 业务流程匹配颜色
  */
 export const businessFlowStatusColorMap = {
-  0: 'var(--BrandPrimary-500)',
-  1: 'var(--FunctionalError-500)'
+  1: 'var(--BrandPrimary-500)',
+  0: 'var(--FunctionalError-500)'
 };
 
 /**
