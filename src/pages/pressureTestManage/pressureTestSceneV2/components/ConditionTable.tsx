@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SchemaMarkupField as Field, FormSpy, LifeCycleTypes } from '@formily/antd';
+import { SchemaMarkupField as Field } from '@formily/antd';
 import { FormBlock, FormLayout, FormTextBox } from '@formily/antd-components';
 import styles from '../index.less';
 
@@ -11,17 +11,6 @@ export default (props) => {
     name,
     arrayFieldProps = {},
   } = props;
-
-  const getUnit = (val) => {
-    switch (val) {
-      case '0':
-        return 'ms';
-      case '1':
-        return '';
-      default:
-        return '%';
-    }
-  };
 
   return (
     <FormLayout
@@ -90,18 +79,18 @@ export default (props) => {
                   }}
                   x-rules={[{ required: true, message: '请选择' }]}
                   enum={SLA_TARGER_TYPE || []}
-                  x-linkages={[
-                    // 联动显示单位
-                    {
-                      type: 'value:schema',
-                      target: '.formulaNumber',
-                      schema: {
-                        'x-component-props': {
-                          addonAfter: `{{ {0: 'ms', 1: '', 2: '%', 3: '%', 4: '%', 5: '%'}[$self.value] }}`,
-                        },
-                      },
-                    },
-                  ]}
+                  // x-linkages={[
+                  //   // 联动显示单位
+                  //   {
+                  //     type: 'value:schema',
+                  //     target: '.formulaNumber',
+                  //     schema: {
+                  //       'x-component-props': {
+                  //         addonAfter: `{{ {0: 'ms', 1: '', 2: '%', 3: '%', 4: '%', 5: '%'}[$self.value] }}`,
+                  //       },
+                  //     },
+                  //   },
+                  // ]}
                 />
                 <Field
                   name="formulaSymbol"
