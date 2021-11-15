@@ -79,6 +79,9 @@ const EditPage = (props) => {
     if (!flowId) {
       return;
     }
+    actions.setFieldState('goal', (state) => {
+      state.props['x-component-props'].loading = true;
+    });
     const {
       data: { success, data },
     } = await services.getThreadTree({
@@ -90,6 +93,7 @@ const EditPage = (props) => {
         // setThreadTree(parsedData);
         actions.setFieldState('goal', (state) => {
           state.props['x-component-props'].treeData = parsedData || [];
+          state.props['x-component-props'].loading = false;
         });
         actions.setFieldState('config.threadGroupConfigMap', (state) => {
           state.props['x-component-props'].flatTreeData =
@@ -306,6 +310,7 @@ const EditPage = (props) => {
               x-component="TargetMap"
               x-component-props={{
                 treeData: [],
+                loading: false,
               }}
             />
           </FormLayout>

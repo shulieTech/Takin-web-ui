@@ -6,7 +6,7 @@ const TargetMap = (props) => {
   const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
 
-  const { treeData = [] } = componentProps;
+  const { treeData = [], loading = false } = componentProps;
 
   const renderInputTd = (record, fieldName, fieldLabel, fieldProps = {}) => {
     if (['TEST_PLAN', 'THREAD_GROUP'].includes(record.type)) {
@@ -77,6 +77,7 @@ const TargetMap = (props) => {
   return (
     <Table
       key={JSON.stringify(treeData)}
+      loading={loading}
       columns={columns}
       pagination={false}
       dataSource={treeData}
