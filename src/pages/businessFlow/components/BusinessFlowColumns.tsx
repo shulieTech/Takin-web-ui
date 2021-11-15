@@ -236,6 +236,7 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
               }
             >
               <Button
+                disabled={row[BusinessFlowBean.来源] === 0 ? true : false}
                 style={{ marginRight: 8 }}
                 type="link"
                 onClick={() =>

@@ -630,31 +630,6 @@ const StepB = (state, setState, props): FormCardMultipleDataSourceBean => {
                 )}
               </div>
             </div>
-            {/** 已经注释，三变要求不展示 */}
-            {/* <div
-               className={styles.linkListRight}
-               style={{ minWidth: 350, width: '30%' }}
-             >
-               <p className={styles.linkListTitle} style={{ minWidth: 350 }}>
-                 关联中间件列表
-               </p>
- 
-               {(!state.treeData.length || !state.middleWareList) && (
-                 <p
-                   className={styles.linkListWithoutData}
-                   style={{ width: 350 }}
-                 >
-                   配置业务活动后自动带出
-                 </p>
-               )}
-               {state.treeData.length !== 0 && state.middleWareList && (
-                 <CommonTable
-                   size="small"
-                   columns={getMiddleWareColumns()}
-                   dataSource={state.middleWareList}
-                 />
-               )}
-             </div> */}
           </div>
         )
       }
