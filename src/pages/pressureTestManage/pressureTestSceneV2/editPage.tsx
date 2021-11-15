@@ -477,7 +477,7 @@ const EditPage = (props) => {
               );
             }}
           </FormSpy>
-          <Submit/>
+          {/* <Submit/> */}
         </SchemaForm>
       </div>
     </Spin>

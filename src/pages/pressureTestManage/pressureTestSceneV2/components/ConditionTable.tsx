@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { SchemaMarkupField as Field } from '@formily/antd';
+import { SchemaMarkupField as Field, FormSpy, LifeCycleTypes } from '@formily/antd';
 import { FormBlock, FormLayout, FormTextBox } from '@formily/antd-components';
+import styles from '../index.less';
 
 export default (props) => {
   const {
@@ -10,8 +11,6 @@ export default (props) => {
     name,
     arrayFieldProps = {},
   } = props;
-
-  const [unit, setUnit] = useState('');
 
   const getUnit = (val) => {
     switch (val) {
@@ -71,9 +70,14 @@ export default (props) => {
                 value: x.businessActivityId,
               }))}
             />
-            <Field title="规则" type="object" x-component="block">
+            <Field
+              title="规则"
+              type="object"
+              x-component="block"
+              x-component-props={{ className: styles['rule-td'] }}
+            >
               <FormTextBox
-                text={`%s %s %s ${unit} 连续出现 %s次`}
+                text={`%s %s %s 连续出现 %s次`}
                 gutter={8}
                 name="textBox"
               >
@@ -83,12 +87,21 @@ export default (props) => {
                   x-component="Select"
                   x-component-props={{
                     placeholder: '指标',
-                    // onChange: (val) => {
-                    //   setUnit(getUnit(val));
-                    // },
                   }}
                   x-rules={[{ required: true, message: '请选择' }]}
                   enum={SLA_TARGER_TYPE || []}
+                  x-linkages={[
+                    // 联动显示单位
+                    {
+                      type: 'value:schema',
+                      target: '.formulaNumber',
+                      schema: {
+                        'x-component-props': {
+                          addonAfter: `{{ {0: 'ms', 1: '', 2: '%', 3: '%', 4: '%', 5: '%'}[$self.value] }}`,
+                        },
+                      },
+                    },
+                  ]}
                 />
                 <Field
                   name="formulaSymbol"
@@ -102,7 +115,11 @@ export default (props) => {
                   name="formulaNumber"
                   type="number"
                   x-component="NumberPicker"
-                  x-component-props={{ placeholder: '数值' }}
+                  x-component-props={{
+                    placeholder: '数值',
+                    compact: false,
+                    addonAfter: '',
+                  }}
                   x-rules={[{ required: true, message: '请输入数值' }]}
                 />
                 <Field
