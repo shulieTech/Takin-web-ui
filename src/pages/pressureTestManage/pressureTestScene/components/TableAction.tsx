@@ -48,7 +48,10 @@ const PressureTestSceneTableAction: React.FC<Props> = props => {
           btnAuthority.pressureTestManage_pressureTestScene_2_create
         }
       >
-        <Link to="/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=add">
+        {/* <Link to="/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=add">
+          <Button type="primary">新增压测场景</Button>
+        </Link> */}
+        <Link to="/pressureTestManage/pressureTestSceneV2/edit">
           <Button type="primary">新增压测场景</Button>
         </Link>
       </AuthorityBtn>

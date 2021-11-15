@@ -132,12 +132,66 @@ const PressureTestSceneService = {
     const url = '/scenemanage/positionPoint';
     return httpGet(url, data);
   },
+
+  // =================== v2 ===========
+
   /**
-   * @name 获取所有业务活动
+   * @name 获取业务流程列表
    */
-  async queryBussinessActive(data = {}) {
-    const url = '/link/bussinessActive';
+  async business_activity_flow(data) {
+    const url = '/v2/scene/business_activity_flow';
     return httpGet(url, data);
+  },
+  /**
+   * @name 创建压测场景
+   */
+  async createSenceV2(data = {}) {
+    const url = '/v2/scene/create';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 更新压测场景
+   */
+  async updateSenceV2(data = {}) {
+    const url = '/v2/scene/update';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 获取压测场景详情
+   */
+  async getSenceDetailV2(data) {
+    const url = '/v2/scene/detail';
+    return httpGet(url, data);
+  },
+  /**
+   * 
+   * @param data 
+   * @returns 
+   */
+  async getThreadTree(data) {
+    const url = '/v2/scene/business_activity_flow/detail';
+    return httpGet(url, data);
+  },
+  // /**
+  //  * @name 业务流程详情获取
+  //  */
+  // async sceneDetail(data) {
+  //   const url = '/businessFlow/scene/detail';
+  //   return httpGet(url, data);
+  // },
+  // /**
+  //  * @name 业务流程详情获取线程组内容详情
+  //  */
+  // async threadGroupDetail(data) {
+  //   const url = '/businessFlow/scene/threadGroupDetail';
+  //   return httpGet(url, data);
+  // },
+  /**
+   * @name 获取漏数验证脚本
+   */
+  async queryMissingDataScriptList(data = {}) {
+    const url = '/leak/sql/batch';
+    return httpPost(url, data);
   },
 };
 

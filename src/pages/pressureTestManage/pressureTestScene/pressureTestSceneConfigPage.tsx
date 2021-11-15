@@ -9,7 +9,6 @@ import CustomSkeleton from 'src/common/custom-skeleton';
 import FormCardMultiple from 'src/components/form-card-multiple';
 import { BasePageLayout } from 'src/components/page-layout';
 import BusinessActivityService from 'src/pages/businessActivity/service';
-import BusinessFlowService from 'src/pages/businessFlow/service';
 import router from 'umi/router';
 import BaseInfo from './components/BaseInfo';
 import BusinessActivityConfig from './components/BusinessActivityConfig';
@@ -331,7 +330,7 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
   const queryBussinessActive = async () => {
     const {
       data: { success, data }
-    } = await BusinessFlowService.queryBussinessActive({});
+    } = await PressureTestSceneService.queryBussinessActive({});
     if (success) {
       setState({
         bussinessActiveList:
