@@ -54,12 +54,11 @@ const ConfigMap = (props: IFieldMergeState) => {
                           message: '请选择压力模式',
                         },
                       ],
-                      // TODO 这里的联动没生效
                       'x-linkages': [
                         {
                           type: 'value:schema',
-                          target: '.mode',
-                          condition: '{{ $value === 1 }}',
+                          target: FormPath.parse(path).concat(`${x.xpathMd5}.mode`),
+                          condition: '{{ $self.value === 1 }}',
                           schema: {
                             enum: [{ label: '固定压力值', value: 1 }],
                           },
@@ -70,6 +69,14 @@ const ConfigMap = (props: IFieldMergeState) => {
                               { label: '阶梯递增', value: 3 },
                             ],
                           },
+                        },
+                        {
+                          type: 'value:state',
+                          target: FormPath.parse(path).concat(`${x.xpathMd5}.mode`),
+                          condition: '{{ $self.value === 1 }}',
+                          state: {
+                            value: 1,
+                          }
                         },
                       ],
                       default: 0,
