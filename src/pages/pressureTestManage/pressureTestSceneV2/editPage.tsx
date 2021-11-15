@@ -245,7 +245,7 @@ const EditPage = (props) => {
             style={{ width: 600, margin: '40px auto' }}
             size="small"
             labelPlacement="vertical"
-            current={2}
+            // current={2}
             dataSource={[
               { title: '压测目标', name: 'step-1' },
               { title: '施压配置', name: 'step-2' },
