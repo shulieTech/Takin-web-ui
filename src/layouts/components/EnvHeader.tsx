@@ -10,7 +10,9 @@ const EnvHeader: React.FC<Props> = (props) => {
   const [desc, setDesc] = useState('');
 
   useEffect(() => {
-    queryTenantList();
+    if (getTakinAuthority() === 'true') {
+      queryTenantList();
+    }
   }, []);
 
   const queryTenantList = async () => {
