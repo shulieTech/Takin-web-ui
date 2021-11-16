@@ -188,12 +188,14 @@ const EditPage = (props) => {
       changeUint
     );
     
-    // 获取建议pod数
-    onFieldValueChange$('*(goal.*.tps, config.threadGroupConfigMap.*.mode)').subscribe(
-      fieldState => {
-        // TODO 获取建议pod数
-      }
-    );
+    if (getTakinAuthority() === 'true') {
+      // 获取建议pod数
+      onFieldValueChange$('*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)').subscribe(
+        fieldState => {
+          // TODO 获取建议pod数
+        }
+      );
+    }
 
   };
 
@@ -378,7 +380,6 @@ const EditPage = (props) => {
                   min: 1,
                   default: 1,
                   addonAfter: <Button>建议Pod数: -</Button>,
-                  // TODO 获取建议pod数
                   disabled: getTakinAuthority() !== 'true',
                 }}
                 title={
@@ -417,6 +418,7 @@ const EditPage = (props) => {
                 </span>
               </span>}
               arrayFieldProps={{
+                default: [{}],
                 minItems: 1,
                 // 'x-rules': [{
                 //   validator: (val) => {

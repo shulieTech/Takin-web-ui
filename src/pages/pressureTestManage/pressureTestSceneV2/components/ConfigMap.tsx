@@ -85,6 +85,11 @@ const ConfigMap = (props: IFieldMergeState) => {
                             value: 1,
                           }
                         },
+                        {
+                          type: 'value:visible',
+                          target: FormPath.parse(path).concat(`${x.xpathMd5}.threadNum`),
+                          condition: '{{ $self.value === 0 }}',
+                        },
                       ],
                       default: 0,
                     })
