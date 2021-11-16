@@ -77,9 +77,9 @@ const TargetMap = (props) => {
     },
     {
       title: '目标成功率(%)',
-      dataIndex: 'rs',
+      dataIndex: 'sr',
       render: (text, record, index) =>
-        renderInputTd(record, 'rs', '目标成功率', { max: 100 }),
+        renderInputTd(record, 'sr', '目标成功率', { max: 100 }),
     },
     {
       title: '目标SA(%)',
