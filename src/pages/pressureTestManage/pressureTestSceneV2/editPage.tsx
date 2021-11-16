@@ -211,7 +211,7 @@ const EditPage = (props) => {
                 flatTreeData
                   .filter((x) => x.parentId === parentId)
                   .forEach((x) => {
-                    sum += valueMap[x.xpathMd5].tps;
+                    sum += valueMap?.[x.xpathMd5]?.tps || 0;
                     getTpsSum(valueMap, x.xpathMd5);
                   });
                 return sum;
