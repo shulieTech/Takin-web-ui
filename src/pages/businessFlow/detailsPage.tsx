@@ -310,7 +310,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         </Link>
         <div className={styles.borders}>
           <CustomDetailHeader
-            title={detailData.businessProcessName}
+            title={detailData.businessProcessName && detailData.businessProcessName.length > 30 ? <Tooltip title={detailData.businessProcessName} >{detailData.businessProcessName.substring(0, 30)}...</Tooltip> : detailData.businessProcessName}
             description={
               <p>
                 <span className={customStyles.alertLabel}>线程总数：</span>
