@@ -294,7 +294,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           sceneLevel={detailData.sceneLevel}
           onSuccess={() => {
             setState({
-              isReload: state.isReload
+              isReload: !state.isReload
             });
           }}
         />
