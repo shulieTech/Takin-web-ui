@@ -25,7 +25,7 @@ const RootDirectory: React.FC<Props> = props => {
         message.info('请检查表单必填项');
         return;
       }
-      console.log(values);
+      // console.log(values);
       props.form.resetFields();
     });
   };
