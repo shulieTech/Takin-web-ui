@@ -388,7 +388,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           </Row>
           {state.treeData && (
             <CustomTable
-              rowKey="id"
+              rowKey="xpathMd5"
               columns={getColumns()}
               size="small"
               dataSource={state.treeData}
