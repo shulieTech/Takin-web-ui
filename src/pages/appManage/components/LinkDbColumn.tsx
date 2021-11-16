@@ -157,7 +157,7 @@ const getLinkDbColumns = (
                 </a>
               </CustomPopconfirm>
             </AuthorityBtn>
-            {row.isNewPage ? (
+            {row.isNewPage && row.canEdit ? (
               <EditDynamicDbDrawer
                 titles="编辑"
                 middlewareType={row.middlewareType}
