@@ -49,11 +49,13 @@ interface Props extends Basic.BaseProps {
 }
 const BusinessActivityDetails: React.FC<Props> = (props) => {
   const defaultState = getInitState();
-  const [state, setState] = useStateReducer<State>({ 
+  const [state, setState] = useStateReducer<State>({
     ...defaultState,
     queryParams: {
       ...defaultState.queryParams,
-      ...(props.location.query.jsonParam ? JSON.parse(props.location.query.jsonParam) : {})
+      ...(props.location.query.jsonParam
+        ? JSON.parse(props.location.query.jsonParam)
+        : {}),
     },
   });
 
@@ -83,7 +85,14 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
       data: { data, success },
     } = await BusinessActivityService.getBusinessActivityDetails({
       activityId: id,
-      ...state.queryParams,
+      ...(state.refreshTime > 0
+        ? {
+          ...state.queryParams,
+          startTime: undefined,
+          endTime: undefined,
+          timeGap: undefined,
+        }
+        : state.queryParams),
     });
     setState({
       detailLoading: false,
@@ -244,7 +253,8 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
                     延迟：链路性能数据涉及大量数据计算与采集，数据存在一定延迟，大概2分钟左右。
                   </div>
                 }
-                beforeHeaderNode={<div className={styles.dropdownBtn}>
+                beforeHeaderNode={
+                  <div className={styles.dropdownBtn}>
                     监控详情：
                     <Switch
                       style={{ verticalAlign: 4 }}
