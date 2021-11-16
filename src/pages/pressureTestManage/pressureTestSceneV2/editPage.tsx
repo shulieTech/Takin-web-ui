@@ -417,16 +417,17 @@ const EditPage = (props) => {
                 </span>
               </span>}
               arrayFieldProps={{
-                'x-rules': [{
-                  validator: (val) => {
-                    if (!(val || []).some((x) => x.formulaTarget === '0')) {
-                      return '请至少设置1条包含RT的终止条件';
-                    }
-                    if (!(val || []).some((x) => x.formulaTarget === '2')) {
-                      return '请至少设置1条包含成功率的终止条件';
-                    }
-                  },
-                }],
+                minItems: 1,
+                // 'x-rules': [{
+                //   validator: (val) => {
+                //     if (!(val || []).some((x) => x.formulaTarget === '0')) {
+                //       return '请至少设置1条包含RT的终止条件';
+                //     }
+                //     if (!(val || []).some((x) => x.formulaTarget === '2')) {
+                //       return '请至少设置1条包含成功率的终止条件';
+                //     }
+                //   },
+                // }],
               }}
             />
             <ConditionTable

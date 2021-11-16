@@ -12,7 +12,9 @@ const TargetMap = (props) => {
     if (['TEST_PLAN', 'THREAD_GROUP'].includes(record.type)) {
       return null;
     }
-    const tdPath = FormPath.parse(path).concat(`${record.xpathMd5}.${fieldName}`);
+    const tdPath = FormPath.parse(path).concat(
+      `${record.xpathMd5}.${fieldName}`
+    );
     return (
       <SchemaField
         path={tdPath}
@@ -28,9 +30,7 @@ const TargetMap = (props) => {
               },
               ...fieldProps,
             },
-            'x-rules': [
-              { required: true, message: `请输入${fieldLabel}` }
-            ],
+            'x-rules': [{ required: true, message: `请输入${fieldLabel}` }],
           })
         }
       />
@@ -40,7 +40,7 @@ const TargetMap = (props) => {
   const columns = [
     {
       title: '线程',
-      dataIndex: 'name',
+      dataIndex: 'testName',
       render: (text, record, index) => {
         return <span>{text}</span>;
       },
@@ -49,13 +49,26 @@ const TargetMap = (props) => {
       title: '类型',
       dataIndex: 'type',
       render: (text, record, index) => {
-        return <span>{text}</span>;
+        return (
+          <span>
+            {
+              {
+                TEST_PLAN: '',
+                THREAD_GROUP: '线程组',
+                CONTROLLER: '逻辑控制器',
+                SAMPLER: 'API',
+              }[text]
+            }
+          </span>
+        );
       },
     },
     {
       title: '目标TPS',
       dataIndex: 'tps',
-      render: (text, record, index) => renderInputTd(record, 'tps', '目标TPS'),
+      render: (text, record, index) => (
+        <span>{renderInputTd(record, 'tps', '目标TPS')}</span>
+      ),
     },
     {
       title: '目标RT(ms)',
@@ -65,12 +78,14 @@ const TargetMap = (props) => {
     {
       title: '目标成功率(%)',
       dataIndex: 'rs',
-      render: (text, record, index) => renderInputTd(record, 'rs', '目标成功率', { max: 100 }),
+      render: (text, record, index) =>
+        renderInputTd(record, 'rs', '目标成功率', { max: 100 }),
     },
     {
       title: '目标SA(%)',
       dataIndex: 'sa',
-      render: (text, record, index) => renderInputTd(record, 'sa', '目标SA', { max: 100 }),
+      render: (text, record, index) =>
+        renderInputTd(record, 'sa', '目标SA', { max: 100 }),
     },
   ];
 
