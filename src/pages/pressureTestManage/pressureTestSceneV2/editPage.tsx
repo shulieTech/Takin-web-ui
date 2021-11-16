@@ -29,7 +29,6 @@ import NumberPicker from './components/NumberPicker';
 import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
-import { flatTree } from './utils';
 import { cloneDeep } from 'lodash';
 
 const { onFieldValueChange$, onFormMount$ } = FormEffectHooks;
@@ -97,6 +96,26 @@ const EditPage = (props) => {
           state.props['x-component-props'].loading = false;
         });
         actions.setFieldState('config.threadGroupConfigMap', (state) => {
+          /**
+           * 树结构平铺
+           * @param nodes
+           * @param parentId
+           * @returns
+           */
+          const result = [];
+          const flatTree = (nodes, parentId = '-1', idName = 'id') => {
+            if (Array.isArray(nodes) && nodes.length > 0) {
+              nodes.forEach((node) => {
+                const { children, ...rest } = node;
+                result.push({
+                  parentId,
+                  ...rest,
+                });
+                flatTree(node.children, node[idName], idName);
+              });
+              return result;
+            }
+          };
           state.props['x-component-props'].flatTreeData =
             flatTree(parsedData, '-1', 'xpathMd5') || [];
         });
