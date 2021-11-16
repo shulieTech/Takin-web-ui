@@ -51,7 +51,7 @@ const EditPage = (props) => {
     if (id) {
       const {
         data: { success, data },
-      } = await services.getSenceDetailV2({ id });
+      } = await services.getSenceDetailV2({ sceneId: id });
       if (success) {
         setInitialValue(data);
       }
@@ -79,6 +79,9 @@ const EditPage = (props) => {
     if (!flowId) {
       return;
     }
+    actions.setFieldState('goal', (state) => {
+      state.props['x-component-props'].loading = true;
+    });
     const {
       data: { success, data },
     } = await services.getThreadTree({
@@ -90,6 +93,7 @@ const EditPage = (props) => {
         // setThreadTree(parsedData);
         actions.setFieldState('goal', (state) => {
           state.props['x-component-props'].treeData = parsedData || [];
+          state.props['x-component-props'].loading = false;
         });
         actions.setFieldState('config.threadGroupConfigMap', (state) => {
           state.props['x-component-props'].flatTreeData =
@@ -183,6 +187,16 @@ const EditPage = (props) => {
     onFieldValueChange$('warnMonitoringGoal.*.formulaTarget').subscribe(
       changeUint
     );
+    
+    if (getTakinAuthority() === 'true') {
+      // 获取建议pod数
+      onFieldValueChange$('*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)').subscribe(
+        fieldState => {
+          // TODO 获取建议pod数
+        }
+      );
+    }
+
   };
 
   /**
@@ -306,6 +320,7 @@ const EditPage = (props) => {
               x-component="TargetMap"
               x-component-props={{
                 treeData: [],
+                loading: false,
               }}
             />
           </FormLayout>
@@ -365,7 +380,6 @@ const EditPage = (props) => {
                   min: 1,
                   default: 1,
                   addonAfter: <Button>建议Pod数: -</Button>,
-                  // TODO 获取建议pod数
                   disabled: getTakinAuthority() !== 'true',
                 }}
                 title={
@@ -404,16 +418,18 @@ const EditPage = (props) => {
                 </span>
               </span>}
               arrayFieldProps={{
-                'x-rules': [{
-                  validator: (val) => {
-                    if (!(val || []).some((x) => x.formulaTarget === '0')) {
-                      return '请至少设置1条包含RT的终止条件';
-                    }
-                    if (!(val || []).some((x) => x.formulaTarget === '2')) {
-                      return '请至少设置1条包含成功率的终止条件';
-                    }
-                  },
-                }],
+                default: [{}],
+                minItems: 1,
+                // 'x-rules': [{
+                //   validator: (val) => {
+                //     if (!(val || []).some((x) => x.formulaTarget === '0')) {
+                //       return '请至少设置1条包含RT的终止条件';
+                //     }
+                //     if (!(val || []).some((x) => x.formulaTarget === '2')) {
+                //       return '请至少设置1条包含成功率的终止条件';
+                //     }
+                //   },
+                // }],
               }}
             />
             <ConditionTable

@@ -285,7 +285,8 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
               >
                 <Link
                   style={{ marginRight: 8 }}
-                  to={`/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`}
+                  to={row.hasAnalysisResult ? `/pressureTestManage/pressureTestSceneV2/edit?id=${row.id}` : 
+                  `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`}
                 >
                   编辑
                 </Link>

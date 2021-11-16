@@ -17,20 +17,27 @@ const ConfigMap = (props: IFieldMergeState) => {
   const componentProps = schema.getExtendsComponentProps() || {};
   const { flatTreeData = [], targetValue = {} } = componentProps;
 
-  // 过滤所有值为空的项
-  const filterEmptyTargetMap = { ...targetValue };
-  Object.entries(targetValue).forEach(([x, y]) => {
-    if (Object.values(y).every(z => !Boolean(z))) {
-      delete filterEmptyTargetMap[x];
+  // // 过滤所有值为空的项
+  // const filterEmptyTargetMap = { ...targetValue };
+  // Object.entries(targetValue).forEach(([x, y]) => {
+  //   if (Object.values(y).every(z => !Boolean(z))) {
+  //     delete filterEmptyTargetMap[x];
+  //   }
+  // });
+
+  const groupMap = {};
+  // 取出线程组
+  flatTreeData.forEach(x => {
+    if (x.type === 'THREAD_GROUP') {
+      groupMap[x.xpathMd5] = x;
     }
   });
 
   return (
-    <Collapse {...componentProps} defaultActiveKey={Object.keys(filterEmptyTargetMap)?.slice(0, 3)}>
-      {Object.keys(filterEmptyTargetMap).map((z) => {
-        const x = flatTreeData.find(item => item.xpathMd5 === z) || {};
+    <Collapse {...componentProps} defaultActiveKey={Object.keys(groupMap)?.slice(0, 3)}>
+      {Object.values(groupMap).map((x: any) => {
         return (
-          <Panel header={x.name} key={x.xpathMd5}>
+          <Panel header={x.testName} key={x.xpathMd5}>
             <Row gutter={16}>
               <Col span={12}>
                 <SchemaField
@@ -54,12 +61,11 @@ const ConfigMap = (props: IFieldMergeState) => {
                           message: '请选择压力模式',
                         },
                       ],
-                      // TODO 这里的联动没生效
                       'x-linkages': [
                         {
                           type: 'value:schema',
-                          target: '.mode',
-                          condition: '{{ $value === 1 }}',
+                          target: FormPath.parse(path).concat(`${x.xpathMd5}.mode`),
+                          condition: '{{ $self.value === 1 }}',
                           schema: {
                             enum: [{ label: '固定压力值', value: 1 }],
                           },
@@ -70,6 +76,19 @@ const ConfigMap = (props: IFieldMergeState) => {
                               { label: '阶梯递增', value: 3 },
                             ],
                           },
+                        },
+                        {
+                          type: 'value:state',
+                          target: FormPath.parse(path).concat(`${x.xpathMd5}.mode`),
+                          condition: '{{ $self.value === 1 }}',
+                          state: {
+                            value: 1,
+                          }
+                        },
+                        {
+                          type: 'value:visible',
+                          target: FormPath.parse(path).concat(`${x.xpathMd5}.threadNum`),
+                          condition: '{{ $self.value === 0 }}',
                         },
                       ],
                       default: 0,
