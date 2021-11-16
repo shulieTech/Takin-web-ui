@@ -23,7 +23,7 @@ const ValidateCommand = (props) => {
   };
 
   useEffect(() => {
-    if (businessActivityIds) {
+    if (businessActivityIds && businessActivityIds.length > 0) {
       queryMissingDataScriptList({ businessActivityIds });
     }
   }, [JSON.stringify(businessActivityIds)]);

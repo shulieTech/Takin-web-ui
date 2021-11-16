@@ -37,8 +37,7 @@ const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
   const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
-  // const [threadTree, setThreadTree] = useState([]);
-  const [targetList, setTargetList] = useState([]);
+  const [flatTreeData, setFlatTreeData] = useState([]);
   const [initialValue, setInitialValue] = useState({});
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -116,32 +115,13 @@ const EditPage = (props) => {
               return result;
             }
           };
-          state.props['x-component-props'].flatTreeData =
-            flatTree(parsedData, '-1', 'xpathMd5') || [];
+          const flatTreeData1 = flatTree(parsedData, '-1', 'xpathMd5') || [];
+          setFlatTreeData(flatTreeData1);
+          state.props['x-component-props'].flatTreeData = flatTreeData1;
         });
       } catch (error) {
         throw error;
       }
-    }
-  };
-
-  /**
-   * 获取流程关联的活动列表
-   * @param businessFlowId
-   */
-  const getBusinessActivityIds = async (businessFlowId) => {
-    const {
-      data: { success, data },
-    } = await services.queryBussinessActivityListWithBusinessFlow({
-      businessFlowId,
-    });
-    if (success) {
-      setTargetList(data);
-      const businessActivityIds = (data || []).map((x) => x.businessActivityId);
-      actions.setFieldState('dataValidation.content', (state) => {
-        state.props['x-component-props'].businessActivityIds =
-          businessActivityIds;
-      });
     }
   };
 
@@ -152,7 +132,6 @@ const EditPage = (props) => {
     const { setFieldState, dispatch, getFieldState } = actions;
     onFieldValueChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       getThreadTree(fieldState.value);
-      getBusinessActivityIds(fieldState.value);
     });
 
     onFieldValueChange$('.goal').subscribe((fieldState) => {
@@ -222,12 +201,12 @@ const EditPage = (props) => {
           getFieldState('goal', async (state) => {
             Object.keys(configMap || {}).forEach((groupKey) => {
               let sum = 0;
-              const flatTreeData =
+              const flatTreeData2 =
                 configState.props['x-component-props'].flatTreeData;
 
               // 递归tps求和
               const getTpsSum = (valueMap, parentId) => {
-                flatTreeData
+                flatTreeData2
                   .filter((x) => x.parentId === parentId)
                   .forEach((x) => {
                     sum += valueMap?.[x.xpathMd5]?.tps || 0;
@@ -465,7 +444,7 @@ const EditPage = (props) => {
           >
             <ConditionTable
               dictionaryMap={dictionaryMap}
-              targetList={targetList}
+              flatTreeData={flatTreeData}
               name="destroyMonitoringGoal"
               title={
                 <span style={{ fontSize: 16 }}>
@@ -491,7 +470,7 @@ const EditPage = (props) => {
             />
             <ConditionTable
               dictionaryMap={dictionaryMap}
-              targetList={targetList}
+              flatTreeData={flatTreeData}
               name="warnMonitoringGoal"
               title={<span style={{ fontSize: 16 }}>告警条件</span>}
               arrayFieldProps={{
