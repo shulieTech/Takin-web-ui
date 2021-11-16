@@ -197,7 +197,9 @@ export function errorProcess(response: BaseResponse) {
   const { status, data, config, headers } = response;
   const statusFilter = config.headers.statusFilter;
   const takinAuthority = headers['takin-authority'];
+  const takinTenantAuthority = headers['takin-tenant-authority'];
   localStorage.setItem('takinAuthority', takinAuthority);
+  localStorage.setItem('takinTenantAuthority', takinTenantAuthority);
   if (statusFilter) {
     switch (statusFilter.type) {
       case 'all':

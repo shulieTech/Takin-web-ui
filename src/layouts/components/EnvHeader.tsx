@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Menu, Icon, Button } from 'antd';
-import { getTakinAuthority } from 'src/utils/utils';
+import { getTakinTenantAuthority } from 'src/utils/utils';
 import tenantCode from './service';
 interface Props { }
 
@@ -10,30 +10,17 @@ const EnvHeader: React.FC<Props> = (props) => {
   const [desc, setDesc] = useState('');
 
   useEffect(() => {
-    if (getTakinAuthority() === 'true') {
+    if (getTakinTenantAuthority() === 'true') {
       queryTenantList();
     }
   }, []);
 
   const queryTenantList = async () => {
     const {
-      headers,
       data: { success, data }
     } = await tenantCode.tenant({
       tenantCode: localStorage.getItem('tenant-code')
     });
-    const takinAuthority = headers['takin-authority'];
-    if (takinAuthority === 'false') {
-      localStorage.setItem('tenant-code', data[0]?.tenantCode);
-      const arr = data[0]?.envs.filter(item => {
-        if (item.isDefault) {
-          return item;
-        }
-      });
-      if (localStorage.getItem('env-code') === null) {
-        localStorage.setItem('env-code', arr[0]?.envCode);
-      }
-    }
     if (success) {
       setTenantList(data);
       setEnvList(data[0]?.envs);
@@ -95,7 +82,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         lineHeight: '32px',
         padding: '0 8px',
         marginTop: 8,
-        display: getTakinAuthority() === 'false' ? 'none' : 'flex',
+        display: getTakinTenantAuthority() === 'false' ? 'none' : 'flex',
         justifyContent: 'flex-end',
       }}
     >
