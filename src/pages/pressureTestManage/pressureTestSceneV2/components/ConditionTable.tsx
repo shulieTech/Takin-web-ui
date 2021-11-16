@@ -52,12 +52,17 @@ export default (props) => {
               name="target"
               type="array"
               x-component="Select"
-              x-component-props={{ placeholder: '请选择', multiple: true }}
+              x-component-props={{ placeholder: '请选择', mode: 'multiple' }}
               x-rules={[{ required: true, message: '请输入规则名称' }]}
-              enum={targetList.map((x) => ({
-                label: x.businessActivityName,
-                value: x.businessActivityId,
-              }))}
+              enum={targetList
+                .concat({
+                  businessActivityName: '全部',
+                  businessActivityId: -1,
+                })
+                .map((x) => ({
+                  label: x.businessActivityName,
+                  value: x.businessActivityId,
+                }))}
             />
             <Field
               title="规则"
