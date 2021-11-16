@@ -152,10 +152,12 @@ const EditPage = (props) => {
                 ms
               </Button>
             ),
+            max: undefined,
           };
         case '1':
           return {
             addonAfter: undefined,
+            max: undefined,
           };
         default:
           return {
@@ -165,6 +167,7 @@ const EditPage = (props) => {
                 %
               </Button>
             ),
+            max: 100,
           };
       }
     };
