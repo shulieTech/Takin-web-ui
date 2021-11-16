@@ -144,8 +144,8 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           footerTxt: `本次匹配完成，时间：${data.finishDate}`,
           extraNode: (
             <p>
-              本次共自动匹配 <span>{data.matchNum}</span> 条API,剩{' '}
-              <span>{data.unMatchNum}</span>条手动匹配
+              本次共自动匹配 <span>{data.matchNum}</span> 条API，剩
+              <span> {data.unMatchNum} </span>条手动匹配
             </p>
           )
         }

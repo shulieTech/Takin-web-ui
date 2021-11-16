@@ -49,7 +49,7 @@ const BusicInfoModal: React.FC<Props> = props => {
         key: 'isCore',
         label: '类型',
         options: {
-          initialValue: props.isCore,
+          initialValue: String(props.isCore),
           rules: [
             {
               required: false,

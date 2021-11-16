@@ -53,6 +53,7 @@ const MatchModal: React.FC<Props> = props => {
   useEffect(() => {
     if (props.entranceApp && props.entrancePath) {
       queryBusinessActivityName(props.entranceApp, props.entrancePath);
+      queryEntryPath(props.entranceApp);
     }
   }, []);
 
