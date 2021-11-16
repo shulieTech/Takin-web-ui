@@ -9,7 +9,7 @@ const TargetMap = (props) => {
   const { treeData = [], loading = false } = componentProps;
 
   const renderInputTd = (record, fieldName, fieldLabel, fieldProps = {}) => {
-    if (['TEST_PLAN', 'THREAD_GROUP'].includes(record.type)) {
+    if (!['SAMPLER'].includes(record.type)) {
       return null;
     }
     const tdPath = FormPath.parse(path).concat(
