@@ -54,11 +54,13 @@ export default (props) => {
               x-component="Select"
               x-component-props={{ placeholder: '请选择', mode: 'multiple' }}
               x-rules={[{ required: true, message: '请输入规则名称' }]}
-              enum={
-                ([{
+              enum={[
+                {
                   businessActivityName: '全部',
                   businessActivityId: -1,
-                }]).concat(targetList)
+                },
+              ]
+                .concat(targetList)
                 .map((x) => ({
                   label: x.businessActivityName,
                   value: x.businessActivityId,
@@ -121,8 +123,11 @@ export default (props) => {
                   name="numberOfIgnore"
                   type="number"
                   x-component="NumberPicker"
-                  x-component-props={{ placeholder: '数值' }}
-                  x-rules={[{ required: true, message: '请输入数值' }]}
+                  x-component-props={{ placeholder: '数值', min: 1 }}
+                  x-rules={[
+                    { required: true, message: '请输入数值' },
+                    { format: 'integer', message: '请输入整数' },
+                  ]}
                 />
               </FormTextBox>
             </Field>
