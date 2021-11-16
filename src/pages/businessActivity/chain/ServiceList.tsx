@@ -52,16 +52,36 @@ export const sortServiceList = (nodes = [], activityId, nodeId: any) => {
   return arr;
 };
 
-export const toAppDetail = async (appName: string, activityDetail: any) => {
-  // const {
-  //   data: { success, data },
-  // } = await BusinessActivityService.searchApp({
-  //   appName,
-  //   activityName: activityDetail?.activityName,
-  // });
-  // if (success && data?.[0]) {
-  //   router.push(`/appManage/details?tabKey=0&id=${data?.[0]?.id}`);
-  // }
+export const AppNameLink: React.FC<{
+  applicationName: string,
+  activityDetail: any
+}> = (props) => {
+  const { applicationName, activityDetail } = props;
+  const [appId, setAppId] = useState();
+
+  const getAppId = async () => {
+    const {
+      data: { success, data },
+    } = await BusinessActivityService.searchApp({
+      applicationName,
+      activityName: activityDetail?.activityName,
+    });
+    if (success && data?.[0]) {
+      setAppId(data?.[0]?.id);
+    }
+  };
+
+  useEffect(() => {
+    getAppId();
+  }, [applicationName]);
+
+  return appId ? (
+    <a onClick={() => router.push(`/appManage/details?tabKey=0&id=${appId}`)}>
+      {applicationName}
+    </a>
+  ) : (
+    <>{applicationName}</>
+  );
 };
 
 const ServiceList: React.FC<Props> = (props) => {
@@ -147,13 +167,17 @@ const ServiceList: React.FC<Props> = (props) => {
       }
       if (bottleneckStatus !== -1) {
         const checkStatus = (typeName) => {
-          return x.containRealAppProvider.some(y => y[typeName] === bottleneckStatus);
+          return x.containRealAppProvider.some(
+            (y) => y[typeName] === bottleneckStatus
+          );
         };
         if (
           !(
-            checkStatus('allSuccessRateBottleneckType') ||
-            checkStatus('allTotalRtBottleneckType') ||
-            checkStatus('allSqlTotalRtBottleneckType')
+            (
+              checkStatus('allSuccessRateBottleneckType') ||
+              checkStatus('allTotalRtBottleneckType') ||
+              checkStatus('allSqlTotalRtBottleneckType')
+            )
             // x.allSuccessRateBottleneckType === bottleneckStatus ||
             // x.allTotalRtBottleneckType === bottleneckStatus ||
             // x.allSqlTotalRtBottleneckType === bottleneckStatus
@@ -168,17 +192,21 @@ const ServiceList: React.FC<Props> = (props) => {
         // 慢sql 是 allSqlTotalRtBottleneckType 不等于 -1
         if (bottleneckType === 1) {
           // return ![0, -1].includes(x.allTotalRtBottleneckType);
-          return !x.containRealAppProvider.every(y => [0, -1].includes(y.allTotalRtBottleneckType));
+          return !x.containRealAppProvider.every((y) =>
+            [0, -1].includes(y.allTotalRtBottleneckType)
+          );
         }
         if (bottleneckType === 2) {
           // return ![0, -1].includes(x.allSuccessRateBottleneckType);
-          return !x.containRealAppProvider.every(y => [0, -1].includes(y.allSuccessRateBottleneckType));
-
+          return !x.containRealAppProvider.every((y) =>
+            [0, -1].includes(y.allSuccessRateBottleneckType)
+          );
         }
         if (bottleneckType === 4) {
           // return ![0, -1].includes(x.allSqlTotalRtBottleneckType);
-          return !x.containRealAppProvider.every(y => [0, -1].includes(y.allSqlTotalRtBottleneckType));
-
+          return !x.containRealAppProvider.every((y) =>
+            [0, -1].includes(y.allSqlTotalRtBottleneckType)
+          );
         }
         return false;
       }
@@ -357,46 +385,37 @@ const ServiceList: React.FC<Props> = (props) => {
                         overflow: 'hidden',
                       }}
                     >
-                      {x.ownerApps ? (
-                        <span
-                          onClick={() =>
-                            toAppDetail(x.ownerApps, state.details)
-                          }
-                        >
-                          {x.ownerApps}
-                        </span>
-                      ) : (
-                        '-'
-                      )}
+                      {x.ownerApps
+                        ? <AppNameLink applicationName={x.ownerApps} activityDetail={state.details}/>
+                        : '-'}
+                    </span>
+                  </div>
+                  
+                  <div style={{ display: 'flex', marginBottom: 8 }}>
+                    <span
+                      style={{
+                        color: 'var(--Netural-10, #8e8e8e)',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      在链路图中显示：
+                    </span>
+                    <span
+                      style={{
+                        flex: 1,
+                        textAlign: 'right',
+                        wordBreak: 'break-all',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Switch
+                        size="small"
+                        checked={x.switchState}
+                        onChange={(val) => toggleWatchService(val, x)}
+                      />
                     </span>
                   </div>
 
-                  {!isInBaseInfoModal && (
-                    <div style={{ display: 'flex', marginBottom: 8 }}>
-                      <span
-                        style={{
-                          color: 'var(--Netural-10, #8e8e8e)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        在链路图中显示：
-                      </span>
-                      <span
-                        style={{
-                          flex: 1,
-                          textAlign: 'right',
-                          wordBreak: 'break-all',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <Switch
-                          size="small"
-                          checked={x.switchState}
-                          onChange={(val) => toggleWatchService(val, x)}
-                        />
-                      </span>
-                    </div>
-                  )}
                   <Divider style={{ margin: '10px 0' }} />
                   <Table
                     key={JSON.stringify(tableExpandMap)}
@@ -420,13 +439,7 @@ const ServiceList: React.FC<Props> = (props) => {
                                 }}
                               >
                                 {text ? (
-                                  <span
-                                    onClick={() =>
-                                      toAppDetail(text, state.details)
-                                    }
-                                  >
-                                    {text}
-                                  </span>
+                                  <AppNameLink applicationName={text} activityDetail={state.details}/>
                                 ) : (
                                   '无'
                                 )}
@@ -485,7 +498,7 @@ const ServiceList: React.FC<Props> = (props) => {
                                     </Link>
                                   </div>
                                 )}
-                              {(text || 0) * 100}%
+                              {((text || 0) * 100).toFixed(2)}%
                             </span>
                           );
                         },

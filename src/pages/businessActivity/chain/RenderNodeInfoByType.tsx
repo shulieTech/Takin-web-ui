@@ -8,7 +8,7 @@ import { NodeDetailsCollapse, NodeDetailsTable } from './NodeInfoCommonNode';
 import { getDefaultNodeIconConf } from 'src/components/g6-graph/GraphNode';
 import styles from '../index.less';
 import classNames from 'classnames';
-import ServiceList, { sortServiceList, toAppDetail } from './ServiceList';
+import ServiceList, { sortServiceList, AppNameLink } from './ServiceList';
 
 const { TabPane } = Tabs;
 
@@ -256,7 +256,8 @@ export const RenderNodeInfoByType = (
   const tabPanelMap = {
     对外服务: {
       icon: 'icon-waibutiaoyong',
-      num: nodeInfo.providerService?.length,
+      // num: nodeInfo.providerService?.length,
+      num: sortServiceList([nodeInfo], details.activityId, nodeInfo.id).length,
       content: <OuterService nodeInfo={nodeInfo} />,
     },
     下游调用: {
@@ -353,9 +354,7 @@ export const RenderNodeInfoByType = (
                 名称：
               </span>
               <Tooltip title={nodeInfo.label}>
-                <span onClick={() => toAppDetail(nodeInfo.label, details)}>
-                  {nodeInfo.label}
-                </span>
+                <AppNameLink applicationName={nodeInfo.label} activityDetail={details}/>
               </Tooltip>
             </div>
             <div

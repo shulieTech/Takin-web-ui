@@ -11,7 +11,6 @@ interface Props {
   setState: (value: any) => void;
 }
 declare var serverUrl: string;
-
 const SecondContent: React.FC<Props> = props => {
   const { state, setState } = props;
   const downloadFile = async fileName => {
@@ -24,7 +23,7 @@ const SecondContent: React.FC<Props> = props => {
       },
       params: {
         projectName: state.appName,
-        urlPrefix: serverUrl,
+        urlPrefix: `${window.location.href.split('#')[0]}takin-web/api`,
         version: state.agentVersionInfo.version
       }
     });
