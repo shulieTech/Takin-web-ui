@@ -9,7 +9,7 @@ const TargetMap = (props) => {
   const { treeData = [], loading = false } = componentProps;
 
   const renderInputTd = (record, fieldName, fieldLabel, fieldProps = {}) => {
-    if (['TEST_PLAN', 'THREAD_GROUP'].includes(record.type)) {
+    if (!['SAMPLER'].includes(record.type)) {
       return null;
     }
     const tdPath = FormPath.parse(path).concat(
@@ -77,9 +77,9 @@ const TargetMap = (props) => {
     },
     {
       title: '目标成功率(%)',
-      dataIndex: 'rs',
+      dataIndex: 'sr',
       render: (text, record, index) =>
-        renderInputTd(record, 'rs', '目标成功率', { max: 100 }),
+        renderInputTd(record, 'sr', '目标成功率', { max: 100 }),
     },
     {
       title: '目标SA(%)',

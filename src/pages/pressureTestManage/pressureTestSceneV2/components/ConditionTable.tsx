@@ -6,11 +6,13 @@ import styles from '../index.less';
 export default (props) => {
   const {
     dictionaryMap: { SLA_TARGER_TYPE, COMPARE_TYPE },
-    targetList = [],
+    flatTreeData = [],
     title,
     name,
     arrayFieldProps = {},
   } = props;
+
+  const sampleList = flatTreeData.filter(x => x.type === 'SAMPLER');
 
   return (
     <FormLayout
@@ -52,12 +54,19 @@ export default (props) => {
               name="target"
               type="array"
               x-component="Select"
-              x-component-props={{ placeholder: '请选择', multiple: true }}
+              x-component-props={{ placeholder: '请选择', mode: 'multiple' }}
               x-rules={[{ required: true, message: '请输入规则名称' }]}
-              enum={targetList.map((x) => ({
-                label: x.businessActivityName,
-                value: x.businessActivityId,
-              }))}
+              enum={[
+                {
+                  testName: '全部',
+                  xpathMd5: 'all',
+                },
+              ]
+                .concat(sampleList)
+                .map((x: any) => ({
+                  label: x.testName,
+                  value: x.xpathMd5,
+                }))}
             />
             <Field
               title="规则"
@@ -78,7 +87,7 @@ export default (props) => {
                     placeholder: '指标',
                   }}
                   x-rules={[{ required: true, message: '请选择' }]}
-                  enum={SLA_TARGER_TYPE || []}
+                  enum={(SLA_TARGER_TYPE || []).map(x => ({ ...x, value: Number(x.value) }))}
                   // x-linkages={[
                   //   // 联动显示单位
                   //   {
@@ -98,7 +107,7 @@ export default (props) => {
                   x-component="Select"
                   x-component-props={{ placeholder: '条件' }}
                   x-rules={[{ required: true, message: '请选择条件' }]}
-                  enum={COMPARE_TYPE || []}
+                  enum={(COMPARE_TYPE || []).map(x => ({ ...x, value: Number(x.value) }))}
                 />
                 <Field
                   name="formulaNumber"
@@ -108,6 +117,7 @@ export default (props) => {
                     placeholder: '数值',
                     compact: false,
                     addonAfter: '',
+                    min: 0,
                   }}
                   x-rules={[{ required: true, message: '请输入数值' }]}
                 />
@@ -115,8 +125,11 @@ export default (props) => {
                   name="numberOfIgnore"
                   type="number"
                   x-component="NumberPicker"
-                  x-component-props={{ placeholder: '数值' }}
-                  x-rules={[{ required: true, message: '请输入数值' }]}
+                  x-component-props={{ placeholder: '数值', min: 1 }}
+                  x-rules={[
+                    { required: true, message: '请输入数值' },
+                    { format: 'integer', message: '请输入整数' },
+                  ]}
                 />
               </FormTextBox>
             </Field>

@@ -193,6 +193,10 @@ const PressureTestSceneService = {
     const url = '/leak/sql/batch';
     return httpPost(url, data);
   },
+  async querysuggestPodNum(data) {
+    const url = '/scenemanage/pod';
+    return httpPost(url, data);
+  },
 };
 
 export default PressureTestSceneService;

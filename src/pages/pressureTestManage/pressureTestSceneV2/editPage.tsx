@@ -29,7 +29,7 @@ import NumberPicker from './components/NumberPicker';
 import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
-import { flatTree } from './utils';
+import { cloneDeep } from 'lodash';
 
 const { onFieldValueChange$, onFormMount$ } = FormEffectHooks;
 
@@ -37,8 +37,7 @@ const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
   const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
-  // const [threadTree, setThreadTree] = useState([]);
-  const [targetList, setTargetList] = useState([]);
+  const [flatTreeData, setFlatTreeData] = useState([]);
   const [initialValue, setInitialValue] = useState({});
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -96,8 +95,29 @@ const EditPage = (props) => {
           state.props['x-component-props'].loading = false;
         });
         actions.setFieldState('config.threadGroupConfigMap', (state) => {
-          state.props['x-component-props'].flatTreeData =
-            flatTree(parsedData, '-1', 'xpathMd5') || [];
+          /**
+           * 树结构平铺
+           * @param nodes
+           * @param parentId
+           * @returns
+           */
+          const result = [];
+          const flatTree = (nodes, parentId = '-1', idName = 'id') => {
+            if (Array.isArray(nodes) && nodes.length > 0) {
+              nodes.forEach((node) => {
+                const { children, ...rest } = node;
+                result.push({
+                  parentId,
+                  ...rest,
+                });
+                flatTree(node.children, node[idName], idName);
+              });
+              return result;
+            }
+          };
+          const flatTreeData1 = flatTree(parsedData, '-1', 'xpathMd5') || [];
+          setFlatTreeData(flatTreeData1);
+          state.props['x-component-props'].flatTreeData = flatTreeData1;
         });
       } catch (error) {
         throw error;
@@ -106,33 +126,12 @@ const EditPage = (props) => {
   };
 
   /**
-   * 获取流程关联的活动列表
-   * @param businessFlowId
-   */
-  const getBusinessActivityIds = async (businessFlowId) => {
-    const {
-      data: { success, data },
-    } = await services.queryBussinessActivityListWithBusinessFlow({
-      businessFlowId,
-    });
-    if (success) {
-      setTargetList(data);
-      const businessActivityIds = (data || []).map((x) => x.businessActivityId);
-      actions.setFieldState('dataValidation.content', (state) => {
-        state.props['x-component-props'].businessActivityIds =
-          businessActivityIds;
-      });
-    }
-  };
-
-  /**
    * 监听表单项数据联动变化
    */
   const formEffect = () => {
-    const { setFieldState, dispatch } = actions;
+    const { setFieldState, dispatch, getFieldState } = actions;
     onFieldValueChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       getThreadTree(fieldState.value);
-      getBusinessActivityIds(fieldState.value);
     });
 
     onFieldValueChange$('.goal').subscribe((fieldState) => {
@@ -152,10 +151,12 @@ const EditPage = (props) => {
                 ms
               </Button>
             ),
+            max: undefined,
           };
         case '1':
           return {
             addonAfter: undefined,
+            max: undefined,
           };
         default:
           return {
@@ -165,6 +166,7 @@ const EditPage = (props) => {
                 %
               </Button>
             ),
+            max: 100,
           };
       }
     };
@@ -187,16 +189,49 @@ const EditPage = (props) => {
     onFieldValueChange$('warnMonitoringGoal.*.formulaTarget').subscribe(
       changeUint
     );
-    
+
     if (getTakinAuthority() === 'true') {
       // 获取建议pod数
-      onFieldValueChange$('*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)').subscribe(
-        fieldState => {
-          // TODO 获取建议pod数
-        }
-      );
-    }
+      onFieldValueChange$(
+        '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
+      ).subscribe((fieldState) => {
+        // TODO 获取建议pod数
+        getFieldState('config.threadGroupConfigMap', (configState) => {
+          const configMap = cloneDeep(configState.value);
+          getFieldState('goal', async (state) => {
+            Object.keys(configMap || {}).forEach((groupKey) => {
+              let sum = 0;
+              const flatTreeData2 =
+                configState.props['x-component-props'].flatTreeData;
 
+              // 递归tps求和
+              const getTpsSum = (valueMap, parentId) => {
+                flatTreeData2
+                  .filter((x) => x.parentId === parentId)
+                  .forEach((x) => {
+                    sum += valueMap?.[x.xpathMd5]?.tps || 0;
+                    getTpsSum(valueMap, x.xpathMd5);
+                  });
+                return sum;
+              };
+              configMap[groupKey].tpsSum = getTpsSum(
+                state.value,
+                groupKey
+              );
+            });
+            // TODO configMap
+            const {
+              data: { success, data },
+            } = await services.querysuggestPodNum(configMap);
+            if (success) {
+              setFieldState('config.podNum', podState => {
+                podState.props['x-component-props'].addonAfter = <Button>建议Pod数: {data.min}-{data.max}</Button>;
+              });
+            }
+          });
+        });
+      });
+    }
   };
 
   /**
@@ -409,14 +444,15 @@ const EditPage = (props) => {
           >
             <ConditionTable
               dictionaryMap={dictionaryMap}
-              targetList={targetList}
+              flatTreeData={flatTreeData}
               name="destroyMonitoringGoal"
-              title={<span style={{ fontSize: 16 }}>
-                终止条件
-                <span style={{ color: '#f7917a', marginLeft: 8 }}>
-                  为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
-                </span>
-              </span>}
+              title={
+                <span style={{ fontSize: 16 }}>
+                  终止条件
+                  <span style={{ color: '#f7917a', marginLeft: 8 }}>
+                    为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+                  </span>
+                </span>}
               arrayFieldProps={{
                 default: [{}],
                 minItems: 1,
@@ -434,7 +470,7 @@ const EditPage = (props) => {
             />
             <ConditionTable
               dictionaryMap={dictionaryMap}
-              targetList={targetList}
+              flatTreeData={flatTreeData}
               name="warnMonitoringGoal"
               title={<span style={{ fontSize: 16 }}>告警条件</span>}
               arrayFieldProps={{
