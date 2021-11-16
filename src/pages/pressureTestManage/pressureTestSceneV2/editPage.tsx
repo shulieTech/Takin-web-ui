@@ -30,6 +30,7 @@ import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 import { flatTree } from './utils';
+import { cloneDeep } from 'lodash';
 
 const { onFieldValueChange$, onFormMount$ } = FormEffectHooks;
 
@@ -129,7 +130,7 @@ const EditPage = (props) => {
    * 监听表单项数据联动变化
    */
   const formEffect = () => {
-    const { setFieldState, dispatch } = actions;
+    const { setFieldState, dispatch, getFieldState } = actions;
     onFieldValueChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       getThreadTree(fieldState.value);
       getBusinessActivityIds(fieldState.value);
@@ -190,16 +191,49 @@ const EditPage = (props) => {
     onFieldValueChange$('warnMonitoringGoal.*.formulaTarget').subscribe(
       changeUint
     );
-    
+
     if (getTakinAuthority() === 'true') {
       // 获取建议pod数
-      onFieldValueChange$('*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)').subscribe(
-        fieldState => {
-          // TODO 获取建议pod数
-        }
-      );
-    }
+      onFieldValueChange$(
+        '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
+      ).subscribe((fieldState) => {
+        // TODO 获取建议pod数
+        getFieldState('config.threadGroupConfigMap', (configState) => {
+          const configMap = cloneDeep(configState.value);
+          getFieldState('goal', async (state) => {
+            Object.keys(configMap || {}).forEach((groupKey) => {
+              let sum = 0;
+              const flatTreeData =
+                configState.props['x-component-props'].flatTreeData;
 
+              // 递归tps求和
+              const getTpsSum = (valueMap, parentId) => {
+                flatTreeData
+                  .filter((x) => x.parentId === parentId)
+                  .forEach((x) => {
+                    sum += valueMap[x.xpathMd5].tps;
+                    getTpsSum(valueMap, x.xpathMd5);
+                  });
+                return sum;
+              };
+              configMap[groupKey].tpsSum = getTpsSum(
+                state.value,
+                groupKey
+              );
+            });
+            // TODO configMap
+            const {
+              data: { success, data },
+            } = await services.querysuggestPodNum(configMap);
+            if (success) {
+              setFieldState('config.podNum', podState => {
+                podState.props['x-component-props'].addonAfter = <Button>建议Pod数: {data.min}-{data.max}</Button>;
+              });
+            }
+          });
+        });
+      });
+    }
   };
 
   /**
@@ -414,12 +448,13 @@ const EditPage = (props) => {
               dictionaryMap={dictionaryMap}
               targetList={targetList}
               name="destroyMonitoringGoal"
-              title={<span style={{ fontSize: 16 }}>
-                终止条件
-                <span style={{ color: '#f7917a', marginLeft: 8 }}>
-                  为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
-                </span>
-              </span>}
+              title={
+                <span style={{ fontSize: 16 }}>
+                  终止条件
+                  <span style={{ color: '#f7917a', marginLeft: 8 }}>
+                    为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+                  </span>
+                </span>}
               arrayFieldProps={{
                 default: [{}],
                 minItems: 1,
