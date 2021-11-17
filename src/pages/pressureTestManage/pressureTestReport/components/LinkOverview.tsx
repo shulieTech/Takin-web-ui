@@ -25,20 +25,23 @@ const LinkOverview: React.FC<Props> = props => {
         title: '平均TPS（实际/目标）',
         dataIndex: 'tps',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}</span>
-            </Fragment>
-          );
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                  }}
+                >
+                  {text.result}
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value}</span>
+              </Fragment>
+            );
+          }
+          return '-';
         }
       },
       {
@@ -46,20 +49,23 @@ const LinkOverview: React.FC<Props> = props => {
         title: '平均RT（实际/目标）',
         dataIndex: 'avgRt',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) > Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}ms
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}ms</span>
-            </Fragment>
-          );
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) > Number(text.value) ? '#FE7D61' : ''
+                  }}
+                >
+                  {text.result}ms
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value}ms</span>
+              </Fragment>
+            );
+          }
+          return '-';
         }
       },
       {
@@ -67,41 +73,47 @@ const LinkOverview: React.FC<Props> = props => {
         title: '成功率（实际/目标）',
         dataIndex: 'successRate',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}%
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
-            </Fragment>
-          );
-        }
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                  }}
+                >
+                  {text.result}%
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value}%</span>
+              </Fragment>
+            );
+          }
+          return '-';
+        } 
       },
       {
         ...customColumnProps,
         title: 'SA（实际/目标）',
         dataIndex: 'sa',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}%
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
-            </Fragment>
-          );
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                  }}
+                >
+                  {text.result}%
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value}%</span>
+              </Fragment>
+            );
+          }
+          return '-';
         }
       }
     ];
