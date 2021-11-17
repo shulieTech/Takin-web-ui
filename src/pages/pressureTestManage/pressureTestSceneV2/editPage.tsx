@@ -153,7 +153,7 @@ const EditPage = (props) => {
       });
       // 手动变更业务流程时，清空步骤3之前的告警条件
       setFieldState('warnMonitoringGoal', state => {
-        state.value = undefined;
+        state.value = [{}];
       });
     });
 
@@ -219,6 +219,9 @@ const EditPage = (props) => {
         // '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
         'config.threadGroupConfigMap.*.threadNum'
       ).subscribe((fieldState) => {
+        if (fieldState.value === '') {
+          return;
+        }
         // 获取建议pod数
         // debounce(() => {
         getFieldState('config.threadGroupConfigMap', (configState) => {
@@ -297,6 +300,7 @@ const EditPage = (props) => {
         <SchemaForm
           actions={actions}
           initialValues={initialValue}
+          validateFirst
           components={{
             Input,
             Select,
@@ -497,7 +501,7 @@ const EditPage = (props) => {
               name="warnMonitoringGoal"
               title={<span style={{ fontSize: 16 }}>告警条件</span>}
               arrayFieldProps={{
-                default: [],
+                default: [{}],
               }}
             />
           </FormLayout>
