@@ -39,7 +39,8 @@ const BusicInfoModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请输入名称'
+              message: '请输入名称（不超过64字符）',
+              max: 64
             }
           ]
         },
