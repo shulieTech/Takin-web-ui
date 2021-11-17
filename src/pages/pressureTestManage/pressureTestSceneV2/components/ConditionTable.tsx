@@ -55,7 +55,7 @@ export default (props) => {
               type="array"
               x-component="Select"
               x-component-props={{ placeholder: '请选择', mode: 'multiple' }}
-              x-rules={[{ required: true, message: '请输入规则名称' }]}
+              x-rules={[{ required: true, message: '请选择对象' }]}
               enum={[
                 {
                   testName: '全部',
@@ -86,7 +86,7 @@ export default (props) => {
                   x-component-props={{
                     placeholder: '指标',
                   }}
-                  x-rules={[{ required: true, message: '请选择' }]}
+                  x-rules={[{ required: true, message: '请选择指标' }]}
                   enum={(SLA_TARGER_TYPE || []).map(x => ({ ...x, value: Number(x.value) }))}
                   // x-linkages={[
                   //   // 联动显示单位
