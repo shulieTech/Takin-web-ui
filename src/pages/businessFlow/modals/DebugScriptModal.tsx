@@ -19,12 +19,13 @@ interface Props extends CommonModelState {
   onSuccess: () => void;
   state?: any;
   setState?: (value) => void;
+  scriptDeployId?: string;
 }
 const DebugScriptModal: React.FC<Props> = props => {
   const [state, setState] = useStateReducer({
     form: null as WrappedFormUtils
   });
-  const { id } = props;
+  const { id, scriptDeployId } = props;
   const text = '脚本调试';
 
   const handleSubmit = () => {
@@ -51,7 +52,7 @@ const DebugScriptModal: React.FC<Props> = props => {
           data: { success, data, error }
         } = await BusinessFlowService.startDebug({
           ...values,
-          scriptDeployId: id
+          scriptDeployId
         });
         if (success) {
           if (!data.scriptDebugId) {

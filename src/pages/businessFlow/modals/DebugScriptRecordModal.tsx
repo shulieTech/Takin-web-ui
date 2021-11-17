@@ -10,6 +10,7 @@ import { Link } from 'umi';
 interface Props {
   btnText?: string | React.ReactNode;
   id: number;
+  scriptDeployId: string;
 }
 
 interface State {
@@ -37,7 +38,7 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
   const handleClick = () => {
     queryDebugScriptRecordList({
       ...state.searchParams,
-      scriptDeployId: props.id
+      scriptDeployId: props.scriptDeployId
     });
   };
 
@@ -135,7 +136,7 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
     queryDebugScriptRecordList({
       pageSize,
       current: current - 1,
-      scriptDeployId: props.id
+      scriptDeployId: props.scriptDeployId
     });
   };
 
@@ -149,7 +150,7 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
     queryDebugScriptRecordList({
       pageSize,
       current: 0,
-      scriptDeployId: props.id
+      scriptDeployId: props.scriptDeployId
     });
   };
 

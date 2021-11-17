@@ -282,7 +282,11 @@ const BusinessFlowDetail: React.FC<Props> = props => {
   const menu = (
     <Menu>
       <Menu.Item key="1">
-        <DebugScriptRecordModal btnText="调试历史" id={id} />
+        <DebugScriptRecordModal
+          btnText="调试历史"
+          id={id}
+          scriptDeployId={detailData.scriptDeployId}
+        />
       </Menu.Item>
       <Menu.Item key="0">
         <BusicInfoModal
@@ -310,7 +314,16 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         </Link>
         <div className={styles.borders}>
           <CustomDetailHeader
-            title={detailData.businessProcessName && detailData.businessProcessName.length > 30 ? <Tooltip title={detailData.businessProcessName} >{detailData.businessProcessName.substring(0, 30)}...</Tooltip> : detailData.businessProcessName}
+            title={
+              detailData.businessProcessName &&
+              detailData.businessProcessName.length > 30 ? (
+                <Tooltip title={detailData.businessProcessName}>
+                  {detailData.businessProcessName.substring(0, 30)}...
+                </Tooltip>
+              ) : (
+                detailData.businessProcessName
+              )
+            }
             description={
               <p>
                 <span className={customStyles.alertLabel}>线程总数：</span>
@@ -351,6 +364,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                     id={id}
                     state={state}
                     setState={setState}
+                    scriptDeployId={detailData.scriptDeployId}
                   />
                 </span>
                 <span style={{ marginRight: 8 }}>
