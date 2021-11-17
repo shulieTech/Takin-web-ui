@@ -37,7 +37,7 @@ const BusinessFlow: React.FC<Props> = props => {
     JSON.parse(localStorage.getItem('trowebBtnResource'));
   const menu = (
     <Menu>
-      <Menu.Item>
+      {/* <Menu.Item>
         <AuthorityBtn
           isShow={btnAuthority && btnAuthority.businessFlow_2_create}
         >
@@ -45,7 +45,7 @@ const BusinessFlow: React.FC<Props> = props => {
             <Button type="link">手工新增</Button>
           </Link>
         </AuthorityBtn>
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item>
         <AddJmeterModal btnText="Jmeter 扫描新增" />
       </Menu.Item>
