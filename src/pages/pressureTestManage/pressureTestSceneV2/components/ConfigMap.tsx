@@ -17,14 +17,6 @@ const ConfigMap = (props: IFieldMergeState) => {
   const componentProps = schema.getExtendsComponentProps() || {};
   const { flatTreeData = [], targetValue = {} } = componentProps;
 
-  // // 过滤所有值为空的项
-  // const filterEmptyTargetMap = { ...targetValue };
-  // Object.entries(targetValue).forEach(([x, y]) => {
-  //   if (Object.values(y).every(z => !Boolean(z))) {
-  //     delete filterEmptyTargetMap[x];
-  //   }
-  // });
-
   const groupMap = {};
   // 取出线程组
   flatTreeData.forEach(x => {

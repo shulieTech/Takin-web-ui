@@ -40,7 +40,7 @@ export default (props) => {
               name="name"
               type="string"
               x-component="Input"
-              x-component-props={{ placeholder: '请输入规则名称' }}
+              x-component-props={{ placeholder: '请输入规则名称', maxLength: 30, }}
               x-rules={[
                 {
                   required: true,

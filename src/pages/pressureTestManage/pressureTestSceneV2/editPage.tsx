@@ -29,9 +29,9 @@ import NumberPicker from './components/NumberPicker';
 import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 
-const { onFieldValueChange$, onFormMount$ } = FormEffectHooks;
+const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } = FormEffectHooks;
 
 const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
@@ -132,6 +132,27 @@ const EditPage = (props) => {
     const { setFieldState, dispatch, getFieldState } = actions;
     onFieldValueChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       getThreadTree(fieldState.value);
+      setFieldState('dataValidation.content', state => {
+        state.props['x-component-props'].flowId = fieldState.value;
+      });
+    });
+    onFieldInputChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
+      // 手动变更业务流程时，清空步骤1之前的目标数据
+      setFieldState('goal', state => {
+        state.value = {};
+      });
+      // 手动变更业务流程时，清空步骤2线程组的配置数据
+      setFieldState('config.threadGroupConfigMap', state => {
+        state.initialValue = {};
+      });
+      // 手动变更业务流程时，清空步骤3之前的终止条件
+      setFieldState('destroyMonitoringGoal', state => {
+        state.value = [{}];
+      });
+      // 手动变更业务流程时，清空步骤3之前的告警条件
+      setFieldState('warnMonitoringGoal', state => {
+        state.value = undefined;
+      });
     });
 
     onFieldValueChange$('.goal').subscribe((fieldState) => {
@@ -193,9 +214,11 @@ const EditPage = (props) => {
     if (getTakinAuthority() === 'true') {
       // 获取建议pod数
       onFieldValueChange$(
-        '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
+        // '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
+        'config.threadGroupConfigMap.*.threadNum'
       ).subscribe((fieldState) => {
-        // TODO 获取建议pod数
+        // 获取建议pod数
+        // debounce(() => {
         getFieldState('config.threadGroupConfigMap', (configState) => {
           const configMap = cloneDeep(configState.value);
           getFieldState('goal', async (state) => {
@@ -219,17 +242,17 @@ const EditPage = (props) => {
                 groupKey
               );
             });
-            // TODO configMap
             const {
               data: { success, data },
-            } = await services.querysuggestPodNum(configMap);
+            } = await services.querySuggestPodNum(configMap);
             if (success) {
               setFieldState('config.podNum', podState => {
-                podState.props['x-component-props'].addonAfter = <Button>建议Pod数: {data.min}-{data.max}</Button>;
+                podState.props['x-component-props'].addonAfter = <Button>建议Pod数: {data?.min}-{data?.max}</Button>;
               });
             }
           });
         });
+        // }, 200)
       });
     }
   };
@@ -316,6 +339,7 @@ const EditPage = (props) => {
                 x-component="Input"
                 x-component-props={{
                   placeholder: '请输入',
+                  maxLength: 30,
                 }}
                 title="压测场景名称"
                 x-rules={[
@@ -524,7 +548,7 @@ const EditPage = (props) => {
                 title="验证命令"
                 x-component="ValidateCommand"
                 x-component-props={{
-                  businessActivityIds: [],
+                  flowId: '',
                 }}
               />
             </Field>
@@ -569,6 +593,7 @@ const EditPage = (props) => {
                   >
                     {isLastStep ? '保存' : '下一步'}
                   </Button>
+                  {/* <Button onClick={() => actions.getFormState(state => console.log(state.values))}>test</Button> */}
                   {/* <Reset>重置</Reset>​ */}
                 </FormButtonGroup>
               );
