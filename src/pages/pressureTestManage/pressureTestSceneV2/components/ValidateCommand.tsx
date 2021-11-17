@@ -7,28 +7,28 @@ const { Panel } = Collapse;
 const ValidateCommand = (props) => {
   const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
-  const { businessActivityIds } = componentProps;
+  const { flowId } = componentProps;
   const [missingDataScriptList, setMissingDataScriptList] = useState([]);
 
   /**
    * @name 获取漏数验证命令
    */
-  const queryMissingDataScriptList = async (values) => {
+  const getValidateSql = async (values) => {
     const {
       data: { success, data },
-    } = await services.queryMissingDataScriptList(values);
+    } = await services.getValidateSql(values);
     if (success) {
       setMissingDataScriptList(data);
     }
   };
 
   useEffect(() => {
-    if (businessActivityIds && businessActivityIds.length > 0) {
-      queryMissingDataScriptList({ businessActivityIds });
+    if (flowId) {
+      getValidateSql({ id: flowId });
     }
-  }, [JSON.stringify(businessActivityIds)]);
+  }, [flowId]);
 
-  if (!businessActivityIds) {
+  if (!flowId) {
     return (
       <span style={{ textAlign: 'left', display: 'inline-block' }}>
         <Empty description={'请先选择业务活动或业务流程'} />

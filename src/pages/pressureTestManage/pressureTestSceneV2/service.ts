@@ -189,12 +189,12 @@ const PressureTestSceneService = {
   /**
    * @name 获取漏数验证脚本
    */
-  async queryMissingDataScriptList(data = {}) {
-    const url = '/leak/sql/batch';
-    return httpPost(url, data);
+  async getValidateSql(data = {}) {
+    const url = '/v2/scene/business_activity_flow/leak_sql';
+    return httpGet(url, data);
   },
-  async querysuggestPodNum(data) {
-    const url = '/scenemanage/pod';
+  async querySuggestPodNum(data) {
+    const url = '/v2/scene/pod_number';
     return httpPost(url, data);
   },
 };
