@@ -164,7 +164,7 @@ const EditPage = (props) => {
     // 联动显示规则表格中的的单位
     const getUnitConfig = (val) => {
       switch (val) {
-        case '0':
+        case 0:
           return {
             compact: true,
             addonAfter: (
@@ -174,7 +174,7 @@ const EditPage = (props) => {
             ),
             max: undefined,
           };
-        case '1':
+        case 1:
           return {
             addonAfter: undefined,
             max: undefined,
