@@ -219,7 +219,7 @@ const EditPage = (props) => {
         // '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
         'config.threadGroupConfigMap.*.threadNum'
       ).subscribe((fieldState) => {
-        if (fieldState.value === '') {
+        if (fieldState.value === '' || !fieldState.valid) {
           return;
         }
         // 获取建议pod数
