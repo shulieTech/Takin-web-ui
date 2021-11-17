@@ -65,7 +65,7 @@ const BusicInfoModal: React.FC<Props> = props => {
         key: 'sceneLevel',
         label: '级别',
         options: {
-          initialValue: props.sceneLevel,
+          initialValue: props.sceneLevel ? props.sceneLevel : undefined,
           rules: [
             {
               required: false,
