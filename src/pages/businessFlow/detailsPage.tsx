@@ -1,7 +1,17 @@
 /**
  * @author chuxu
  */
-import { Button, Col, Dropdown, Icon, Menu, Modal, Row, Tooltip } from 'antd';
+import {
+  Badge,
+  Button,
+  Col,
+  Dropdown,
+  Icon,
+  Menu,
+  Modal,
+  Row,
+  Tooltip
+} from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { connect } from 'dva';
 import {
@@ -27,6 +37,7 @@ import DebugScriptRecordModal from './modals/DebugScriptRecordModal';
 import MatchModal from './modals/MatchModal';
 import ScriptFileManageModal from './modals/ScriptFileManageModal';
 import BusinessFlowService from './service';
+import { businessFlowStatusColorMap, businessFlowStatusMap } from './enum';
 
 interface Props {
   location?: any;
@@ -218,7 +229,12 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         width: 100,
         render: (text, row) => {
           if (row.type === 'SAMPLER') {
-            return <span>{text === 1 ? '已匹配' : '未匹配'}</span>;
+            return (
+              <Badge
+                text={businessFlowStatusMap[text]}
+                color={businessFlowStatusColorMap[text]}
+              />
+            );
           }
           return '-';
         }
