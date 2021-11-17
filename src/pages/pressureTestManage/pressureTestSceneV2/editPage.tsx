@@ -361,7 +361,6 @@ const EditPage = (props) => {
                 x-rules={[
                   {
                     required: true,
-                    whitespace: true,
                     message: '请选择业务流程',
                   },
                 ]}
@@ -410,7 +409,6 @@ const EditPage = (props) => {
                 x-rules={[
                   {
                     required: true,
-                    whitespace: true,
                     message: '请输入压测时长',
                   },
                 ]}
@@ -449,7 +447,6 @@ const EditPage = (props) => {
                 x-rules={[
                   {
                     required: true,
-                    whitespace: true,
                     message: '请输入Pod数',
                   },
                 ]}
@@ -537,7 +534,6 @@ const EditPage = (props) => {
                 x-rules={[
                   {
                     required: true,
-                    whitespace: true,
                     message: '请输入时间间隔',
                   },
                 ]}
