@@ -107,6 +107,9 @@ const ConfigMap = (props: IFieldMergeState) => {
                       'x-rules': [
                         {
                           required: true,
+                          message: '请输入最大并发',
+                        },
+                        {
                           format: 'integer',
                           minimum: 1,
                           maximum: 100000,
