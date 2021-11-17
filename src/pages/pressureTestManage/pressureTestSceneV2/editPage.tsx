@@ -39,7 +39,7 @@ const EditPage = (props) => {
   const [businessFlowList, setBusinessFlowList] = useState([]);
   const [flatTreeData, setFlatTreeData] = useState([]);
   const [initialValue, setInitialValue] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   /**
@@ -81,11 +81,13 @@ const EditPage = (props) => {
     actions.setFieldState('goal', (state) => {
       state.props['x-component-props'].loading = true;
     });
+    setSaving(true);
     const {
       data: { success, data },
     } = await services.getThreadTree({
       id: flowId,
     });
+    setSaving(false);
     if (success) {
       try {
         const parsedData = JSON.parse(data.scriptJmxNode);
@@ -274,14 +276,14 @@ const EditPage = (props) => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    setDetailLoading(true);
     Promise.all([getBusinessFlowList(), getDetailData()]).then(() => {
-      setLoading(false);
+      setDetailLoading(false);
     });
   }, []);
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={detailLoading}>
       <div style={{ padding: 20 }}>
         <div
           style={{
