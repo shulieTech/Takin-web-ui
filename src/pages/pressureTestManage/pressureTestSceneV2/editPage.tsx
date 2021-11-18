@@ -91,7 +91,13 @@ const EditPage = (props) => {
     setSaving(false);
     if (success) {
       try {
-        const parsedData = JSON.parse(data.scriptJmxNode);
+        const parsedData = JSON.parse(data.scriptJmxNode, (k, v) => {
+          // 处理children为空数组，会显示折叠
+          if (k === 'children' && v?.length === 0) {
+            return null;
+          }
+          return v;
+        });
         // setThreadTree(parsedData);
         actions.setFieldState('goal', (state) => {
           state.props['x-component-props'].treeData = parsedData || [];
