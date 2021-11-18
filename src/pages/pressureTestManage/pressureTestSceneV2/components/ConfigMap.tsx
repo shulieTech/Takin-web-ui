@@ -176,7 +176,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                         style: {
                           width: '100%',
                         },
-                        addonAfter: <Button>分</Button>
+                        addonAfter: <Button>分</Button>,
                       },
                       'x-rules': [
                         {

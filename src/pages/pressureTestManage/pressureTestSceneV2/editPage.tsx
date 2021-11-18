@@ -158,6 +158,13 @@ const EditPage = (props) => {
       });
     });
 
+    // 每个线程组的递增时长需小于总压测时长
+    onFieldValueChange$('.config.duration').subscribe((fieldState) => {
+      setFieldState('config.threadGroupConfigMap.*.rampUp', (state) => {
+        state.props['x-component-props'].max = fieldState.value || undefined;
+      });
+    });
+
     // 联动显示规则表格中的的单位
     const getUnitConfig = (val) => {
       switch (val) {
