@@ -251,7 +251,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 rowDetail={row}
                 btnText="编辑匹配"
                 apiName={row.testName}
-                path={row.identification}
+                path={row.requestPath}
                 isVirtual={String(row.businessType)}
                 entranceApp={row.businessApplicationName}
                 entrancePath={row.entrace}
