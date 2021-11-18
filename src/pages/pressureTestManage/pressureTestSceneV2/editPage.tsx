@@ -397,6 +397,7 @@ const EditPage = (props) => {
             prefixCls={undefined}
           >
             <Field type="object" name="config">
+              <Field name="unit" type="string" x-component="Input" default="m" display={false}/>
               <Field
                 name="duration"
                 type="number"
