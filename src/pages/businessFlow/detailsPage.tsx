@@ -173,7 +173,8 @@ const BusinessFlowDetail: React.FC<Props> = props => {
 
   const handleChangeThread = value => {
     setState({
-      threadValue: value
+      threadValue: value,
+      treeData: null
     });
   };
 
