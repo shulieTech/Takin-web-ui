@@ -3,7 +3,7 @@ import { Table } from 'antd';
 import { SchemaField, FormPath, Schema } from '@formily/antd';
 
 const TargetMap = (props) => {
-  const { value = {}, schema, className, editable, path, mutators } = props;
+  const { value = {}, schema, className, editable, path, mutators, form } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
 
   const { treeData = [], loading = false } = componentProps;
@@ -27,6 +27,14 @@ const TargetMap = (props) => {
               min: 0,
               style: {
                 width: 'auto',
+              },
+              onBlur: (e) => {
+                // 联动填充空白值
+                form.setFieldState(`.goal.*.${fieldName}`, state => {
+                  if (state.value === undefined) {
+                    state.value = e.target.value;
+                  }
+                });
               },
               ...fieldProps,
             },
