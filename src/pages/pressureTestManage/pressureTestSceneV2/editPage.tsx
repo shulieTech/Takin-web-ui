@@ -31,7 +31,8 @@ import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 import { cloneDeep, debounce } from 'lodash';
 
-const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } = FormEffectHooks;
+const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
+  FormEffectHooks;
 
 const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
@@ -134,32 +135,26 @@ const EditPage = (props) => {
     const { setFieldState, dispatch, getFieldState } = actions;
     onFieldValueChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       getThreadTree(fieldState.value);
-      setFieldState('dataValidation.content', state => {
+      setFieldState('dataValidation.content', (state) => {
         state.props['x-component-props'].flowId = fieldState.value;
       });
     });
     onFieldInputChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       // 手动变更业务流程时，清空步骤1之前的目标数据
-      setFieldState('goal', state => {
+      setFieldState('goal', (state) => {
         state.value = {};
       });
       // 手动变更业务流程时，清空步骤2线程组的配置数据
-      setFieldState('config.threadGroupConfigMap', state => {
+      setFieldState('config.threadGroupConfigMap', (state) => {
         state.initialValue = {};
       });
       // 手动变更业务流程时，清空步骤3之前的终止条件
-      setFieldState('destroyMonitoringGoal', state => {
+      setFieldState('destroyMonitoringGoal', (state) => {
         state.value = [{}];
       });
       // 手动变更业务流程时，清空步骤3之前的告警条件
-      setFieldState('warnMonitoringGoal', state => {
+      setFieldState('warnMonitoringGoal', (state) => {
         state.value = [{}];
-      });
-    });
-
-    onFieldValueChange$('.goal').subscribe((fieldState) => {
-      setFieldState('config.threadGroupConfigMap', (state) => {
-        state.props['x-component-props'].targetValue = fieldState.value;
       });
     });
 
@@ -242,17 +237,18 @@ const EditPage = (props) => {
                   });
                 return sum;
               };
-              configMap[groupKey].tpsSum = getTpsSum(
-                state.value,
-                groupKey
-              );
+              configMap[groupKey].tpsSum = getTpsSum(state.value, groupKey);
             });
             const {
               data: { success, data },
             } = await services.querySuggestPodNum(configMap);
             if (success) {
-              setFieldState('config.podNum', podState => {
-                podState.props['x-component-props'].addonAfter = <Button>建议Pod数: {data?.min}-{data?.max}</Button>;
+              setFieldState('config.podNum', (podState) => {
+                podState.props['x-component-props'].addonAfter = (
+                  <Button>
+                    建议Pod数: {data?.min}-{data?.max}
+                  </Button>
+                );
               });
             }
           });
@@ -363,6 +359,10 @@ const EditPage = (props) => {
                 x-component="Select"
                 x-component-props={{
                   placeholder: '请选择',
+                  filterOption: (inputValue, option) => {
+                    return inputValue ? option.props?.title?.includes(inputValue) : true;
+                  },
+                  showSearch: true,
                 }}
                 x-rules={[
                   {
@@ -397,7 +397,13 @@ const EditPage = (props) => {
             prefixCls={undefined}
           >
             <Field type="object" name="config">
-              <Field name="unit" type="string" x-component="Input" default="m" display={false}/>
+              <Field
+                name="unit"
+                type="string"
+                x-component="Input"
+                default="m"
+                display={false}
+              />
               <Field
                 name="duration"
                 type="number"
@@ -427,7 +433,6 @@ const EditPage = (props) => {
                   x-component="ConfigMap"
                   x-component-props={{
                     flatTreeData: [],
-                    targetValue: {},
                   }}
                 />
               </FormLayout>

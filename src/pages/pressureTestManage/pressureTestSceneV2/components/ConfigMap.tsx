@@ -15,7 +15,7 @@ const { Panel } = Collapse;
 const ConfigMap = (props: IFieldMergeState) => {
   const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
-  const { flatTreeData = [], targetValue = {} } = componentProps;
+  const { flatTreeData = [] } = componentProps;
 
   const groupMap = {};
   // 取出线程组
