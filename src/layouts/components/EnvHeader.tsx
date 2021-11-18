@@ -52,11 +52,7 @@ const EnvHeader: React.FC<Props> = (props) => {
       });
       localStorage.setItem('env-code', arr[0]?.envCode);
       setDesc(arr[0]?.desc);
-      if (window.location.hash === '#/dashboard') {
-        window.location.reload();
-      } else {
-        window.location.hash = '#/dashboard';
-      }
+      window.location.href = `?key=${localStorage.getItem('tenant-code')}#/dashboard`;
     }
   };
 
@@ -69,11 +65,7 @@ const EnvHeader: React.FC<Props> = (props) => {
     if (success) {
       setDesc(descs);
       localStorage.setItem('env-code', code);
-      if (window.location.hash === '#/dashboard') {
-        window.location.reload();
-      } else {
-        window.location.hash = '#/dashboard';
-      }
+      window.location.href = `?key=${localStorage.getItem('tenant-code')}#/dashboard`;
     }
   };
   return (
