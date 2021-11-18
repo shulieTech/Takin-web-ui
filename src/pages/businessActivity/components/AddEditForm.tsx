@@ -53,7 +53,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         label: '业务活动类型',
         options: {
           rules: [{ required: false, message: '请选择业务活动类型' }],
-          initialValue: props.isCore
+          initialValue: props.isCore ? props.isCore : undefined
         },
         node: (
           <CommonSelect
@@ -69,7 +69,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         label: '业务活动级别',
         options: {
           rules: [{ required: false, message: '请选择业务活动级别' }],
-          initialValue: props.link_level
+          initialValue: props.link_level ? props.link_level : undefined
         },
         node: (
           <CommonSelect
@@ -85,7 +85,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         label: '业务域',
         options: {
           rules: [{ required: false, message: '请选择业务域' }],
-          initialValue: props.businessDomain
+          initialValue: props.businessDomain ? props.businessDomain : undefined
         },
         node: (
           <CommonSelect
