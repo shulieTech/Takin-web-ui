@@ -79,7 +79,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
     if (isAuto === 'true') {
       queryMatchProcess();
     }
-  }, []);
+  }, [state.isReload]);
 
   useEffect(() => {
     if (id) {

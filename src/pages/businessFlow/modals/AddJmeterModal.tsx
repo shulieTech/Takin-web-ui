@@ -175,8 +175,8 @@ const AddJmeterModal: React.FC<Props> = props => {
         });
         if (success) {
           message.success('保存成功!');
+          props.onSuccess();
           router.push(`/businessFlow/details?id=${data.id}&isAuto=true`);
-
           resolve(true);
           return;
         }
