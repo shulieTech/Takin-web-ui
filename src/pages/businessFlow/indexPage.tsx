@@ -47,7 +47,14 @@ const BusinessFlow: React.FC<Props> = props => {
         </AuthorityBtn>
       </Menu.Item> */}
       <Menu.Item>
-        <AddJmeterModal btnText="Jmeter 扫描新增" />
+        <AddJmeterModal
+          btnText="Jmeter 扫描新增"
+          onSuccess={() => {
+            setState({
+              isReload: !state.isReload
+            });
+          }}
+        />
       </Menu.Item>
     </Menu>
   );
