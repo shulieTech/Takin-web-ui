@@ -66,6 +66,9 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         title: '平均TPS（实际/目标）',
         dataIndex: 'tps',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
               <span
@@ -89,6 +92,9 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         title: '平均RT（实际/目标）',
         dataIndex: 'avgRt',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
               <div style={{ position: 'relative' }}>
@@ -143,6 +149,9 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         title: '请求成功率（实际/目标）',
         dataIndex: 'successRate',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
               <span
@@ -166,6 +175,9 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         title: 'SA（实际/目标）',
         dataIndex: 'sa',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
               <span
