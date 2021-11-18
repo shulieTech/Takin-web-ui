@@ -93,6 +93,7 @@ const MatchModal: React.FC<Props> = props => {
     setState({
       entrancePath: value
     });
+
     queryBusinessActivityName(state.applicationName, value);
   };
 
@@ -271,6 +272,11 @@ const MatchModal: React.FC<Props> = props => {
     });
     if (success) {
       if (data && data[0]) {
+        // tslint:disable-next-line:no-unused-expression
+        state.form &&
+          state.form.setFieldsValue({
+            activityName: data && data[0] && data[0].activityName
+          });
         setState({
           businessActivityName: data && data[0] && data[0].activityName,
           businessActivityId: data && data[0] && data[0].activityId
@@ -278,7 +284,11 @@ const MatchModal: React.FC<Props> = props => {
         return;
       }
       state.form.setFieldsValue({
-        businessActivityName: props.apiName
+        activityName: props.apiName
+      });
+      setState({
+        businessActivityName: undefined,
+        businessActivityId: undefined
       });
     }
   };
