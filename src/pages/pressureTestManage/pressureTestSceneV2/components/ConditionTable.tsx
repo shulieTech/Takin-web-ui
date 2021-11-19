@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { SchemaMarkupField as Field } from '@formily/antd';
 import { FormBlock, FormLayout, FormTextBox } from '@formily/antd-components';
 import styles from '../index.less';
-
+/**
+ * @deprecated
+ * 已过期，请使用ConditionTableField
+ */
 export default (props) => {
   const {
     dictionaryMap: { SLA_TARGER_TYPE, COMPARE_TYPE },
