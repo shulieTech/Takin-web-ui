@@ -238,6 +238,9 @@ const EditPage = (props) => {
         // debounce(() => {
         getFieldState('config.threadGroupConfigMap', (configState) => {
           const configMap = cloneDeep(configState.value);
+          if (!configMap) {
+            return;
+          }
           getFieldState('goal', async (state) => {
             Object.keys(configMap || {}).forEach((groupKey) => {
               let sum = 0;
