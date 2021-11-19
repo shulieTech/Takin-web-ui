@@ -46,7 +46,8 @@ const MatchModal: React.FC<Props> = props => {
     setState({
       applicationName: props.entranceApp,
       entrancePath: props.entrancePath,
-      isVirtual: props.isVirtual === '1' ? '1' : '0'
+      isVirtual: props.isVirtual === '1' ? '1' : '0',
+      businessActivityName: undefined
     });
     if (props.entranceApp && props.entrancePath) {
       queryBusinessActivityName(props.entranceApp, props.entrancePath);
