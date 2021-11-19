@@ -135,19 +135,19 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Row type="flex">
             <Col span={8}>
-              <p className={styles.title}>总计</p>
-              <p className={styles.value}>{row[BusinessFlowBean.总计]}</p>
+              <span className={styles.title}>总计</span>
+              <span className={styles.value}>{row[BusinessFlowBean.总计]}</span>
             </Col>
             <Col span={8}>
-              <p className={styles.title}>已完成</p>
-              <p
+              <span className={styles.title}>已完成</span>
+              <span
                 className={styles.value}
                 style={{
                   color: 'var(--FunctionalSuccess-500)'
                 }}
               >
                 {text}
-              </p>
+              </span>
             </Col>
           </Row>
         );
