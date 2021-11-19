@@ -164,7 +164,7 @@ const EditPage = (props) => {
       });
       // 手动变更业务流程时，清空步骤3之前的告警条件
       setFieldState('warnMonitoringGoal', (state) => {
-        state.value = undefined;
+        state.value = [];
       });
     });
 
@@ -521,7 +521,7 @@ const EditPage = (props) => {
                 tableTitle: <span style={{ fontSize: 16 }}>告警条件</span>,
                 flatTreeData: [],
               }}
-              // default={[{}]}
+              default={[]}
             />
           </FormLayout>
 
