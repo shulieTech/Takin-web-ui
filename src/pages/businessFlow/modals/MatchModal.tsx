@@ -42,20 +42,18 @@ const MatchModal: React.FC<Props> = props => {
     businessActivityId: undefined
   });
 
-  useEffect(() => {
+  const handleClick = () => {
     setState({
       applicationName: props.entranceApp,
       entrancePath: props.entrancePath,
       isVirtual: props.isVirtual === '1' ? '1' : '0'
     });
-  }, []);
-
-  useEffect(() => {
     if (props.entranceApp && props.entrancePath) {
       queryBusinessActivityName(props.entranceApp, props.entrancePath);
       queryEntryPath(props.entranceApp);
     }
-  }, []);
+    queryEntryApp();
+  };
 
   /**
    * @name 选择入口应用
@@ -223,10 +221,6 @@ const MatchModal: React.FC<Props> = props => {
       return basicFormData.concat(businessFormData as any);
     }
     return basicFormData;
-  };
-
-  const handleClick = () => {
-    queryEntryApp();
   };
 
   /**
