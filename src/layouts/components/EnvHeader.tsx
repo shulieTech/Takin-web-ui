@@ -24,16 +24,17 @@ const EnvHeader: React.FC<Props> = (props) => {
     });
     if (success) {
       setTenantList(data);
-      setEnvList(data[0]?.envs);
-      const arr = data[0]?.envs.filter(item => {
+      const indexs = _.findIndex(data, ['tenantName', localStorage.getItem('tenant-code')]);
+      setEnvList(data[indexs]?.envs);
+      const arr = data[indexs]?.envs.filter(item => {
         if (item.isDefault) {
           return item;
         }
       });
+      setDesc(arr[indexs]?.desc);
       if (localStorage.getItem('env-code') === null) {
-        localStorage.setItem('env-code', arr[0]?.envCode);
+        localStorage.setItem('env-code', arr[indexs]?.envCode);
       }
-      setDesc(arr[0]?.desc);
     }
   };
 
@@ -84,6 +85,7 @@ const EnvHeader: React.FC<Props> = (props) => {
       localStorage.setItem('env-code', code);
       const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
       window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
+      location.reload();
     }
   };
   const index = _.findIndex(envList, ['envCode', localStorage.getItem('env-code')]);
@@ -126,7 +128,7 @@ const EnvHeader: React.FC<Props> = (props) => {
             <Menu>
               {envList.map((x, ind) => (
                 <Menu.Item
-                  key={x.ind}
+                  key={ind}
                   onClick={() => changeCode(x.envCode, x.desc)}
                 >
                   {x.envName}
