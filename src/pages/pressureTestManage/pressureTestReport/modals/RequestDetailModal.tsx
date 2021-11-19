@@ -133,7 +133,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '客户端/服务端',
         dataIndex: 'logTypeName',
-        width: 70
+        width: 100
       },
       {
         ...customColumnProps,
@@ -145,7 +145,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '同步/异步',
         dataIndex: 'asyncName',
-        width: 50
+        width: 100
       },
       {
         ...customColumnProps,
@@ -263,6 +263,7 @@ const RequestDetailModal: React.FC<Props> = props => {
     const actions = {
       title: '操作',
       dataIndex: 'actions',
+      width: 100,
       render: (text, row) => {
         if (row.entryHostIp && row.agentId) {
           return (

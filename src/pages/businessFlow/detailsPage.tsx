@@ -453,6 +453,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           )}
         </div>
         <ImportFileModal
+          zIndex={10000000}
           onCancel={() => {
             queryDetail();
             setState({
@@ -486,6 +487,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
               }
             });
             router.push(`/businessFlow/details?id=${id}`);
+            window.history.go(0);
           }}
         />
         <Modal

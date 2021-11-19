@@ -19,6 +19,7 @@ interface Props {
   setState?: (value) => void;
   fileData: any;
   id?: string;
+  onSuccess: any;
 }
 
 interface State {
@@ -91,11 +92,11 @@ const EditJmeterModal: React.FC<Props> = props => {
         });
         if (success) {
           message.success('保存成功!');
-          props.setState({
-            isReload: !props.state.isReload
-          });
+          // props.setState({
+          //   isReload: !props.state.isReload
+          // });
           router.push(`/businessFlow/details?id=${data.id}&isAuto=true`);
-
+          props.onSuccess();
           resolve(true);
           return;
         }

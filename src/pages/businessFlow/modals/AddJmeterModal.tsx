@@ -75,6 +75,7 @@ const AddJmeterModal: React.FC<Props> = props => {
               fileId={row.downloadUrl}
               fileData={row}
               state={state}
+              onSuccess={() => props.onSuccess()}
             />
           );
         }
