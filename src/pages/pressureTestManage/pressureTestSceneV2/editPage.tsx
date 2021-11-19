@@ -24,7 +24,8 @@ import { Button, message, Spin } from 'antd';
 import services from './service';
 import TargetMap from './components/TargetMap';
 import ConfigMap from './components/ConfigMap';
-import ConditionTable from './components/ConditionTable';
+// import ConditionTable from './components/ConditionTable';
+import ConditionTableField from './components/ConditionTableField';
 import NumberPicker from './components/NumberPicker';
 import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
@@ -38,7 +39,7 @@ const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
   const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
-  const [flatTreeData, setFlatTreeData] = useState([]);
+  // const [flatTreeData, setFlatTreeData] = useState([]);
   const [initialValue, setInitialValue] = useState({});
   const [detailLoading, setDetailLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -103,31 +104,34 @@ const EditPage = (props) => {
           state.props['x-component-props'].treeData = parsedData || [];
           state.props['x-component-props'].loading = false;
         });
-        actions.setFieldState('config.threadGroupConfigMap', (state) => {
-          /**
-           * 树结构平铺
-           * @param nodes
-           * @param parentId
-           * @returns
-           */
-          const result = [];
-          const flatTree = (nodes, parentId = '-1', idName = 'id') => {
-            if (Array.isArray(nodes) && nodes.length > 0) {
-              nodes.forEach((node) => {
-                const { children, ...rest } = node;
-                result.push({
-                  parentId,
-                  ...rest,
+        actions.setFieldState(
+          '*(config.threadGroupConfigMap, destroyMonitoringGoal ,warnMonitoringGoal)',
+          (state) => {
+            /**
+             * 树结构平铺
+             * @param nodes
+             * @param parentId
+             * @returns
+             */
+            const result = [];
+            const flatTree = (nodes, parentId = '-1', idName = 'id') => {
+              if (Array.isArray(nodes) && nodes.length > 0) {
+                nodes.forEach((node) => {
+                  const { children, ...rest } = node;
+                  result.push({
+                    parentId,
+                    ...rest,
+                  });
+                  flatTree(node.children, node[idName], idName);
                 });
-                flatTree(node.children, node[idName], idName);
-              });
-              return result;
-            }
-          };
-          const flatTreeData1 = flatTree(parsedData, '-1', 'xpathMd5') || [];
-          setFlatTreeData(flatTreeData1);
-          state.props['x-component-props'].flatTreeData = flatTreeData1;
-        });
+                return result;
+              }
+            };
+            const flatTreeData1 = flatTree(parsedData, '-1', 'xpathMd5') || [];
+            // setFlatTreeData(flatTreeData1);
+            state.props['x-component-props'].flatTreeData = flatTreeData1;
+          }
+        );
       } catch (error) {
         throw error;
       }
@@ -160,7 +164,7 @@ const EditPage = (props) => {
       });
       // 手动变更业务流程时，清空步骤3之前的告警条件
       setFieldState('warnMonitoringGoal', (state) => {
-        state.value = [{}];
+        state.value = undefined;
       });
     });
 
@@ -316,6 +320,7 @@ const EditPage = (props) => {
             NumberPicker,
             TargetMap,
             ConfigMap,
+            ConditionTableField,
             ValidateCommand,
             ArrayTable,
             FormBlock,
@@ -373,7 +378,9 @@ const EditPage = (props) => {
                 x-component-props={{
                   placeholder: '请选择',
                   filterOption: (inputValue, option) => {
-                    return inputValue ? option.props?.title?.includes(inputValue) : true;
+                    return inputValue
+                      ? option.props?.title?.includes(inputValue)
+                      : true;
                   },
                   showSearch: true,
                 }}
@@ -488,40 +495,33 @@ const EditPage = (props) => {
             labelAlign={undefined}
             prefixCls={undefined}
           >
-            <ConditionTable
-              dictionaryMap={dictionaryMap}
-              flatTreeData={flatTreeData}
+            <Field
               name="destroyMonitoringGoal"
-              title={
-                <span style={{ fontSize: 16 }}>
-                  终止条件
-                  <span style={{ color: '#f7917a', marginLeft: 8 }}>
-                    为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+              x-component="ConditionTableField"
+              x-component-props={{
+                dictionaryMap,
+                tableTitle: (
+                  <span style={{ fontSize: 16 }}>
+                    终止条件
+                    <span style={{ color: '#f7917a', marginLeft: 8 }}>
+                      为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+                    </span>
                   </span>
-                </span>}
-              arrayFieldProps={{
-                default: [{}],
+                ),
                 minItems: 1,
-                // 'x-rules': [{
-                //   validator: (val) => {
-                //     if (!(val || []).some((x) => x.formulaTarget === '0')) {
-                //       return '请至少设置1条包含RT的终止条件';
-                //     }
-                //     if (!(val || []).some((x) => x.formulaTarget === '2')) {
-                //       return '请至少设置1条包含成功率的终止条件';
-                //     }
-                //   },
-                // }],
+                flatTreeData: [],
               }}
+              default={[{}]}
             />
-            <ConditionTable
-              dictionaryMap={dictionaryMap}
-              flatTreeData={flatTreeData}
+            <Field
               name="warnMonitoringGoal"
-              title={<span style={{ fontSize: 16 }}>告警条件</span>}
-              arrayFieldProps={{
-                default: [{}],
+              x-component="ConditionTableField"
+              x-component-props={{
+                dictionaryMap,
+                tableTitle: <span style={{ fontSize: 16 }}>告警条件</span>,
+                flatTreeData: [],
               }}
+              // default={[{}]}
             />
           </FormLayout>
 
@@ -614,7 +614,13 @@ const EditPage = (props) => {
                   >
                     {isLastStep ? '保存' : '下一步'}
                   </Button>
-                  {/* <Button onClick={() => actions.getFormState(state => console.log(state.values))}>test</Button> */}
+                  {/* <Button
+                    onClick={() =>
+                      actions.getFormState((state) => console.log(state.values))
+                    }
+                  >
+                    test
+                  </Button> */}
                   {/* <Reset>重置</Reset>​ */}
                 </FormButtonGroup>
               );
