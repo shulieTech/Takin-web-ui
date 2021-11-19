@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown, Menu, Icon, Button } from 'antd';
 import { getTakinTenantAuthority } from 'src/utils/utils';
 import tenantCode from './service';
+import _ from 'lodash';
 interface Props { }
-
+let path = '';
 const EnvHeader: React.FC<Props> = (props) => {
   const [envList, setEnvList] = useState([]);
   const [tenantList, setTenantList] = useState([]);
@@ -36,6 +37,21 @@ const EnvHeader: React.FC<Props> = (props) => {
     }
   };
 
+  function getPath(lists) {
+    if (lists.length === 0) {
+      return;
+    }
+    if (lists[0].type === 'Item') {
+      path = lists[0].path;
+    }
+    [lists[0]].forEach(list => {
+      if (list.children) {
+        getPath(list.children);
+      }
+    });
+    return path;
+  }
+
   const changeTenant = async (code) => {
     const {
       data: { success, data }
@@ -52,7 +68,8 @@ const EnvHeader: React.FC<Props> = (props) => {
       });
       localStorage.setItem('env-code', arr[0]?.envCode);
       setDesc(arr[0]?.desc);
-      window.location.href = `?key=${localStorage.getItem('tenant-code')}#/dashboard`;
+      const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
+      window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
     }
   };
 
@@ -65,9 +82,11 @@ const EnvHeader: React.FC<Props> = (props) => {
     if (success) {
       setDesc(descs);
       localStorage.setItem('env-code', code);
-      window.location.href = `?key=${localStorage.getItem('tenant-code')}#/dashboard`;
+      const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
+      window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
     }
   };
+  const index = _.findIndex(envList, ['envCode', localStorage.getItem('env-code')]);
   return (
     <div
       style={{
@@ -118,7 +137,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         >
           <Button type="primary">
             环境：
-            {localStorage.getItem('env-code')}
+            {envList[index]?.envName}
             <Icon type="down" />
           </Button>
         </Dropdown>
