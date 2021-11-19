@@ -31,9 +31,12 @@ const EnvHeader: React.FC<Props> = (props) => {
           return item;
         }
       });
-      setDesc(arr[indexs]?.desc);
       if (localStorage.getItem('env-code') === null) {
         localStorage.setItem('env-code', arr[indexs]?.envCode);
+        setDesc(arr[indexs]?.desc);
+      } else {
+        const ind = _.findIndex(data[indexs].envs, ['envCode', localStorage.getItem('env-code')]);
+        setDesc(data[indexs].envs[ind]?.desc);
       }
     }
   };
