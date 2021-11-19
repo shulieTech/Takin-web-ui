@@ -32,7 +32,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
-  const userType: string = localStorage.getItem('troweb-role');
+  const userType: string = localStorage.getItem('isAdmin');
   const expire: string = localStorage.getItem('troweb-expire');
   /**
    * @name  删除脚本
@@ -364,7 +364,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
             )}
 
             <DebugScriptRecordModal btnText="调试记录" id={row.id} />
-            {userType === '0' &&
+            {userType &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8, marginLeft: 8 }}>

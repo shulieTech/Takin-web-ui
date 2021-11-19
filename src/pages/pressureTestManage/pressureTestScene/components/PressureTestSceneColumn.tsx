@@ -33,7 +33,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
     localStorage.getItem('trowebUserResource') &&
     JSON.parse(localStorage.getItem('trowebUserResource'));
 
-  const userType: string = localStorage.getItem('troweb-role');
+  const userType: string = localStorage.getItem('isAdmin');
   const expire: string = localStorage.getItem('troweb-expire');
 
   /**
@@ -328,7 +328,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                 查看报告
               </Link>
             )}
-            {userType === '0' &&
+            {userType &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>

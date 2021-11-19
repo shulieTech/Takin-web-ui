@@ -23,7 +23,7 @@ const getBusinessActivityColumns = (
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
-  const userType: string = localStorage.getItem('troweb-role');
+  const userType: string = localStorage.getItem('isAdmin');
   const expire: string = localStorage.getItem('troweb-expire');
 
   /**
@@ -109,7 +109,7 @@ const getBusinessActivityColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType === '0' &&
+          {userType &&
             expire === 'false' &&
             getTakinAuthority() === 'true' && (
               <span style={{ marginRight: 8 }}>

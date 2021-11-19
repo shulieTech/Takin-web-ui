@@ -167,6 +167,7 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
+      localStorage.setItem('isAdmin', data.isAdmin);
       localStorage.setItem('tenant-code', data.tenantCode);
       localStorage.setItem('env-code', data.envCode);
       localStorage.setItem('full-link-token', data.xToken);

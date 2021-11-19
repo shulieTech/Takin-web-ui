@@ -13,7 +13,7 @@ import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import { getTakinAuthority } from 'src/utils/utils';
 
 const getColumns = (state, setState): ColumnProps<any>[] => {
-  const userType: string = localStorage.getItem('troweb-role');
+  const userType: string = localStorage.getItem('isAdmin');
   const expire: string = localStorage.getItem('troweb-expire');
 
   return [
@@ -54,7 +54,7 @@ const getColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
-            {userType === '0' &&
+            {userType &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>
