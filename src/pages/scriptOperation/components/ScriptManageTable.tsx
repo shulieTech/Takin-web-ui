@@ -16,7 +16,7 @@ import { getTakinAuthority } from 'src/utils/utils';
 const { confirm } = Modal;
 
 const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
-  const userType: string = localStorage.getItem('troweb-role');
+  const userType: string = localStorage.getItem('isAdmin');
   const expire: string = localStorage.getItem('troweb-expire');
   const showConfirm = row => {
     confirm({
@@ -104,7 +104,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
   const menu = row => {
     return (
       <Menu>
-        {userType === '0' &&
+        {userType &&
           expire === 'false' &&
           getTakinAuthority() === 'true' && (
             <Menu.Item>
