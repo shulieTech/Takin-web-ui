@@ -85,6 +85,10 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       type: value,
       MQPlan: []
     });
+    // 更改MQ类型后，会重新拉取隔离方案列表，并清空隔离方案之前的值
+    state?.form?.setFieldsValue({
+      [ShadowConsumerBean.隔离方案]: undefined
+    });
   };
   const getFormData = (): FormDataType[] => {
     return [
@@ -173,6 +177,9 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       btnText={props.btnText}
       btnProps={{ type: action === 'edit' ? 'link' : 'primary' }}
       onClick={handleClick}
+      afterCancel={() => setState({
+        type: undefined
+      })}
     >
       <CommonForm
         rowNum={1}
