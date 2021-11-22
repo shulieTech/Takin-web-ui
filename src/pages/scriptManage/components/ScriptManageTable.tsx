@@ -364,7 +364,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
             )}
 
             <DebugScriptRecordModal btnText="调试记录" id={row.id} />
-            {userType &&
+            {userType === 'true' &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8, marginLeft: 8 }}>

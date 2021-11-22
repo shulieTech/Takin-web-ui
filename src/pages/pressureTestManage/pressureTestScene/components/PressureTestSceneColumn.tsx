@@ -328,7 +328,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                 查看报告
               </Link>
             )}
-            {userType &&
+            {userType === 'true' &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>

@@ -104,7 +104,7 @@ const getColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType &&
+          {userType === 'true' &&
             expire === 'false' &&
             getTakinAuthority() === 'true' && (
               <span style={{ marginRight: 8 }}>
