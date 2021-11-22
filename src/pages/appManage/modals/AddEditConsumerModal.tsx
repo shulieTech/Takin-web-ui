@@ -178,7 +178,8 @@ const AddEditConsumerModal: React.FC<Props> = props => {
       btnProps={{ type: action === 'edit' ? 'link' : 'primary' }}
       onClick={handleClick}
       afterCancel={() => setState({
-        type: undefined
+        type: undefined,
+        MQPlan: [],
       })}
     >
       <CommonForm
