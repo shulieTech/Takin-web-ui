@@ -255,7 +255,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 path={row.requestPath}
                 isVirtual={String(row.businessType)}
                 entranceApp={row.businessApplicationName}
-                entrancePath={row.entrace}
+                entrancePath={row.entracePath}
                 samplerType={row.samplerType}
                 onSuccess={() => {
                   setState({

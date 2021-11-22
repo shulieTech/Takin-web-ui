@@ -66,9 +66,11 @@ const MatchModal: React.FC<Props> = props => {
       businessActivityName: undefined,
       businessActivityId: undefined
     });
-    state.form.setFieldsValue({
-      entrance: undefined
-    });
+    // tslint:disable-next-line:no-unused-expression
+    state.form &&
+      state.form.setFieldsValue({
+        entrance: undefined
+      });
     queryEntryPath(value);
   };
 
@@ -80,10 +82,12 @@ const MatchModal: React.FC<Props> = props => {
       businessActivityName: undefined,
       businessActivityId: undefined
     });
-    state.form.setFieldsValue({
-      applicationName: undefined,
-      entrance: undefined
-    });
+    // tslint:disable-next-line:no-unused-expression
+    state.form &&
+      state.form.setFieldsValue({
+        applicationName: undefined,
+        entrance: undefined
+      });
   };
   /**
    * @name 选择入口path
@@ -278,9 +282,11 @@ const MatchModal: React.FC<Props> = props => {
         });
         return;
       }
-      state.form.setFieldsValue({
-        activityName: props.apiName
-      });
+      // tslint:disable-next-line:no-unused-expression
+      state.form &&
+        state.form.setFieldsValue({
+          activityName: props.apiName
+        });
       setState({
         businessActivityName: undefined,
         businessActivityId: undefined
