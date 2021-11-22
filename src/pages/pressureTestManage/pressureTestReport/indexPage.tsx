@@ -31,7 +31,7 @@ const PressureTestReport: React.FC<PressureTestReportProps> = props => {
 
   const { location } = props;
   const { query } = location;
-  const { sceneName } = query;
+  const { sceneId } = query;
 
   return (
     <Fragment>
@@ -44,7 +44,7 @@ const PressureTestReport: React.FC<PressureTestReportProps> = props => {
           rowNum: 4
         }}
         ajaxProps={{ url: '/report/listReport', method: 'GET' }}
-        searchParams={{ ...state.searchParams, sceneName }}
+        searchParams={{ ...state.searchParams, sceneId }}
         toggleRoload={state.isReload}
         datekeys={[
           {
