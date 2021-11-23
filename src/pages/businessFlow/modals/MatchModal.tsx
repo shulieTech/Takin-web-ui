@@ -16,6 +16,7 @@ interface Props {
   rowDetail: any;
   onSuccess: () => void;
   businessFlowId: string;
+  entrancePathWithoutZero: string;
 }
 
 interface State {
@@ -179,7 +180,7 @@ const MatchModal: React.FC<Props> = props => {
     {
       key: 'entrance',
       options: {
-        initialValue: props.entrancePath,
+        initialValue: props.entrancePathWithoutZero,
         rules: [
           {
             required: true,
