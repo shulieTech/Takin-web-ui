@@ -98,6 +98,7 @@ const EnvHeader: React.FC<Props> = (props) => {
     }
   };
   const index = _.findIndex(envList, ['envCode', localStorage.getItem('env-code')]);
+  const indexcode = _.findIndex(tenantList, ['tenantCode', localStorage.getItem('tenant-code')]);
   return (
     <div
       style={{
@@ -120,7 +121,7 @@ const EnvHeader: React.FC<Props> = (props) => {
                   key={x.tenantId}
                   onClick={() => changeTenant(x.tenantCode)}
                 >
-                  {x.tenantName}
+                  {x.tenantNick}
                 </Menu.Item>
               ))}
             </Menu>
@@ -128,7 +129,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         >
           <Button type="primary">
             租户：
-            {localStorage.getItem('tenant-code')}
+            {tenantList[indexcode]?.tenantNick}
             <Icon type="down" />
           </Button>
         </Dropdown>
