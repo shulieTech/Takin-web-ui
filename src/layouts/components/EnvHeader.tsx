@@ -73,6 +73,9 @@ const EnvHeader: React.FC<Props> = (props) => {
       localStorage.setItem('env-code', arr[0]?.envCode);
       setDesc(arr[0]?.desc);
       const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
+      localStorage.removeItem('trowebUserResource');
+      localStorage.removeItem('trowebBtnResource');
+      localStorage.removeItem('trowebUserMenu');
       window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
     }
   };
@@ -87,6 +90,9 @@ const EnvHeader: React.FC<Props> = (props) => {
       setDesc(descs);
       localStorage.setItem('env-code', code);
       const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
+      localStorage.removeItem('trowebUserResource');
+      localStorage.removeItem('trowebBtnResource');
+      localStorage.removeItem('trowebUserMenu');
       window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
       location.reload();
     }
