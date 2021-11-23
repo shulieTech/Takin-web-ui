@@ -90,7 +90,7 @@ const LinkOverview: React.FC<Props> = props => {
             );
           }
           return '-';
-        } 
+        }
       },
       {
         ...customColumnProps,
@@ -122,6 +122,7 @@ const LinkOverview: React.FC<Props> = props => {
     <Fragment>
       <Header title="链路概览" />
       <CommonTable
+        rowKey="xpathMd5"
         size="small"
         style={{ marginTop: 8 }}
         columns={getLinkOverviewColumns()}
