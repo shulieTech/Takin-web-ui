@@ -127,7 +127,12 @@ const EnvHeader: React.FC<Props> = (props) => {
             </Menu>
           }
         >
-          <Button type="primary">
+          <Button
+            type="primary"
+            style={{
+              display: tenantList[indexcode]?.tenantCode === 'default' ? 'inline-block' : 'none'
+            }}
+          >
             租户：
             {tenantList[indexcode]?.tenantNick}
             <Icon type="down" />
@@ -147,7 +152,13 @@ const EnvHeader: React.FC<Props> = (props) => {
             </Menu>
           }
         >
-          <Button type="primary">
+          <Button
+            type="primary"
+            style={{
+              borderTopLeftRadius: tenantList[indexcode]?.tenantCode === 'default' ? '0px' : '4px',
+              borderBottomLeftRadius: tenantList[indexcode]?.tenantCode === 'default' ? '0px' : '4px'
+            }}
+          >
             环境：
             {envList[index]?.envName}
             <Icon type="down" />
