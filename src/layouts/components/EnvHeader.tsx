@@ -6,6 +6,7 @@ import _ from 'lodash';
 interface Props { }
 let path = '';
 const EnvHeader: React.FC<Props> = (props) => {
+  const userType: string = localStorage.getItem('troweb-role');
   const [envList, setEnvList] = useState([]);
   const [tenantList, setTenantList] = useState([]);
   const [desc, setDesc] = useState('');
@@ -130,7 +131,7 @@ const EnvHeader: React.FC<Props> = (props) => {
           <Button
             type="primary"
             style={{
-              display: tenantList[indexcode]?.tenantCode === 'default' ? 'inline-block' : 'none'
+              display: userType === '0' ? 'inline-block' : 'none'
             }}
           >
             租户：
@@ -155,8 +156,8 @@ const EnvHeader: React.FC<Props> = (props) => {
           <Button
             type="primary"
             style={{
-              borderTopLeftRadius: tenantList[indexcode]?.tenantCode === 'default' ? '0px' : '4px',
-              borderBottomLeftRadius: tenantList[indexcode]?.tenantCode === 'default' ? '0px' : '4px'
+              borderTopLeftRadius: userType === '0' ? '0px' : '4px',
+              borderBottomLeftRadius: userType === '0' ? '0px' : '4px'
             }}
           >
             环境：
