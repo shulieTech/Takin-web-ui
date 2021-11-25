@@ -139,7 +139,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
     const {
       data: { data, success }
     } = await AppManageService.allByActivity({
-      appName: detailData.applicationName
+      appName: detailData.applicationName,
+      clusterTest: state.clusterTest,
     });
     if (success) {
       const arr = [];
