@@ -99,16 +99,31 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
    * @name  下载单个脚本
    */
   const handleDownloadFile = async (Id, fileName) => {
-    const {
-      data: { data, success }
-    } = await ScriptManageService.downloadSingleScript({
-      filePath: Id
+    const { data, status, headers } = await request({
+      url: `${serverUrl}/file/download?filePath=${Id}`,
+      responseType: 'blob',
+      headers: {
+        'x-token': localStorage.getItem('full-link-token'),
+        'Auth-Cookie': localStorage.getItem('auth-cookie')
+      }
     });
-    if (success) {
-      downloadFile(data.content, fileName);
-      // location.href = `${data.content}`;
-      // message.success('下载成功');
-    }
+    const blob = new Blob([data], { type: `` });
+
+    // 获取heads中的filename文件名
+    const downloadElement = document.createElement('a');
+    // 创建下载的链接
+    const href = window.URL.createObjectURL(blob);
+
+    downloadElement.href = href;
+    // 下载后文件名
+    downloadElement.download = fileName;
+    document.body.appendChild(downloadElement);
+    // 点击下载
+    downloadElement.click();
+    // 下载完成移除元素
+    document.body.removeChild(downloadElement);
+    // 释放掉blob对象
+    window.URL.revokeObjectURL(href);
   };
 
   return [
