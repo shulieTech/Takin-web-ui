@@ -30,7 +30,7 @@ const AddEditDbModal: React.FC<Props> = props => {
     dsType: null,
     cacheTempValue: null
   });
-  const text = props.id ? '编辑影子库表' : '新增影子库表';
+  const text = props.id ? '编辑存储影子集群' : '新增存储影子集群';
   const getDetails = async () => {
     queryCacheTemp();
     if (!props.id) {
