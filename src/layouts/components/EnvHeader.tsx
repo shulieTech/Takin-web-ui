@@ -107,10 +107,17 @@ const EnvHeader: React.FC<Props> = (props) => {
         padding: '0 8px',
         marginTop: 8,
         display: getTakinTenantAuthority() === 'false' ? 'none' : 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
       }}
     >
-      <span style={{ marginRight: 16, color: '#D0D5DE' }}>
+      <span
+        style={{
+          marginLeft: '35%',
+          color: 'var(--FunctionalAlert-900)',
+          fontSize: '20px',
+
+        }}
+      >
         {desc}
       </span>
       <Button.Group>

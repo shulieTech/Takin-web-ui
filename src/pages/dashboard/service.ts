@@ -12,14 +12,14 @@ const IndexService = {
    * @name 获取压测场景列表
    */
   async queryPressureTestSceneList(data = {}) {
-    const url = '/scenemanage/list';
+    const url = '/scenemanage/list/un_safe';
     return httpGet(url, data);
   },
   /**
    * @name 获取压测报告列表
    */
   async queryPressureTestReportList(data = {}) {
-    const url = '/report/listReport';
+    const url = '/report/listReport/un_safe';
     return httpGet(url, data);
   },
   /**
@@ -33,7 +33,7 @@ const IndexService = {
    * @name 获取可用流量账户信息（dictionary）
    */
   async queryFlowAccountInfoDic(data = {}) {
-    const url = '/asset/account_book';
+    const url = '/account_book/un_safe';
     return httpGet(url, data);
   }
 };

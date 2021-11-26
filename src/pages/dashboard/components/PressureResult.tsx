@@ -8,6 +8,9 @@ interface Props {
 }
 const PressureResult: React.FC<Props> = props => {
   const { data } = props;
+  const menuAuthority: any =
+  localStorage.getItem('trowebUserResource') &&
+  JSON.parse(localStorage.getItem('trowebUserResource'));
 
   const columns = [
     {
@@ -86,6 +89,10 @@ const PressureResult: React.FC<Props> = props => {
             <Link
               to="/pressureTestManage/pressureTestReport"
               className={styles.more}
+              style={{
+                display:
+                  menuAuthority?.pressureTestManage_pressureTestReport ? 'block' : 'none'
+              }}
             >
               更多 <Icon type="right" />
             </Link>
