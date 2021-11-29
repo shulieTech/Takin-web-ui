@@ -6,7 +6,7 @@ import React from 'react';
 const getPressureTestReportFormData = (): FormDataType[] => {
   return [
     {
-      key: 'id',
+      key: 'reportId',
       label: '',
       node: <Input placeholder="报告ID" />
     },
