@@ -7,7 +7,7 @@ import BusinessSelect from 'src/components/business-select';
 const getPressureTestSceneFormData = (): FormDataType[] => {
   return [
     {
-      key: 'id',
+      key: 'sceneId',
       label: '',
       node: <Input placeholder="压测场景ID" />
     },
