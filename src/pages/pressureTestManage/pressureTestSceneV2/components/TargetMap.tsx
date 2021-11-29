@@ -8,7 +8,7 @@ const TargetMap = (props) => {
 
   const { treeData = [], loading = false } = componentProps;
 
-  const renderInputTd = (record, fieldName, fieldLabel, fieldProps = {}) => {
+  const renderInputTd = (record, fieldName, fieldLabel, fieldProps = {}, moreRules = []) => {
     if (!['SAMPLER'].includes(record.type)) {
       return null;
     }
@@ -30,15 +30,17 @@ const TargetMap = (props) => {
               },
               onBlur: (e) => {
                 // 联动填充空白值
-                form.setFieldState(`.goal.*.${fieldName}`, state => {
-                  if (state.value === undefined) {
-                    state.value = e.target.value;
-                  }
+                form.getFieldState(tdPath, sourceState => {
+                  form.setFieldState(`.goal.*.${fieldName}`, state => {
+                    if (sourceState.valid && state.value === undefined) {
+                      state.value = e.target.value;
+                    }
+                  });
                 });
               },
               ...fieldProps,
             },
-            'x-rules': [{ required: true, message: `请输入${fieldLabel}` }],
+            'x-rules': [{ required: true, message: `请输入${fieldLabel}` }, ...moreRules],
           })
         }
       />
@@ -75,13 +77,15 @@ const TargetMap = (props) => {
       title: '目标TPS',
       dataIndex: 'tps',
       render: (text, record, index) => (
-        <span>{renderInputTd(record, 'tps', '目标TPS')}</span>
+        <span>{renderInputTd(record, 'tps', '目标TPS', {}, [{ format: 'integer', message: '请输入整数' }])}</span>
       ),
     },
     {
       title: '目标RT(ms)',
       dataIndex: 'rt',
-      render: (text, record, index) => renderInputTd(record, 'rt', '目标RT'),
+      render: (text, record, index) => (
+        <span>{renderInputTd(record, 'rt', '目标RT', {}, [{ format: 'integer', message: '请输入整数' }])}</span>
+      ),
     },
     {
       title: '目标成功率(%)',
