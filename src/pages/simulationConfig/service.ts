@@ -39,6 +39,10 @@ const configService = {
     const url = `/fast/agent/access/config/useGlobal?id=${id}`;
     return httpDelete(url);
   },
+  async pathConfig(id) {
+    const url = `/plugin/path/config`;
+    return httpGet(url);
+  },
 };
 
 export default configService;

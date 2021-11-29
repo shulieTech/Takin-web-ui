@@ -4,6 +4,7 @@ import { customColumnProps } from 'src/components/custom-table/utils';
 import { ColumnProps } from 'antd/lib/table';
 import { Form, Input, message, Select } from 'antd';
 import { FormItemProps } from 'antd/lib/form';
+import configService from '../service';
 const { Option } = Select;
 interface Props {
   form: any;
@@ -19,7 +20,7 @@ const RootDirectory: React.FC<Props> = props => {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
   };
-  const handleOk = e => {
+  const handleOk = () => {
     props.form.validateFields(async (err, values) => {
       if (err) {
         message.info('请检查表单必填项');
@@ -29,9 +30,20 @@ const RootDirectory: React.FC<Props> = props => {
       props.form.resetFields();
     });
   };
+
+  const onClick = async () => {
+    const {
+      data: { data, success }
+    } = await configService.pathConfig({});
+    if (success) {
+      // console.log(data)
+    }
+  };
+
   return (
     <CommonModal
       beforeOk={handleOk}
+      onClick={onClick}
       modalProps={{
         width: 600,
         title: '探针根目录编辑'
@@ -91,7 +103,7 @@ const RootDirectory: React.FC<Props> = props => {
                 )}
               </Form.Item>
             </div>
-          )}{ props.form.getFieldValue('version') === 'oss' && (
+          )}{props.form.getFieldValue('version') === 'oss' && (
             <div>
               <Form.Item
                 label="endpoint"
@@ -108,14 +120,14 @@ const RootDirectory: React.FC<Props> = props => {
                 {props.form.getFieldDecorator('accessKeyId', {
                   rules: [{ required: true, message: `请输入accessKeyId` }],
                 })(
-                  <Input placeholder="请输入accessKeyId" type="password"/>
+                  <Input placeholder="请输入accessKeyId" type="password" />
                 )}
               </Form.Item>
               <Form.Item
                 label="accessKeySecret"
               >
                 {props.form.getFieldDecorator('accessKeySecret')(
-                  <Input placeholder="请输入accessKeySecret" type="password"/>
+                  <Input placeholder="请输入accessKeySecret" type="password" />
                 )}
               </Form.Item>
               <Form.Item
