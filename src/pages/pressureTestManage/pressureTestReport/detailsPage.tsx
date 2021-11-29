@@ -160,6 +160,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
 
   const headList = [
     { label: '报告ID', value: detailData.id },
+    { label: '场景ID', value: detailData.sceneId },
     {
       label: '压测时长',
       value: detailData.testTotalTime
