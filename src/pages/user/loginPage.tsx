@@ -104,14 +104,6 @@ export default class Login extends DvaComponent<Props, State> {
 
   componentDidMount = () => {
     this.queryMenuList();
-    const { key } = queryString.parse(location.search);
-    if (key) {
-      localStorage.setItem('tenant-code', key.replace(/\//, ''));
-      localStorage.setItem('env-code', 'test');
-    } else {
-      localStorage.setItem('tenant-code', 'default');
-      localStorage.setItem('env-code', 'test');
-    }
   };
 
   refresh = () => {
