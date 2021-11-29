@@ -33,7 +33,7 @@ const IndexService = {
    * @name 获取可用流量账户信息（dictionary）
    */
   async queryFlowAccountInfoDic(data = {}) {
-    const url = '/account_book/un_safe';
+    const url = '/asset/account_book/un_safe';
     return httpGet(url, data);
   }
 };
