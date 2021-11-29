@@ -217,7 +217,7 @@ const PressureTestLive: React.FC<Props> = props => {
   };
   const headList = [
     {
-      label: '最大并发',
+      label: '压测场景ID',
       value: detailData.sceneId
     },
     {
