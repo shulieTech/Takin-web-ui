@@ -77,7 +77,7 @@ const EnvHeader: React.FC<Props> = (props) => {
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
-      window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
+      window.location.href = `#${getPath(menu)}`;
     }
   };
 
@@ -94,7 +94,7 @@ const EnvHeader: React.FC<Props> = (props) => {
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
-      window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
+      window.location.href = `#${getPath(menu)}`;
       location.reload();
     }
   };
