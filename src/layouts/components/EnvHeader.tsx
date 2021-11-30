@@ -73,11 +73,14 @@ const EnvHeader: React.FC<Props> = (props) => {
       });
       localStorage.setItem('env-code', arr[0]?.envCode);
       setDesc(arr[0]?.desc);
-      const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
-      window.location.href = `#${getPath(menu)}`;
+      if (window.location.hash === '#/dashboard') {
+        window.location.reload();
+      } else {
+        window.location.hash = '#/dashboard';
+      }
     }
   };
 
@@ -90,12 +93,14 @@ const EnvHeader: React.FC<Props> = (props) => {
     if (success) {
       setDesc(descs);
       localStorage.setItem('env-code', code);
-      const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
-      window.location.href = `#${getPath(menu)}`;
-      location.reload();
+      if (window.location.hash === '#/dashboard') {
+        window.location.reload();
+      } else {
+        window.location.hash = '#/dashboard';
+      }
     }
   };
   const index = _.findIndex(envList, ['envCode', localStorage.getItem('env-code')]);
