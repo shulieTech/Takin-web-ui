@@ -24,7 +24,6 @@ import { Button, message, Spin } from 'antd';
 import services from './service';
 import TargetMap from './components/TargetMap';
 import ConfigMap from './components/ConfigMap';
-// import ConditionTable from './components/ConditionTable';
 import ConditionTableField from './components/ConditionTableField';
 import NumberPicker from './components/NumberPicker';
 import ValidateCommand from './components/ValidateCommand';
