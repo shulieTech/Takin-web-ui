@@ -73,11 +73,14 @@ const EnvHeader: React.FC<Props> = (props) => {
       });
       localStorage.setItem('env-code', arr[0]?.envCode);
       setDesc(arr[0]?.desc);
-      const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
-      window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
+      if (window.location.hash === '#/dashboard') {
+        window.location.reload();
+      } else {
+        window.location.hash = '#/dashboard';
+      }
     }
   };
 
@@ -90,12 +93,14 @@ const EnvHeader: React.FC<Props> = (props) => {
     if (success) {
       setDesc(descs);
       localStorage.setItem('env-code', code);
-      const menu = JSON.parse(localStorage.getItem('trowebUserMenu'));
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
-      window.location.href = `?key=${localStorage.getItem('tenant-code')}#${getPath(menu)}`;
-      location.reload();
+      if (window.location.hash === '#/dashboard') {
+        window.location.reload();
+      } else {
+        window.location.hash = '#/dashboard';
+      }
     }
   };
   const index = _.findIndex(envList, ['envCode', localStorage.getItem('env-code')]);
@@ -107,10 +112,17 @@ const EnvHeader: React.FC<Props> = (props) => {
         padding: '0 8px',
         marginTop: 8,
         display: getTakinTenantAuthority() === 'false' ? 'none' : 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
       }}
     >
-      <span style={{ marginRight: 16, color: '#D0D5DE' }}>
+      <span
+        style={{
+          marginLeft: '35%',
+          color: 'var(--FunctionalAlert-900)',
+          fontSize: '20px',
+
+        }}
+      >
         {desc}
       </span>
       <Button.Group>
