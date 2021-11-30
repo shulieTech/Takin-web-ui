@@ -38,7 +38,7 @@ const getFormData = (that: Login): FormDataType[] => {
         <Input
           className={styles.inputStyle}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
-          placeholder="账号"
+          placeholder="<用户名>@<企业别名>，例如： username@shulie"
         />
       )
     },
