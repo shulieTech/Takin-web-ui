@@ -31,13 +31,45 @@ const RootDirectory: React.FC<Props> = props => {
     wrapperCol: { span: 15 },
   };
   const handleOk = () => {
-    props.form.validateFields(async (err, values) => {
-      if (err) {
-        message.info('请检查表单必填项');
-        return;
-      }
-      // console.log(values);
-      props.form.resetFields();
+    return new Promise(resolve => {
+      props.form.validateFields(async (err, values) => {
+        if (err) {
+          message.info('请检查表单必填项');
+          resolve(false);
+          return;
+        }
+        delete values.pathType;
+        if (state.datas?.id) {
+          const {
+            data: { data, success }
+          } = await configService.pathUpdate({
+            context: JSON.stringify(values),
+            id: state.datas?.id,
+            pathType: props.form.getFieldValue('pathType')
+          });
+          if (success) {
+            resolve(true);
+            message.success('保存成功');
+            props.form.resetFields();
+
+          }
+          resolve(false);
+        } else {
+          const {
+            data: { data, success }
+          } = await configService.pathCreate({
+            context: JSON.stringify(values),
+            pathType: props.form.getFieldValue('pathType')
+          });
+          if (success) {
+            resolve(true);
+            message.success('保存成功');
+            props.form.resetFields();
+
+          }
+          resolve(false);
+        }
+      });
     });
   };
 
@@ -57,7 +89,7 @@ const RootDirectory: React.FC<Props> = props => {
       }
       setState({
         datas: data,
-        context: data && JSON.parse(data.context)
+        context: data && JSON.parse(data?.context)
       });
     }
   };
@@ -72,13 +104,11 @@ const RootDirectory: React.FC<Props> = props => {
   return (
     <CommonModal
       onClick={onClick}
+      afterCancel={handleCancel}
       modalProps={{
         width: 700,
         title: '探针根目录编辑',
         footer: [
-          <Button key="back" onClick={handleCancel}>
-            取消
-          </Button>,
           <Button
             key="submit"
             type="primary"
@@ -98,7 +128,7 @@ const RootDirectory: React.FC<Props> = props => {
         <Form.Item
           label="类型"
         >
-          {props.form.getFieldDecorator('version', {
+          {props.form.getFieldDecorator('pathType', {
             initialValue: `${state.datas?.pathType}`,
             rules: [{ required: true, message: `请输入类型` }],
           })(
@@ -109,12 +139,12 @@ const RootDirectory: React.FC<Props> = props => {
           )}
         </Form.Item>
         {
-          props.form.getFieldValue('version') === '1' && (
+          props.form.getFieldValue('pathType') === '1' && (
             <div>
               <Form.Item
                 label="ip"
               >
-                {props.form.getFieldDecorator('ip', {
+                {props.form.getFieldDecorator('ftpHost', {
                   rules: [{ required: true, message: `请输入地址` }],
                 })(
                   <Input placeholder="请输入ip" />
@@ -123,7 +153,7 @@ const RootDirectory: React.FC<Props> = props => {
               <Form.Item
                 label="端口"
               >
-                {props.form.getFieldDecorator('version', {
+                {props.form.getFieldDecorator('ftpPort', {
                   rules: [{ required: true, message: `请输入端口` }],
                 })(
                   <Input placeholder="请输入端口" />
@@ -132,25 +162,25 @@ const RootDirectory: React.FC<Props> = props => {
               <Form.Item
                 label="账号"
               >
-                {props.form.getFieldDecorator('version')(
+                {props.form.getFieldDecorator('username')(
                   <Input placeholder="请输入账号" />
                 )}
               </Form.Item>
               <Form.Item
                 label="密码"
               >
-                {props.form.getFieldDecorator('version')(
+                {props.form.getFieldDecorator('passwd')(
                   <Input placeholder="请输入密码" type="password" />
                 )}
               </Form.Item>
             </div>
-          )}{props.form.getFieldValue('version') === '0' && (
+          )}{props.form.getFieldValue('pathType') === '0' && (
             <div>
               <Form.Item
                 label="endpoint"
               >
                 {props.form.getFieldDecorator('endpoint', {
-                  initialValue: state.context.endpoint,
+                  initialValue: state.context?.endpoint,
                   rules: [{ required: true, message: `请输入endpoint` }],
                 })(
                   <Input placeholder="请输入endpoint" />
@@ -160,7 +190,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="accessKeyId"
               >
                 {props.form.getFieldDecorator('accessKeyId', {
-                  initialValue: state.context.accessKeyId,
+                  initialValue: state.context?.accessKeyId,
                   rules: [{ required: true, message: `请输入accessKeyId` }],
                 })(
                   <Input placeholder="请输入accessKeyId" type="password" />
@@ -170,7 +200,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="accessKeySecret"
               >
                 {props.form.getFieldDecorator('accessKeySecret', {
-                  initialValue: state.context.accessKeySecret,
+                  initialValue: state.context?.accessKeySecret,
                   rules: [{ required: true, message: `请输入accessKeySecret` }],
                 })(
                   <Input placeholder="请输入accessKeySecret" type="password" />
@@ -180,7 +210,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="bucketName"
               >
                 {props.form.getFieldDecorator('bucketName', {
-                  initialValue: state.context.bucketName,
+                  initialValue: state.context?.bucketName,
                   rules: [{ required: true, message: `请输入bucketName` }],
                 })(
                   <Input placeholder="请输入bucketName" />

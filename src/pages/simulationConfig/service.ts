@@ -43,6 +43,14 @@ const configService = {
     const url = `/plugin/path/config`;
     return httpGet(url);
   },
+  async pathUpdate(data = {}) {
+    const url = `/plugin/path/config/update`;
+    return httpPut(url, data);
+  },
+  async pathCreate(data = {}) {
+    const url = `/plugin/path/config/create`;
+    return httpPut(url, data);
+  },
 };
 
 export default configService;
