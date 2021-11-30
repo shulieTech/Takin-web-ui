@@ -217,6 +217,10 @@ const PressureTestLive: React.FC<Props> = props => {
   };
   const headList = [
     {
+      label: '压测场景ID',
+      value: detailData.sceneId
+    },
+    {
       label: '开始时间',
       value: detailData.startTime
     },

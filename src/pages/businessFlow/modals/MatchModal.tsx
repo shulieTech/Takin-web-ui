@@ -166,6 +166,7 @@ const MatchModal: React.FC<Props> = props => {
       label: '入口应用',
       node: (
         <CommonSelect
+          allowClear={false}
           dataSource={state.entryAppList || []}
           placeholder="请选择入口应用"
           onChange={handleChangeEntranceApp}
@@ -191,6 +192,7 @@ const MatchModal: React.FC<Props> = props => {
       label: '入口path',
       node: (
         <CommonSelect
+          allowClear={false}
           dataSource={state.entryPathList || []}
           placeholder="请选择入口path"
           onChange={value => handleChangeEntrancePath(value)}
