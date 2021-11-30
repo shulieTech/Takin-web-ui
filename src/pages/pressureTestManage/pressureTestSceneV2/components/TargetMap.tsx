@@ -26,89 +26,119 @@ const TargetMap = (props) => {
     const tdPath = FormPath.parse(path).concat(
       `${record.xpathMd5}.${fieldName}`
     );
+    const rowField = (
+      <SchemaField
+        path={FormPath.parse(path).concat(`${record.xpathMd5}`)}
+        schema={
+          new Schema({
+            type: 'object',
+          })
+        }
+      />
+    );
     if (record.type === 'SAMPLER') {
       return (
-        <SchemaField
-          path={tdPath}
-          schema={
-            new Schema({
-              type: 'number',
-              'x-component': 'NumberPicker',
-              'x-component-props': {
-                placeholder: `请输入`,
-                min: 0,
-                style: {
-                  width: 'auto',
-                },
-                threadType: 'SAMPLER',
-                onBlur: (e) => {
-                  // 联动填充空白值
-                  form.getFieldState(tdPath, (sourceState) => {
-                    form.setFieldState(`.goal.*.${fieldName}`, (state) => {
-                      if (
-                        e.target.value &&
-                        sourceState.valid &&
-                        state.value === undefined &&
-                        state.props?.['x-component-props']?.threadType ===
-                          'SAMPLER'
-                      ) {
-                        state.value = e.target.value;
-                      }
+        <>
+          {rowField}
+          <SchemaField
+            path={tdPath}
+            schema={
+              new Schema({
+                type: 'number',
+                'x-component': 'NumberPicker',
+                'x-component-props': {
+                  placeholder: `请输入`,
+                  min: 0,
+                  style: {
+                    width: 'auto',
+                  },
+                  threadType: 'SAMPLER',
+                  onBlur: (e) => {
+                    // 联动填充空白值
+                    form.getFieldState(tdPath, (sourceState) => {
+                      form.setFieldState(`.goal.*.${fieldName}`, (state) => {
+                        if (
+                          sourceState.value &&
+                          sourceState.valid &&
+                          state.value === undefined &&
+                          state.props?.['x-component-props']?.threadType ===
+                            'SAMPLER'
+                        ) {
+                          state.value = sourceState.value;
+                        }
+                      });
                     });
-                  });
+                  },
+                  ...fieldProps,
                 },
-                ...fieldProps,
-              },
-              'x-rules': [
-                { required: true, message: `请输入${fieldLabel}` },
-                ...moreRules,
-              ],
-            })
-          }
-        />
+                'x-rules': [
+                  { required: true, message: `请输入${fieldLabel}` },
+                  ...moreRules,
+                ],
+              })
+            }
+          />
+        </>
       );
     }
     if (record.type === 'CONTROLLER') {
       // 逻辑控制器
       return (
-        <SchemaField
-          path={tdPath}
-          schema={
-            new Schema({
-              type: 'number',
-              'x-component': 'NumberPicker',
-              'x-component-props': {
-                placeholder: `请输入`,
-                min: 0,
-                style: {
-                  width: 'auto',
-                },
-                threadType: 'CONTROLLER',
-                onBlur: (e) => {
-                  // 联动填充空白值
-                  form.getFieldState(tdPath, (sourceState) => {
-                    form.setFieldState(`.goal.*.${fieldName}`, (state) => {
-                      if (
-                        e.target.value &&
-                        sourceState.valid &&
-                        state.value === undefined &&
-                        state.props?.['x-component-props']?.threadType ===
-                          'CONTROLLER'
-                      ) {
-                        state.value = e.target.value;
-                      }
+        <>
+          {rowField}
+          <SchemaField
+            path={tdPath}
+            schema={
+              new Schema({
+                type: 'number',
+                'x-component': 'NumberPicker',
+                'x-component-props': {
+                  placeholder: `请输入`,
+                  min: 0,
+                  style: {
+                    width: 'auto',
+                  },
+                  threadType: 'CONTROLLER',
+                  onBlur: (e) => {
+                    // 联动填充空白值
+                    form.getFieldState(tdPath, (sourceState) => {
+                      form.setFieldState(`.goal.*.${fieldName}`, (state) => {
+                        if (
+                          sourceState.value &&
+                          sourceState.valid &&
+                          state.value === undefined &&
+                          state.props?.['x-component-props']?.threadType ===
+                            'CONTROLLER'
+                        ) {
+                          state.value = sourceState.value;
+                        }
+                        // 触发其他输入框的验证，为了清除全部不填时的错误信息
+                        form.validate(
+                          `.goal.${record.xpathMd5}.*(!${fieldName})`
+                        );
+                      });
                     });
-                  });
+                  },
+                  ...fieldProps,
                 },
-                ...fieldProps,
-              },
-              'x-rules': [
-                // { required: false, message: `请输入${fieldLabel}` },
-                ...moreRules,
-              ],
-            })
-          }
-        />
+                'x-rules': [
+                  // { required: false, message: `请输入${fieldLabel}` },
+                  {
+                    // 整行有1个单元格填写，则整行都必填
+                    validator: (val) => {
+                      const hasValue =
+                        Object.values(
+                          form.getFieldValue(`goal.${record.xpathMd5}`) || {}
+                        ).filter(Boolean).length > 0;
+                      return hasValue && !val ? `请输入${fieldLabel}` : null;
+                    },
+                  },
+                  ...moreRules,
+                ],
+              })
+            }
+          />
+        </>
       );
     }
   };
