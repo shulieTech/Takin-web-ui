@@ -267,7 +267,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
             type="error"
             showIcon
           />
-          <div style={{ position: 'absolute', top: 25, left: 250 }}>
+          <div style={{ position: 'absolute', top: 25, left: 270 }}>
             <MissingDataListModal
               reportId={id}
               hasMissingData={1}
