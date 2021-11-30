@@ -1,50 +1,116 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, message } from 'antd';
 import { SchemaField, FormPath, Schema } from '@formily/antd';
 
 const TargetMap = (props) => {
-  const { value = {}, schema, className, editable, path, mutators, form } = props;
+  const {
+    value = {},
+    schema,
+    className,
+    editable,
+    path,
+    mutators,
+    form,
+  } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
 
   const { treeData = [], loading = false } = componentProps;
 
-  const renderInputTd = (record, fieldName, fieldLabel, fieldProps = {}, moreRules = []) => {
-    if (!['SAMPLER'].includes(record.type)) {
-      return null;
-    }
+  const renderInputTd = ({
+    record,
+    fieldName,
+    fieldLabel,
+    fieldProps = {},
+    moreRules = [],
+  }) => {
     const tdPath = FormPath.parse(path).concat(
       `${record.xpathMd5}.${fieldName}`
     );
-    return (
-      <SchemaField
-        path={tdPath}
-        schema={
-          new Schema({
-            type: 'number',
-            'x-component': 'NumberPicker',
-            'x-component-props': {
-              placeholder: '请输入',
-              min: 0,
-              style: {
-                width: 'auto',
-              },
-              onBlur: (e) => {
-                // 联动填充空白值
-                form.getFieldState(tdPath, sourceState => {
-                  form.setFieldState(`.goal.*.${fieldName}`, state => {
-                    if (sourceState.valid && state.value === undefined) {
-                      state.value = e.target.value;
-                    }
+    if (record.type === 'SAMPLER') {
+      return (
+        <SchemaField
+          path={tdPath}
+          schema={
+            new Schema({
+              type: 'number',
+              'x-component': 'NumberPicker',
+              'x-component-props': {
+                placeholder: `请输入`,
+                min: 0,
+                style: {
+                  width: 'auto',
+                },
+                threadType: 'SAMPLER',
+                onBlur: (e) => {
+                  // 联动填充空白值
+                  form.getFieldState(tdPath, (sourceState) => {
+                    form.setFieldState(`.goal.*.${fieldName}`, (state) => {
+                      if (
+                        e.target.value &&
+                        sourceState.valid &&
+                        state.value === undefined &&
+                        state.props?.['x-component-props']?.threadType ===
+                          'SAMPLER'
+                      ) {
+                        state.value = e.target.value;
+                      }
+                    });
                   });
-                });
+                },
+                ...fieldProps,
               },
-              ...fieldProps,
-            },
-            'x-rules': [{ required: true, message: `请输入${fieldLabel}` }, ...moreRules],
-          })
-        }
-      />
-    );
+              'x-rules': [
+                { required: true, message: `请输入${fieldLabel}` },
+                ...moreRules,
+              ],
+            })
+          }
+        />
+      );
+    }
+    if (record.type === 'CONTROLLER') {
+      // 逻辑控制器
+      return (
+        <SchemaField
+          path={tdPath}
+          schema={
+            new Schema({
+              type: 'number',
+              'x-component': 'NumberPicker',
+              'x-component-props': {
+                placeholder: `请输入`,
+                min: 0,
+                style: {
+                  width: 'auto',
+                },
+                threadType: 'CONTROLLER',
+                onBlur: (e) => {
+                  // 联动填充空白值
+                  form.getFieldState(tdPath, (sourceState) => {
+                    form.setFieldState(`.goal.*.${fieldName}`, (state) => {
+                      if (
+                        e.target.value &&
+                        sourceState.valid &&
+                        state.value === undefined &&
+                        state.props?.['x-component-props']?.threadType ===
+                          'CONTROLLER'
+                      ) {
+                        state.value = e.target.value;
+                      }
+                    });
+                  });
+                },
+                ...fieldProps,
+              },
+              'x-rules': [
+                // { required: false, message: `请输入${fieldLabel}` },
+                ...moreRules,
+              ],
+            })
+          }
+        />
+      );
+    }
   };
 
   const columns = [
@@ -77,27 +143,51 @@ const TargetMap = (props) => {
       title: '目标TPS',
       dataIndex: 'tps',
       render: (text, record, index) => (
-        <span>{renderInputTd(record, 'tps', '目标TPS', {}, [{ format: 'integer', message: '请输入整数' }])}</span>
+        <span>
+          {renderInputTd({
+            record,
+            fieldName: 'tps',
+            fieldLabel: '目标TPS',
+            moreRules: [{ format: 'integer', message: '请输入整数' }],
+          })}
+        </span>
       ),
     },
     {
       title: '目标RT(ms)',
       dataIndex: 'rt',
       render: (text, record, index) => (
-        <span>{renderInputTd(record, 'rt', '目标RT', {}, [{ format: 'integer', message: '请输入整数' }])}</span>
+        <span>
+          {renderInputTd({
+            record,
+            fieldName: 'rt',
+            fieldLabel: '目标RT',
+            moreRules: [{ format: 'integer', message: '请输入整数' }],
+          })}
+        </span>
       ),
     },
     {
       title: '目标成功率(%)',
       dataIndex: 'sr',
       render: (text, record, index) =>
-        renderInputTd(record, 'sr', '目标成功率', { max: 100 }),
+        renderInputTd({
+          record,
+          fieldName: 'sr',
+          fieldLabel: '目标成功率',
+          fieldProps: { max: 100 },
+        }),
     },
     {
       title: '目标SA(%)',
       dataIndex: 'sa',
       render: (text, record, index) =>
-        renderInputTd(record, 'sa', '目标SA', { max: 100 }),
+        renderInputTd({
+          record,
+          fieldName: 'sa',
+          fieldLabel: '目标SA',
+          fieldProps: { max: 100 },
+        }),
     },
   ];
 
