@@ -62,7 +62,7 @@ export default (props) => {
               enum={[
                 {
                   testName: '全部',
-                  xpathMd5: 'all',
+                  xpathMd5: '0f1a197a2040e645dcdb4dfff8a3f960',
                 },
               ]
                 .concat(sampleList)
