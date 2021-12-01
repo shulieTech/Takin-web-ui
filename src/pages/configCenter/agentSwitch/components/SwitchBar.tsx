@@ -97,10 +97,7 @@ const SwitchBar: React.FC<Props> = props => {
         <p>{state.statusInfo}</p>
       </Col>
       <AuthorityBtn
-        isShow={
-          btnAuthority &&
-          btnAuthority.canEnableDisable
-        }
+        isShow={state.canEnableDisable}
       >
         <Col style={{ marginRight: 40, marginLeft: 40 }}>
           <Divider type="vertical" style={{ height: 51, marginTop: 10 }} />

@@ -62,7 +62,7 @@ const SwitchBar: React.FC<Props> = props => {
       });
     }
   };
-
+  
   return (
     <Row type="flex" className={styles.switchWrap} align="middle">
       <Col style={{ marginRight: 24 }}>
@@ -120,8 +120,7 @@ const SwitchBar: React.FC<Props> = props => {
       </Col>
       <AuthorityBtn
         isShow={
-          btnAuthority &&
-          btnAuthority.configCenter_pressureMeasureSwitch_6_enable_disable
+          state.canEnableDisable
         }
       >
         {state.switchStatus === 'OPEN_FAILING' ||
