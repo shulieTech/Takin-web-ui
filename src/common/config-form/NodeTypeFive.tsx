@@ -27,7 +27,7 @@ const NodeTypeFive: React.FC<Props> = props => {
         ? props.value.map((item, k) => {
           return {
             ...item,
-            shaDowTableName: `pt_${item.bizTableName}`,
+            shaDowTableName: `PT_${item.bizTableName}`,
             id: k,
             editable: false
           };
@@ -242,11 +242,11 @@ const NodeTypeFive: React.FC<Props> = props => {
           return row.editable ? (
             <Input
               maxLength={128}
-              value={row.bizTableName ? `pt_${row.bizTableName}` : undefined}
+              value={row.bizTableName ? `PT_${row.bizTableName}` : undefined}
               disabled={true}
             />
           ) : row.bizTableName ? (
-            `pt_${row.bizTableName}`
+            `PT_${row.bizTableName}`
           ) : (
             ''
           );

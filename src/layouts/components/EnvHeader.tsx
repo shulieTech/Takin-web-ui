@@ -80,6 +80,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         window.location.reload();
       } else {
         window.location.hash = '#/dashboard';
+        window.location.reload();
       }
     }
   };
@@ -100,6 +101,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         window.location.reload();
       } else {
         window.location.hash = '#/dashboard';
+        window.location.reload();
       }
     }
   };
