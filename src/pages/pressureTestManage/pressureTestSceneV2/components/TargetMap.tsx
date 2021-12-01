@@ -26,6 +26,8 @@ const TargetMap = (props) => {
     const tdPath = FormPath.parse(path).concat(
       `${record.xpathMd5}.${fieldName}`
     );
+
+    // 不加rowField这个数据 form.getFieldValue(`goal.${record.xpathMd5}`)取不到值
     const rowField = (
       <SchemaField
         path={FormPath.parse(path).concat(`${record.xpathMd5}`)}
@@ -117,6 +119,21 @@ const TargetMap = (props) => {
                           `.goal.${record.xpathMd5}.*(!${fieldName})`
                         );
                       });
+                      
+                      // 填写逻辑控制器行数据然后清空输入时，会残留一个类似{tps: null}的数据，下面的代码会尝试清除这种数据
+                      const hasValue =
+                        Object.values(
+                          form.getFieldValue(`goal.${record.xpathMd5}`) || {}
+                        ).filter(Boolean).length > 0;
+                      if (!hasValue) {
+                        form.setFieldState(
+                          `goal.${record.xpathMd5}`,
+                          (state) => {
+                            state.value = undefined;
+                          }
+                        );
+                      }
+
                     });
                   },
                   ...fieldProps,
