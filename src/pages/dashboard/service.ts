@@ -4,6 +4,10 @@ const IndexService = {
   /**
    * @name 获取快捷入口数据
    */
+  async querySwitchStatus(data = {}) {
+    const url = '/application/center/app/switch/un_safe';
+    return httpGet(url, data);
+  },
   async queryQuickEntrance(data = {}) {
     const url = '/workbench/user/access';
     return httpGet(url, data);
