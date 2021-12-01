@@ -4,6 +4,14 @@ const AppManageService = {
   /**
    * @name 获取影子库表列表
    */
+  async configurationwrite(data = {}) {
+    const url = '/configuration/write';
+    return httpPost(url, data);
+  },
+  async configurationread(data = {}) {
+    const url = '/configuration/read';
+    return httpPost(url, data);
+  },
   async queryDbAndTableList(data = {}) {
     const url = '/v2/link/ds/manage';
     return httpGet(url, data);

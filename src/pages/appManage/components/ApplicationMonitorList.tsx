@@ -214,6 +214,13 @@ const getBlackListColumns = (
     },
     {
       ...customColumnProps,
+      title: '健康度设置',
+      dataIndex: 'requestCount',
+      width: 100,
+      render: text => <span>设置</span>
+    },
+    {
+      ...customColumnProps,
       title: '关联业务活动名称',
       dataIndex: 'activeIdAndName',
       width: 200,
