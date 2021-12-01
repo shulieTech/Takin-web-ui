@@ -231,6 +231,28 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
     },
     {
       ...customColumnProps,
+      title: '最新压测时间',
+      dataIndex: 'lastPtTime',
+      render: (text, row) =>
+        text ? (
+          row.isScheduler ? (
+            <Fragment>
+              <div>{text}</div>
+              {row.scheduleExecuteTime && (
+                <div style={{ color: '#bababa' }}>
+                  {row.scheduleExecuteTime}(定时)
+                </div>
+              )}
+            </Fragment>
+          ) : (
+            text
+          )
+        ) : (
+          '--'
+        )
+    },
+    {
+      ...customColumnProps,
       title: '负责人',
       dataIndex: 'userName',
       className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
