@@ -83,7 +83,7 @@ const LinkDbTable: React.FC<Props> = props => {
                         ? true
                         : false
                     }
-                    titles="新增影子库表"
+                    titles="新增其他影子存储"
                     action="add"
                     id={id}
                     detailData={detailData}
