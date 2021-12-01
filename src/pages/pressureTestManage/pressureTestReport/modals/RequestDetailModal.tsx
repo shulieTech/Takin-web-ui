@@ -252,7 +252,7 @@ const RequestDetailModal: React.FC<Props> = props => {
                       marginRight: 2
                     }}
                   />
-                  <span>{text === 0 ? '<1ms' : text}ms</span>
+                  <span>{text === 0 ? '<1' : text}ms</span>
                 </div>
               )}
             </div>
