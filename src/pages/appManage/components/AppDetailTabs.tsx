@@ -147,18 +147,18 @@ const AppDetailTabs: React.FC<Props> = props => {
       ),
       show: true
     },
-    // {
-    //   title: '探针管理',
-    //   tabNode: (
-    //     <NodeManageList
-    //       id={id}
-    //       detailData={detailData}
-    //       detailState={detailState}
-    //       action={action}
-    //     />
-    //   ),
-    //   show: isNewAgent === 1 ? true : false
-    // },
+    {
+      title: '探针管理',
+      tabNode: (
+        <NodeManageList
+          id={id}
+          detailData={detailData}
+          detailState={detailState}
+          action={action}
+        />
+      ),
+      show: isNewAgent === 1 ? true : false
+    },
     {
       title: '插件管理',
       tabNode: (
