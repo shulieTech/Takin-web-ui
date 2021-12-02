@@ -374,7 +374,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         <div style={{ marginBottom: 26 }}>
           <div style={{ lineHeight: '32px', marginBottom: 8 }}>
             <span className={styles.requestTitle}>{state.traceId}</span>
-            {state.clusterTest !== null && (
+            {state.data.length > 0 && state.clusterTest !== null && (
               <span className={styles.requestTag}>
                 {state.clusterTest ? '压测流量' : '业务流量'}
               </span>
