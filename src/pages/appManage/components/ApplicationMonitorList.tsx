@@ -80,8 +80,7 @@ const getBlackListColumns = (
     });
     if (success) {
       const tempActivity = data[Object.keys(data)[0]];
-      router.push(`/businessActivity/details?id=${
-        Object.keys(data)[0]}&pageIndex=0&hideList=1${tempActivity ? 
+      router.push(`/businessActivity/details?id=${Object.keys(data)[0]}&pageIndex=0&hideList=1${tempActivity ?
           `&jsonParam=${encodeURIComponent(JSON.stringify({
             tempActivity,
             startTime: row.startTime,
@@ -218,7 +217,7 @@ const getBlackListColumns = (
       title: '健康度设置',
       dataIndex: 'service',
       width: 100,
-      render: text => <SetModal service={text}/>
+      render: (text, row) => <SetModal service={row} />
     },
     {
       ...customColumnProps,
