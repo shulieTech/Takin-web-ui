@@ -32,7 +32,7 @@ const SetModal: React.FC<Props> = props => {
     wrapperCol: { span: 6 },
   };
   const onClick = async () => {
-    const service = `${props.service.appName}\\#${props.service.service}\\#${props.service.method}\\#${props.service.rpcType}`;
+    const service = `${props.service.appName}#${props.service.service}#${props.service.method}#${props.service.rpcType}`;
     const {
       data: { data, success }
     } = await AppManageService.configurationread({
@@ -53,11 +53,12 @@ const SetModal: React.FC<Props> = props => {
           resolve(false);
           return;
         }
+        const service = `${props.service.appName}#${props.service.service}#${props.service.method}#${props.service.rpcType}`;
         const {
           data: { success }
         } = await AppManageService.configurationwrite({
           ...values,
-          service: props.service
+          service
         });
         if (success) {
           resolve(true);
