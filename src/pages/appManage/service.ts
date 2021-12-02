@@ -9,8 +9,8 @@ const AppManageService = {
     return httpPost(url, data);
   },
   async configurationread(data = {}) {
-    const url = '/configuration/read';
-    return httpPost(url, data);
+    const url = `/configuration/read?service=${data.service}`;
+    return httpPost(url);
   },
   async queryDbAndTableList(data = {}) {
     const url = '/v2/link/ds/manage';

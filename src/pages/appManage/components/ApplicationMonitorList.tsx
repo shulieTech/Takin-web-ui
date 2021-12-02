@@ -10,6 +10,7 @@ import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm'
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { router } from 'umi';
 import AppManageService from '../service';
+import SetModal from '../modals/SetModal';
 import AddAndEditBlacklistDrawer from './AddAndEditBlackListDrawer';
 
 const getBlackListColumns = (
@@ -215,9 +216,9 @@ const getBlackListColumns = (
     {
       ...customColumnProps,
       title: '健康度设置',
-      dataIndex: 'requestCount',
+      dataIndex: 'service',
       width: 100,
-      render: text => <span>设置</span>
+      render: text => <SetModal service={text}/>
     },
     {
       ...customColumnProps,

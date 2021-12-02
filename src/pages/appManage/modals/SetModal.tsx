@@ -10,16 +10,16 @@ import AppManageService from '../service';
 const InputGroup = Input.Group;
 interface Props {
   btnText?: string | React.ReactDOM;
-  form: any;
+  service: any;
 }
 const getInitState = () => ({
   detial: {
-    valueType1Level1: 1000,
-    valueType1Level2: 3000,
-    valueType2Level1: 90,
-    valueType2Level2: 70,
-    valueType4Level1: 100,
-    valueType4Level2: 500,
+    valueType1Level1: 0,
+    valueType1Level2: 0,
+    valueType2Level1: 0,
+    valueType2Level2: 0,
+    valueType4Level1: 0,
+    valueType4Level2: 0,
   },
 });
 export type WhiteListScopeModalState = ReturnType<typeof getInitState>;
@@ -35,7 +35,7 @@ const SetModal: React.FC<Props> = props => {
     const {
       data: { data, success }
     } = await AppManageService.configurationread({
-      service: props.btnText
+      service: props.service
     });
     if (success) {
       setState({
@@ -54,10 +54,23 @@ const SetModal: React.FC<Props> = props => {
         }
         const {
           data: { success }
-        } = await AppManageService.configurationwrite({ ...values });
+        } = await AppManageService.configurationwrite({
+          ...values,
+          service: props.service
+        });
         if (success) {
           resolve(true);
           message.success('保存成功');
+          setState({
+            detial: {
+              valueType1Level1: 0,
+              valueType1Level2: 0,
+              valueType2Level1: 0,
+              valueType2Level2: 0,
+              valueType4Level1: 0,
+              valueType4Level2: 0,
+            }
+          });
           return;
         }
         resolve(false);
@@ -68,7 +81,7 @@ const SetModal: React.FC<Props> = props => {
     <CommonModal
       modalProps={{
         width: 1096,
-        title: '白名单生效范围'
+        title: '瓶颈等级设置'
       }}
       btnProps={{ type: 'link' }}
       btnText="设置"
@@ -77,7 +90,6 @@ const SetModal: React.FC<Props> = props => {
     >
       <Form onSubmit={handleSubmit} {...formItemProps}>
         <Card bordered={false}>
-          <h1 style={{ fontSize: '20px', marginBottom: 30 }}>瓶颈等级设置</h1>
           <TableTitle title="卡慢" />
           <div className={styles.line}>
             <Divider />
