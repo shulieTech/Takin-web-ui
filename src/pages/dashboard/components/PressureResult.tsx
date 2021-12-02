@@ -70,6 +70,10 @@ const PressureResult: React.FC<Props> = props => {
         return (
           <Link
             to={`/pressureTestManage/pressureTestReport/details?id=${row.id}`}
+            style={{
+              display:
+                menuAuthority?.pressureTestManage_pressureTestReport ? 'block' : 'none'
+            }}
           >
             查看报告
           </Link>

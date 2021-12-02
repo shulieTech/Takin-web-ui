@@ -98,8 +98,8 @@ const SwitchBar: React.FC<Props> = props => {
       </Col>
       <AuthorityBtn
         isShow={
-          menuAuthority &&
-          menuAuthority.configCenter_globalConfig
+          btnAuthority &&
+          btnAuthority.canEnableDisable
         }
       >
         <Col style={{ marginRight: 40, marginLeft: 40 }}>

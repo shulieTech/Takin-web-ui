@@ -231,7 +231,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
     },
     {
       ...customColumnProps,
-      title: '最新压测时间 / 定时压测时间',
+      title: '最新压测时间',
       dataIndex: 'lastPtTime',
       render: (text, row) =>
         text ? (
