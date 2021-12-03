@@ -120,13 +120,23 @@ const RequestDetailModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '方法名/服务名',
         dataIndex: 'interfaceName',
-        ellipsis: true,
-        width: 250,
+        // ellipsis: true,
+        width: 280,
         render: text => {
           return (
             <span>
               <Tooltip placement="bottomLeft" title={text}>
-                <span>{text}</span>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    maxWidth: 200,
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }}
+                >
+                  {text}
+                </span>
               </Tooltip>
             </span>
           );
@@ -389,6 +399,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         {state.data && state.data[0] && !state.loading ? (
           <div className={styles.detailTable}>
             <CustomTable
+              indentSize={8}
               rowKey="id"
               columns={getColumns()}
               size="small"

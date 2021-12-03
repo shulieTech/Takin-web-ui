@@ -95,8 +95,7 @@ export const getLoginToken = () => {
 /** @name 下拉模糊搜索 */
 export const filter = (inputValue, path) => {
   return path.some(
-    option =>
-      option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+    option => option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
   );
 };
 
@@ -108,18 +107,42 @@ export const isEmpty = (obj: any) => {
   return false;
 };
 
- /** @name 数组平铺 */
+/** @name 数组平铺 */
 export const flatten = arr => {
   return [].concat(
-      ...arr.map(item => {
-        return item.children
-          ? [].concat(item, ...flatten(item.children))
-          : [].concat(item);
-      })
-    );
+    ...arr.map(item => {
+      return item.children
+        ? [].concat(item, ...flatten(item.children))
+        : [].concat(item);
+    })
+  );
 };
 
 /** @name 获取是否需要权限 */
 export const getTakinAuthority = () => {
   return localStorage.getItem('takinAuthority');
+};
+
+/**
+ * @name 查找树子节点的全部父节点
+ */
+export const treeFindPath = (tree, func, path = []) => {
+  if (!tree) {
+    return [];
+  }
+  for (const data of tree) {
+    // 这里按照你的需求来存放最后返回的内容吧
+    path.push(data.path);
+    if (func(data)) {
+      return path;
+    }
+    if (data.children) {
+      const findChildren = treeFindPath(data.children, func, path);
+      if (findChildren.length) {
+        return findChildren;
+      }
+    }
+    path.pop();
+  }
+  return [];
 };

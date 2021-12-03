@@ -424,13 +424,16 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         </div>
         <div style={{ marginTop: 20 }}>
           <Row type="flex" justify="space-between" align="middle">
-            <CommonSelect
-              style={{ width: 150 }}
-              dataSource={state.threadGroupList || []}
-              value={state.threadValue}
-              onChange={handleChangeThread}
-              allowClear={false}
-            />
+            <Col>
+              <span style={{ marginRight: 8 }}>选择线程组:</span>
+              <CommonSelect
+                style={{ width: 150 }}
+                dataSource={state.threadGroupList || []}
+                value={state.threadValue}
+                onChange={handleChangeThread}
+                allowClear={false}
+              />
+            </Col>
             <span className={customStyles.alertLabel}>
               当前线程组匹配进度：
               <span className={customStyles.alertValueError}>
