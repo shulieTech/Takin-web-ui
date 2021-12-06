@@ -424,6 +424,7 @@ const EditPage = (props) => {
                 x-component="DatePicker"
                 title="启动时间"
                 x-component-props={{
+                  style: { width: '100%' },
                   showTime: { format: 'HH:mm' },
                   format: 'YYYY-MM-DD HH:mm',
                   disabledDate: (currentDate) =>
