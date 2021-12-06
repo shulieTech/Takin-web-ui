@@ -4,6 +4,14 @@ const AppManageService = {
   /**
    * @name 获取影子库表列表
    */
+  async configurationwrite(data = {}) {
+    const url = '/configuration/write';
+    return httpPost(url, data);
+  },
+  async configurationread(data = {}) {
+    const url = `/configuration/read?service=${encodeURIComponent(data.service)}`;
+    return httpPost(url);
+  },
   async queryDbAndTableList(data = {}) {
     const url = '/v2/link/ds/manage';
     return httpGet(url, data);
@@ -696,11 +704,11 @@ const AppManageService = {
     return httpGet(url, data);
   },
   async allByActivity(data = {}) {
-    const url = '/application/center/app/activityList' ;
+    const url = '/application/center/app/activityList';
     return httpGet(url, data);
   },
   async goActivityInfo(data = {}) {
-    const url = '/application/center/app/gotoActivityInfo' ;
+    const url = '/application/center/app/gotoActivityInfo';
     return httpPost(url, data);
   },
 };
