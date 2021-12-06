@@ -409,7 +409,7 @@ const EditPage = (props) => {
                 type="boolean"
                 x-component="Switch"
                 title="是否定时启动"
-                default={!!initialValue?.basicInfo?.executeTime}
+                // default={!!initialValue?.basicInfo?.executeTime}
                 x-linkages={[
                   {
                     type: 'value:visible',
