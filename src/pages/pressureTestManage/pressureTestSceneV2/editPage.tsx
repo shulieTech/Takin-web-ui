@@ -409,21 +409,22 @@ const EditPage = (props) => {
                 type="boolean"
                 x-component="Switch"
                 title="是否定时启动"
-                default={!!initialValue?.scheduleExecuteTime}
+                default={!!initialValue?.basicInfo?.executeTime}
                 x-linkages={[
                   {
                     type: 'value:visible',
-                    target: '.scheduleExecuteTime',
+                    target: '.executeTime',
                     condition: '{{ $self.value }}',
                   },
                 ]}
               />
               <Field
-                name="scheduleExecuteTime"
+                name="executeTime"
                 type="number"
                 x-component="DatePicker"
                 title="启动时间"
                 x-component-props={{
+                  style: { width: '100%' },
                   showTime: { format: 'HH:mm' },
                   format: 'YYYY-MM-DD HH:mm',
                   disabledDate: (currentDate) =>
