@@ -78,7 +78,7 @@ const RootDirectory: React.FC<Props> = props => {
       data: { data, success }
     } = await configService.pathConfig({});
     if (success) {
-      if (data.editable === 1) {
+      if (data?.editable === 1) {
         setState({
           buDisabled: true,
         });
@@ -129,7 +129,7 @@ const RootDirectory: React.FC<Props> = props => {
           label="类型"
         >
           {props.form.getFieldDecorator('pathType', {
-            initialValue: `${state.datas?.pathType}`,
+            initialValue: state.datas ? `${state.datas?.pathType}` : '0',
             rules: [{ required: true, message: `请输入类型` }],
           })(
             <Select placeholder="请选择类型">
