@@ -19,6 +19,8 @@ import {
   Radio,
   ArrayTable,
   FormTextBox,
+  Switch,
+  DatePicker,
 } from '@formily/antd-components';
 import { Button, message, Spin } from 'antd';
 import services from './service';
@@ -30,6 +32,7 @@ import ValidateCommand from './components/ValidateCommand';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 import { cloneDeep, debounce } from 'lodash';
+import moment from 'moment';
 
 const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
   FormEffectHooks;
@@ -328,6 +331,8 @@ const EditPage = (props) => {
             FormBlock,
             FormTextBox,
             Radio,
+            Switch,
+            DatePicker,
             RadioGroup: Radio.Group,
           }}
           onSubmit={onSubmit}
@@ -398,6 +403,46 @@ const EditPage = (props) => {
                   label: x.sceneName,
                   value: x.id,
                 }))}
+              />
+              <Field
+                name="isScheduler"
+                type="boolean"
+                x-component="Switch"
+                title="是否定时启动"
+                default={!!initialValue?.scheduleExecuteTime}
+                x-linkages={[
+                  {
+                    type: 'value:visible',
+                    target: '.scheduleExecuteTime',
+                    condition: '{{ $self.value }}',
+                  },
+                ]}
+              />
+              <Field
+                name="scheduleExecuteTime"
+                type="number"
+                x-component="DatePicker"
+                title="启动时间"
+                x-component-props={{
+                  showTime: { format: 'HH:mm' },
+                  format: 'YYYY-MM-DD HH:mm',
+                  disabledDate: (currentDate) =>
+                    moment().isAfter(currentDate, 'day'),
+                }}
+                x-rules={[
+                  {
+                    required: true,
+                    message: '请选择启动时间',
+                  },
+                  // {
+                  //   validator: (val) => {
+                  //     return val &&
+                  //       moment(val).valueOf() <= moment().valueOf() + 120000
+                  //       ? '启动时间需晚于当前时间至少2分钟'
+                  //       : '';
+                  //   },
+                  // },
+                ]}
               />
             </Field>
             <Field
