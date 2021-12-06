@@ -409,7 +409,6 @@ const EditPage = (props) => {
                 type="boolean"
                 x-component="Switch"
                 title="是否定时启动"
-                // default={!!initialValue?.basicInfo?.executeTime}
                 x-linkages={[
                   {
                     type: 'value:visible',
@@ -435,14 +434,14 @@ const EditPage = (props) => {
                     required: true,
                     message: '请选择启动时间',
                   },
-                  // {
-                  //   validator: (val) => {
-                  //     return val &&
-                  //       moment(val).valueOf() <= moment().valueOf() + 120000
-                  //       ? '启动时间需晚于当前时间至少2分钟'
-                  //       : '';
-                  //   },
-                  // },
+                  {
+                    validator: (val) => {
+                      return val &&
+                        moment(val).valueOf() <= moment().valueOf()
+                        ? '启动时间需晚于当前时间'
+                        : '';
+                    },
+                  },
                 ]}
               />
             </Field>
