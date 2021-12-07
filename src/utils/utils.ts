@@ -146,3 +146,31 @@ export const treeFindPath = (tree, func, path = []) => {
   }
   return [];
 };
+
+/**
+ * @name 去掉表单对象前后空格
+ */
+export const trimObj = obj => {
+  let newObj = {};
+  // tslint:disable-next-line:forin
+  for (const i in obj) {
+    newObj = {
+      ...newObj,
+      [i]: typeof obj[i] === 'string' ? obj[i].trim() : obj[i]
+    };
+  }
+  return newObj;
+};
+
+/**
+ * @name 判断去掉表单对象前后空格后是否为空，为空返回true，否则false
+ */
+export const objEachResultIsEmpty = obj => {
+  // tslint:disable-next-line:forin
+  for (const i in obj) {
+    if (!obj[i]) {
+      return true;
+    }
+  }
+  return false;
+};

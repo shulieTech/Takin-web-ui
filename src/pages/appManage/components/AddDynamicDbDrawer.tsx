@@ -3,6 +3,7 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { CommonDrawer, CommonForm, useStateReducer } from 'racc';
 import React from 'react';
 import { openNotification } from 'src/common/custom-notification/CustomNotification';
+import { objEachResultIsEmpty, trimObj } from 'src/utils/utils';
 import { DbDetailBean } from '../enum';
 import AppManageService from '../service';
 import getAddDynamicDbFormData from './AddDynamicDbFormData';
@@ -84,6 +85,12 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
       state.form.validateFields(async (err, values) => {
         if (err) {
           message.error('请检查表单必填项');
+          resolve(false);
+          return false;
+        }
+
+        if (objEachResultIsEmpty(trimObj(values))) {
+          message.error('请正确填写表单内容');
           resolve(false);
           return false;
         }
