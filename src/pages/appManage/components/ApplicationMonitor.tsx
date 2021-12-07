@@ -330,6 +330,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
             detailData
           )}
           dataSource={state.List ? state.List : []}
+          scroll={{ x: 1500 }}
         />
       </div>
       <div
