@@ -238,7 +238,8 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请输入业务数据源用户名'
+            message: '请输入业务数据源用户名',
+            whitespace: true
           }
         ]
       },
@@ -252,7 +253,8 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请输入业务数据源'
+            message: '请输入业务数据源',
+            whitespace: true
           }
         ]
       },
@@ -303,7 +305,8 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请输入业务集群'
+            message: '请输入业务集群',
+            whitespace: true
           }
         ]
       },
@@ -399,7 +402,8 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: item.required ? true : false,
-            message: '请检查表单必填项'
+            message: '请检查表单必填项',
+            whitespace: true
           }
         ]
       },

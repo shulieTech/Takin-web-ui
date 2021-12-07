@@ -89,12 +89,6 @@ const AddDynamicDbDrawer: React.FC<Props> = props => {
           return false;
         }
 
-        if (objEachResultIsEmpty(trimObj(values))) {
-          message.error('请正确填写表单内容');
-          resolve(false);
-          return false;
-        }
-
         const newResult = { ...values };
         delete newResult.applicationName;
         delete newResult[DbDetailBean.业务数据源用户名];
