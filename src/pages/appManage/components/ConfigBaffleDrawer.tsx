@@ -144,7 +144,7 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
             : undefined,
         rules: [
           {
-            required: false,
+            required: true,
             message: '请输入groovy脚本',
             whitespace: true
           }
