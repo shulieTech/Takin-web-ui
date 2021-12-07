@@ -11,7 +11,6 @@ interface Props {
   setState: (value: any) => void;
 }
 declare var serverUrl: string;
-
 const SecondContent: React.FC<Props> = props => {
   const { state, setState } = props;
   const downloadFile = async fileName => {
@@ -20,11 +19,13 @@ const SecondContent: React.FC<Props> = props => {
       responseType: 'blob',
       headers: {
         'x-token': localStorage.getItem('full-link-token'),
-        'Auth-Cookie': localStorage.getItem('auth-cookie')
+        'Auth-Cookie': localStorage.getItem('auth-cookie'),
+        'tenant-code': localStorage.getItem('tenant-code'),
+        'env-code': localStorage.getItem('env-code'),
       },
       params: {
         projectName: state.appName,
-        urlPrefix: serverUrl,
+        urlPrefix: `${window.location.href.split('#')[0]}takin-web/api`,
         version: state.agentVersionInfo.version
       }
     });

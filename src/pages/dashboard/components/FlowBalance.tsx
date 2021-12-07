@@ -8,6 +8,9 @@ interface Props {
 }
 const FlowBalance: React.FC<Props> = props => {
   const { data } = props;
+  const menuAuthority: any =
+    localStorage.getItem('trowebUserResource') &&
+    JSON.parse(localStorage.getItem('trowebUserResource'));
 
   if (data) {
     return (
@@ -18,7 +21,14 @@ const FlowBalance: React.FC<Props> = props => {
             <span className={`${styles.boldTitle}`}>流量余额</span>
           </Col>
           <Col>
-            <Link to="/pro/flowAccount" className={styles.more}>
+            <Link
+              to="/pro/flowAccount"
+              className={styles.more}
+              style={{
+                display:
+                  menuAuthority?.flowAccount ? 'block' : 'none'
+              }}
+            >
               明细 <Icon type="right" />
             </Link>
           </Col>

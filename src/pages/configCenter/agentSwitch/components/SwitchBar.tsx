@@ -12,6 +12,9 @@ const SwitchBar: React.FC<Props> = props => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
+  const menuAuthority: any =
+    localStorage.getItem('trowebUserResource') &&
+    JSON.parse(localStorage.getItem('trowebUserResource'));
   const { state, setState } = props;
   const { confirm } = Modal;
   const showModal = status => {
@@ -94,10 +97,7 @@ const SwitchBar: React.FC<Props> = props => {
         <p>{state.statusInfo}</p>
       </Col>
       <AuthorityBtn
-        isShow={
-          btnAuthority &&
-          btnAuthority.configCenter_whitelistSwitch_6_enable_disable
-        }
+        isShow={state.canEnableDisable}
       >
         <Col style={{ marginRight: 40, marginLeft: 40 }}>
           <Divider type="vertical" style={{ height: 51, marginTop: 10 }} />

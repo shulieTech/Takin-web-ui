@@ -13,6 +13,9 @@ const SwitchBar: React.FC<Props> = props => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
+  const menuAuthority: any =
+    localStorage.getItem('trowebUserResource') &&
+    JSON.parse(localStorage.getItem('trowebUserResource'));
   const { state, setState } = props;
   const { confirm } = Modal;
   const showModal = status => {
@@ -96,7 +99,7 @@ const SwitchBar: React.FC<Props> = props => {
       <AuthorityBtn
         isShow={
           btnAuthority &&
-          btnAuthority.configCenter_whitelistSwitch_6_enable_disable
+          btnAuthority.canEnableDisable
         }
       >
         <Col style={{ marginRight: 40, marginLeft: 40 }}>

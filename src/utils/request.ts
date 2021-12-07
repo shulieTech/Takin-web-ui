@@ -32,6 +32,7 @@ axios.interceptors.request.use((config) => {
   if (config.method.toLowerCase() === 'get' && config.params) {
     url += url.includes('?') ? '&' : '?';
     const keys = Object.keys(config.params);
+    // tslint:disable-next-line:no-shadowed-variable
     for (const key of keys) {
       if (![undefined, null].includes(config.params[key])) {
         url += `${key}=${encodeURIComponent(config.params[key])}&`;
@@ -93,7 +94,7 @@ function checkStatus(response: BaseResponse) {
       if (!outloginFlag) {
         getBackLogin(response);
       }
-    } 
+    }
   }
   return {
     config: response.config,
@@ -118,11 +119,11 @@ export interface RequestParams {
 const getUrl = (url: string, options: any) => {
   return `${options && options.domain ? options.domain : serverUrl}${url}`;
 };
+
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
-  const myurl = `${
-    options && options.domain ? options.domain : serverUrl
-  }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
+  const myurl = `${options && options.domain ? options.domain : serverUrl
+    }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   // const myurl = `${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   return httpRequest<T>({
     url: myurl,
@@ -131,7 +132,9 @@ export function httpGet<T = any>(url: string, data?: any, options?: any) {
     ...options,
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie')
+      'Auth-Cookie': localStorage.getItem('auth-cookie'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }
@@ -144,7 +147,9 @@ export function httpPost<T>(url, data?: any, options?: any) {
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'Access-Token': localStorage.getItem('Access-Token')
+      'Access-Token': localStorage.getItem('Access-Token'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }
@@ -156,7 +161,9 @@ export function httpPut<T>(url, data?: any, options?: any) {
     ...options,
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie')
+      'Auth-Cookie': localStorage.getItem('auth-cookie'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }
@@ -168,7 +175,9 @@ export function httpDelete<T>(url, data?: any, options?: any) {
     ...options,
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie')
+      'Auth-Cookie': localStorage.getItem('auth-cookie'),
+      'tenant-code': localStorage.getItem('tenant-code'),
+      'env-code': localStorage.getItem('env-code'),
     }
   });
 }
@@ -188,7 +197,9 @@ export function errorProcess(response: BaseResponse) {
   const { status, data, config, headers } = response;
   const statusFilter = config.headers.statusFilter;
   const takinAuthority = headers['takin-authority'];
+  const takinTenantAuthority = headers['takin-tenant-authority'];
   localStorage.setItem('takinAuthority', takinAuthority);
+  localStorage.setItem('takinTenantAuthority', takinTenantAuthority);
   if (statusFilter) {
     switch (statusFilter.type) {
       case 'all':

@@ -8,6 +8,9 @@ interface Props {
 }
 const QuickEntry: React.FC<Props> = props => {
   const { data } = props;
+  const menuAuthority: any =
+    localStorage.getItem('trowebUserResource') &&
+    JSON.parse(localStorage.getItem('trowebUserResource'));
   if (data) {
     return (
       <div className={styles.border}>
@@ -18,17 +21,59 @@ const QuickEntry: React.FC<Props> = props => {
           </Col>
         </Row>
         <Row type="flex" className={styles.entryWrap}>
-          {data.length > 0 &&
-            data.map((item, key) => {
-              return (
-                <Col key={key} span={12} className={styles.iconWrap}>
-                  <Link to={item.urlAddress}>
-                    <Icon style={{ fontSize: 32 }} type={iconType[item.id]} />
-                    <p className={styles.iconText}>{item.quickName}</p>
-                  </Link>
-                </Col>
-              );
-            })}
+          <Col
+            span={12}
+            className={styles.iconWrap}
+            style={{
+              display:
+                menuAuthority?.pressureTestManage_pressureTestScene &&
+                  menuAuthority?.flowAccount ? 'block' : 'none'
+            }}
+          >
+            <Link to="/pressureTestManage/pressureTestScene">
+              <Icon style={{ fontSize: 32 }} type={iconType[2]} />
+              <p className={styles.iconText}>压测场景</p>
+            </Link>
+          </Col>
+          <Col
+            span={12}
+            className={styles.iconWrap}
+            style={{
+              display:
+                menuAuthority?.pressureTestManage_pressureTestReport ? 'block' : 'none'
+            }}
+          >
+            <Link to="/pressureTestManage/pressureTestReport">
+              <Icon style={{ fontSize: 32 }} type={iconType[3]} />
+              <p className={styles.iconText}>压测报告</p>
+            </Link>
+          </Col>
+          <Col
+            span={12}
+            className={styles.iconWrap}
+            style={{
+              display:
+                menuAuthority?.pressureTestManage_pressureTestScene ? 'block' : 'none'
+            }}
+          >
+            <Link to="/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=add">
+              <Icon style={{ fontSize: 32 }} type={iconType[1]} />
+              <p className={styles.iconText}>发起压测</p>
+            </Link>
+          </Col>
+          <Col
+            span={12}
+            className={styles.iconWrap}
+            style={{
+              display:
+                menuAuthority?.appManage ? 'block' : 'none'
+            }}
+          >
+            <Link to="/appManage">
+              <Icon style={{ fontSize: 32 }} type={iconType[4]} />
+              <p className={styles.iconText}>应用列表</p>
+            </Link>
+          </Col>
         </Row>
       </div>
     );

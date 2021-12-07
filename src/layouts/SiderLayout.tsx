@@ -14,6 +14,7 @@ import { router, qiankunStart } from 'umi';
 import ContentNode from './components/ContentNode';
 import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
+import EnvHeader from './components/EnvHeader';
 
 declare var window: any;
 let path = '';
@@ -165,6 +166,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
             style={{ backgroundColor: '#1D2530' }}
             ref={popupDom}
           >
+            <EnvHeader/>
             <ContentNode children={children} />
             {/* <FooterNode /> */}
           </div>

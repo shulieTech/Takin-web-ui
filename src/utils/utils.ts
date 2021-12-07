@@ -123,3 +123,7 @@ export const flatten = arr => {
 export const getTakinAuthority = () => {
   return localStorage.getItem('takinAuthority');
 };
+
+export const getTakinTenantAuthority = () => {
+  return localStorage.getItem('takinTenantAuthority');
+};

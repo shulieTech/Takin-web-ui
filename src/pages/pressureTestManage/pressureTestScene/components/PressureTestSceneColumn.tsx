@@ -33,7 +33,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
     localStorage.getItem('trowebUserResource') &&
     JSON.parse(localStorage.getItem('trowebUserResource'));
 
-  const userType: string = localStorage.getItem('troweb-role');
+  const userType: string = localStorage.getItem('isAdmin');
   const expire: string = localStorage.getItem('troweb-expire');
 
   /**
@@ -231,7 +231,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
     },
     {
       ...customColumnProps,
-      title: '最新压测时间 / 定时压测时间',
+      title: '最新压测时间',
       dataIndex: 'lastPtTime',
       render: (text, row) =>
         text ? (
@@ -328,7 +328,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                 查看报告
               </Link>
             )}
-            {userType === '0' &&
+            {userType === 'true' &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>

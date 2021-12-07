@@ -8,8 +8,9 @@ import DvaComponent from 'src/components/basic-component/DvaComponent';
 import UserService from 'src/services/user';
 import request from 'src/utils/request';
 import router from 'umi/router';
+import queryString from 'query-string';
 import styles from './indexPage.less';
-interface Props {}
+interface Props { }
 
 const state = {
   nums: null,
@@ -37,7 +38,7 @@ const getFormData = (that: Login): FormDataType[] => {
         <Input
           className={styles.inputStyle}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
-          placeholder="账号"
+          placeholder="<用户名>@<企业别名>，例如： username@shulie"
         />
       )
     },
@@ -146,10 +147,9 @@ export default class Login extends DvaComponent<Props, State> {
     if (err) {
       return;
     }
-
     const {
       data: { success, data }
-    } = await UserService.troLogin(value);
+    } = await UserService.troLogin({ ...value });
     if (success) {
       notification.success({
         message: '通知',
@@ -159,7 +159,9 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
-
+      localStorage.setItem('isAdmin', data.isAdmin);
+      localStorage.setItem('tenant-code', data.tenantCode);
+      localStorage.setItem('env-code', data.envCode);
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
