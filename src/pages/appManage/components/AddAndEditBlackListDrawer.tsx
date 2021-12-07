@@ -128,7 +128,8 @@ const AddAndEditBlacklistDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
-            message: '请输入redis key'
+            message: '请输入redis key',
+            whitespace: true
           }
         ]
       },
