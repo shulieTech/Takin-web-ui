@@ -210,7 +210,7 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请选择类型'
+            message: '请选择中间件名称'
           }
         ]
       },
