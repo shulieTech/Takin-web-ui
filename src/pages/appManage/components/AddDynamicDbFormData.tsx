@@ -341,7 +341,10 @@ const getAddDynamicDbFormData = (
       key: DbDetailBean.隔离方案,
       label: '隔离方案',
       options: {
-        initialValue: detailData && String(detailData[DbDetailBean.隔离方案]),
+        initialValue:
+          detailData &&
+          detailData[DbDetailBean.隔离方案] &&
+          String(detailData[DbDetailBean.隔离方案]),
         rules: [
           {
             required: true,
