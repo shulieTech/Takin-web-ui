@@ -63,7 +63,7 @@ const DashboardPage: React.FC<Props> = props => {
   const querySwitchStatus = async () => {
     const {
       data: { data, success }
-    } = await AppManageService.querySwitchStatus({});
+    } = await IndexService.querySwitchStatus({});
     if (success) {
       setState({
         switchStatus: data.switchStatus

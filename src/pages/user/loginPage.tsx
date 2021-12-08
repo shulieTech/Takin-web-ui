@@ -38,7 +38,7 @@ const getFormData = (that: Login): FormDataType[] => {
         <Input
           className={styles.inputStyle}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
-          placeholder="账号"
+          placeholder="<用户名>@<企业别名>，例如： username@shulie"
         />
       )
     },
@@ -104,14 +104,6 @@ export default class Login extends DvaComponent<Props, State> {
 
   componentDidMount = () => {
     this.queryMenuList();
-    const { key } = queryString.parse(location.search);
-    if (key) {
-      localStorage.setItem('tenant-code', key.replace(/\//, ''));
-      localStorage.setItem('env-code', 'test');
-    } else {
-      localStorage.setItem('tenant-code', 'default');
-      localStorage.setItem('env-code', 'test');
-    }
   };
 
   refresh = () => {

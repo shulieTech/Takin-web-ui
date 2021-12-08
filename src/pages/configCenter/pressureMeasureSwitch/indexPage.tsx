@@ -18,6 +18,7 @@ interface State {
   };
   dataSource: any;
   loading: boolean;
+  canEnableDisable: boolean;
 }
 const PressureMeasureSwitch: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -29,7 +30,8 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
       current: 0,
       pageSize: 10
     },
-    loading: false
+    loading: false,
+    canEnableDisable: true
   });
 
   useEffect(() => {
@@ -58,7 +60,8 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
             ? '执行关闭中，应用配置无法修改，所有压测配置失效。当前状态不能压测。'
             : '所有压测配置失效。当前状态不能做压测任务，以免出现压测数据写入生产等风险。',
         dataSource: data.errorList,
-        loading: false
+        loading: false,
+        canEnableDisable: data.canEnableDisable
       });
     }
     setState({

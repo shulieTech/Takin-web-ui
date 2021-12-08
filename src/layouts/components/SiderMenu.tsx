@@ -170,7 +170,6 @@ const SiderMenu: React.FC<Props> = props => {
           <Popover
             content={content}
             placement="topLeft"
-            title="注销"
             visible={visible}
             trigger="click"
             arrowPointAtCenter
