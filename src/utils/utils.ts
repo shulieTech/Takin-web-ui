@@ -174,3 +174,10 @@ export const objEachResultIsEmpty = obj => {
   }
   return false;
 };
+
+/**
+ * @name 设置全局message
+ */
+message.config({
+  maxCount: 1
+});
