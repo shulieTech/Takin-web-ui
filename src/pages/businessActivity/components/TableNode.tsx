@@ -62,9 +62,8 @@ const getColumns = (
       title: '业务域',
       dataIndex: 'businessDomain',
       render: (text) =>
-        text && props.dictionaryMap
-          ? props.dictionaryMap?.domain?.find((item) => +item.value === +text)
-            .label
+        text ? (props.domains?.find((item) => +item.value === +text) || {})
+            .label || '-'
           : '-',
     },
     {

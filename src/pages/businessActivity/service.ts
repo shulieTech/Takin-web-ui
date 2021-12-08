@@ -307,6 +307,34 @@ const BusinessActivityService = {
     const url = '/application/center/list';
     return httpGet(url, data);
   },
+  /**
+   * @name 业务域列表
+   */
+  async domainList(data = {}) {
+    const url = '/domain/list';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 新增业务域
+   */
+  async domainAdd(data = {}) {
+    const url = '/domain/create';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 更新业务域
+   */
+  async domainUpdate(data = {}) {
+    const url = '/domain/update';
+    return httpPut(url, data);
+  },
+  /**
+   * @name 删除业务域
+   */
+  async domainDelete(params = {}) {
+    const url = '/domain/delete';
+    return httpDelete(url, {}, { params });
+  },
 };
 
 export default BusinessActivityService;
