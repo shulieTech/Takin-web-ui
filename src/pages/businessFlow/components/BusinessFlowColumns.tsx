@@ -87,7 +87,7 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
   return [
     {
       ...customColumnProps,
-      title: '业务活动',
+      title: '业务流程',
       dataIndex: BusinessFlowBean.业务活动名称,
       width: 350,
       render: (text, row) => {
