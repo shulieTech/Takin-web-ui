@@ -22,7 +22,7 @@ const getColumns = (
   setSystemFlowState,
   props: CommonModelState
 ): ColumnProps<any>[] => {
-  const userType: string = localStorage.getItem('troweb-role');
+  const userType: string = localStorage.getItem('isAdmin');
   const expire: string = localStorage.getItem('troweb-expire');
   /**
    * @name 删除,刷新列表
@@ -63,7 +63,7 @@ const getColumns = (
       dataIndex: 'businessDomain',
       render: (text) =>
         text && props.dictionaryMap
-          ? props.dictionaryMap.domain.find((item) => +item.value === +text)
+          ? props.dictionaryMap?.domain?.find((item) => +item.value === +text)
             .label
           : '-',
     },
@@ -104,7 +104,7 @@ const getColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType === '0' &&
+          {userType === 'true' &&
             expire === 'false' &&
             getTakinAuthority() === 'true' && (
               <span style={{ marginRight: 8 }}>

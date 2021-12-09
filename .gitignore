@@ -33,3 +33,5 @@ page/.umi
 /.zip
 .zip
 *.zip
+
+.umi/

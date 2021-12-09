@@ -15,6 +15,7 @@ import StepLineInfo from './components/StepLineInfo';
 import AppAccessService from './service';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import { MapBtnAuthority } from 'src/utils/utils';
+import { connect } from 'dva';
 
 const getInitState = () => ({
   isReload: false,
@@ -141,4 +142,4 @@ const AppAccess: React.FC<Props> = props => {
     </AppAccessContext.Provider>
   );
 };
-export default AppAccess;
+export default connect(({ common }) => ({ ...common }))(AppAccess);

@@ -12,6 +12,7 @@ import moment from 'moment';
 import { FormItemProps } from 'antd/lib/form';
 import CustomTable from 'src/components/custom-table';
 import { values } from 'lodash';
+import RootDirectory from './modals/ RootDirectory';
 const InputGroup = Input.Group;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -350,7 +351,7 @@ const Admin: React.FC<AdminProps> = props => {
         <Tabs defaultActiveKey="1" onChange={callback}>
           <TabPane tab="全局配置" key="1">
             <Row style={{ marginBottom: 20, marginLeft: 20 }}>
-              <Col span={1} offset={14}>
+              <Col span={1} offset={11}>
                 <Button type="link" onClick={() => reset(1)} style={{ marginTop: 10 }}>重置</Button>
               </Col>
               <Col span={4}>
@@ -376,6 +377,9 @@ const Admin: React.FC<AdminProps> = props => {
                   <Option value="0">重启生效</Option>
                   <Option value="1">立即生效</Option>
                 </Select>
+              </Col>
+              <Col span={3}>
+                <RootDirectory />
               </Col>
               <Col span={1}>
                 <Button type="default" icon="redo" onClick={resets} />

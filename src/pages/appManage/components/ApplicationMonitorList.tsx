@@ -10,6 +10,7 @@ import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm'
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { router } from 'umi';
 import AppManageService from '../service';
+import SetModal from '../modals/SetModal';
 import AddAndEditBlacklistDrawer from './AddAndEditBlackListDrawer';
 
 const getBlackListColumns = (
@@ -78,8 +79,14 @@ const getBlackListColumns = (
       persistence: false
     });
     if (success) {
-      router.push(`/businessActivity/details?id=${
-        Object.keys(data)[0]}&pageIndex=0&type=${data[Object.keys(data)[0]]}&hideList=1`);
+      const tempActivity = data[Object.keys(data)[0]];
+      router.push(`/businessActivity/details?id=${Object.keys(data)[0]}&pageIndex=0&hideList=1${tempActivity ?
+          `&jsonParam=${encodeURIComponent(JSON.stringify({
+            tempActivity,
+            startTime: row.startTime,
+            endTime: row.endTime,
+            timeGap: row.timeGap
+          }))}` : ''}`);
     }
   };
 
@@ -204,6 +211,13 @@ const getBlackListColumns = (
 
         return btns.length > 0 ? <span>{btns}</span> : '正常';
       }
+    },
+    {
+      ...customColumnProps,
+      title: '健康度设置',
+      dataIndex: 'service',
+      width: 100,
+      render: (text, row) => <SetModal service={row} />
     },
     {
       ...customColumnProps,

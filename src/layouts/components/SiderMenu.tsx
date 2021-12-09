@@ -65,6 +65,7 @@ const SiderMenu: React.FC<Props> = props => {
       message.success('登录已失效，请重新登录');
       const storageList = [
         'troweb-role',
+        'isAdmin',
         'troweb-userName',
         'full-link-token',
         'trowebUserResource',
@@ -169,7 +170,6 @@ const SiderMenu: React.FC<Props> = props => {
           <Popover
             content={content}
             placement="topLeft"
-            title="注销"
             visible={visible}
             trigger="click"
             arrowPointAtCenter

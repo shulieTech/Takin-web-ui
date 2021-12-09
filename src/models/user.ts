@@ -43,6 +43,7 @@ export default {
         localStorage.setItem('troweb-userName', payload.username);
         localStorage.setItem('troweb-role', data.userType);
         localStorage.setItem('troweb-userId', data.id);
+        localStorage.setItem('isAdmin', data.isAdmin);
       }
     },
     *troLogout({ payload }, { call, put }) {
@@ -51,6 +52,7 @@ export default {
       } = yield call(troLogout, payload);
       if (success) {
         localStorage.removeItem('troweb-role');
+        localStorage.removeItem('isAdmin');
         localStorage.removeItem('troweb-userName');
         localStorage.removeItem('full-link-token');
         localStorage.removeItem('trowebUserResource');

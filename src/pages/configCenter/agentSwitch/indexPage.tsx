@@ -16,6 +16,7 @@ interface State {
   loading: boolean;
   inoperativeNodeData: any[];
   searchInputValue: string;
+  canEnableDisable: any;
 }
 const AgentSwitch: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -25,7 +26,8 @@ const AgentSwitch: React.FC<Props> = props => {
     dataSource: [],
     loading: false,
     inoperativeNodeData: [],
-    searchInputValue: undefined
+    searchInputValue: undefined,
+    canEnableDisable: false
   });
 
   useEffect(() => {
@@ -66,7 +68,8 @@ const AgentSwitch: React.FC<Props> = props => {
           data.switchStatus === 'OPENED'
             ? '探针已启用，压测配置已生效，确认各项压测配置正常后可进行安全压测'
             : '探针已关闭，探针将不区分压测流量，且无法采集监控日志。无法从平台发起压测流量的压测和调试',
-        loading: false
+        loading: false,
+        canEnableDisable: data.canEnableDisable
       });
     }
     setState({
