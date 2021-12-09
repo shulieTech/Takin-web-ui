@@ -121,7 +121,7 @@ const AppAccess: React.FC<Props> = props => {
         >
           <StepInfo state={state} setState={setState} />
         </Modal>
-        <StepByStepInstructions />
+        <StepByStepInstructions agentVersionInfo={state.agentVersionInfo}/>
         <Modal
           maskClosable={false}
           title="接入说明"

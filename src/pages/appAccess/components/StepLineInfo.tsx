@@ -3,7 +3,9 @@ import React, { Fragment } from 'react';
 import AgentVersionWrap from './AgentVersionWrap';
 import CardTitle from './CardTitle';
 import styles from './../index.less';
-interface Props {}
+interface Props {
+  agentVersionInfo?: any;
+}
 const StepLineInfo: React.FC<Props> = props => {
   return (
     <div style={{ paddingLeft: 76 }}>
@@ -40,9 +42,22 @@ const StepLineInfo: React.FC<Props> = props => {
         >
           <div style={{ marginTop: 10 }}>
             <AgentVersionWrap
-              time="2020-10-10 10:00:00"
-              version="V5.4.2.1"
-              feature="3.修复了BUG新：kafuka1.0、pika1.1；2.数觉得"
+              {
+                ...(props.agentVersionInfo ? {
+                  time: props.agentVersionInfo.gmtUpdate,
+                  version: props.agentVersionInfo.version,
+                  feature: props.agentVersionInfo.versionFeatures,
+                } : {
+                  time: '2020-10-10 10:00:00',
+                  version: 'V5.4.2.1',
+                  feature: `1、支持链路快速接入（数据库/表，redis，远程调用，影子消费者）
+                  2、支持一键静默
+                  3、新增traceid打印开关
+                  4、支持入口规则的上报
+                  5、新增业务/影子的动态配置参数开关
+                  6、支持一键卸载/恢复`,
+                })
+              }
             />
           </div>
         </Card>
