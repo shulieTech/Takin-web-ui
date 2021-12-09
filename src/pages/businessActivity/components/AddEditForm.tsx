@@ -155,7 +155,7 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
         label: '服务类型',
         options: {
           rules: [{ required: true, message: '请选择服务类型' }],
-          initialValue: props.serviceType,
+          initialValue: props.serviceType || 'HTTP'
         },
         node: (
           <BusinessSelect
