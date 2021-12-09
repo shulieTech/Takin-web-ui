@@ -2,7 +2,9 @@ import React, { Fragment } from 'react';
 import styles from './../index.less';
 import StepLineInfo from './StepLineInfo';
 
-interface Props {}
+interface Props {
+  agentVersionInfo?: any;
+}
 const StepByStepInstructions: React.FC<Props> = props => {
   return (
     <div
@@ -19,7 +21,7 @@ const StepByStepInstructions: React.FC<Props> = props => {
       >
         步骤说明
       </p>
-      <StepLineInfo />
+      <StepLineInfo agentVersionInfo={props.agentVersionInfo}/>
     </div>
   );
 };

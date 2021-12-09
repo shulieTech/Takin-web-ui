@@ -3,9 +3,11 @@
  */
 import { BasicDva } from 'src/components/basic-component/BasicDva';
 import AppService from 'src/services/app';
+import BusinessService from 'src/pages/businessActivity/service';
 
 const initState = {
-  dictionaryMap: {} as any
+  dictionaryMap: {} as any,
+  domains: [], // 业务域列表
 };
 export type CommonModelState = Partial<typeof initState>;
 
@@ -22,6 +24,20 @@ const commonModel = new BasicDva<CommonModelState>({
           type: 'updateState',
           payload: {
             dictionaryMap: data
+          }
+        });
+      }
+    },
+    *getDomains({ payload }, { call, put, select }) {
+      const {
+        data: { data, success }
+      } = yield call(BusinessService.domainList);
+      if (success && data) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            // 注意这里value用的是domainCode而不是id
+            domains: (data || []).map((x) => ({ label: x.name, value: +x.domainCode })),
           }
         });
       }
