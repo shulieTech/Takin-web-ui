@@ -83,6 +83,7 @@ const SiderMenu: React.FC<Props> = props => {
         return;
       }
       router.push('/login');
+      window.location.reload();
     }
   };
 
