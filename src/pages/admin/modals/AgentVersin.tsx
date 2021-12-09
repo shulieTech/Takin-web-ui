@@ -199,7 +199,7 @@ const AgentVersin: React.FC<Props> = props => {
   return (
     <Modal
       title="新增探针版本"
-      visible={props.state.versinVisible}
+      visible={props.state.visible}
       bodyStyle={{ background: '#F5F7F9' }}
       style={{ top: 40 }}
       width={1000}

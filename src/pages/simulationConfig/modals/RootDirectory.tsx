@@ -2,12 +2,14 @@ import React, { Fragment, useEffect } from 'react';
 import { CommonModal, CommonTable, useStateReducer } from 'racc';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { ColumnProps } from 'antd/lib/table';
-import { Button, Form, Input, message, Select } from 'antd';
+import { Button, Form, Input, message, Modal, Select } from 'antd';
 import { FormItemProps } from 'antd/lib/form';
 import configService from '../service';
 const { Option } = Select;
 interface Props {
   form: any;
+  state: any;
+  setState: any;
 }
 
 const getInitState = () => ({
@@ -31,47 +33,50 @@ const RootDirectory: React.FC<Props> = props => {
     wrapperCol: { span: 15 },
   };
   const handleOk = () => {
-    return new Promise(resolve => {
-      props.form.validateFields(async (err, values) => {
-        if (err) {
-          message.info('请检查表单必填项');
-          resolve(false);
-          return;
-        }
-        delete values.pathType;
-        if (state.datas?.id) {
-          const {
-            data: { data, success }
-          } = await configService.pathUpdate({
-            context: JSON.stringify(values),
-            id: state.datas?.id,
-            pathType: props.form.getFieldValue('pathType')
+    props.form.validateFields(async (err, values) => {
+      if (err) {
+        message.info('请检查表单必填项');
+        return;
+      }
+      delete values.pathType;
+      if (state.datas?.id) {
+        const {
+          data: { data, success }
+        } = await configService.pathUpdate({
+          context: JSON.stringify(values),
+          id: state.datas?.id,
+          pathType: props.form.getFieldValue('pathType')
+        });
+        if (success) {
+          message.success('保存成功');
+          props.form.resetFields();
+          props.setState({
+            visible: false
           });
-          if (success) {
-            resolve(true);
-            message.success('保存成功');
-            props.form.resetFields();
-
-          }
-          resolve(false);
-        } else {
-          const {
-            data: { data, success }
-          } = await configService.pathCreate({
-            context: JSON.stringify(values),
-            pathType: props.form.getFieldValue('pathType')
-          });
-          if (success) {
-            resolve(true);
-            message.success('保存成功');
-            props.form.resetFields();
-
-          }
-          resolve(false);
         }
-      });
+      } else {
+        const {
+          data: { data, success }
+        } = await configService.pathCreate({
+          context: JSON.stringify(values),
+          pathType: props.form.getFieldValue('pathType')
+        });
+        if (success) {
+          message.success('保存成功');
+          props.form.resetFields();
+          props.setState({
+            visible: false
+          });
+        }
+      }
     });
   };
+
+  useEffect(() => {
+    if (props.state.visible) {
+      onClick();
+    }
+  }, []);
 
   const onClick = async () => {
     const {
@@ -99,30 +104,28 @@ const RootDirectory: React.FC<Props> = props => {
       buDisabled: true,
     });
     props.form.resetFields();
+    props.setState({
+      visible: false
+    });
   };
 
   return (
-    <CommonModal
-      onClick={onClick}
-      afterCancel={handleCancel}
-      modalProps={{
-        width: 700,
-        title: '探针根目录编辑',
-        footer: [
-          <Button
-            key="submit"
-            type="primary"
-            onClick={handleOk}
-            disabled={state.buDisabled}
-          >
-            确认编辑
-          </Button>,
-        ]
-      }}
-      btnProps={{
-        type: 'default'
-      }}
-      btnText="探针根目录管理"
+    <Modal
+      title="探针根目录编辑"
+      visible={props.state.visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      width={700}
+      footer={[
+        <Button
+          key="submit"
+          type="primary"
+          onClick={handleOk}
+          disabled={state.buDisabled}
+        >
+          确认编辑
+        </Button>,
+      ]}
     >
       <Form onSubmit={handleOk} {...formItemProps}>
         <Form.Item
@@ -146,6 +149,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('ftpHost', {
                   rules: [{ required: true, message: `请输入地址` }],
+                  initialValue: state.context.ftpHost || '',
                 })(
                   <Input placeholder="请输入ip" />
                 )}
@@ -155,6 +159,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('ftpPort', {
                   rules: [{ required: true, message: `请输入端口` }],
+                  initialValue: state.context.ftpPort || '',
                 })(
                   <Input placeholder="请输入端口" />
                 )}
@@ -162,14 +167,18 @@ const RootDirectory: React.FC<Props> = props => {
               <Form.Item
                 label="账号"
               >
-                {props.form.getFieldDecorator('username')(
+                {props.form.getFieldDecorator('username', {
+                  initialValue: state.context.username || '',
+                })(
                   <Input placeholder="请输入账号" />
                 )}
               </Form.Item>
               <Form.Item
                 label="密码"
               >
-                {props.form.getFieldDecorator('passwd')(
+                {props.form.getFieldDecorator('passwd', {
+                  initialValue: state.context.passwd || '',
+                })(
                   <Input placeholder="请输入密码" type="password" />
                 )}
               </Form.Item>
@@ -221,7 +230,7 @@ const RootDirectory: React.FC<Props> = props => {
         }
 
       </Form>
-    </CommonModal>
+    </Modal >
   );
 };
 export default Form.create()(RootDirectory);
