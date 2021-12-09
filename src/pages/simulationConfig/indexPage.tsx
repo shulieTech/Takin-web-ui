@@ -12,7 +12,7 @@ import moment from 'moment';
 import { FormItemProps } from 'antd/lib/form';
 import CustomTable from 'src/components/custom-table';
 import { values } from 'lodash';
-import RootDirectory from './modals/ RootDirectory';
+import RootDirectory from './modals/RootDirectory';
 const InputGroup = Input.Group;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -31,7 +31,8 @@ const getInitState = () => ({
   readProjectConfig: false,
   allApplicationList: [],
   row: {},
-  key: '1'
+  key: '1',
+  visible: false,
 });
 export type AdminState = ReturnType<typeof getInitState>;
 
@@ -152,6 +153,12 @@ const Admin: React.FC<AdminProps> = props => {
 
   const resets = () => {
     queryPatrolSceneAndDashbordList();
+  };
+
+  const visible = () => {
+    setState({
+      visible: true,
+    });
   };
 
   const useGlobal = async (id) => {
@@ -379,7 +386,7 @@ const Admin: React.FC<AdminProps> = props => {
                 </Select>
               </Col>
               <Col span={3}>
-                <RootDirectory />
+                <Button type="default" onClick={visible}>探针根目录管理</Button>
               </Col>
               <Col span={1}>
                 <Button type="default" icon="redo" onClick={resets} />
@@ -449,6 +456,7 @@ const Admin: React.FC<AdminProps> = props => {
       </div>
       <AgentVersin state={state} setState={setState} />
       <TakeEffect state={state} setState={setState} />
+      {state.visible && <RootDirectory state={state} setState={setState} />}
     </div>
   );
 };
