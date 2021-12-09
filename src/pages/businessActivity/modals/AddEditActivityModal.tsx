@@ -22,7 +22,7 @@ const getInitState = () => ({
   systemName: undefined,
   service: undefined,
   serviceName: undefined,
-  serviceType: undefined,
+  serviceType: 'HTTP',
   app: undefined,
   appName: undefined,
   serviceList: [],

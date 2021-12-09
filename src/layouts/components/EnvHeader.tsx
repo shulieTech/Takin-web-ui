@@ -25,7 +25,7 @@ const EnvHeader: React.FC<Props> = (props) => {
     });
     if (success) {
       setTenantList(data);
-      const indexs = _.findIndex(data, ['tenantName', localStorage.getItem('tenant-code')]);
+      const indexs = _.findIndex(data, ['tenantCode', localStorage.getItem('tenant-code')]);
       setEnvList(data[indexs]?.envs);
       const arr = data[indexs]?.envs.filter(item => {
         if (item.isDefault) {
