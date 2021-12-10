@@ -137,7 +137,7 @@ const RootDirectory: React.FC<Props> = props => {
         >
           {props.form.getFieldDecorator('pathType', {
             initialValue: state.datas ? `${state.datas?.pathType}` : '0',
-            rules: [{ required: true, message: `请输入类型` }],
+            rules: [{ required: true, message: `请输入类型`, whitespace: true }],
           })(
             <Select placeholder="请选择类型">
               <Option value="0">oss</Option>
@@ -152,7 +152,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="ip"
               >
                 {props.form.getFieldDecorator('ftpHost', {
-                  rules: [{ required: true, message: `请输入地址` }],
+                  rules: [{ required: true, message: `请输入地址`, whitespace: true }],
                   initialValue: state.context?.ftpHost || '',
                 })(
                   <Input placeholder="请输入ip" />
@@ -162,7 +162,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="端口"
               >
                 {props.form.getFieldDecorator('ftpPort', {
-                  rules: [{ required: true, message: `请输入端口` }],
+                  rules: [{ required: true, message: `请输入端口`, whitespace: true }],
                   initialValue: state.context?.ftpPort || '',
                 })(
                   <Input placeholder="请输入端口" />
@@ -172,6 +172,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="账号"
               >
                 {props.form.getFieldDecorator('username', {
+                  rules: [{ required: true, message: `请输入端口`, whitespace: true }],
                   initialValue: state.context?.username || '',
                 })(
                   <Input placeholder="请输入账号" />
@@ -181,6 +182,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="密码"
               >
                 {props.form.getFieldDecorator('passwd', {
+                  rules: [{ required: true, message: `请输入端口`, whitespace: true }],
                   initialValue: state.context?.passwd || '',
                 })(
                   <Input placeholder="请输入密码" type="password" />
@@ -194,7 +196,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('endpoint', {
                   initialValue: state.context?.endpoint,
-                  rules: [{ required: true, message: `请输入endpoint` }],
+                  rules: [{ required: true, message: `请输入endpoint`, whitespace: true }],
                 })(
                   <Input placeholder="请输入endpoint" />
                 )}
@@ -204,7 +206,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('accessKeyId', {
                   initialValue: state.context?.accessKeyId,
-                  rules: [{ required: true, message: `请输入accessKeyId` }],
+                  rules: [{ required: true, message: `请输入accessKeyId`, whitespace: true }],
                 })(
                   <Input placeholder="请输入accessKeyId" type="password" />
                 )}
@@ -214,7 +216,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('accessKeySecret', {
                   initialValue: state.context?.accessKeySecret,
-                  rules: [{ required: true, message: `请输入accessKeySecret` }],
+                  rules: [{ required: true, message: `请输入accessKeySecret`, whitespace: true }],
                 })(
                   <Input placeholder="请输入accessKeySecret" type="password" />
                 )}
@@ -224,7 +226,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('bucketName', {
                   initialValue: state.context?.bucketName,
-                  rules: [{ required: true, message: `请输入bucketName` }],
+                  rules: [{ required: true, message: `请输入bucketName`, whitespace: true }],
                 })(
                   <Input placeholder="请输入bucketName" />
                 )}
