@@ -563,24 +563,26 @@ canvas {
     display: none !important;
   }
 }
-.activity-item{
+.activity-item {
   cursor: pointer;
   padding: 8px 16px 12px;
-  border-bottom: 1px solid var(--Netural-02, #F8F8F8);
+  border-bottom: 1px solid var(--Netural-100, #f8f8f8);
   background-color: #fff;
   // transition: all 0.3s;
-  .active-type-name{
-    color: var(--Netural-08, #ABABAB);
+  .active-type-name {
+    color: var(--Netural-08, #ababab);
     margin-bottom: 8px;
   }
-  .active-name{
+  .active-name {
     color: var(--Netural-14, #424242);
     font-weight: 600;
     word-break: 'break-all';
   }
-  &.selected, &:hover{
-    background-color: var(--BrandPrimary-500, #00CDC3);
-    .active-type-name, .active-name {
+  &.selected,
+  &:hover {
+    background-color: var(--BrandPrimary-500, #00cdc3);
+    .active-type-name,
+    .active-name {
       color: #fff;
     }
   }

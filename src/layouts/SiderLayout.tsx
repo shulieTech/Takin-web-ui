@@ -2,7 +2,7 @@
  * @name 基础布局Layout
  * @author MingShined
  */
-import { ConfigProvider, Layout } from 'antd';
+import { Alert, Col, ConfigProvider, Layout, Row } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { useEffect, useRef } from 'react';
@@ -15,10 +15,12 @@ import ContentNode from './components/ContentNode';
 import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
 import EnvHeader from './components/EnvHeader';
+import styles from './index.less';
+import CustomIcon from 'src/common/custom-icon/CustomIcon';
 
 declare var window: any;
 let path = '';
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
 
 const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const [state, setState] = useStateReducer({
@@ -147,32 +149,68 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   };
 
   return (
-    <Layout
-      className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
-    >
-      <SiderMenu
-        collapsedStatus={state.collapsedStatus}
-        onCollapse={handlerCollapsed}
-        location={location}
+    <div>
+      <Alert
+        banner
+        closable={true}
+        message={
+          <span
+            style={{
+              color: 'var(--Netural-100)'
+            }}
+          >
+            试用提醒
+          </span>
+        }
+        description="您还有7天试用时效，若想体验更多功能请联系熟练数列人员"
+        style={{
+          backgroundColor: 'var(--FunctionalNetural-300)',
+          color: 'var(--Netural-100)'
+        }}
       />
-      <Layout className="flex" style={{ backgroundColor: '#1D2530' }}>
-        {/* <HeaderNode
+      <Row className={styles.logo}>
+        <Col>
+          <div className={styles.titleName}>
+            <CustomIcon
+              iconWidth={36}
+              imgWidth={26}
+              imgName="takin_logo"
+              color="var(--BrandPrimary-500)"
+            />
+            <span className={styles.logoName}>Takin</span>
+          </div>
+        </Col>
+      </Row>
+      <Layout
+        className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
+      >
+        <SiderMenu
+          collapsedStatus={state.collapsedStatus}
+          onCollapse={handlerCollapsed}
+          location={location}
+        />
+        <Layout
+          className="flex"
+          style={{ backgroundColor: 'var(--Netural-100)' }}
+        >
+          {/* <HeaderNode
           onCollapse={handlerCollapsed}
           collapsedStatus={state.collapsedStatus}
         /> */}
-        <ConfigProvider getPopupContainer={() => popupDom.current}>
-          <div
-            className="h-100p"
-            style={{ backgroundColor: '#1D2530' }}
-            ref={popupDom}
-          >
-            <EnvHeader/>
-            <ContentNode children={children} />
-            {/* <FooterNode /> */}
-          </div>
-        </ConfigProvider>
+          <ConfigProvider getPopupContainer={() => popupDom.current}>
+            <div
+              className="h-100p"
+              style={{ backgroundColor: 'var(--Netural-100)' }}
+              ref={popupDom}
+            >
+              <EnvHeader />
+              <ContentNode children={children} />
+              {/* <FooterNode /> */}
+            </div>
+          </ConfigProvider>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

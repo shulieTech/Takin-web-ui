@@ -6,30 +6,30 @@ import BusinessActivityService from '../service';
 import styles from '../index.less';
 import classNames from 'classnames';
 
-const ActivityLeftList = (props) => {
+const ActivityLeftList = props => {
   const { initialId, currentId, onChangeId, currentPageIndex } = props;
   const [listQuery, setListQuery] = useState({
     current: currentPageIndex || 0,
     pageSize: 10,
-    activityName: undefined as string,
+    activityName: undefined as string
   });
 
   const [listLoading, setListLoading] = useState(false);
   const [listData, setListData] = useState([]);
   const [total, setTotal] = useState(0);
 
-  const getBusinessTypeName = (type) => {
-    return props?.dictionaryMap?.domain.find((x) => x.value === type)?.label;
+  const getBusinessTypeName = type => {
+    return props?.dictionaryMap?.domain.find(x => x.value === type)?.label;
   };
-  const getActivityList = async (params) => {
+  const getActivityList = async params => {
     setListLoading(true);
     const {
       data: { data, success },
-      headers: { totalCount },
+      headers: { totalCount }
     } = await BusinessActivityService.getBusinessActivityList(params);
     setListLoading(false);
     if (success && data) {
-      setListData(data.filter((x) => x.businessType !== 1));
+      setListData(data.filter(x => x.businessType !== 1));
       setTotal(+totalCount);
     }
   };
@@ -43,7 +43,7 @@ const ActivityLeftList = (props) => {
     // 滚动到当前活动
     if (
       Array.isArray(listData) &&
-      listData.some((x) => String(x.activityId) === initialId)
+      listData.some(x => String(x.activityId) === initialId)
     ) {
       setTimeout(() => {
         document.querySelector(`#activity_${initialId}`)?.scrollIntoView();
@@ -57,7 +57,7 @@ const ActivityLeftList = (props) => {
       style={{
         width: 224,
         paddingRight: 0,
-        filter: 'drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.1))',
+        filter: 'drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.1))'
       }}
     >
       <div
@@ -65,14 +65,16 @@ const ActivityLeftList = (props) => {
           backgroundColor: '#fff',
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
+          height: '100%'
         }}
       >
-        {window.history.length > 1 && <div style={{ marginTop: 8, padding: 8 }}>
-          <a onClick={() => window.history.go(-1)}>
-            <Icon type="left" style={{ marginRight: 8 }} /> 返回
-          </a>
-        </div>}
+        {window.history.length > 1 && (
+          <div style={{ marginTop: 8, padding: 8 }}>
+            <a onClick={() => window.history.go(-1)}>
+              <Icon type="left" style={{ marginRight: 8 }} /> 返回
+            </a>
+          </div>
+        )}
         <div style={{ padding: 8 }}>
           <Input
             style={{ marginBottom: 8 }}
@@ -80,11 +82,11 @@ const ActivityLeftList = (props) => {
             prefix={<Icon type="search" />}
             placeholder="搜索链路"
             defaultValue={listQuery.activityName}
-            onChange={debounce((e) => {
+            onChange={debounce(e => {
               setListQuery({
                 ...listQuery,
                 current: 0,
-                activityName: e.target.value,
+                activityName: e.target.value
               });
             }, 200)}
           />
@@ -95,12 +97,12 @@ const ActivityLeftList = (props) => {
               style={{
                 height: '100%',
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'column'
               }}
             >
               <div style={{ flex: 1, overflow: 'auto' }}>
                 {listData?.length > 0 ? (
-                  listData.map((itemData) => {
+                  listData.map(itemData => {
                     const selected = currentId === String(itemData.activityId);
                     return (
                       <div
@@ -108,7 +110,7 @@ const ActivityLeftList = (props) => {
                         key={itemData.activityId}
                         onClick={() => onChangeId(String(itemData.activityId))}
                         className={classNames(styles['activity-item'], {
-                          [styles.selected]: selected,
+                          [styles.selected]: selected
                         })}
                       >
                         <div className="flex" style={{ marginBottom: 8 }}>
@@ -131,7 +133,7 @@ const ActivityLeftList = (props) => {
                                 <span className="text-red-500 bg-white rounded px-2 py-1">
                                   配置变更
                                 </span>
-                              ),
+                              )
                             }[itemData.status]
                           }
                         </div>
@@ -148,7 +150,7 @@ const ActivityLeftList = (props) => {
               {total > listQuery.pageSize && (
                 <div
                   style={{
-                    backgroundColor: 'var(--Netural-02, #F8F8F8)',
+                    backgroundColor: 'var(--Netural-100, #F8F8F8)',
                     padding: '8px 16px',
                     margin: 16,
                     display: 'flex',
@@ -156,7 +158,7 @@ const ActivityLeftList = (props) => {
                     alignItems: 'center',
                     position: 'relative',
                     zIndex: 1,
-                    borderRadius: 4,
+                    borderRadius: 4
                   }}
                 >
                   <span>
@@ -177,7 +179,7 @@ const ActivityLeftList = (props) => {
                     current={Number(listQuery.current) + 1}
                     pageSize={listQuery.pageSize}
                     total={total}
-                    onChange={(page) =>
+                    onChange={page =>
                       setListQuery({ ...listQuery, current: page - 1 })
                     }
                   />

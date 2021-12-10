@@ -10,16 +10,16 @@
     }
   }
   // 品牌主色 BrandPrimary
-  --BrandPrimary-50: #f3fdfe; // 文字条的背景色
-  --BrandPrimary-100: #caedf2;
-  --BrandPrimary-200: #83dfed;
-  --BrandPrimary-300: #36cce3;
-  --BrandPrimary-400: #25bed6;
-  --BrandPrimary-500: #11bbd5; // 主色
-  --BrandPrimary-600: #0faac1; // hover
-  --BrandPrimary-700: #109cb2; // active
-  --BrandPrimary-800: #0d8ea2;
-  --BrandPrimary-900: #067c8d;
+  --BrandPrimary-50: #f1f7ff; // 文字条的背景色
+  --BrandPrimary-100: #adceff;
+  --BrandPrimary-200: #77adff;
+  --BrandPrimary-300: #589bff;
+  --BrandPrimary-400: #3f8cff;
+  --BrandPrimary-500: #2e75ff; // 主色
+  --BrandPrimary-600: #1864f8; // hover
+  --BrandPrimary-700: #0c57e9; // active
+  --BrandPrimary-800: #074cd2;
+  --BrandPrimary-900: #0643b9;
 
   --BrandSecondary-500: #00d77d;
 
@@ -63,8 +63,9 @@
   // 详情：【标题10，正文14】
   // tab :
   // Netural
-  --Netural-01: #ffffff; // button文字（除disable）
-  --Netural-02: #f8f8f8; // disabled 背景色
+  --Netural-50: #ffffff; // button文字（除disable）
+  --Netural-100: #f8f8f8; // disabled 背景色
+  --Netural-900: #303336;
   --Netural-03: #f0f0f0;
   --Netural-04: #e8e8e8;
   --Netural-05: #dadada;
@@ -79,6 +80,7 @@
   --Netural-14: #424242;
   --Netural-15: #313131;
   --Netural-16: #262626;
+
   height: 100%;
 
   ::-webkit-scrollbar {
@@ -109,7 +111,7 @@
   }
 
   .ant-btn-danger {
-    background-color: var(--Netural-01);
+    background-color: var(--Netural-50);
     border-color: var(--FunctionalError-500);
     color: var(--FunctionalError-500);
   }
@@ -131,7 +133,7 @@
   .ant-menu .ant-menu-submenu-open,
   .ant-menu-submenu-active,
   .ant-menu-submenu-title:hover {
-    color: var(--Netural-01) !important;
+    color: var(--Netural-50) !important;
   }
 
   .ant-menu-vertical .ant-menu-submenu-selected > a,
@@ -154,7 +156,7 @@
     color: var(--BrandPrimary-500);
   }
   .ant-menu-horizontal > .ant-menu-item-selected > a {
-    color: var(--Netural-01);
+    color: var(--Netural-50);
   }
   .ant-menu-dark {
     background: var(--BrandPrimary-500);
