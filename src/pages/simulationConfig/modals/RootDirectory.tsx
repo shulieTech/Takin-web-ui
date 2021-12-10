@@ -22,7 +22,11 @@ const getInitState = () => ({
     endpoint: '',
     bucketName: '',
     accessKeySecret: '',
-    accessKeyId: ''
+    accessKeyId: '',
+    ftpHost: '',
+    ftpPort: '',
+    username: '',
+    passwd: ''
   }
 });
 
@@ -149,7 +153,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('ftpHost', {
                   rules: [{ required: true, message: `请输入地址` }],
-                  initialValue: state.context.ftpHost || '',
+                  initialValue: state.context?.ftpHost || '',
                 })(
                   <Input placeholder="请输入ip" />
                 )}
@@ -159,7 +163,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('ftpPort', {
                   rules: [{ required: true, message: `请输入端口` }],
-                  initialValue: state.context.ftpPort || '',
+                  initialValue: state.context?.ftpPort || '',
                 })(
                   <Input placeholder="请输入端口" />
                 )}
@@ -168,7 +172,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="账号"
               >
                 {props.form.getFieldDecorator('username', {
-                  initialValue: state.context.username || '',
+                  initialValue: state.context?.username || '',
                 })(
                   <Input placeholder="请输入账号" />
                 )}
@@ -177,7 +181,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="密码"
               >
                 {props.form.getFieldDecorator('passwd', {
-                  initialValue: state.context.passwd || '',
+                  initialValue: state.context?.passwd || '',
                 })(
                   <Input placeholder="请输入密码" type="password" />
                 )}
