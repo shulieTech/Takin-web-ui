@@ -13,7 +13,6 @@ interface Props {
 }
 
 const getInitState = () => ({
-  data: [],
   buDisabled: true,
   datas: {
     pathType: 0
@@ -83,24 +82,11 @@ const RootDirectory: React.FC<Props> = props => {
   }, []);
 
   const onClick = async () => {
-    const {
-      data: { data, success }
-    } = await configService.pathConfig({});
-    if (success) {
-      if (data?.editable === 1) {
-        setState({
-          buDisabled: true,
-        });
-      } else {
-        setState({
-          buDisabled: false,
-        });
-      }
-      setState({
-        datas: data,
-        context: data && JSON.parse(data?.context)
-      });
-    }
+    setState({
+      buDisabled: props.state.buDisabled,
+      datas: props.state.datas,
+      context: props.state.context
+    });
   };
 
   const handleCancel = () => {
