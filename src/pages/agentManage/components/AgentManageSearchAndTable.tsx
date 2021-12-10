@@ -39,6 +39,12 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
     state.searchInputValue
   ]);
 
+  useEffect(() => {
+    const projectName = location.hash.split('=')[1];
+    setState({
+      searchInputValue: projectName,
+    });
+  }, []);
   /**
    * @name 获取探针列表
    */
@@ -184,9 +190,9 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
         </Col>
       </Row>
       {(!state.agentManageList || state.agentManageList.length === 0) &&
-      !state.agentStatus &&
-      !state.probeStatus &&
-      !state.searchInputValue ? (
+        !state.agentStatus &&
+        !state.probeStatus &&
+        !state.searchInputValue ? (
         <div>
           <EmptyNode
             title="暂无探针,请先接入应用"
@@ -256,7 +262,7 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
               pageSize={state.searchParams.pageSize}
               showTotal={(t, range) =>
                 `共 ${state.total} 条数据 第${state.searchParams.current +
-                  1}页 / 共 ${Math.ceil(
+                1}页 / 共 ${Math.ceil(
                   state.total / (state.searchParams.pageSize || 10)
                 )}页`
               }
