@@ -86,7 +86,7 @@ const Admin: React.FC<AdminProps> = props => {
       setState({
         datas: data,
         context: data && JSON.parse(data?.context),
-        validStatus: 0
+        validStatus: data.validStatus
       });
     }
   };
