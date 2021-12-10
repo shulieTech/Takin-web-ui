@@ -33,6 +33,21 @@ const getInitState = () => ({
   row: {},
   key: '1',
   visible: false,
+  buDisabled: true,
+  datas: {
+    pathType: 0
+  },
+  context: {
+    endpoint: '',
+    bucketName: '',
+    accessKeySecret: '',
+    accessKeyId: '',
+    ftpHost: '',
+    ftpPort: '',
+    username: '',
+    passwd: ''
+  },
+  validStatus: 0
 });
 export type AdminState = ReturnType<typeof getInitState>;
 
@@ -51,7 +66,30 @@ const Admin: React.FC<AdminProps> = props => {
 
   useEffect(() => {
     allApplication();
+    onClick();
   }, []);
+
+  const onClick = async () => {
+    const {
+      data: { data, success }
+    } = await configService.pathConfig({});
+    if (success) {
+      if (data?.editable === 1) {
+        setState({
+          buDisabled: true,
+        });
+      } else {
+        setState({
+          buDisabled: false,
+        });
+      }
+      setState({
+        datas: data,
+        context: data && JSON.parse(data?.context),
+        validStatus: 0
+      });
+    }
+  };
 
   const allApplication = async () => {
     const {
@@ -358,7 +396,7 @@ const Admin: React.FC<AdminProps> = props => {
         <Tabs defaultActiveKey="1" onChange={callback}>
           <TabPane tab="全局配置" key="1">
             <Row style={{ marginBottom: 20, marginLeft: 20 }}>
-              <Col span={1} offset={11}>
+              <Col span={1} offset={9}>
                 <Button type="link" onClick={() => reset(1)} style={{ marginTop: 10 }}>重置</Button>
               </Col>
               <Col span={4}>
@@ -387,6 +425,12 @@ const Admin: React.FC<AdminProps> = props => {
               </Col>
               <Col span={3}>
                 <Button type="default" onClick={visible}>探针根目录管理</Button>
+              </Col>
+              <Col span={2} style={{ marginTop: 6 }}>
+                <Badge
+                  text={state.validStatus === 0 ? '未检测' : state.validStatus === 1 ? '检测失败' : '检测成功'}
+                  color={state.validStatus === 2 ? 'var(--BrandPrimary-500)' : 'var(--FunctionalError-400)'}
+                />
               </Col>
               <Col span={1}>
                 <Button type="default" icon="redo" onClick={resets} />
