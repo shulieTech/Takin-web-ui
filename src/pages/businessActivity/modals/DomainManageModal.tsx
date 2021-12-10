@@ -133,7 +133,9 @@ const DomainManageModal: React.FC<Props> = (props) => {
               width: 100,
               fixed: 'right',
               render: (text, record, index) => {
-                return (
+                return record.type === 0 ? (
+                  '-'
+                ) : (
                   <span>
                     <a onClick={() => editItem(record)}>编辑</a>
                     <Popconfirm
