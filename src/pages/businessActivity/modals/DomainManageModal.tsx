@@ -70,10 +70,16 @@ const DomainManageModal: React.FC<Props> = (props) => {
     } = await services.domainDelete({ id: record.id });
     if (success) {
       message.success('操作成功');
-      setQuery({
-        ...query,
-        current: 0,
-      });
+      if (query.current === 0) {
+        // 可能已经在第一页了，页码没发生变化，所以这里还是得手动刷新下列表
+        getList();
+      } else {
+        // 不在第一页，直接修改页码触发刷新
+        setQuery({
+          ...query,
+          current: 0,
+        });
+      }
     }
   };
 
