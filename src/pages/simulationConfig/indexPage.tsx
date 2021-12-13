@@ -430,7 +430,9 @@ const Admin: React.FC<AdminProps> = props => {
                 <Badge
                   text={state.validStatus === 0 ? '未配置' : state.validStatus === 1 ? '检测中' :
                     state.validStatus === 2 ? '异常' : '检测成功'}
-                  color={state.validStatus === 2 ? 'var(--FunctionalError-400)' : 'var(--BrandPrimary-500)'}
+                  color={state.validStatus === 2 ? 'var(--FunctionalError-400)' : 
+                  state.validStatus === 1 ? 'var(--FunctionalAlert-300)' :  state.validStatus === 3 ? 'var(--BrandPrimary-500)' :
+                '--FunctionalNetural-400'}
                 />
               </Col>
               <Col span={1}>
