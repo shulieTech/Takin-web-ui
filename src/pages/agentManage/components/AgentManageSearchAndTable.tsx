@@ -24,10 +24,11 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
   const { agent_status, agent_probe_status } = dictionaryMap;
 
   useEffect(() => {
+    const projectName = location.hash.split('=')[1];
     queryAgentManageList({
       ...state.searchParams,
+      projectName,
       agentStatus: state.agentStatus,
-      projectName: state.searchInputValue,
       probeStatus: state.probeStatus
     });
   }, [
@@ -36,23 +37,8 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
     state.probeStatus,
     state.searchParams.current,
     state.searchParams.pageSize,
-    state.searchInputValue
   ]);
 
-  useEffect(() => {
-    const projectName = location.hash.split('=')[1];
-    setState({
-      searchInputValue: projectName,
-    });
-    setTimeout(() => {
-      queryAgentManageList({
-        ...state.searchParams,
-        projectName,
-        agentStatus: state.agentStatus,
-        probeStatus: state.probeStatus
-      });
-    }, 0);
-  }, []);
   /**
    * @name 获取探针列表
    */
@@ -131,32 +117,12 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
         align="middle"
         style={{ marginBottom: 20, marginTop: 20 }}
       >
-        <Col span={6}>
-          <CommonSelect
-            style={{ width: '100%' }}
-            placeholder="搜索应用名称"
-            dataSource={state.allAppList || []}
-            value={state.searchInputValue}
-            onChange={value => {
-              setState({
-                searchInputValue: value
-              });
-            }}
-            showSearch
-            filterOption={(input, option) =>
-              option.props.children
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
-          />
-        </Col>
-        <Col>
+        <Col span={8} offset={16}>
           <Button
             type="link"
             style={{ marginRight: 16 }}
             onClick={() => {
               setState({
-                searchInputValue: null,
                 agentStatus: undefined,
                 probeStatus: undefined,
                 isReload: !state.isReload,
@@ -199,8 +165,7 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
       </Row>
       {(!state.agentManageList || state.agentManageList.length === 0) &&
         !state.agentStatus &&
-        !state.probeStatus &&
-        !state.searchInputValue ? (
+        !state.probeStatus ? (
         <div>
           <EmptyNode
             title="暂无探针,请先接入应用"
