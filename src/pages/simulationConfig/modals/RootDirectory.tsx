@@ -122,7 +122,7 @@ const RootDirectory: React.FC<Props> = props => {
           label="类型"
         >
           {props.form.getFieldDecorator('pathType', {
-            initialValue: state.datas ? `${state.datas?.pathType}` : '0',
+            initialValue: state.datas.pathType ? `${state.datas?.pathType}` : '0',
             rules: [{ required: true, message: `请输入类型`, whitespace: true }],
           })(
             <Select placeholder="请选择类型">
