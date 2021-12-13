@@ -24,12 +24,25 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
   const { agent_status, agent_probe_status } = dictionaryMap;
 
   useEffect(() => {
-    queryAgentManageList({
-      ...state.searchParams,
-      agentStatus: state.agentStatus,
-      projectName: state.searchInputValue,
-      probeStatus: state.probeStatus
-    });
+    if (location.hash.split('=')[1]) {
+      const projectName = location.hash.split('=')[1];
+      queryAgentManageList({
+        ...state.searchParams,
+        projectName,
+        agentStatus: state.agentStatus,
+        probeStatus: state.probeStatus
+      });
+      setState({
+        searchInputValue: projectName,
+      });
+    } else {
+      queryAgentManageList({
+        ...state.searchParams,
+        agentStatus: state.agentStatus,
+        projectName: state.searchInputValue,
+        probeStatus: state.probeStatus
+      });
+    }
   }, [
     state.isReload,
     state.agentStatus,
@@ -39,20 +52,6 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
     state.searchInputValue
   ]);
 
-  useEffect(() => {
-    const projectName = location.hash.split('=')[1];
-    setState({
-      searchInputValue: projectName,
-    });
-    setTimeout(() => {
-      queryAgentManageList({
-        ...state.searchParams,
-        projectName,
-        agentStatus: state.agentStatus,
-        probeStatus: state.probeStatus
-      });
-    }, 0);
-  }, []);
   /**
    * @name 获取探针列表
    */
