@@ -44,12 +44,14 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
     setState({
       searchInputValue: projectName,
     });
-    queryAgentManageList({
-      ...state.searchParams,
-      projectName,
-      agentStatus: state.agentStatus,
-      probeStatus: state.probeStatus
-    });
+    setTimeout(() => {
+      queryAgentManageList({
+        ...state.searchParams,
+        projectName,
+        agentStatus: state.agentStatus,
+        probeStatus: state.probeStatus
+      });
+    }, 0);
   }, []);
   /**
    * @name 获取探针列表
