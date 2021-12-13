@@ -2,7 +2,7 @@
  * @name 基础布局Layout
  * @author MingShined
  */
-import { Alert, Col, ConfigProvider, Layout, Row } from 'antd';
+import { Affix, Alert, Col, ConfigProvider, Divider, Layout, Row } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { useEffect, useRef } from 'react';
@@ -149,7 +149,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   };
 
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <Alert
         banner
         closable={true}
@@ -168,48 +168,45 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
           color: 'var(--Netural-100)'
         }}
       />
-      <Row className={styles.logo}>
-        <Col>
-          <div className={styles.titleName}>
-            <CustomIcon
-              iconWidth={36}
-              imgWidth={26}
-              imgName="takin_logo"
-              color="var(--BrandPrimary-500)"
-            />
-            <span className={styles.logoName}>Takin</span>
-          </div>
-        </Col>
-      </Row>
-      <Layout
-        className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
-      >
-        <SiderMenu
-          collapsedStatus={state.collapsedStatus}
-          onCollapse={handlerCollapsed}
-          location={location}
-        />
+      <div style={{ height: '100%' }}>
+        <EnvHeader />
+
         <Layout
-          className="flex"
-          style={{ backgroundColor: 'var(--Netural-100)' }}
+          className={
+            venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'
+          }
+          style={{ height: 'calc(100% - 56px)' }}
         >
-          {/* <HeaderNode
+          <SiderMenu
+            collapsedStatus={state.collapsedStatus}
+            onCollapse={handlerCollapsed}
+            location={location}
+          />
+          <Layout
+            className="flex"
+            style={{
+              backgroundColor: 'var(--Netural-100)'
+            }}
+          >
+            {/* <HeaderNode
           onCollapse={handlerCollapsed}
           collapsedStatus={state.collapsedStatus}
         /> */}
-          <ConfigProvider getPopupContainer={() => popupDom.current}>
-            <div
-              className="h-100p"
-              style={{ backgroundColor: 'var(--Netural-100)' }}
-              ref={popupDom}
-            >
-              <EnvHeader />
-              <ContentNode children={children} />
-              {/* <FooterNode /> */}
-            </div>
-          </ConfigProvider>
+            <ConfigProvider getPopupContainer={() => popupDom.current}>
+              <div
+                className="h-100p"
+                style={{
+                  backgroundColor: 'var(--Netural-100)'
+                }}
+                ref={popupDom}
+              >
+                <ContentNode children={children} />
+                {/* <FooterNode /> */}
+              </div>
+            </ConfigProvider>
+          </Layout>
         </Layout>
-      </Layout>
+      </div>
     </div>
   );
 };

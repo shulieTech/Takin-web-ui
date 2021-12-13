@@ -130,19 +130,51 @@
       box-shadow: none;
     }
 
+    .ant-menu-submenu-title,
+    .ant-menu-submenu-title .anticon + span,
+    .ant-menu-submenu-title .anticon,
+    .ant-menu-dark .ant-menu-item > a {
+      color: var(--Netural-900);
+    }
+
+    .ant-menu-dark .ant-menu-item-active > a {
+      color: var(--BrandPrimary-500);
+    }
+
+    .ant-menu-dark .ant-menu-submenu-title .ant-menu-submenu-arrow::before,
+    .ant-menu-dark .ant-menu-submenu-title .ant-menu-submenu-arrow::after,
+    .ant-menu-dark
+      .ant-menu-submenu-selected
+      .ant-menu-submenu-title
+      .ant-menu-submenu-arrow::after,
+    .ant-menu-dark
+      .ant-menu-submenu-selected
+      .ant-menu-submenu-title
+      .ant-menu-submenu-arrow::before {
+      background-color: var(--Netural-900);
+    }
+
     .ant-menu.ant-menu-dark .ant-menu-item-selected,
     .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
-      background-color: var(--BrandPrimary-600);
-      border-left: 2px solid rgba(255, 182, 74, 1);
+      background-color: var(--Netural-200);
+      // border-left: 2px solid rgba(255, 182, 74, 1);
+    }
+
+    .ant-menu-dark .ant-menu-item-selected > a {
+      color: var(--BrandPrimary-500);
+    }
+    .ant-menu-dark .ant-menu-item-selected .anticon {
+      color: var(--BrandPrimary-500);
+    }
+    .ant-menu-dark .ant-menu-item-selected .anticon + span {
+      color: var(--BrandPrimary-500);
     }
   }
 }
 
 .menuCard {
-  background-color: transparent;
   box-shadow: none;
   border: none;
-  border-top: 1px solid var(--BrandPrimary-500);
 
   :global {
     .ant-card-body {
@@ -171,37 +203,7 @@
   vertical-align: top;
   height: 50px;
 }
-// .tabItem {
-//   min-width: 40px;
-//   max-width: 160px;
-//   padding-left: 20px;
-//   background-color: rgb(53, 65, 83);
-//   word-break: keep-all;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   display: flex;
-//   justify-content: space-between;
-//   line-height: 40px;
-//   height: 40px;
-//   border-radius: 0 5px 0 0;
-//   position: relative;
-//   a {
-//     max-width: 120px;
-//     display: inline-block;
-//     word-break: keep-all;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//     line-height: 40px;
-//   }
-//   i {
-//     display: inline-block;
-//     min-width: 20px;
-//     padding-top: 15px;
-//     padding-left: 10px;
-//     position: relative;
-//     z-index: 1001;
-//   }
-// }
+
 .tabItemSelected,
 .tabItem {
   min-width: 40px;

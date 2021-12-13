@@ -138,11 +138,7 @@ const SiderMenu: React.FC<Props> = props => {
       // onCollapse={}
     >
       {/* {!venomBasicConfig.fixHeader && <TitleNode />} */}
-      <TitleNode
-        collapsedStatus={props.collapsedStatus}
-        onCollapsed={props.onCollapse}
-        location={props.location}
-      />
+
       <Menu
         theme={venomBasicConfig.theme}
         mode="inline"
@@ -163,9 +159,25 @@ const SiderMenu: React.FC<Props> = props => {
           setOpenKeys(values);
         }}
       >
+        <Button
+          type="link"
+          onClick={props.onCollapse}
+          className={props.collapsedStatus ? styles.menuClose : styles.menuOpen}
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            zIndex: 10
+          }}
+        >
+          <Icon
+            type={props.collapsedStatus ? 'menu-unfold' : 'menu-fold'}
+            style={{ color: '#fff' }}
+          />
+        </Button>
         {renderMenuNode()}
       </Menu>
-      {getTakinAuthority() === 'true' && (
+      {/* {getTakinAuthority() === 'true' && (
         <Card className={styles.menuCard}>
           <Popover
             content={content}
@@ -182,7 +194,7 @@ const SiderMenu: React.FC<Props> = props => {
             />
           </Popover>
         </Card>
-      )}
+      )} */}
     </Sider>
   );
 };

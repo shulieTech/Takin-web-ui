@@ -31,51 +31,61 @@ const TitleNode: React.FC<Props> = props => {
   }
 
   return (
-    <Link to={url}>
-      <Title
-        className={styles.logo}
-        style={{
-          width:
-            venomBasicConfig.theme === 'dark'
-              ? !props.collapsedStatus
-                ? venomBasicConfig.siderWidth
-                : '80px'
-              : !props.collapsedStatus
-              ? +venomBasicConfig.siderWidth - 1
-              : '79px',
+    // <Link to={url}>
+    //   <Title
+    //     className={styles.logo}
+    //     style={{
+    //       width:
+    //         venomBasicConfig.theme === 'dark'
+    //           ? !props.collapsedStatus
+    //             ? venomBasicConfig.siderWidth
+    //             : '80px'
+    //           : !props.collapsedStatus
+    //           ? +venomBasicConfig.siderWidth - 1
+    //           : '79px',
 
-          height: venomBasicConfig.headerHeight,
-          marginBottom: 0,
-          background:
-            venomBasicConfig.theme === 'dark'
-              ? 'var(--BrandPrimary-500)'
-              : '#fff',
-          color: venomBasicConfig.theme === 'dark' ? '#fff' : '#1890ff',
-          boxShadow:
-            venomBasicConfig.theme === 'light' && '1px 1px 0 0 #e8e8e8',
-          borderBottom: '1px solid var(--BrandPrimary-500)'
-        }}
-      >
-        <div className={styles.titleName}>
-          <img width={30} src={require('./../../assets/takin_logo.png')} />
+    //       height: venomBasicConfig.headerHeight,
+    //       marginBottom: 0,
+    //       background:
+    //         venomBasicConfig.theme === 'dark'
+    //           ? 'var(--BrandPrimary-500)'
+    //           : '#fff',
+    //       color: venomBasicConfig.theme === 'dark' ? '#fff' : '#1890ff',
+    //       boxShadow:
+    //         venomBasicConfig.theme === 'light' && '1px 1px 0 0 #e8e8e8',
+    //       borderBottom: '1px solid var(--BrandPrimary-500)'
+    //     }}
+    //   >
+    //     <div className={styles.titleName}>
+    //       <img width={30} src={require('./../../assets/takin_logo.png')} />
 
-          {!props.collapsedStatus && (
-            <span className={styles.logoName}>Takin</span>
-          )}
-        </div>
+    //       {!props.collapsedStatus && (
+    //         <span className={styles.logoName}>Takin</span>
+    //       )}
+    //     </div>
 
-        <Button
-          type="link"
-          onClick={props.onCollapsed}
-          className={props.collapsedStatus ? styles.menuClose : styles.menuOpen}
-        >
-          <Icon
-            type={props.collapsedStatus ? 'menu-unfold' : 'menu-fold'}
-            style={{ color: '#fff' }}
-          />
-        </Button>
-      </Title>
-    </Link>
+    //     <Button
+    //       type="link"
+    //       onClick={props.onCollapsed}
+    //       className={props.collapsedStatus ? styles.menuClose : styles.menuOpen}
+    //     >
+    //       <Icon
+    //         type={props.collapsedStatus ? 'menu-unfold' : 'menu-fold'}
+    //         style={{ color: '#fff' }}
+    //       />
+    //     </Button>
+    //   </Title>
+    // </Link>
+    <Button
+      type="link"
+      onClick={props.onCollapsed}
+      className={props.collapsedStatus ? styles.menuClose : styles.menuOpen}
+    >
+      <Icon
+        type={props.collapsedStatus ? 'menu-unfold' : 'menu-fold'}
+        style={{ color: '#fff' }}
+      />
+    </Button>
   );
 };
 
