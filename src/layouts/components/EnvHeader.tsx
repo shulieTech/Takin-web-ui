@@ -156,7 +156,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         <Dropdown
           overlay={
             <Menu>
-              {envList.map((x, ind) => (
+              {envList?.map((x, ind) => (
                 <Menu.Item
                   key={ind}
                   onClick={() => changeCode(x.envCode, x.desc)}
