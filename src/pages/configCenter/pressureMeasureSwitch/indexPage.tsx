@@ -47,7 +47,7 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
     });
     const {
       data: { data, success }
-    } = await AppManageService.querySwitchStatus({});
+    } = await AppManageService.querySwitch({});
     if (success) {
       setState({
         switchStatus: data.switchStatus,
