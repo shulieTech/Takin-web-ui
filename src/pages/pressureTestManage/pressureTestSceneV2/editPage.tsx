@@ -41,7 +41,7 @@ const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
   const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
-  // const [flatTreeData, setFlatTreeData] = useState([]);
+  const [flatTreeData, setFlatTreeData] = useState([]);
   const [initialValue, setInitialValue] = useState({});
   const [detailLoading, setDetailLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -102,35 +102,39 @@ const EditPage = (props) => {
           return v;
         });
         // setThreadTree(parsedData);
+
+        /**
+         * 树结构平铺
+         * @param nodes
+         * @param parentId
+         * @returns
+         */
+        const result = [];
+        const flatTree = (nodes, parentId = '-1', idName = 'id') => {
+          if (Array.isArray(nodes) && nodes.length > 0) {
+            nodes.forEach((node) => {
+              const { children, ...rest } = node;
+              result.push({
+                parentId,
+                ...rest,
+              });
+              flatTree(node.children, node[idName], idName);
+            });
+            return result;
+          }
+        };
+        const flatTreeData1 = flatTree(parsedData, '-1', 'xpathMd5') || [];
+        setFlatTreeData(flatTreeData1);
+
         actions.setFieldState('goal', (state) => {
           state.props['x-component-props'].treeData = parsedData || [];
+          state.props['x-component-props'].flatTreeData = flatTreeData1 || [];
           state.props['x-component-props'].loading = false;
         });
+
         actions.setFieldState(
           '*(config.threadGroupConfigMap, destroyMonitoringGoal ,warnMonitoringGoal)',
           (state) => {
-            /**
-             * 树结构平铺
-             * @param nodes
-             * @param parentId
-             * @returns
-             */
-            const result = [];
-            const flatTree = (nodes, parentId = '-1', idName = 'id') => {
-              if (Array.isArray(nodes) && nodes.length > 0) {
-                nodes.forEach((node) => {
-                  const { children, ...rest } = node;
-                  result.push({
-                    parentId,
-                    ...rest,
-                  });
-                  flatTree(node.children, node[idName], idName);
-                });
-                return result;
-              }
-            };
-            const flatTreeData1 = flatTree(parsedData, '-1', 'xpathMd5') || [];
-            // setFlatTreeData(flatTreeData1);
             state.props['x-component-props'].flatTreeData = flatTreeData1;
           }
         );
@@ -155,6 +159,9 @@ const EditPage = (props) => {
       // 手动变更业务流程时，清空步骤1之前的目标数据
       setFieldState('goal', (state) => {
         state.value = {};
+      });
+      setFieldState('goal.*', (state) => {
+        state.value = undefined;
       });
       // 手动变更业务流程时，清空步骤2线程组的配置数据
       setFieldState('config.threadGroupConfigMap', (state) => {
@@ -302,6 +309,14 @@ const EditPage = (props) => {
       setDetailLoading(false);
     });
   }, []);
+  
+  // 清除编辑时详情数据中前面业务流程的带来的目标数据
+  const filteredInitialValue = cloneDeep(initialValue);
+  Object.keys(filteredInitialValue?.goal || {}).forEach(x => {
+    if (!flatTreeData.some(y => y.xpathMd5 === x)) {
+      delete filteredInitialValue.goal[x];
+    }
+  });
 
   return (
     <Spin spinning={detailLoading}>
@@ -317,7 +332,7 @@ const EditPage = (props) => {
         </div>
         <SchemaForm
           actions={actions}
-          initialValues={initialValue}
+          initialValues={filteredInitialValue}
           validateFirst
           components={{
             Input,
@@ -436,8 +451,7 @@ const EditPage = (props) => {
                   },
                   {
                     validator: (val) => {
-                      return val &&
-                        moment(val).valueOf() <= moment().valueOf()
+                      return val && moment(val).valueOf() <= moment().valueOf()
                         ? '启动时间需晚于当前时间'
                         : '';
                     },
