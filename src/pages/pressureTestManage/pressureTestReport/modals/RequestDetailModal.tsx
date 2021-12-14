@@ -288,6 +288,7 @@ const RequestDetailModal: React.FC<Props> = props => {
               }
               style={{ marginLeft: 16 }}
               type="primary"
+              size="small"
             >
               开启方法追踪
             </Button>
