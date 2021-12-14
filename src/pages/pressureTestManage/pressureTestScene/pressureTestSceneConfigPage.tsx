@@ -285,43 +285,43 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
       /**
        * @name 增加压测场景
        */
-      // if (action === 'add') {
-      //   const {
-      //     data: { success, data }
-      //   } = await PressureTestSceneService.addPressureTestScene(result);
-      //   if (success) {
-      //     setState({
-      //       loading: false
-      //     });
-      //     message.success('增加压测场景成功');
-      //     router.push('/pressureTestManage/pressureTestScene');
-      //   }
-      //   setState({
-      //     loading: false
-      //   });
-      // }
+      if (action === 'add') {
+        const {
+          data: { success, data }
+        } = await PressureTestSceneService.addPressureTestScene(result);
+        if (success) {
+          setState({
+            loading: false
+          });
+          message.success('增加压测场景成功');
+          router.push('/pressureTestManage/pressureTestScene');
+        }
+        setState({
+          loading: false
+        });
+      }
 
       /**
        * @name 编辑压测场景
        */
-      // if (action === 'edit') {
-      //   const {
-      //     data: { success, data }
-      //   } = await PressureTestSceneService.editPressureTestScene({
-      //     ...result,
-      //     id
-      //   });
-      //   if (success) {
-      //     setState({
-      //       loading: false
-      //     });
-      //     message.success('编辑压测场景成功');
-      //     router.push('/pressureTestManage/pressureTestScene');
-      //   }
-      //   setState({
-      //     loading: false
-      //   });
-      // }
+      if (action === 'edit') {
+        const {
+          data: { success, data }
+        } = await PressureTestSceneService.editPressureTestScene({
+          ...result,
+          id
+        });
+        if (success) {
+          setState({
+            loading: false
+          });
+          message.success('编辑压测场景成功');
+          router.push('/pressureTestManage/pressureTestScene');
+        }
+        setState({
+          loading: false
+        });
+      }
     });
   };
 
