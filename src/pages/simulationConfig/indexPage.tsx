@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AgentVersin from './modals/AgentVersin';
 import TakeEffect from './modals/takeEffect';
-import { Input, Form, Button, Row, Col, Select, Radio, Tabs, Badge, Tooltip } from 'antd';
+import { Input, Form, Button, Row, Col, Select, Radio, Tabs, Badge, Tooltip, Popover } from 'antd';
 import { useStateReducer } from 'racc';
 import configService from './service';
 import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
@@ -437,10 +437,22 @@ const Admin: React.FC<AdminProps> = props => {
                       '--FunctionalNetural-400'}
                 />
                 {
-                  state.validStatus === 2 &&
-                  <Tooltip title={state.errorMsg}>
-                    <a style={{ marginLeft: 5 }}>详情</a>
-                  </Tooltip>}
+                  state.validStatus === 3 &&
+                  <Popover
+                    title="详情"
+                    content={
+                      <div
+                        style={{ width: 180, height: 280, overflowY: 'scroll' }}
+                      >
+                        <p>{state.errorMsg}</p>
+                      </div>
+                    }
+                    trigger="click"
+                  >
+                    <Button type="link" style={{ marginLeft: 8 }}>
+                      详情
+                  </Button>
+                  </Popover>}
               </Col>
               <Col span={1}>
                 <Button type="default" icon="redo" onClick={resets} />
