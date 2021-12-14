@@ -14,7 +14,7 @@ const TargetMap = (props) => {
   } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
 
-  const { treeData = [], loading = false } = componentProps;
+  const { treeData = [], loading = false, flatTreeData = [] } = componentProps;
 
   const renderInputTd = ({
     record,
@@ -55,6 +55,7 @@ const TargetMap = (props) => {
                     width: 'auto',
                   },
                   threadType: 'SAMPLER',
+                  xpathMd5: record.xpathMd5,
                   onBlur: (e) => {
                     // 联动填充空白值
                     form.getFieldState(tdPath, (sourceState) => {
@@ -64,7 +65,12 @@ const TargetMap = (props) => {
                           sourceState.valid &&
                           state.value === undefined &&
                           state.props?.['x-component-props']?.threadType ===
-                            'SAMPLER'
+                            'SAMPLER' &&
+                          flatTreeData.some(
+                            (x) =>
+                              x.xpathMd5 ===
+                              state.props?.['x-component-props']?.xpathMd5
+                          )
                         ) {
                           state.value = sourceState.value;
                         }
@@ -101,6 +107,7 @@ const TargetMap = (props) => {
                     width: 'auto',
                   },
                   threadType: 'CONTROLLER',
+                  xpathMd5: record.xpathMd5,
                   onBlur: (e) => {
                     // 联动填充空白值
                     form.getFieldState(tdPath, (sourceState) => {
@@ -110,7 +117,12 @@ const TargetMap = (props) => {
                           sourceState.valid &&
                           state.value === undefined &&
                           state.props?.['x-component-props']?.threadType ===
-                            'CONTROLLER'
+                            'CONTROLLER' &&
+                          flatTreeData.some(
+                            (x) =>
+                              x.xpathMd5 ===
+                              state.props?.['x-component-props']?.xpathMd5
+                          )
                         ) {
                           state.value = sourceState.value;
                         }
@@ -119,7 +131,7 @@ const TargetMap = (props) => {
                           `.goal.${record.xpathMd5}.*(!${fieldName})`
                         );
                       });
-                      
+
                       // 填写逻辑控制器行数据然后清空输入时，会残留一个类似{tps: null}的数据，下面的代码会尝试清除这种数据
                       const hasValue =
                         Object.values(
@@ -133,7 +145,6 @@ const TargetMap = (props) => {
                           }
                         );
                       }
-
                     });
                   },
                   ...fieldProps,
