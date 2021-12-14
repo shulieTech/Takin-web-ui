@@ -31,7 +31,7 @@ const getInitState = () => ({
   versionSelect: [],
   allVersionList: [],
   value: {},
-  keys: 0
+  keys: 1
 });
 export type AdminState = ReturnType<typeof getInitState>;
 
