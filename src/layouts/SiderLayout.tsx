@@ -170,7 +170,27 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
       />
       <div style={{ height: '100%' }}>
         <EnvHeader />
-
+        <Alert
+          showIcon
+          closable={true}
+          message={
+            <Row
+              type="flex"
+              align="middle"
+              style={{ color: 'var(--Netural-50)' }}
+            >
+              <Col style={{ fontSize: 16, fontWeight: 600, margin: '0 16px' }}>
+                测试环境
+              </Col>
+              <Col>您正在测试环境使用Takin</Col>
+            </Row>
+          }
+          banner
+          style={{
+            backgroundColor: 'var(--FunctionalPositive-500)',
+            color: 'var(--Netural-50)'
+          }}
+        />
         <Layout
           className={
             venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'
