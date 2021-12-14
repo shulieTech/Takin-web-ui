@@ -230,6 +230,10 @@ const AppManageService = {
    * @name 获取压测开关状态
    */
   async querySwitchStatus(data = {}) {
+    const url = '/application/center/app/switch/un_safe';
+    return httpGet(url, data);
+  },
+  async querySwitch(data = {}) {
     const url = '/application/center/app/switch';
     return httpGet(url, data);
   },

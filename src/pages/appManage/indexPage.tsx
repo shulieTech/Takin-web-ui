@@ -49,7 +49,7 @@ const AppManage: React.FC<AppManageProps> = props => {
   const querySwitchStatus = async () => {
     const {
       data: { data, success }
-    } = await AppManageService.querySwitchStatus({});
+    } = await AppManageService.querySwitch({});
     if (success) {
       setState({
         switchStatus: data.switchStatus
