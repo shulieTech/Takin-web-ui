@@ -161,6 +161,7 @@ const SelectVersionModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '序号',
         dataIndex: 'id',
+        width: 100,
         render: text => {
           return <TableIndex text={text} />;
         }
