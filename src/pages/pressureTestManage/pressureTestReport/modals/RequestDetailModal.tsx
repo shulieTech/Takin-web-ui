@@ -122,8 +122,17 @@ const RequestDetailModal: React.FC<Props> = props => {
         render: (text, row) => {
           return (
             <span>
-              <Tooltip placement="bottomLeft" title={row.methodName / text}>
-                <span>{row.methodName / text}</span>
+              <Tooltip
+                placement="bottomLeft"
+                title={
+                  <span>
+                    {row.methodName}/{text}
+                  </span>
+                }
+              >
+                <span>
+                  {row.methodName}/{text}
+                </span>
               </Tooltip>
             </span>
           );
@@ -155,7 +164,10 @@ const RequestDetailModal: React.FC<Props> = props => {
         width: 120,
         render: (text, row) => {
           return (
-            <Tooltip placement="bottomLeft" title={text / row.middlewareName}>
+            <Tooltip
+              placement="bottomLeft"
+              title={<span>{text / row.middlewareName}</span>}
+            >
               <span>
                 {text}/{row.middlewareName}
               </span>
