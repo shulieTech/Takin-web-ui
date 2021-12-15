@@ -94,8 +94,7 @@ const FirstContent: React.FC<Props> = props => {
           btnText="重新选择"
           agentId={
             state.agentVersionInfo &&
-            state.agentVersionInfo.id &&
-            String(state.agentVersionInfo.id)
+            state.agentVersionInfo.id
           }
           selectedVersionInfo={state.agentVersionInfo}
         />
