@@ -437,7 +437,7 @@ const Admin: React.FC<AdminProps> = props => {
                       '--FunctionalNetural-400'}
                 />
                 {
-                  state.validStatus === 3 &&
+                  state.validStatus === 2 &&
                   <Popover
                     title="详情"
                     content={
