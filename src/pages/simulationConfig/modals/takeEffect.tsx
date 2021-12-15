@@ -301,7 +301,17 @@ const takeEffect: React.FC<Props> = props => {
             <Button type="default" icon="redo" onClick={() => resets()} />
           </Col>
         </Row>
-        <CustomTable columns={columns} dataSource={state.dataList} pagination={false} />
+        <div
+          style={{
+            height: '500px'
+          }}
+        >
+          <CustomTable
+            columns={columns}
+            dataSource={state.dataList}
+            pagination={false}
+          />
+        </div>
         <div
           style={{
             position: 'absolute',
