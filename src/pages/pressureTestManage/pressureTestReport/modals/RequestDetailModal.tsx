@@ -144,9 +144,9 @@ const RequestDetailModal: React.FC<Props> = props => {
       },
       {
         ...customColumnProps,
-        title: '客户端/服务端',
+        title: '调用方/被调用方',
         dataIndex: 'logTypeName',
-        width: 100
+        width: 120
       },
       {
         ...customColumnProps,
