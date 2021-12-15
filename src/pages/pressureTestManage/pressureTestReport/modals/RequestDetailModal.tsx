@@ -166,7 +166,11 @@ const RequestDetailModal: React.FC<Props> = props => {
           return (
             <Tooltip
               placement="bottomLeft"
-              title={<span>{text / row.middlewareName}</span>}
+              title={
+                <span>
+                  {text}/{row.middlewareName}
+                </span>
+              }
             >
               <span>
                 {text}/{row.middlewareName}
