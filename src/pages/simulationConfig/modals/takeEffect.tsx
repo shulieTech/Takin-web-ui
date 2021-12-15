@@ -77,13 +77,21 @@ const takeEffect: React.FC<Props> = props => {
 
   const apply = (value) => {
     setState({
-      projectName: value
+      projectName: value,
+      searchParams: {
+        current: 0,
+        pageSize: 10
+      },
     });
   };
 
   const takeEffects = (value) => {
     setState({
-      isEffect: value
+      isEffect: value,
+      searchParams: {
+        current: 0,
+        pageSize: 10
+      },
     });
   };
 
