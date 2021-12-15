@@ -155,7 +155,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         width: 120,
         render: (text, row) => {
           return (
-            <Tooltip placement="bottomLeft" title={text}>
+            <Tooltip placement="bottomLeft" title={text / row.methodName}>
               <span>
                 {text}/{row.methodName}
               </span>
