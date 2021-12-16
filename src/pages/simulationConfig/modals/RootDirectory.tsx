@@ -167,7 +167,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="账号"
               >
                 {props.form.getFieldDecorator('username', {
-                  rules: [{ required: true, message: `请输入端口`, whitespace: true },
+                  rules: [{ required: true, message: `请输入账号`, whitespace: true },
                   { validator: validateZhKey }],
                   initialValue: state.context?.username || '',
                 })(
@@ -178,7 +178,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="密码"
               >
                 {props.form.getFieldDecorator('passwd', {
-                  rules: [{ required: true, message: `请输入端口`, whitespace: true },
+                  rules: [{ required: true, message: `请输入密码`, whitespace: true },
                   { validator: validateZhKey }],
                   initialValue: state.context?.passwd || '',
                 })(
