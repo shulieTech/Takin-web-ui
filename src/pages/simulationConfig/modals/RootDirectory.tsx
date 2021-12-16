@@ -148,7 +148,7 @@ const RootDirectory: React.FC<Props> = props => {
       callback('不能有空格');
     }
     if (!values) {
-      callback('值不能空');
+      callback('值不能为空');
     }
   };
 
