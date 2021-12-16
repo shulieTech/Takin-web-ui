@@ -37,43 +37,85 @@ const RootDirectory: React.FC<Props> = props => {
     wrapperCol: { span: 15 },
   };
   const handleOk = () => {
-    props.form.validateFields(async (err, values) => {
-      if (err) {
-        message.info('请检查表单必填项');
-        return;
-      }
-      delete values.pathType;
-      if (state.datas?.id) {
-        const {
-          data: { data, success }
-        } = await configService.pathUpdate({
-          context: JSON.stringify(values),
-          id: state.datas?.id,
-          pathType: props.form.getFieldValue('pathType')
-        });
-        if (success) {
-          message.success('保存成功');
-          props.form.resetFields();
-          props.setState({
-            visible: false
-          });
+    if (props.form.getFieldValue('pathType') === '1') {
+      props.form.validateFields(['username', 'passwd', 'ftpPort',
+        'ftpHost', 'basePath'], async (err, values) => {
+        if (err) {
+          message.info('请检查表单必填项');
+          return;
         }
-      } else {
-        const {
-          data: { data, success }
-        } = await configService.pathCreate({
-          context: JSON.stringify(values),
-          pathType: props.form.getFieldValue('pathType')
-        });
-        if (success) {
-          message.success('保存成功');
-          props.form.resetFields();
-          props.setState({
-            visible: false
-          });
+        delete values.pathType;
+        if (state.datas?.id) {
+          const {
+              data: { data, success }
+            } = await configService.pathUpdate({
+              context: JSON.stringify(values),
+              id: state.datas?.id,
+              pathType: props.form.getFieldValue('pathType')
+            });
+          if (success) {
+            message.success('保存成功');
+            props.form.resetFields();
+            props.setState({
+              visible: false
+            });
+          }
+        } else {
+          const {
+              data: { data, success }
+            } = await configService.pathCreate({
+              context: JSON.stringify(values),
+              pathType: props.form.getFieldValue('pathType')
+            });
+          if (success) {
+            message.success('保存成功');
+            props.form.resetFields();
+            props.setState({
+              visible: false
+            });
+          }
         }
-      }
-    });
+      });
+    } else {
+      props.form.validateFields(['endpoint', 'accessKeyId',
+        'accessKeySecret', 'bucketName'], async (err, values) => {
+        if (err) {
+          message.info('请检查表单必填项');
+          return;
+        }
+        delete values.pathType;
+        if (state.datas?.id) {
+          const {
+              data: { data, success }
+            } = await configService.pathUpdate({
+              context: JSON.stringify(values),
+              id: state.datas?.id,
+              pathType: props.form.getFieldValue('pathType')
+            });
+          if (success) {
+            message.success('保存成功');
+            props.form.resetFields();
+            props.setState({
+              visible: false
+            });
+          }
+        } else {
+          const {
+              data: { data, success }
+            } = await configService.pathCreate({
+              context: JSON.stringify(values),
+              pathType: props.form.getFieldValue('pathType')
+            });
+          if (success) {
+            message.success('保存成功');
+            props.form.resetFields();
+            props.setState({
+              visible: false
+            });
+          }
+        }
+      });
+    }
   };
 
   useEffect(() => {
