@@ -65,7 +65,7 @@ const TargetMap = (props) => {
                     form.getFieldState(tdPath, (sourceState) => {
                       form.setFieldState(`.goal.*.${fieldName}`, (state) => {
                         if (
-                          sourceState.value &&
+                          notEmptyValue(sourceState.value) &&
                           sourceState.valid &&
                           state.value === undefined &&
                           state.props?.['x-component-props']?.threadType ===
@@ -117,7 +117,7 @@ const TargetMap = (props) => {
                     form.getFieldState(tdPath, (sourceState) => {
                       form.setFieldState(`.goal.*.${fieldName}`, (state) => {
                         if (
-                          sourceState.value &&
+                          notEmptyValue(sourceState.value) &&
                           sourceState.valid &&
                           state.value === undefined &&
                           state.props?.['x-component-props']?.threadType ===
