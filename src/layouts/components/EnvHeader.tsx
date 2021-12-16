@@ -3,6 +3,7 @@ import { Dropdown, Menu, Icon, Button } from 'antd';
 import { getTakinTenantAuthority } from 'src/utils/utils';
 import tenantCode from './service';
 import _ from 'lodash';
+import AddTenantModal from 'src/modals/AddTenantModal';
 interface Props {}
 let path = '';
 const EnvHeader: React.FC<Props> = props => {
@@ -119,6 +120,8 @@ const EnvHeader: React.FC<Props> = props => {
     'tenantCode',
     localStorage.getItem('tenant-code')
   ]);
+
+  const isSuper: string = localStorage.getItem('isSuper');
   return (
     <div
       style={{
@@ -138,8 +141,8 @@ const EnvHeader: React.FC<Props> = props => {
       >
         {desc}
       </span>
+
       <Button.Group>
-        <Button>11</Button>
         <Dropdown
           overlay={
             <Menu>
@@ -165,6 +168,7 @@ const EnvHeader: React.FC<Props> = props => {
             <Icon type="down" />
           </Button>
         </Dropdown>
+
         <Dropdown
           overlay={
             <Menu>
@@ -191,6 +195,7 @@ const EnvHeader: React.FC<Props> = props => {
             <Icon type="down" />
           </Button>
         </Dropdown>
+        {isSuper === '1' && <AddTenantModal btnText="新增租户" />}
       </Button.Group>
     </div>
   );
