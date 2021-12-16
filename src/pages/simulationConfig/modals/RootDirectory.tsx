@@ -105,6 +105,9 @@ const RootDirectory: React.FC<Props> = props => {
     if (patt1.test(values)) {
       callback('不能有空格');
     }
+    if (!values) {
+      callback('值不能空');
+    }
   };
 
   return (
@@ -140,14 +143,15 @@ const RootDirectory: React.FC<Props> = props => {
           )}
         </Form.Item>
         {
-          props.form.getFieldValue('pathType') === '1' && (
+          props.form.getFieldValue('pathType') === '1' ? (
             <div>
               <Form.Item
                 label="ip"
+                required
               >
                 {props.form.getFieldDecorator('ftpHost', {
-                  rules: [{ required: true, message: `请输入地址` },
-                  { validator: validateZhKey }],
+                  rules: [
+                    { validator: validateZhKey }],
                   initialValue: state.context?.ftpHost || '',
                 })(
                   <Input placeholder="请输入ip" />
@@ -155,10 +159,11 @@ const RootDirectory: React.FC<Props> = props => {
               </Form.Item>
               <Form.Item
                 label="端口"
+                required
               >
                 {props.form.getFieldDecorator('ftpPort', {
-                  rules: [{ required: true, message: `请输入端口` },
-                  { validator: validateZhKey }],
+                  rules: [
+                    { validator: validateZhKey }],
                   initialValue: state.context?.ftpPort || '',
                 })(
                   <Input placeholder="请输入端口" />
@@ -166,10 +171,11 @@ const RootDirectory: React.FC<Props> = props => {
               </Form.Item>
               <Form.Item
                 label="basePath"
+                required
               >
                 {props.form.getFieldDecorator('basePath', {
-                  rules: [{ required: true, message: `请输入basePath` },
-                  { validator: validateZhKey }],
+                  rules: [
+                    { validator: validateZhKey }],
                   initialValue: state.context?.basePath || '',
                 })(
                   <Input placeholder="请输入basePath" />
@@ -177,10 +183,11 @@ const RootDirectory: React.FC<Props> = props => {
               </Form.Item>
               <Form.Item
                 label="账号"
+                required
               >
                 {props.form.getFieldDecorator('username', {
-                  rules: [{ required: true, message: `请输入账号` },
-                  { validator: validateZhKey }],
+                  rules: [
+                    { validator: validateZhKey }],
                   initialValue: state.context?.username || '',
                 })(
                   <Input placeholder="请输入账号" />
@@ -188,65 +195,69 @@ const RootDirectory: React.FC<Props> = props => {
               </Form.Item>
               <Form.Item
                 label="密码"
+                required
               >
                 {props.form.getFieldDecorator('passwd', {
-                  rules: [{ required: true, message: `请输入密码` },
-                  { validator: validateZhKey }],
+                  rules: [
+                    { validator: validateZhKey }],
                   initialValue: state.context?.passwd || '',
                 })(
                   <Input placeholder="请输入密码" type="password" />
                 )}
               </Form.Item>
             </div>
-          )}{props.form.getFieldValue('pathType') === '0' && (
+          ) : (
             <div>
               <Form.Item
                 label="endpoint"
+                required
               >
                 {props.form.getFieldDecorator('endpoint', {
-                  initialValue: state.context?.endpoint,
-                  rules: [{ required: true, message: `请输入endpoint` },
-                  { validator: validateZhKey }],
+                  initialValue: state.context?.endpoint || '',
+                  rules: [
+                    { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入endpoint" />
                 )}
               </Form.Item>
               <Form.Item
                 label="accessKeyId"
+                required
               >
                 {props.form.getFieldDecorator('accessKeyId', {
-                  initialValue: state.context?.accessKeyId,
-                  rules: [{ required: true, message: `请输入accessKeyId` },
-                  { validator: validateZhKey }],
+                  initialValue: state.context?.accessKeyId || '',
+                  rules: [
+                    { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入accessKeyId" type="password" />
                 )}
               </Form.Item>
               <Form.Item
                 label="accessKeySecret"
+                required
               >
                 {props.form.getFieldDecorator('accessKeySecret', {
-                  initialValue: state.context?.accessKeySecret,
-                  rules: [{ required: true, message: `请输入accessKeySecret` },
-                  { validator: validateZhKey }],
+                  initialValue: state.context?.accessKeySecret || '',
+                  rules: [
+                    { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入accessKeySecret" type="password" />
                 )}
               </Form.Item>
               <Form.Item
                 label="bucketName"
+                required
               >
                 {props.form.getFieldDecorator('bucketName', {
-                  initialValue: state.context?.bucketName,
-                  rules: [{ required: true, message: `请输入bucketName` },
-                  { validator: validateZhKey }],
+                  initialValue: state.context?.bucketName || '',
+                  rules: [
+                    { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入bucketName" />
                 )}
               </Form.Item>
             </div>
-          )
-        }
+          )}
 
       </Form>
     </Modal >
