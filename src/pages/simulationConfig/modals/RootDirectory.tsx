@@ -165,7 +165,7 @@ const RootDirectory: React.FC<Props> = props => {
                 )}
               </Form.Item>
               <Form.Item
-                label="bastPath"
+                label="basePath"
               >
                 {props.form.getFieldDecorator('basePath', {
                   rules: [{ required: true, message: `请输入basePath` },
