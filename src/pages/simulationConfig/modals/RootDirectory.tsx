@@ -130,7 +130,7 @@ const RootDirectory: React.FC<Props> = props => {
         >
           {props.form.getFieldDecorator('pathType', {
             initialValue: state.datas.pathType ? `${state.datas?.pathType}` : '0',
-            rules: [{ required: true, message: `请输入类型`, whitespace: true }],
+            rules: [{ required: true, message: `请输入类型` }],
           })(
             <Select placeholder="请选择类型">
               <Option value="0">oss</Option>
@@ -145,7 +145,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="ip"
               >
                 {props.form.getFieldDecorator('ftpHost', {
-                  rules: [{ required: true, message: `请输入地址`, whitespace: true },
+                  rules: [{ required: true, message: `请输入地址` },
                   { validator: validateZhKey }],
                   initialValue: state.context?.ftpHost || '',
                 })(
@@ -156,7 +156,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="端口"
               >
                 {props.form.getFieldDecorator('ftpPort', {
-                  rules: [{ required: true, message: `请输入端口`, whitespace: true },
+                  rules: [{ required: true, message: `请输入端口` },
                   { validator: validateZhKey }],
                   initialValue: state.context?.ftpPort || '',
                 })(
@@ -167,7 +167,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="账号"
               >
                 {props.form.getFieldDecorator('username', {
-                  rules: [{ required: true, message: `请输入账号`, whitespace: true },
+                  rules: [{ required: true, message: `请输入账号` },
                   { validator: validateZhKey }],
                   initialValue: state.context?.username || '',
                 })(
@@ -178,7 +178,7 @@ const RootDirectory: React.FC<Props> = props => {
                 label="密码"
               >
                 {props.form.getFieldDecorator('passwd', {
-                  rules: [{ required: true, message: `请输入密码`, whitespace: true },
+                  rules: [{ required: true, message: `请输入密码` },
                   { validator: validateZhKey }],
                   initialValue: state.context?.passwd || '',
                 })(
@@ -193,7 +193,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('endpoint', {
                   initialValue: state.context?.endpoint,
-                  rules: [{ required: true, message: `请输入endpoint`, whitespace: true },
+                  rules: [{ required: true, message: `请输入endpoint` },
                   { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入endpoint" />
@@ -204,7 +204,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('accessKeyId', {
                   initialValue: state.context?.accessKeyId,
-                  rules: [{ required: true, message: `请输入accessKeyId`, whitespace: true },
+                  rules: [{ required: true, message: `请输入accessKeyId` },
                   { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入accessKeyId" type="password" />
@@ -215,7 +215,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('accessKeySecret', {
                   initialValue: state.context?.accessKeySecret,
-                  rules: [{ required: true, message: `请输入accessKeySecret`, whitespace: true },
+                  rules: [{ required: true, message: `请输入accessKeySecret` },
                   { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入accessKeySecret" type="password" />
@@ -226,7 +226,7 @@ const RootDirectory: React.FC<Props> = props => {
               >
                 {props.form.getFieldDecorator('bucketName', {
                   initialValue: state.context?.bucketName,
-                  rules: [{ required: true, message: `请输入bucketName`, whitespace: true },
+                  rules: [{ required: true, message: `请输入bucketName` },
                   { validator: validateZhKey }],
                 })(
                   <Input placeholder="请输入bucketName" />
