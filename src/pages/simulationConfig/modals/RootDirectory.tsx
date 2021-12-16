@@ -25,7 +25,8 @@ const getInitState = () => ({
     ftpHost: '',
     ftpPort: '',
     username: '',
-    passwd: ''
+    passwd: '',
+    bastPath: ''
   }
 });
 
@@ -161,6 +162,17 @@ const RootDirectory: React.FC<Props> = props => {
                   initialValue: state.context?.ftpPort || '',
                 })(
                   <Input placeholder="请输入端口" />
+                )}
+              </Form.Item>
+              <Form.Item
+                label="bastPath"
+              >
+                {props.form.getFieldDecorator('bastPath', {
+                  rules: [{ required: true, message: `请输入bastPath` },
+                  { validator: validateZhKey }],
+                  initialValue: state.context?.bastPath || '',
+                })(
+                  <Input placeholder="请输入bastPath" />
                 )}
               </Form.Item>
               <Form.Item
