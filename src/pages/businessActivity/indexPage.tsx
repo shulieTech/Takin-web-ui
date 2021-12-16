@@ -73,6 +73,11 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
 
   const filterData: any = [
     {
+      dataSource: props.dictionaryMap.link_level,
+      key: 'linkLevel',
+      label: '级别'
+    },
+    {
       // dataSource: props.dictionaryMap.domain,
       dataSource: props.domains,
       key: 'domain',
