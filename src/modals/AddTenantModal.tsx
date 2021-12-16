@@ -50,6 +50,11 @@ const AddTenantModal: React.FC<Props> = props => {
               { label: '正式', value: 1 },
               { label: '试用', value: 2 }
             ]}
+            onRender={item => (
+              <CommonSelect.Option key={item.value} value={item.value}>
+                {item.label}
+              </CommonSelect.Option>
+            )}
           />
         )
       },
@@ -80,7 +85,7 @@ const AddTenantModal: React.FC<Props> = props => {
             placeholder="请选择接入环境"
             dataSource={[
               { label: '测试环境', value: 'test' },
-              { label: '演示环境', value: 'prod' }
+              { label: '生产环境', value: 'prod' }
             ]}
           />
         )
