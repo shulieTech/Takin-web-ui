@@ -149,6 +149,7 @@ const AppDetailHeader: React.FC<Props> = props => {
             setState={setState}
           />
           <Button
+            style={{ margin: '0px 24px' }}
             onClick={() => {
               setState({
                 visible: true
@@ -158,14 +159,15 @@ const AppDetailHeader: React.FC<Props> = props => {
           >
             导入
           </Button>
-          <Button
+          {/** 三变需求APFF-137，导出暂时隐藏 */}
+          {/* <Button
             type="primary"
             ghost
             style={{ margin: '0px 24px' }}
             onClick={handleExport}
           >
             导出
-          </Button>
+          </Button> */}
           {
             <Dropdown
               overlay={

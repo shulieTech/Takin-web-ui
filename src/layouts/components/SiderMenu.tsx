@@ -26,7 +26,7 @@ import router from 'umi/router';
 import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
-import { getTakinAuthority } from 'src/utils/utils';
+import { getTakinAuthority, treeFindPath } from 'src/utils/utils';
 
 const { Sider } = Layout;
 
@@ -49,6 +49,7 @@ const SiderMenu: React.FC<Props> = props => {
       setVisible(false);
     }
   };
+  const menuLists = localStorage.getItem('trowebUserMenu');
 
   useEffect(() => {
     document.body.addEventListener('click', dismissPopover);
@@ -159,7 +160,10 @@ const SiderMenu: React.FC<Props> = props => {
         // }
         selectedKeys={keys}
         defaultSelectedKeys={keys}
-        defaultOpenKeys={keys}
+        defaultOpenKeys={treeFindPath(
+          JSON.parse(menuLists),
+          data => data.path === keys[0]
+        )}
         onOpenChange={values => {
           setOpenKeys(values);
         }}

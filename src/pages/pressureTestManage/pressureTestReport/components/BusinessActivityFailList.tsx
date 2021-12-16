@@ -64,7 +64,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '成功率（实际/目标）',
-        dataIndex: 'sucessRate',
+        dataIndex: 'successRate',
         render: (text, row) => {
           return (
             <Fragment>

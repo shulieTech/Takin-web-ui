@@ -314,7 +314,8 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请输入配置代码'
+            message: '请输入配置代码',
+            whitespace: true
           }
         ]
       },
@@ -334,7 +335,8 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请输入数据库URL'
+            message: '请输入数据库URL',
+            whitespace: true
           }
         ]
       },

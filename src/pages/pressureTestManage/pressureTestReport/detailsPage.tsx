@@ -31,13 +31,13 @@ interface State {
 interface Props {
   location?: { query?: any };
 }
-const PressureTestReportDetail: React.FC<Props> = (props) => {
+const PressureTestReportDetail: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     detailData: {},
-    tabList: [{ label: '全局趋势', value: 0 }],
+    tabList: [],
     chartsInfo: {},
-    tabKey: 0,
+    tabKey: null,
     /** 风险机器应用key */
     riskAppKey: 0,
     /** 风险机器应用明细 */
@@ -45,7 +45,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     reportCountData: null,
     failedCount: null,
     /** 是否漏数 */
-    hasMissingData: null,
+    hasMissingData: null
   });
 
   const { location } = props;
@@ -65,23 +65,25 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   }, [state.isReload]);
 
   useEffect(() => {
-    queryReportChartsInfo(id, state.tabKey);
+    if (state.tabKey) {
+      queryReportChartsInfo(id, state.tabKey);
+    }
   }, [state.isReload, state.tabKey]);
 
   /**
    * @name 获取压测报告详情
    */
-  const queryReportDetail = async (value) => {
+  const queryReportDetail = async value => {
     const {
-      data: { data, success },
+      data: { data, success }
     } = await PressureTestReportService.queryReportDetail({
-      reportId: value,
+      reportId: value
     });
     if (success) {
       setState({
         detailData: data,
         hasMissingData:
-          data && data.leakVerifyResult && data.leakVerifyResult.code,
+          data && data.leakVerifyResult && data.leakVerifyResult.code
       });
     }
   };
@@ -89,15 +91,15 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   /**
    * @name 获取压测报告汇总数据
    */
-  const queryReportCount = async (value) => {
+  const queryReportCount = async value => {
     const {
-      data: { data, success },
+      data: { data, success }
     } = await PressureTestReportService.queryReportCount({
-      reportId: value,
+      reportId: value
     });
     if (success) {
       setState({
-        reportCountData: data,
+        reportCountData: data
       });
     }
   };
@@ -105,15 +107,15 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   /**
    * @name 获取压测报告汇总流量数据
    */
-  const queryRequestCount = async (value) => {
+  const queryRequestCount = async value => {
     const {
-      data: { data, success },
+      data: { data, success }
     } = await PressureTestReportService.queryRequestCount({
-      reportId: value,
+      reportId: value
     });
     if (success) {
       setState({
-        failedCount: data,
+        failedCount: data
       });
     }
   };
@@ -121,23 +123,16 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   /**
    * @name 获取压测报告业务活动列表
    */
-  const queryReportBusinessActivity = async (value) => {
+  const queryReportBusinessActivity = async value => {
     const {
-      data: { data, success },
-    } = await PressureTestReportService.queryReportBusinessActivity({
-      reportId: value,
+      data: { data, success }
+    } = await PressureTestReportService.queryBusinessActivityTree({
+      reportId: value
     });
     if (success) {
       setState({
-        tabList: state.tabList.concat(
-          data &&
-            data.map((item) => {
-              return {
-                label: item.businessActivityName,
-                value: item.businessActivityId,
-              };
-            })
-        ),
+        tabList: data,
+        tabKey: data && data[0].xpathMd5
       });
     }
   };
@@ -145,37 +140,34 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   /**
    * @name 获取压测报告趋势信息
    */
-  const queryReportChartsInfo = async (reportId, businessActivityId) => {
+  const queryReportChartsInfo = async (reportId, xpathMd5) => {
     const {
       data: {
         data: { activity, ...chartsInfo },
-        success,
-      },
+        success
+      }
     } = await PressureTestReportService.queryLinkChartsInfo({
       reportId,
-      businessActivityId,
+      xpathMd5
     });
     if (success) {
       setState({
         chartsInfo,
-        graphData: activity?.topology || { nodes: [], edges: [] },
+        graphData: activity?.topology || { nodes: [], edges: [] }
       });
     }
   };
 
   const headList = [
     { label: '报告ID', value: detailData.id },
+    { label: '场景ID', value: detailData.sceneId },
     {
       label: '压测时长',
-      value: detailData.testTotalTime,
-    },
-    {
-      label: '压测模式',
-      value: TestMode[detailData.pressureType],
+      value: detailData.testTotalTime
     },
     {
       label: '开始时间',
-      value: detailData.startTime,
+      value: detailData.startTime
     },
     {
       label: '消耗流量',
@@ -184,7 +176,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           <Statistic
             style={{
               display: 'inline-block',
-              padding: 0,
+              padding: 0
             }}
             value={detailData.amount}
             suffix="vum"
@@ -197,24 +189,24 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       label: '执行人',
       value: detailData.operateName,
       notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
-    },
+    }
   ];
 
   const summaryList = [
     {
       label: '请求总数',
       value: detailData.totalRequest,
-      precision: 0,
+      precision: 0
     },
     {
       label: '最大并发',
       value: detailData.concurrent,
-      precision: 0,
+      precision: 0
     },
     {
-      label: '实际并发数',
+      label: '平均并发数',
       value: detailData.avgConcurrent,
-      precision: 2,
+      precision: 2
     },
     {
       label: '实际/目标TPS',
@@ -234,26 +226,26 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
             precision={0}
           />
         </Fragment>
-      ),
+      )
     },
     {
       label: '平均RT',
       value: detailData.avgRt,
       precision: 2,
-      suffix: 'ms',
+      suffix: 'ms'
     },
     {
       label: '成功率',
       value: detailData.successRate,
       precision: 2,
-      suffix: '%',
+      suffix: '%'
     },
     {
       label: 'SA',
       value: detailData.sa,
       precision: 2,
-      suffix: '%',
-    },
+      suffix: '%'
+    }
   ];
 
   const extra = (
@@ -276,7 +268,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
             type="error"
             showIcon
           />
-          <div style={{ position: 'absolute', top: 25, left: 250 }}>
+          <div style={{ position: 'absolute', top: 25, left: 270 }}>
             <MissingDataListModal
               reportId={id}
               hasMissingData={1}
@@ -306,7 +298,8 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
         style={{ padding: 8 }}
         extraPosition="top"
         extra={extra}
-        title={<div style={{ position: 'relative' }}>
+        title={
+          <div style={{ position: 'relative' }}>
             <span style={{ fontSize: 20 }}>
               {detailData.sceneName ? detailData.sceneName : '-'}
             </span>
@@ -318,7 +311,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
                   padding: '6px 8px',
                   background: '#F2F2F2',
                   borderRadius: '4px',
-                  float: 'right',
+                  float: 'right'
                 }}
               >
                 <Icon type="exclamation-circle" />
@@ -341,9 +334,10 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           style={{
             marginTop: 24,
             marginBottom: 24,
-            background: detailData.conclusion === 1 ? '#75D0DD' : '#F58D76',
+            background: detailData.conclusion === 1 ? '#75D0DD' : '#F58D76'
           }}
-          leftWrap={<Col span={4}>
+          leftWrap={
+            <Col span={4}>
               <Row type="flex" align="middle">
                 <Col>
                   <img
@@ -357,7 +351,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
                   <p
                     style={{
                       fontSize: 20,
-                      color: '#fff',
+                      color: '#fff'
                     }}
                   >
                     {detailData.conclusion === 1 ? '压测通过' : '压测不通过'}
@@ -387,11 +381,12 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     <div style={{ marginTop: 200 }}>
       <EmptyNode
         title="报告生成中..."
-        extra={<div style={{ marginTop: 16 }}>
+        extra={
+          <div style={{ marginTop: 16 }}>
             <Button
               onClick={() => {
                 setState({
-                  isReload: !state.isReload,
+                  isReload: !state.isReload
                 });
               }}
             >

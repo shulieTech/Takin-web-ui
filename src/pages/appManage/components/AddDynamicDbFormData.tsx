@@ -210,7 +210,7 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请选择类型'
+            message: '请选择中间件名称'
           }
         ]
       },
@@ -238,7 +238,8 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请输入业务数据源用户名'
+            message: '请输入业务数据源用户名',
+            whitespace: true
           }
         ]
       },
@@ -252,7 +253,8 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请输入业务数据源'
+            message: '请输入业务数据源',
+            whitespace: true
           }
         ]
       },
@@ -303,7 +305,8 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请输入业务集群'
+            message: '请输入业务集群',
+            whitespace: true
           }
         ]
       },
@@ -341,7 +344,10 @@ const getAddDynamicDbFormData = (
       key: DbDetailBean.隔离方案,
       label: '隔离方案',
       options: {
-        initialValue: detailData && String(detailData[DbDetailBean.隔离方案]),
+        initialValue:
+          detailData &&
+          detailData[DbDetailBean.隔离方案] &&
+          String(detailData[DbDetailBean.隔离方案]),
         rules: [
           {
             required: true,
@@ -396,7 +402,9 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: item.required ? true : false,
-            message: '请检查表单必填项'
+            message: '请检查表单必填项',
+            whitespace: true,
+            type: item.nodeType === 4 ? 'array' : 'string'
           }
         ]
       },

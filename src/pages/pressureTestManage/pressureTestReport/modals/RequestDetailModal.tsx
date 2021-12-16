@@ -30,6 +30,7 @@ interface State {
   traceId: string;
   loading: boolean;
   originData: any[];
+  totalRt: number;
 }
 const RequestDetailModal: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -41,9 +42,10 @@ const RequestDetailModal: React.FC<Props> = props => {
     entryHostIp: null,
     clusterTest: null,
     traceId: null,
-    loading: false
+    loading: false,
+    totalRt: null
   });
-  const { Paragraph } = Typography;
+
   const { traceId } = props;
 
   const timestampToTime = timestamp => {
@@ -63,7 +65,8 @@ const RequestDetailModal: React.FC<Props> = props => {
 
   const handleClick = () => {
     setState({
-      traceId
+      traceId,
+      totalRt: props.totalRt
     });
     queryRequestDetail({
       traceId
@@ -117,8 +120,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '方法名/服务名',
         dataIndex: 'interfaceName',
-        ellipsis: true,
-        width: 250,
+        width: 280,
         render: (text, row) => {
           return (
             <span>
@@ -130,7 +132,15 @@ const RequestDetailModal: React.FC<Props> = props => {
                   </span>
                 }
               >
-                <span>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    maxWidth: 200,
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }}
+                >
                   {row.methodName}/{text}
                 </span>
               </Tooltip>
@@ -140,9 +150,9 @@ const RequestDetailModal: React.FC<Props> = props => {
       },
       {
         ...customColumnProps,
-        title: '客户端/服务端',
+        title: '调用方/被调用方',
         dataIndex: 'logTypeName',
-        width: 70
+        width: 120
       },
       {
         ...customColumnProps,
@@ -154,7 +164,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '同步/异步',
         dataIndex: 'asyncName',
-        width: 50
+        width: 100
       },
       {
         ...customColumnProps,
@@ -279,6 +289,7 @@ const RequestDetailModal: React.FC<Props> = props => {
     const actions = {
       title: '操作',
       dataIndex: 'actions',
+      width: 100,
       render: (text, row) => {
         if (row.entryHostIp && row.agentId) {
           return (
@@ -290,6 +301,7 @@ const RequestDetailModal: React.FC<Props> = props => {
               }
               style={{ marginLeft: 16 }}
               type="primary"
+              size="small"
             >
               开启方法追踪
             </Button>
@@ -352,11 +364,11 @@ const RequestDetailModal: React.FC<Props> = props => {
     },
     {
       label: '总耗时',
-      value: props.totalRt ? `${props.totalRt}ms` : null
+      value: state.totalRt ? `${state.totalRt}ms` : null
     },
     {
       label: '网络耗时',
-      value: `${props.totalRt - state.totalCost}ms`
+      value: `${state.totalRt - state.totalCost}ms`
     },
     {
       label: '接口耗时',
@@ -401,6 +413,7 @@ const RequestDetailModal: React.FC<Props> = props => {
         {state.data && state.data[0] && !state.loading ? (
           <div className={styles.detailTable}>
             <CustomTable
+              indentSize={8}
               rowKey="id"
               columns={getColumns()}
               size="small"

@@ -1,4 +1,4 @@
-import { Col, Modal, Row } from 'antd';
+import { Alert, Col, Modal, Row } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import SearchTable from 'src/components/search-table';
@@ -8,6 +8,7 @@ import getScriptManageColumns from './components/ScriptManageTable';
 import ScriptManageTableAction from './components/ScriptManageTableAction';
 import ScriptManageService from './service';
 import styles from './index.less';
+import CustomAlert from 'src/common/custom-alert/CustomAlert';
 
 interface ScriptManageProps {
   isReload?: boolean;
@@ -138,6 +139,19 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
 
   return (
     <Fragment>
+      <Alert
+        message={
+          <span>
+            脚本管理页面
+            <span
+              style={{ fontWeight: 'bold', fontSize: '16px', marginLeft: 4 }}
+            >
+              即将下线
+            </span>
+            ，建议您使用「 Jmeter扫描创建业务流程 」，无需在此额外配置文件
+          </span>
+        }
+      />
       <SearchTable
         key="id"
         commonTableProps={{

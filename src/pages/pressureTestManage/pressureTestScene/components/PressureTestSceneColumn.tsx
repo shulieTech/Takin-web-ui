@@ -233,23 +233,16 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '最新压测时间',
       dataIndex: 'lastPtTime',
-      render: (text, row) =>
-        text ? (
-          row.isScheduler ? (
-            <Fragment>
-              <div>{text}</div>
-              {row.scheduleExecuteTime && (
-                <div style={{ color: '#bababa' }}>
-                  {row.scheduleExecuteTime}(定时)
-                </div>
-              )}
-            </Fragment>
-          ) : (
-            text
-          )
-        ) : (
-          '--'
-        )
+      render: (text, row) => (
+        <Fragment>
+          <div>{text || '-'}</div>
+          {row.isScheduler && row.scheduleExecuteTime && (
+            <div style={{ color: '#bababa' }}>
+              {row.scheduleExecuteTime}(定时)
+            </div>
+          )}
+        </Fragment>
+      ),
     },
     {
       ...customColumnProps,
@@ -285,7 +278,8 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
               >
                 <Link
                   style={{ marginRight: 8 }}
-                  to={`/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`}
+                  to={row.hasAnalysisResult ? `/pressureTestManage/pressureTestSceneV2/edit?id=${row.id}` : 
+                  `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`}
                 >
                   编辑
                 </Link>
@@ -323,7 +317,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                 menuAuthority.pressureTestManage_pressureTestReport)) && (
               <Link
                 style={{ marginRight: 8 }}
-                to={`/pressureTestManage/pressureTestReport?sceneName=${row.sceneName}`}
+                to={`/pressureTestManage/pressureTestReport?sceneId=${row.id}`}
               >
                 查看报告
               </Link>

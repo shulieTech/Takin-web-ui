@@ -5,7 +5,6 @@ import React from 'react';
 import { getTakinAuthority } from 'src/utils/utils';
 
 const getPressureTestReportFormData = (): FormDataType[] => {
-
   if (getTakinAuthority() === 'true') {
     return [
       {
@@ -16,7 +15,7 @@ const getPressureTestReportFormData = (): FormDataType[] => {
       {
         key: 'managerName',
         label: '',
-        node: <Input placeholder="执行人" />,
+        node: <Input placeholder="执行人" />
       },
       {
         key: 'time',
@@ -36,9 +35,19 @@ const getPressureTestReportFormData = (): FormDataType[] => {
   }
   return [
     {
+      key: 'reportId',
+      label: '',
+      node: <Input placeholder="报告ID" />
+    },
+    {
       key: 'sceneName',
       label: '',
       node: <Input placeholder="压测场景名称" />
+    },
+    {
+      key: 'userName',
+      label: '',
+      node: <Input placeholder="执行人" />
     },
     {
       key: 'time',
