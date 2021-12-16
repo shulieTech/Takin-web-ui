@@ -2,6 +2,10 @@ import React from 'react';
 import { Table, message } from 'antd';
 import { SchemaField, FormPath, Schema } from '@formily/antd';
 
+const notEmptyValue = value => {
+  return !(isNaN(value) || [undefined, null].includes(value));
+};
+
 const TargetMap = (props) => {
   const {
     value = {},
@@ -136,7 +140,7 @@ const TargetMap = (props) => {
                       const hasValue =
                         Object.values(
                           form.getFieldValue(`goal.${record.xpathMd5}`) || {}
-                        ).filter(Boolean).length > 0;
+                        ).filter(notEmptyValue).length > 0;
                       if (!hasValue) {
                         form.setFieldState(
                           `goal.${record.xpathMd5}`,
@@ -157,8 +161,8 @@ const TargetMap = (props) => {
                       const hasValue =
                         Object.values(
                           form.getFieldValue(`goal.${record.xpathMd5}`) || {}
-                        ).filter(Boolean).length > 0;
-                      return hasValue && !val ? `请输入${fieldLabel}` : null;
+                        ).filter(notEmptyValue).length > 0;
+                      return hasValue && !notEmptyValue(val) ? `请输入${fieldLabel}` : null;
                     },
                   },
                   ...moreRules,
