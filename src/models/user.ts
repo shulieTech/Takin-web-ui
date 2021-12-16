@@ -44,6 +44,7 @@ export default {
         localStorage.setItem('troweb-role', data.userType);
         localStorage.setItem('troweb-userId', data.id);
         localStorage.setItem('isAdmin', data.isAdmin);
+        localStorage.setItem('isSuper', data.isSuper);
       }
     },
     *troLogout({ payload }, { call, put }) {
@@ -62,6 +63,7 @@ export default {
         localStorage.removeItem('trowebUserMenu');
         localStorage.removeItem('takinAuthority');
         localStorage.removeItem('Access-Token');
+        localStorage.removeItem('isSuper');
         yield put({
           type: 'updateState',
           payload: {

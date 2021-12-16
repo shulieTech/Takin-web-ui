@@ -174,7 +174,10 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
       let result = {
         ...values,
         pressureTestTime: { time: values.pressureTestTime, unit: 'm' },
-        increasingTime: { time: values.pressureTestTime, unit: 'm' }
+        increasingTime:
+          state.pressureMode === 1
+            ? null
+            : { time: values.increasingTime, unit: 'm' }
       };
 
       if (state.configType === 1) {
