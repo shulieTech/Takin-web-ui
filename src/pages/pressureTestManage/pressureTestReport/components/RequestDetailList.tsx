@@ -121,6 +121,7 @@ const RequestDetailList: React.FC<Props> = props => {
                 isLive={true}
                 btnText="请求详情"
                 traceId={row.traceId}
+                totalRt={row.totalRt}
               />
               {row.responseStatus !== 0 && row.responseStatus !== 200 && (
                 <span style={{ marginLeft: 8 }}>

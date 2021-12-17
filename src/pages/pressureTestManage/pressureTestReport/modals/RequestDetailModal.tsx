@@ -30,6 +30,7 @@ interface State {
   traceId: string;
   loading: boolean;
   originData: any[];
+  totalRt: number;
 }
 const RequestDetailModal: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -41,7 +42,8 @@ const RequestDetailModal: React.FC<Props> = props => {
     entryHostIp: null,
     clusterTest: null,
     traceId: null,
-    loading: false
+    loading: false,
+    totalRt: null
   });
   const { Paragraph } = Typography;
   const { traceId } = props;
@@ -63,7 +65,8 @@ const RequestDetailModal: React.FC<Props> = props => {
 
   const handleClick = () => {
     setState({
-      traceId
+      traceId,
+      totalRt: props.totalRt
     });
     queryRequestDetail({
       traceId
@@ -352,11 +355,11 @@ const RequestDetailModal: React.FC<Props> = props => {
     },
     {
       label: '总耗时',
-      value: props.totalRt ? `${props.totalRt}ms` : null
+      value: state.totalRt ? `${state.totalRt}ms` : null
     },
     {
       label: '网络耗时',
-      value: `${props.totalRt - state.totalCost}ms`
+      value: `${state.totalRt - state.totalCost}ms`
     },
     {
       label: '接口耗时',
