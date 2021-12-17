@@ -271,7 +271,7 @@ const RootDirectory: React.FC<Props> = props => {
                   rules: [
                     { validator: validateZhKey }],
                 })(
-                  <Input placeholder="请输入accessKeyId" type="password" maxLength={64}/>
+                  <Input placeholder="请输入accessKeyId" type="password" maxLength={30}/>
                 )}
               </Form.Item>
               <Form.Item
@@ -283,7 +283,7 @@ const RootDirectory: React.FC<Props> = props => {
                   rules: [
                     { validator: validateZhKey }],
                 })(
-                  <Input placeholder="请输入accessKeySecret" type="password"  maxLength={64}/>
+                  <Input placeholder="请输入accessKeySecret" type="password"  maxLength={30}/>
                 )}
               </Form.Item>
               <Form.Item
