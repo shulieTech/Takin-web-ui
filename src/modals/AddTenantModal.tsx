@@ -127,8 +127,9 @@ const AddTenantModal: React.FC<Props> = props => {
           ...values
         });
         if (success) {
-          message.success('新增租户成功!');
-          props.onSuccess();
+          message.success(
+            '客户新增成功，默认密码：shulie@2021，请登录后更改密码您的密码！'
+          );
           resolve(true);
           return;
         }
