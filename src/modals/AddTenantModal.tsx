@@ -72,23 +72,6 @@ const AddTenantModal: React.FC<Props> = props => {
           ]
         },
         node: <Input placeholder="请输入英文" />
-      },
-      {
-        key: 'defaultEnv',
-        label: '老探针默认接入',
-        options: {
-          rules: [{ required: true, message: '请选择接入环境' }],
-          initialValue: 'test'
-        },
-        node: (
-          <CommonSelect
-            placeholder="请选择接入环境"
-            dataSource={[
-              { label: '测试环境', value: 'test' },
-              { label: '生产环境', value: 'prod' }
-            ]}
-          />
-        )
       }
     ];
   };
