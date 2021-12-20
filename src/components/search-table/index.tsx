@@ -14,7 +14,7 @@ import { getInitState, SearchTableContext } from './context';
 import styles from './index.less';
 import { SearchTableProps } from './type';
 
-const SearchTable: React.FC<SearchTableProps> = (props) => {
+const SearchTable: React.FC<SearchTableProps> = props => {
   const [state, setState] = useStateReducer(getInitState());
   useEffect(() => {
     if (!state.flag && props.searchParams) {
@@ -23,7 +23,7 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
     setState({
       searchParams: { ...state.searchParams },
       checkedKeys: [],
-      checkedRows: [],
+      checkedRows: []
     });
     // setState({ searchParams: { ...state.searchParams, current: 0 } });
     queryList(true);
@@ -34,11 +34,11 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
     }
     const searchParams = {
       ...getInitState().searchParams,
-      ...props.searchParams,
+      ...props.searchParams
     };
     setState({
       searchParams,
-      flag: true,
+      flag: true
     });
   }, [props.searchParams]);
   useEffect(() => {
@@ -59,7 +59,10 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
     const getSearchParams = { ...state.searchParams };
     window._search_table_params = getSearchParams; // 某些情况下外部需要获取页码信息
     if (method === 'GET') {
-      Object.keys(getSearchParams).forEach((item) => {
+      Object.keys(getSearchParams).forEach(item => {
+        if (typeof getSearchParams[item] === 'string') {
+          getSearchParams[item] = getSearchParams[item].trim();
+        }
         if (Array.isArray(getSearchParams[item])) {
           getSearchParams[item] = getSearchParams[item].join(',');
         }
@@ -71,7 +74,7 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
         : httpPost(url, filterSearchParams(state.searchParams));
     const {
       data: { data, success },
-      total,
+      total
     } = await ajaxEvent;
     if (props.onSearch) {
       props.onSearch(state.searchParams, data);
@@ -82,7 +85,7 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
         dataSource: data,
         loading: false,
         // checkedKeys: reload ? [] : state.checkedKeys,
-        flag: true,
+        flag: true
       });
     }
   };
@@ -108,5 +111,5 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
 export default SearchTable;
 
 SearchTable.defaultProps = {
-  theme: 'dark',
+  theme: 'dark'
 };
