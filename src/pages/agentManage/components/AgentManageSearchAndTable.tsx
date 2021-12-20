@@ -142,7 +142,7 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
             style={{ marginRight: 16 }}
             onClick={() => {
               setState({
-                searchInputValue: null,
+                searchInputValue: undefined,
                 agentStatus: undefined,
                 probeStatus: undefined,
                 isReload: !state.isReload,
