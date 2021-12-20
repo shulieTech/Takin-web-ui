@@ -50,7 +50,8 @@ const getEntryRuleFormData = (
         rules: [
           {
             required: true,
-            message: '请输入入口地址'
+            message: '请输入入口地址',
+            whitespace: true
           }
         ]
       },
