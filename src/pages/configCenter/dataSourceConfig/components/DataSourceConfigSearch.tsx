@@ -37,6 +37,11 @@ const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
           placeholder="标签：全部"
           dataSource={state.tagList || []}
           mode="multiple"
+          onRender={item => (
+            <CommonSelect.Option key={item.value} value={item.value}>
+              {item.label}
+            </CommonSelect.Option>
+          )}
         />
       )
     }

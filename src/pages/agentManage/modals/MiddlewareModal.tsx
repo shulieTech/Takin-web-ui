@@ -77,8 +77,9 @@ const MiddlewareModal: React.FC<Props> = props => {
     setState({
       data: dataSource.filter((item, k) => {
         return (
-          item.moduleId.indexOf(state.searchInputValue.trim()) > -1 ||
-          item.status === state.status
+          item.moduleId.indexOf(
+            state.searchInputValue && state.searchInputValue.trim()
+          ) > -1 || item.status === state.status
         );
       })
     });
