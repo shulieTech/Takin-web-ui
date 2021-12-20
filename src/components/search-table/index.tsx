@@ -58,20 +58,23 @@ const SearchTable: React.FC<SearchTableProps> = props => {
     const { method, url } = props.ajaxProps;
     const getSearchParams = { ...state.searchParams };
     window._search_table_params = getSearchParams; // 某些情况下外部需要获取页码信息
+    Object.keys(getSearchParams).forEach(item => {
+      if (typeof getSearchParams[item] === 'string') {
+        getSearchParams[item] = getSearchParams[item].trim();
+      }
+    });
     if (method === 'GET') {
       Object.keys(getSearchParams).forEach(item => {
-        if (typeof getSearchParams[item] === 'string') {
-          getSearchParams[item] = getSearchParams[item].trim();
-        }
         if (Array.isArray(getSearchParams[item])) {
           getSearchParams[item] = getSearchParams[item].join(',');
         }
       });
     }
+
     const ajaxEvent =
       method === 'GET'
         ? httpGet(url, filterSearchParams(getSearchParams))
-        : httpPost(url, filterSearchParams(state.searchParams));
+        : httpPost(url, filterSearchParams(getSearchParams));
     const {
       data: { data, success },
       total

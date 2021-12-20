@@ -141,7 +141,7 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
                 }}
                 onChange={value => {
                   return setState({
-                    searchInputValue: value
+                    searchInputValue: value.trim()
                   });
                 }}
               />
@@ -161,7 +161,7 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
                 }}
                 onChange={e =>
                   setState({
-                    agentIdValue: e.target.value
+                    agentIdValue: e.target.value.trim()
                   })
                 }
                 value={state.agentIdValue}
@@ -182,7 +182,7 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
                 }}
                 onChange={e =>
                   setState({
-                    logValue: e.target.value
+                    logValue: e.target.value.trim()
                   })
                 }
                 value={state.logValue}

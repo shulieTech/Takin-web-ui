@@ -5,7 +5,6 @@ import { CommonSelect } from 'racc';
 
 const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
   const { VERIFY_DATASOURCE_TYPE } = dictionaryMap;
-  // console.log(dictionaryMap);
   return [
     {
       key: 'datasourceName',
