@@ -22,7 +22,8 @@ const getAppFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
-            message: '请输入应用名'
+            message: '请输入应用名',
+            whitespace: true
           }
         ]
       },
@@ -42,7 +43,8 @@ const getAppFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: false,
-            message: '请输入应用说明'
+            message: '请输入应用说明',
+            whitespace: true
           }
         ]
       },
