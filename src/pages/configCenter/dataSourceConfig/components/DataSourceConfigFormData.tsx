@@ -63,7 +63,8 @@ const getAddDataSourceConfigFormData = (
           {
             required: true,
             message: '请输入正确数据源名称',
-            max: 20
+            max: 20,
+            whitespace: true
           }
         ]
       },
@@ -104,7 +105,8 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: true,
-            message: '请输入正确数据源地址'
+            message: '请输入正确数据源地址',
+            whitespace: true
           }
         ]
       },
@@ -119,7 +121,8 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: true,
-            message: '请输入用户名'
+            message: '请输入用户名',
+            whitespace: true
           }
         ]
       },
@@ -133,7 +136,8 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: true,
-            message: '请输入密码'
+            message: '请输入密码',
+            whitespace: true
           }
         ]
       },
