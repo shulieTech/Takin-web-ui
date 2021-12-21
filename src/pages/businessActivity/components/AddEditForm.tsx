@@ -94,7 +94,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
           initialValue:
             typeof props.businessDomain === 'string'
               ? +props.businessDomain
-              : props.businessDomain
+              : props.businessDomain ?? undefined
         },
         node: (
           // <CommonSelect
