@@ -69,11 +69,13 @@ const ActivityLeftList = (props) => {
           height: '100%',
         }}
       >
-        {window.history.length > 1 && <div style={{ marginTop: 8, padding: 8 }}>
-          <a onClick={() => window.history.go(-1)}>
-            <Icon type="left" style={{ marginRight: 8 }} /> 返回
-          </a>
-        </div>}
+        {window.history.length > 1 && (
+          <div style={{ marginTop: 8, padding: 8 }}>
+            <a onClick={() => window.history.go(-1)}>
+              <Icon type="left" style={{ marginRight: 8 }} /> 返回
+            </a>
+          </div>
+        )}
         <div style={{ padding: 8 }}>
           <Input
             style={{ marginBottom: 8 }}
@@ -104,6 +106,9 @@ const ActivityLeftList = (props) => {
                   listData.map((itemData) => {
                     const selected = currentId === String(itemData.activityId);
                     const isVirtual = itemData.businessType === 1;
+                    const domainName = getBusinessTypeName(
+                      itemData.businessDomain
+                    );
                     return (
                       <div
                         id={`activity_${itemData.activityId}`}
@@ -120,16 +125,16 @@ const ActivityLeftList = (props) => {
                       >
                         <div className="flex" style={{ marginBottom: 8 }}>
                           <span className={styles['active-type-name']}>
-                            {getBusinessTypeName(itemData.businessDomain)}
-                            {isVirtual && (
-                              <Tag
+                            {domainName && (
+                              <span
                                 style={{
-                                  marginLeft: 8,
+                                  marginRight: 8,
                                 }}
                               >
-                                虚拟
-                              </Tag>
+                                {domainName}
+                              </span>
                             )}
+                            {isVirtual && <Tag>虚拟</Tag>}
                           </span>
 
                           {

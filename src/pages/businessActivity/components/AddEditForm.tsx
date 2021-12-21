@@ -110,6 +110,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             placeholder="请选择业务域"
             showSearch
             optionFilterProp="children"
+            allowClear
           >
             {props.domains.map(x => (
               <Select.Option key={x.value} value={x.value}>
