@@ -272,7 +272,8 @@ const SelectVersionModal: React.FC<Props> = props => {
           scroll={{ y: 400 }}
           rowSelection={{
             type: 'radio',
-            selectedRowKeys: [modalState.selectedRowKeys],
+            selectedRowKeys: Array.isArray(modalState.selectedRowKeys) ?
+            modalState.selectedRowKeys : [modalState.selectedRowKeys],
             onChange: (selectedRowKeys, selectedRows) => {
               setModalState({
                 selectedRowKeys,
