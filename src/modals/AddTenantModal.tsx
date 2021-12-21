@@ -65,7 +65,7 @@ const AddTenantModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请输入租户code',
+              message: '请输入租户code（只支持英文）',
               whitespace: true,
               validator: checkData
             }
@@ -83,7 +83,7 @@ const AddTenantModal: React.FC<Props> = props => {
         callback(new Error('只可输入英文'));
       }
     } else {
-      callback(new Error('请输入租户code'));
+      callback(new Error('请输入租户code（只支持英文）'));
     }
   };
 
@@ -113,6 +113,7 @@ const AddTenantModal: React.FC<Props> = props => {
           message.success(
             '客户新增成功，默认密码：shulie@2021，请登录后更改密码您的密码！'
           );
+          props.onSuccess();
           resolve(true);
           return;
         }

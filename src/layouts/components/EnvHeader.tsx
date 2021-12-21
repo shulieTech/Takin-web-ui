@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Menu, Icon, Button } from 'antd';
 import { getTakinTenantAuthority } from 'src/utils/utils';
-import tenantCode from './service';
 import _ from 'lodash';
 import AddTenantModal from 'src/modals/AddTenantModal';
+import tenantCodeService from './service';
 interface Props {}
 let path = '';
 const EnvHeader: React.FC<Props> = props => {
@@ -21,7 +21,7 @@ const EnvHeader: React.FC<Props> = props => {
   const queryTenantList = async () => {
     const {
       data: { success, data }
-    } = await tenantCode.tenant({
+    } = await tenantCodeService.tenant({
       tenantCode: localStorage.getItem('tenant-code')
     });
     if (success) {
@@ -67,7 +67,7 @@ const EnvHeader: React.FC<Props> = props => {
   const changeTenant = async code => {
     const {
       data: { success, data }
-    } = await tenantCode.tenantSwitch({
+    } = await tenantCodeService.tenantSwitch({
       targetTenantCode: code
     });
     if (success) {
@@ -95,7 +95,7 @@ const EnvHeader: React.FC<Props> = props => {
   const changeCode = async (code, descs) => {
     const {
       data: { success, data }
-    } = await tenantCode.envSwitch({
+    } = await tenantCodeService.envSwitch({
       targetEnvCode: code
     });
     if (success) {
@@ -195,7 +195,14 @@ const EnvHeader: React.FC<Props> = props => {
             <Icon type="down" />
           </Button>
         </Dropdown>
-        {isSuper === '1' && <AddTenantModal btnText="新增租户" />}
+        {isSuper === '1' && (
+          <AddTenantModal
+            btnText="新增租户"
+            onSuccess={() => {
+              queryTenantList();
+            }}
+          />
+        )}
       </Button.Group>
     </div>
   );
