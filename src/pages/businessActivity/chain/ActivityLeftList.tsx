@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Icon, Input, Empty, Spin, Pagination } from 'antd';
+import { Icon, Input, Empty, Spin, Pagination, Tag } from 'antd';
 import { debounce } from 'lodash';
 import { connect } from 'dva';
 import BusinessActivityService from '../service';
@@ -29,7 +29,8 @@ const ActivityLeftList = (props) => {
     } = await BusinessActivityService.getBusinessActivityList(params);
     setListLoading(false);
     if (success && data) {
-      setListData(data.filter((x) => x.businessType !== 1));
+      // setListData(data.filter((x) => x.businessType !== 1));
+      setListData(data);
       setTotal(+totalCount);
     }
   };
@@ -102,19 +103,35 @@ const ActivityLeftList = (props) => {
                 {listData?.length > 0 ? (
                   listData.map((itemData) => {
                     const selected = currentId === String(itemData.activityId);
+                    const isVirtual = itemData.businessType === 1;
                     return (
                       <div
                         id={`activity_${itemData.activityId}`}
                         key={itemData.activityId}
-                        onClick={() => onChangeId(String(itemData.activityId))}
+                        onClick={() => {
+                          if (!isVirtual) {
+                            onChangeId(String(itemData.activityId));
+                          }
+                        }}
                         className={classNames(styles['activity-item'], {
                           [styles.selected]: selected,
+                          [styles.disabled]: isVirtual,
                         })}
                       >
                         <div className="flex" style={{ marginBottom: 8 }}>
                           <span className={styles['active-type-name']}>
                             {getBusinessTypeName(itemData.businessDomain)}
+                            {isVirtual && (
+                              <Tag
+                                style={{
+                                  marginLeft: 8,
+                                }}
+                              >
+                                虚拟
+                              </Tag>
+                            )}
                           </span>
+
                           {
                             {
                               1: (

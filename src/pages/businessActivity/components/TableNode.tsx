@@ -59,6 +59,14 @@ const getColumns = (
     },
     {
       ...customColumnProps,
+      title: '级别',
+      dataIndex: 'link_level',
+      render: (text) => {
+        return text || '-';
+      },
+    },
+    {
+      ...customColumnProps,
       title: '业务域',
       dataIndex: 'businessDomain',
       render: (text) =>
