@@ -568,7 +568,7 @@ const PressureConfig = (
           </span>
         ),
         options: {
-          initialValue: state.increasingTime.time,
+          initialValue: state.increasingTime && state.increasingTime.time,
           rules: [{ required: true, message: '请输入递增时长' }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
