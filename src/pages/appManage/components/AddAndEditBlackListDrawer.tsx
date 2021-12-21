@@ -111,6 +111,7 @@ const AddAndEditBlacklistDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入应用名'
           }
         ]

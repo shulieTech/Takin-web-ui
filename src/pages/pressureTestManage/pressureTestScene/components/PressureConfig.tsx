@@ -337,7 +337,7 @@ const PressureConfig = (
               : action !== 'add'
               ? detailData.ipNum
               : state.ipNum,
-          rules: [{ required: true, message: '请输入指定Pod数' }]
+          rules: [{ required: true, whitespace: true, message: '请输入指定Pod数' }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 13 } },
         node:

@@ -30,6 +30,7 @@ const getFormData = (that: Login): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入账号'
           }
         ]
@@ -49,6 +50,7 @@ const getFormData = (that: Login): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入密码'
           }
         ]
@@ -69,6 +71,7 @@ const getFormData = (that: Login): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入验证码'
           }
         ]

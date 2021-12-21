@@ -97,6 +97,7 @@ const MockConfigModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入接口名称'
             }
           ]

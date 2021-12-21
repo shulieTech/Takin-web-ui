@@ -168,6 +168,7 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请选择应用'
           }
         ]

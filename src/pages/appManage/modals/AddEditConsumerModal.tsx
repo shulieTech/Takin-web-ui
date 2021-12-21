@@ -111,7 +111,7 @@ const AddEditConsumerModal: React.FC<Props> = props => {
         key: ShadowConsumerBean.groupId,
         options: {
           initialValue: props.topicGroup,
-          rules: [{ required: true, message: '请输入业务的topic#业务的消费组' }]
+          rules: [{ required: true, whitespace: true, message: '请输入业务的topic#业务的消费组' }]
         },
         label: '业务的topic#业务的消费组',
         node: <Input placeholder="请输入业务的topic#业务的消费组" />

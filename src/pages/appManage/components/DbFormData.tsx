@@ -62,6 +62,7 @@ const getDbFormData = (state, id, setState, detailData): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请选择应用'
           }
         ]

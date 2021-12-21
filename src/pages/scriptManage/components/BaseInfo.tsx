@@ -27,7 +27,7 @@ const BaseInfo = (state, setState, props): FormCardMultipleDataSourceBean => {
         label: '脚本名称',
         options: {
           initialValue: action !== 'add' ? detailData.scriptName : undefined,
-          rules: [{ required: true, message: '请输入正确的脚本名称', max: 20 }]
+          rules: [{ required: true, whitespace: true, message: '请输入正确的脚本名称', max: 20 }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 16 } },
         node: (

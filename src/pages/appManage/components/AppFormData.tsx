@@ -73,6 +73,7 @@ const getAppFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入影子库结构脚本路径'
           }
         ]
@@ -87,6 +88,7 @@ const getAppFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入数据库清理脚本路径'
           }
         ]
@@ -101,6 +103,7 @@ const getAppFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入基础数据准备脚本路径'
           }
         ]
@@ -115,6 +118,7 @@ const getAppFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入基础数据准备脚本路径'
           }
         ]
@@ -129,6 +133,7 @@ const getAppFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入基础数据准备脚本路径'
           }
         ]

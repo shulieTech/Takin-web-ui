@@ -110,6 +110,7 @@ const MatchModal: React.FC<Props> = props => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入API名称'
           }
         ]
@@ -123,6 +124,7 @@ const MatchModal: React.FC<Props> = props => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入请求path'
           }
         ]

@@ -102,6 +102,7 @@ const getDataSourceFormData = (
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入验证命令'
           }
         ]

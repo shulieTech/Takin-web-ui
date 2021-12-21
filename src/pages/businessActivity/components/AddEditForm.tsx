@@ -45,7 +45,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         key: ActivityBean.业务活动名称,
         label: '业务活动名称',
         options: {
-          rules: [{ required: true, message: '请填写业务活动名称' }],
+          rules: [{ required: true, whitespace: true, message: '请填写业务活动名称' }],
           initialValue: props.systemName
         },
         node: <Input style={{ fontSize: 12 }} placeholder="业务活动名称" />
@@ -221,7 +221,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         key: ActivityBean.虚拟入口,
         label: '虚拟入口',
         options: {
-          rules: [{ required: true, message: '请输入虚拟入口' }],
+          rules: [{ required: true, whitespace: true, message: '请输入虚拟入口' }],
           initialValue: props.virtualEntrance
         },
         node: <Input placeholder="请与脚本里的path保持一致" />

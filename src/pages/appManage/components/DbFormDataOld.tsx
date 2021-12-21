@@ -70,6 +70,7 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请选择应用'
           }
         ]
@@ -351,6 +352,7 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入表名称'
           }
         ]

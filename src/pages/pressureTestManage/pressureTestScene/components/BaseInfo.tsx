@@ -36,7 +36,7 @@ const BaseInfo = (state, setState, props): FormCardMultipleDataSourceBean => {
         options: {
           initialValue:
             action !== 'add' ? detailData.pressureTestSceneName : undefined,
-          rules: [{ required: true, message: '请输入压测场景名称' }]
+          rules: [{ required: true, whitespace: true, message: '请输入压测场景名称' }]
         },
         formItemProps: { labelCol: { span: 4 }, wrapperCol: { span: 16 } },
         node: <Input placeholder="请输入" />

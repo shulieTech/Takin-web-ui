@@ -225,7 +225,7 @@ const ScriptModal: React.FC<Props> = props => {
             >
               {props.form.getFieldDecorator('name', {
                 initialValue: state.detail.name ? state.detail.name : '',
-                rules: [{ required: true, message: `请输入脚本名称` }],
+                rules: [{ required: true, whitespace: true, message: `请输入脚本名称` }],
               })(
                 <Input placeholder="脚本名称" />
               )}
