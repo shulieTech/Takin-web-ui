@@ -110,7 +110,7 @@ const getDataSourceFormData = (
         <CodeMirrorWrapper
           mode="sql"
           // tslint:disable-next-line: max-line-length
-          placeholder={`根据压测数据所在的库表以及标识设置查询语句，模板："SELECT field_name FROM table_name where field_name LIKE 'PT_%' limit1；"，可输入多个命令，使用换行分隔。"`}
+          placeholder={`根据压测数据所在的库表以及标识设置查询语句，模板："SELECT field_name FROM table_name where field_name LIKE 'PT_%' limit 1;"，可输入多个命令，使用换行分隔。"`}
         />
       )
     },
