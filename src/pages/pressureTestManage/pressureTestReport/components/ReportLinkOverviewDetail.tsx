@@ -101,7 +101,8 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                 <span
                   style={{
                     color:
-                      Number(text && text.result) > Number(text && text.value)
+                      Number(text && text.result) >
+                        Number(text && text.value) && text.value !== -1
                         ? '#FE7D61'
                         : ''
                   }}
