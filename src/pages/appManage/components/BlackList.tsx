@@ -149,12 +149,20 @@ const BlackList: React.FC<Props> = props => {
 
   const handleChange = (key, value) => {
     setState({
-      searchValues: { ...state.searchValues, [key]: value }
+      searchValues: {
+        ...state.searchValues,
+        [key]: value
+      },
+      searchParams: {
+        ...state.searchParams,
+        current: 0
+      }
     });
     queryBlackListList({
       ...state.searchParams,
       ...state.searchValues,
-      [key]: value
+      [key]: value,
+      current: 0
     });
   };
 
@@ -171,7 +179,11 @@ const BlackList: React.FC<Props> = props => {
         useYn: undefined,
         interfaceName: null
       },
-      selectedRowKeys: []
+      selectedRowKeys: [],
+      searchParams: {
+        current: 0,
+        pageSize: 10
+      }
     });
     queryBlackListList({ ...state.searchParams });
   };
