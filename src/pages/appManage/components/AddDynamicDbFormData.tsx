@@ -405,7 +405,12 @@ const getAddDynamicDbFormData = (
             required: item.required ? true : false,
             message: '请检查表单必填项',
             whitespace: true,
-            type: item.nodeType === 4 ? 'array' : 'string'
+            type:
+              item.nodeType === 4
+                ? 'array'
+                : item.nodeType === 3
+                ? 'object'
+                : 'string'
           }
         ]
       },
