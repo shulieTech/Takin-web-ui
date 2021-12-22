@@ -35,7 +35,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                 {text.result}
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}</span>
+              <span>{text.value === -1 ? '-' : text.value}</span>
             </Fragment>
           );
         }
@@ -56,7 +56,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                 {text.result}ms
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}ms</span>
+              <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
             </Fragment>
           );
         }
@@ -98,7 +98,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                 {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
           );
         }
