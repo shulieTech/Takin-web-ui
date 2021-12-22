@@ -70,6 +70,7 @@ const VersionListModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '版本号',
         dataIndex: 'version',
+        width: '35%',
         render: text => {
           return <Tag>{text}</Tag>;
         }
@@ -110,7 +111,7 @@ const VersionListModal: React.FC<Props> = props => {
                 }}
               />
             </AuthorityBtn>
-            
+
           );
         }
       }
@@ -169,7 +170,7 @@ const VersionListModal: React.FC<Props> = props => {
           pageSize={state.searchParams.pageSize}
           showTotal={(t, range) =>
             `共 ${state.total} 条数据 第${state.searchParams.current +
-              1}页 / 共 ${Math.ceil(
+            1}页 / 共 ${Math.ceil(
               state.total / (state.searchParams.pageSize || 10)
             )}页`
           }

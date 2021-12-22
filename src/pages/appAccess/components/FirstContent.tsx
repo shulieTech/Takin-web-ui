@@ -92,7 +92,10 @@ const FirstContent: React.FC<Props> = props => {
           state={state}
           setState={setState}
           btnText="重新选择"
-          agentId={state.agentVersionInfo && state.agentVersionInfo.id}
+          agentId={
+            state.agentVersionInfo &&
+            state.agentVersionInfo.id
+          }
           selectedVersionInfo={state.agentVersionInfo}
         />
         <div style={{ marginTop: 10 }}>

@@ -161,6 +161,7 @@ const SelectVersionModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '序号',
         dataIndex: 'id',
+        width: 100,
         render: text => {
           return <TableIndex text={text} />;
         }
@@ -169,7 +170,7 @@ const SelectVersionModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '探针版本',
         dataIndex: 'version',
-        width: 300,
+        width: 250,
         render: (text, row) => {
           return (
             <TableTwoRows
@@ -188,7 +189,7 @@ const SelectVersionModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '版本特性',
         dataIndex: 'versionFeatures',
-        width: 500,
+        width: 400,
         render: text => {
           return (
             <Paragraph ellipsis={{ rows: 1, expandable: true }}>
@@ -271,7 +272,8 @@ const SelectVersionModal: React.FC<Props> = props => {
           scroll={{ y: 400 }}
           rowSelection={{
             type: 'radio',
-            selectedRowKeys: [modalState.selectedRowKeys],
+            selectedRowKeys: Array.isArray(modalState.selectedRowKeys) ?
+             modalState.selectedRowKeys : [modalState.selectedRowKeys],
             onChange: (selectedRowKeys, selectedRows) => {
               setModalState({
                 selectedRowKeys,
@@ -292,7 +294,7 @@ const SelectVersionModal: React.FC<Props> = props => {
         pageSize={modalState.searchParams.pageSize}
         showTotal={(t, range) =>
           `共 ${modalState.total} 条数据 第${modalState.searchParams.current +
-            1}页 / 共 ${Math.ceil(
+          1}页 / 共 ${Math.ceil(
             modalState.total / (modalState.searchParams.pageSize || 10)
           )}页`
         }
