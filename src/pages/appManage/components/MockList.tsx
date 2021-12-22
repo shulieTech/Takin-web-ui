@@ -227,7 +227,7 @@ const MockList: React.FC<Props> = props => {
             <Icon
               onClick={() => {
                 setState({
-                  interfaceName: null,
+                  interfaceName: state.interfaceName,
                   isReload: !state.isReload,
                   searchParams: {
                     current: 0,
