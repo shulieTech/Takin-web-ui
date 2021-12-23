@@ -35,7 +35,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                 {text.result}
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}</span>
+              <span>{text.value === -1 ? '-' : text.value}</span>
             </Fragment>
           );
         }
@@ -50,13 +50,16 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text.result) > Number(text.value) ? '#FE7D61' : ''
+                    Number(text.result) > Number(text.value) &&
+                    text.value !== -1
+                      ? '#FE7D61'
+                      : ''
                 }}
               >
                 {text.result}ms
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}ms</span>
+              <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
             </Fragment>
           );
         }
@@ -77,7 +80,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                 {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
           );
         }
@@ -98,7 +101,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                 {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
           );
         }

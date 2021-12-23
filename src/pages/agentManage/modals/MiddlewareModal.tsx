@@ -124,6 +124,13 @@ const MiddlewareModal: React.FC<Props> = props => {
       btnProps={{ type: 'link' }}
       btnText={props.btnText}
       onClick={() => handleClick()}
+      afterCancel={() => {
+        setState({
+          status: undefined,
+          searchInputValue: undefined,
+          isReload: !state.isReload
+        });
+      }}
     >
       <CustomDescriptions
         title={`AgentID:${props.agentId}`}

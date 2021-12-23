@@ -184,7 +184,8 @@ const MockConfigModal: React.FC<Props> = props => {
             {
               required: false,
               message: '请输入备注（50字以内）',
-              max: 50
+              max: 50,
+              whitespace: true
             }
           ]
         },

@@ -82,7 +82,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                 {text.result}
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text && text.value}</span>
+              <span>{text.value === -1 ? '-' : text.value}</span>
             </Fragment>
           );
         }
@@ -101,7 +101,8 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                 <span
                   style={{
                     color:
-                      Number(text && text.result) > Number(text && text.value)
+                      Number(text && text.result) >
+                        Number(text && text.value) && text.value !== -1
                         ? '#FE7D61'
                         : ''
                   }}
@@ -109,7 +110,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                   {text.result}ms
                 </span>
                 <span style={{ margin: '0 8px' }}>/</span>
-                <span>{text && text.value}ms</span>
+                <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
                 <Popover
                   placement="bottomLeft"
                   content={
@@ -165,7 +166,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                 {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text && text.value}%</span>
+              <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
           );
         }
@@ -191,7 +192,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                 {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
           );
         }

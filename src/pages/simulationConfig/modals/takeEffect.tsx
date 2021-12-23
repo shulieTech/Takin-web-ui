@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { ImportFile, useStateReducer } from 'racc';
 import {
-  Modal, Form, Input, Descriptions, Icon, Tooltip, Alert, Row, Col, Select, Button, Badge,
+  Modal, Form, Input, Descriptions, Icon, Tooltip, Alert, Row, Col, Select, Button, Badge, Pagination,
 } from 'antd';
 import styles from '../index.less';
 import CustomTable from 'src/components/custom-table';
@@ -20,6 +20,8 @@ interface State {
   dataList: any;
   isEffect: any;
   projectName: any;
+  searchParams: any;
+  total: any;
 }
 const takeEffect: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -30,6 +32,11 @@ const takeEffect: React.FC<Props> = props => {
       effectiveCount: 0,
       invalidCount: 0
     },
+    searchParams: {
+      current: 0,
+      pageSize: 10
+    },
+    total: 0,
     isEffect: [],
     projectName: []
   });
@@ -38,7 +45,7 @@ const takeEffect: React.FC<Props> = props => {
     if (props.state.row.enKey) {
       effectList();
     }
-  }, [state.isEffect, state.projectName]);
+  }, [state.isEffect, state.projectName, state.searchParams]);
 
   useEffect(() => {
     if (props.state.key === '2' && props.state.row.enKey) {
@@ -70,26 +77,38 @@ const takeEffect: React.FC<Props> = props => {
 
   const apply = (value) => {
     setState({
-      projectName: value
+      projectName: value,
+      searchParams: {
+        current: 0,
+        pageSize: 10
+      },
     });
   };
 
   const takeEffects = (value) => {
     setState({
-      isEffect: value
+      isEffect: value,
+      searchParams: {
+        current: 0,
+        pageSize: 10
+      },
     });
   };
 
   const effectList = async () => {
     const {
+      total,
       data: { data, success }
     } = await configService.effectList({
       enKey: props.state.row.enKey,
       isEffect: state.isEffect || undefined,
       projectName: state.projectName || undefined,
+      current: state.searchParams.current,
+      pageSize: state.searchParams.pageSize
     });
     if (success) {
       setState({
+        total,
         dataList: data
       });
     }
@@ -97,13 +116,17 @@ const takeEffect: React.FC<Props> = props => {
 
   const effectLists = async () => {
     const {
+      total,
       data: { data, success }
     } = await configService.effectList({
       enKey: props.state.row.enKey,
       projectName: props.state.projectName,
+      current: state.searchParams.current,
+      pageSize: state.searchParams.pageSize
     });
     if (success) {
       setState({
+        total,
         dataList: data
       });
     }
@@ -182,6 +205,24 @@ const takeEffect: React.FC<Props> = props => {
     effectList();
   };
 
+  const handleChangePage = async (current, pageSize) => {
+    setState({
+      searchParams: {
+        pageSize,
+        current: current - 1
+      }
+    });
+  };
+
+  const handlePageSizeChange = async (current, pageSize) => {
+    setState({
+      searchParams: {
+        pageSize,
+        current: 0
+      }
+    });
+  };
+
   return (
     <Modal
       title="配置生效范围"
@@ -216,9 +257,9 @@ const takeEffect: React.FC<Props> = props => {
         <Alert
           message={
             <p style={{ fontSize: 16, lineHeight: '20px' }}>配置概况
-              <span className={styles.font}>配置总数 {state.count.configCount}</span>
-              <span className={styles.font}>生效总数 {state.count.effectiveCount}</span>
-              <span className={styles.font}>未生效  {state.count.invalidCount}</span>
+              <span className={styles.font}>配置总数 {state.count?.configCount}</span>
+              <span className={styles.font}>生效总数 {state.count?.effectiveCount}</span>
+              <span className={styles.font}>未生效  {state.count?.invalidCount}</span>
             </p>}
           type="info"
           showIcon
@@ -260,8 +301,40 @@ const takeEffect: React.FC<Props> = props => {
             <Button type="default" icon="redo" onClick={() => resets()} />
           </Col>
         </Row>
-        <CustomTable columns={columns} dataSource={state.dataList} pagination={false} />
-
+        <CustomTable
+          columns={columns}
+          dataSource={state.dataList}
+          pagination={false}
+        />
+        <div
+          style={{
+            padding: '8px 16px',
+            width: '100%',
+            height: '50px',
+            marginTop: '50px',
+            background: '#fff'
+          }}
+        >
+          <Pagination
+            style={{
+              float: 'right'
+            }}
+            total={state.total}
+            current={state.searchParams.current + 1}
+            pageSize={state.searchParams.pageSize}
+            showTotal={(t, range) =>
+              `共 ${state.total} 条数据 第${state.searchParams.current +
+              1}页 / 共 ${Math.ceil(
+                state.total / (state.searchParams.pageSize || 10)
+              )}页`
+            }
+            showSizeChanger={true}
+            onChange={(current, pageSize) =>
+              handleChangePage(current, pageSize)
+            }
+            onShowSizeChange={handlePageSizeChange}
+          />
+        </div>
       </div>
     </Modal>
   );

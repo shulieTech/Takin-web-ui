@@ -137,8 +137,9 @@ const AppErrorListModal: React.FC<Props> = props => {
       btnText={props.btnText}
       onClick={() => handleClick()}
     >
-      <div style={{ minHeight: 500 }}>
+      <div>
         <CustomTable
+          scroll={{ y: 500 }}
           rowKey={(row, index) => index.toString()}
           columns={getColumns()}
           size="small"
