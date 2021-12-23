@@ -9,10 +9,6 @@ import AppManageService from './service';
 
 interface AppManageProps {
   isReload?: boolean;
-  searchParams: {
-    current: string | number;
-    pageSize: string | number;
-  };
   location?: any;
 }
 
@@ -33,9 +29,9 @@ const AppManage: React.FC<AppManageProps> = props => {
     switchStatus: null,
     searchParams: {
       current: 0,
-      pageSize: 10
+      pageSize: 10,
+      ...props.location.query,
     },
-    searchParamss: props.location.query,
     checkedKeys: []
   });
 
@@ -74,9 +70,9 @@ const AppManage: React.FC<AppManageProps> = props => {
         checkable: true
       }}
       onCheck={(keys, checkedRows) => handleCheck(keys, checkedRows)}
-      commonFormProps={{ formData: getFormData(), rowNum: 6 }}
+      commonFormProps={{ formData: getFormData(state), rowNum: 6 }}
       ajaxProps={{ url: '/application/center/list', method: 'GET' }}
-      searchParams={state.searchParamss}
+      searchParams={state.searchParams}
       toggleRoload={state.isReload}
       tableAction={<TableAction state={state} setState={setState} />}
       tableWarning={
