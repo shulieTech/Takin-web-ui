@@ -9,12 +9,12 @@ const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
     {
       key: 'datasourceName',
       label: '',
-      node: <Input placeholder="数据源名称" />
+      node: <Input placeholder="数据源名称" />,
     },
     {
       key: 'jdbcUrl',
       label: '',
-      node: <Input placeholder="数据源地址" />
+      node: <Input placeholder="数据源地址" />,
     },
     {
       key: 'type',
@@ -26,7 +26,7 @@ const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
             (dictionaryMap && dictionaryMap.VERIFY_DATASOURCE_TYPE) || []
           }
         />
-      )
+      ),
     },
     {
       key: 'tagsIdList',
@@ -36,14 +36,17 @@ const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
           placeholder="标签：全部"
           dataSource={state.tagList || []}
           mode="multiple"
-          onRender={item => (
+          onRender={(item) => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
             </CommonSelect.Option>
           )}
+          filterOption={(input, option) =>
+            input ? option.props.children.toString().includes(input) : true
+          }
         />
-      )
-    }
+      ),
+    },
   ];
 };
 
