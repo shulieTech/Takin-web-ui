@@ -90,6 +90,11 @@ const SearchTable: React.FC<SearchTableProps> = props => {
         // checkedKeys: reload ? [] : state.checkedKeys,
         flag: true
       });
+    } else {
+      setState({
+        loading: false,
+        flag: true,
+      });
     }
   };
   return (
