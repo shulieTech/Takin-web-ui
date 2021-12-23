@@ -3,7 +3,7 @@ import { Input } from 'antd';
 import React from 'react';
 import { CommonSelect } from 'racc';
 
-const getFormData = (): FormDataType[] => {
+const getFormData = (state): FormDataType[] => {
   return [
     {
       key: 'applicationName',
@@ -13,6 +13,9 @@ const getFormData = (): FormDataType[] => {
     {
       key: 'accessStatus',
       label: '',
+      options: {
+        initialValue: state?.searchParams?.accessStatus
+      },
       node: (
         <CommonSelect
           placeholder="接入状态"
