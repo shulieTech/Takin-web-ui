@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Menu, Icon, Button } from 'antd';
 import { getTakinTenantAuthority } from 'src/utils/utils';
-import tenantCode from './service';
 import _ from 'lodash';
-interface Props { }
+import AddTenantModal from 'src/modals/AddTenantModal';
+import tenantCodeService from './service';
+interface Props {}
 let path = '';
-const EnvHeader: React.FC<Props> = (props) => {
+const EnvHeader: React.FC<Props> = props => {
   const userType: string = localStorage.getItem('troweb-role');
   const [envList, setEnvList] = useState([]);
   const [tenantList, setTenantList] = useState([]);
@@ -20,12 +21,15 @@ const EnvHeader: React.FC<Props> = (props) => {
   const queryTenantList = async () => {
     const {
       data: { success, data }
-    } = await tenantCode.tenant({
+    } = await tenantCodeService.tenant({
       tenantCode: localStorage.getItem('tenant-code')
     });
     if (success) {
       setTenantList(data);
-      const indexs = _.findIndex(data, ['tenantCode', localStorage.getItem('tenant-code')]);
+      const indexs = _.findIndex(data, [
+        'tenantCode',
+        localStorage.getItem('tenant-code')
+      ]);
       setEnvList(data[indexs]?.envs);
       const arr = data[indexs]?.envs.filter(item => {
         if (item.isDefault) {
@@ -36,7 +40,10 @@ const EnvHeader: React.FC<Props> = (props) => {
         localStorage.setItem('env-code', arr[indexs]?.envCode);
         setDesc(arr[indexs]?.desc);
       } else {
-        const ind = _.findIndex(data[indexs].envs, ['envCode', localStorage.getItem('env-code')]);
+        const ind = _.findIndex(data[indexs].envs, [
+          'envCode',
+          localStorage.getItem('env-code')
+        ]);
         setDesc(data[indexs].envs[ind]?.desc);
       }
     }
@@ -57,10 +64,10 @@ const EnvHeader: React.FC<Props> = (props) => {
     return path;
   }
 
-  const changeTenant = async (code) => {
+  const changeTenant = async code => {
     const {
       data: { success, data }
-    } = await tenantCode.tenantSwitch({
+    } = await tenantCodeService.tenantSwitch({
       targetTenantCode: code
     });
     if (success) {
@@ -88,7 +95,7 @@ const EnvHeader: React.FC<Props> = (props) => {
   const changeCode = async (code, descs) => {
     const {
       data: { success, data }
-    } = await tenantCode.envSwitch({
+    } = await tenantCodeService.envSwitch({
       targetEnvCode: code
     });
     if (success) {
@@ -105,8 +112,16 @@ const EnvHeader: React.FC<Props> = (props) => {
       }
     }
   };
-  const index = _.findIndex(envList, ['envCode', localStorage.getItem('env-code')]);
-  const indexcode = _.findIndex(tenantList, ['tenantCode', localStorage.getItem('tenant-code')]);
+  const index = _.findIndex(envList, [
+    'envCode',
+    localStorage.getItem('env-code')
+  ]);
+  const indexcode = _.findIndex(tenantList, [
+    'tenantCode',
+    localStorage.getItem('tenant-code')
+  ]);
+
+  const isSuper: string = localStorage.getItem('isSuper');
   return (
     <div
       style={{
@@ -114,24 +129,24 @@ const EnvHeader: React.FC<Props> = (props) => {
         padding: '0 8px',
         marginTop: 8,
         display: getTakinTenantAuthority() === 'false' ? 'none' : 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
       }}
     >
       <span
         style={{
           marginLeft: '35%',
           color: 'var(--FunctionalAlert-900)',
-          fontSize: '20px',
-
+          fontSize: '20px'
         }}
       >
         {desc}
       </span>
+
       <Button.Group>
         <Dropdown
           overlay={
             <Menu>
-              {tenantList.map((x) => (
+              {tenantList.map(x => (
                 <Menu.Item
                   key={x.tenantId}
                   onClick={() => changeTenant(x.tenantCode)}
@@ -153,10 +168,11 @@ const EnvHeader: React.FC<Props> = (props) => {
             <Icon type="down" />
           </Button>
         </Dropdown>
+
         <Dropdown
           overlay={
             <Menu>
-              {envList.map((x, ind) => (
+              {envList?.map((x, ind) => (
                 <Menu.Item
                   key={ind}
                   onClick={() => changeCode(x.envCode, x.desc)}
@@ -179,6 +195,14 @@ const EnvHeader: React.FC<Props> = (props) => {
             <Icon type="down" />
           </Button>
         </Dropdown>
+        {isSuper === '1' && (
+          <AddTenantModal
+            btnText="新增租户"
+            onSuccess={() => {
+              queryTenantList();
+            }}
+          />
+        )}
       </Button.Group>
     </div>
   );

@@ -28,6 +28,13 @@ const DistributionService = {
   async allocation(data = {}) {
     const url = '/user/allocation';
     return httpPost(url, data);
+  },
+  /**
+   * @name 新增租户
+   */
+  async addTenant(data = {}) {
+    const url = '/tenantInfo/add';
+    return httpPost(url, data);
   }
 };
 

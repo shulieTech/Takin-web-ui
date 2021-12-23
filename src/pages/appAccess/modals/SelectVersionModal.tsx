@@ -16,6 +16,7 @@ interface Props {
   setState: (value: any) => void;
 }
 const { Paragraph } = Typography;
+
 const getInitState = () => ({
   isReload: false,
   searchParams: {
