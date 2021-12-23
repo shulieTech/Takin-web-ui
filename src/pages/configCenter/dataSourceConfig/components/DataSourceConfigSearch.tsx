@@ -41,9 +41,7 @@ const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
               {item.label}
             </CommonSelect.Option>
           )}
-          filterOption={(input, option) =>
-            input ? option.props.children.toString().includes(input) : true
-          }
+          optionFilterProp="children"
         />
       ),
     },
