@@ -29,7 +29,7 @@ const ConfigMap = (props: IFieldMergeState) => {
     <Collapse {...componentProps} defaultActiveKey={Object.keys(groupMap)?.slice(0, 3)}>
       {Object.values(groupMap).map((x: any) => {
         return (
-          <Panel header={x.testName} key={x.xpathMd5}>
+          <Panel header={x.testName} key={x.xpathMd5} forceRender>
             <Row gutter={16}>
               <Col span={12}>
                 <SchemaField
