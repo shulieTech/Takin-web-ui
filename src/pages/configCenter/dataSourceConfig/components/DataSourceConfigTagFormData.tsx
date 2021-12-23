@@ -4,22 +4,26 @@ import { FormDataType } from 'racc/dist/common-form/type';
 
 const getDataSourceConfigTagFormData = (state, setState): FormDataType[] => {
   const handleChange = (value, option) => {
-    // console.log('value, option', value, option);
     setState({
-      tags: value.filter(item => {
-        if (item.trim() !== '') {
-          return item;
-        }
-      }),
-      tagsValue: option.map((item, k) => {
-        // if (item.props.children.trim() !== '') {
-        return item.props.children;
-        // }
-      })
+      tags:
+        value &&
+        value.filter(item => {
+          if (item.trim() !== '') {
+            return item.trim();
+          }
+        }),
+      tagsValue: option
+        .map((item, k) => {
+          return item.props.children;
+        })
+        .filter(item1 => {
+          if (item1.trim() !== '') {
+            return item1.trim();
+          }
+        })
     });
   };
-  // console.log('state.tags', state.tags);
-  // console.log('state.tagsValue', state.tagsValue);
+
   const basicFormData = [
     {
       key: 'tagNames',
@@ -38,15 +42,15 @@ const getDataSourceConfigTagFormData = (state, setState): FormDataType[] => {
           value.forEach(item => {
             const temItem = item.replace(/(^\s+)|(\s+$)/g, '');
             if (temItem !== '') {
-              // console.log('temItem', temItem);
               replaceSpace.push(temItem);
             }
-            // temItem !== '' && replaceSpace.push(temItem);
           });
-          const filterValue = replaceSpace.filter(
-            item => !/^\s+|\s+$/g.test(item)
-          );
-
+          const filterValue = replaceSpace.filter(item => {
+            if (!/^\s+|\s+$/g.test(item)) {
+              return item;
+            }
+            return item.trim();
+          });
           return filterValue;
         }
       },
