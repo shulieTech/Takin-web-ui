@@ -129,7 +129,11 @@ const BusicInfoModal: React.FC<Props> = props => {
         width: 700,
         title: '业务流程基本信息',
         maskClosable: false,
-        okText: '确认编辑'
+        okText: '确认编辑',
+        bodyStyle: {
+          height: 400,
+          overflow: 'auto',
+        },
       }}
       btnProps={{
         type: 'link'
@@ -139,7 +143,7 @@ const BusicInfoModal: React.FC<Props> = props => {
       afterCancel={handleCancle}
     >
       <div
-        style={{ position: 'relative', maxHeight: 400, overflowY: 'scroll' }}
+        style={{ position: 'relative' }}
       >
         <CommonForm
           getForm={form => setState({ form })}
