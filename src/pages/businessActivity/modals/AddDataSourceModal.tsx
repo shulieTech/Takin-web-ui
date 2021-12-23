@@ -4,6 +4,7 @@ import styles from './../index.less';
 import BusinessActivityService from '../service';
 import { Collapse, Icon, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { ButtonProps } from 'antd/lib/button';
 import getDataSourceFormData from '../components/DataSourceFormData';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
   onSccuess?: () => void;
   action: string;
   businessActivityId?: string;
+  btnProps?: ButtonProps;
 }
 
 interface State {
@@ -152,7 +154,8 @@ const AddDataSourceModal: React.FC<Props> = props => {
         centered: true
       }}
       btnProps={{
-        type: props.action === 'edit' ? 'link' : null
+        type: props.action === 'edit' ? 'link' : null,
+        ...props.btnProps,
       }}
       btnText={props.btnText}
       onClick={() => handleClick()}

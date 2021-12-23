@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { CommonModal, CommonTable, useStateReducer } from 'racc';
 import styles from './../index.less';
 import BusinessActivityService from '../service';
@@ -7,9 +7,11 @@ import {
   Collapse,
   Icon,
   message,
-  Popconfirm,
-  Popover,
-  Tooltip
+  Dropdown,
+  Menu,
+  Modal,
+  Tooltip,
+  Spin,
 } from 'antd';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { ColumnProps } from 'antd/lib/table';
@@ -28,31 +30,35 @@ interface State {
   isReload?: boolean;
   missingDataScriptList: any[];
 }
-const MissingDataScriptModal: React.FC<Props> = props => {
+const MissingDataScriptModal: React.FC<Props> = (props) => {
   const { businessActivityId } = props;
   const { Panel } = Collapse;
   const [state, setState] = useStateReducer<State>({
     isReload: false,
-    missingDataScriptList: null
+    missingDataScriptList: null,
   });
   const { dataSourceId } = props;
 
+  const [loading, setLoading] = useState(false);
+
   const handleClick = () => {
     queryMissingDataScriptList({
-      businessActivityIds: [businessActivityId]
+      businessActivityIds: [businessActivityId],
     });
   };
 
   /**
    * @name 获取漏数脚本配置列表
    */
-  const queryMissingDataScriptList = async value => {
+  const queryMissingDataScriptList = async (value) => {
+    setLoading(true);
     const {
-      data: { data, success }
+      data: { data, success },
     } = await BusinessActivityService.queryMissingDataScriptList({ ...value });
+    setLoading(false);
     if (success) {
       setState({
-        missingDataScriptList: data
+        missingDataScriptList: data,
       });
     }
   };
@@ -62,15 +68,15 @@ const MissingDataScriptModal: React.FC<Props> = props => {
    */
   const handleDelete = async (id, datasourceId) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await BusinessActivityService.deleteDataSource({
       datasourceId,
-      businessActivityId: id
+      businessActivityId: id,
     });
     if (success) {
       message.success('删除数据源成功！');
       queryMissingDataScriptList({
-        businessActivityIds: [businessActivityId]
+        businessActivityIds: [businessActivityId],
       });
     }
   };
@@ -80,7 +86,7 @@ const MissingDataScriptModal: React.FC<Props> = props => {
     borderRadius: 2,
     marginBottom: 8,
     border: '1px solid #F0F0F0',
-    overflow: 'hidden'
+    overflow: 'hidden',
   };
 
   const getMissingDataScriptColumns = (): ColumnProps<any>[] => {
@@ -89,13 +95,13 @@ const MissingDataScriptModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '序号',
         dataIndex: 'order',
-        width: 80
+        width: 80,
       },
       {
         ...customColumnProps,
         title: '命令',
-        dataIndex: 'sql'
-      }
+        dataIndex: 'sql',
+      },
     ];
   };
 
@@ -108,7 +114,7 @@ const MissingDataScriptModal: React.FC<Props> = props => {
             数据验证脚本设置
             <Tooltip
               trigger="click"
-              title="数据验证脚本可在调试工具和压测试跑时执行数据验证命令，配置命令前请先在【设置中心-数据源配置】中完善数据源配置。"
+              title="数据验证脚本可在调试工具和压测试跑时执行数据验证命令，配置命令前请先在【仿真平台-数据源管理-数据源配置】中完善数据源配置。"
               placement="bottom"
             >
               <Icon style={{ marginLeft: 8 }} type="question-circle" />
@@ -117,7 +123,7 @@ const MissingDataScriptModal: React.FC<Props> = props => {
         ),
         footer: null,
         maskClosable: false,
-        centered: true
+        centered: true,
       }}
       btnProps={{ type: 'link' }}
       btnText={props.btnText}
@@ -129,7 +135,7 @@ const MissingDataScriptModal: React.FC<Props> = props => {
         businessActivityId={businessActivityId}
         onSccuess={() => {
           queryMissingDataScriptList({
-            businessActivityIds: [businessActivityId]
+            businessActivityIds: [businessActivityId],
           });
         }}
       />
@@ -153,50 +159,61 @@ const MissingDataScriptModal: React.FC<Props> = props => {
                       <p className={styles.subTitle}>url: {item.jdbcUrl}</p>
                       <div
                         className={styles.rightIcon}
-                        onClick={event => {
+                        onClick={(event) => {
                           event.stopPropagation();
                         }}
                       >
-                        <Popover
+                        <Dropdown
                           placement="bottomRight"
-                          content={
-                            <div className={styles.actionWrap}>
-                              <AddDataSourceModal
-                                btnText="编辑"
-                                action="edit"
-                                businessActivityId={businessActivityId}
-                                dataSourceId={item.datasourceId}
-                                onSccuess={() => {
-                                  queryMissingDataScriptList({
-                                    businessActivityIds: [businessActivityId]
-                                  });
-                                }}
-                              />
-
-                              <CustomPopconfirm
-                                okText="确认删除"
-                                title={'是否确认删除数据源？'}
-                                okColor="var(--FunctionalError-500, #ED6047)"
-                                onConfirm={() =>
-                                  handleDelete(
-                                    businessActivityId,
-                                    item.datasourceId
-                                  )
-                                }
-                              >
-                                <p>
-                                  <Button type="link">删除</Button>
-                                </p>
-                              </CustomPopconfirm>
-                            </div>}
+                          overlay={
+                            <Menu style={{ width: 80 }}>
+                              <Menu.Item>
+                                <AddDataSourceModal
+                                  btnText="编辑"
+                                  btnProps={{ block: true }}
+                                  action="edit"
+                                  businessActivityId={businessActivityId}
+                                  dataSourceId={item.datasourceId}
+                                  onSccuess={() => {
+                                    queryMissingDataScriptList({
+                                      businessActivityIds: [businessActivityId],
+                                    });
+                                  }}
+                                />
+                              </Menu.Item>
+                              <Menu.Item>
+                                <Button
+                                  type="link"
+                                  block
+                                  onClick={() => {
+                                    Modal.confirm({
+                                      title: '提示',
+                                      content: '是否确认删除该数据源？',
+                                      okText: '确认删除',
+                                      okButtonProps: {
+                                        type: 'danger',
+                                        ghost: true,
+                                      },
+                                      onOk: () =>
+                                        handleDelete(
+                                          businessActivityId,
+                                          item.datasourceId
+                                        ),
+                                    });
+                                  }}
+                                >
+                                  删除
+                                </Button>
+                              </Menu.Item>
+                            </Menu>}
                         >
                           <Icon
                             type="more"
-                            onClick={event => {
+                            onClick={(event) => {
                               event.stopPropagation();
                             }}
                           />
-                        </Popover>
+                        </Dropdown>
                       </div>
                     </div>}
                   key={k}

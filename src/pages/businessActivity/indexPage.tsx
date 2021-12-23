@@ -83,15 +83,15 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
       key: 'domain',
       label: '业务域',
     },
-    {
-      dataSource: [
-        { label: '正常', value: '0' },
-        { label: '变更', value: '1' },
-      ],
-      key: 'isChange',
-      label: '变更状态',
-      type: 'radio',
-    },
+    // {
+    //   dataSource: [
+    //     { label: '正常', value: '0' },
+    //     { label: '变更', value: '1' },
+    //   ],
+    //   key: 'isChange',
+    //   label: '变更状态',
+    //   type: 'radio',
+    // },
   ];
 
   useEffect(() => {

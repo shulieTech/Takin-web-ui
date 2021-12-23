@@ -192,7 +192,11 @@ const AddJmeterModal: React.FC<Props> = props => {
         width: 700,
         title: 'Jmeter脚本解析',
         maskClosable: false,
-        okText: '保存并解析'
+        okText: '保存并解析',
+        bodyStyle: {
+          height: 500,
+          overflow: 'auto'
+        }
       }}
       btnProps={{
         type: props.action === 'edit' ? 'primary' : 'link'
@@ -202,7 +206,7 @@ const AddJmeterModal: React.FC<Props> = props => {
       beforeOk={handleSubmit}
       afterCancel={handleCancle}
     >
-      <div style={{ position: 'relative', height: 500, overflowY: 'scroll' }}>
+      <div style={{ position: 'relative' }}>
         {state.loading && (
           <span
             style={{
