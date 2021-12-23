@@ -80,7 +80,8 @@ const AppManage: React.FC<AppManageProps> = props => {
       toggleRoload={state.isReload}
       tableAction={<TableAction state={state} setState={setState} />}
       tableWarning={
-        state.switchStatus !== 'OPENED' && (
+        state.switchStatus !== 'OPENED' &&
+        state.switchStatus !== null && (
           <TableWarning state={state} setState={setState} />
         )
       }
