@@ -306,7 +306,11 @@ const ScriptFileManageModal: React.FC<Props> = props => {
         width: 'calc(100% - 192px)',
         title: '脚本文件',
         maskClosable: false,
-        okText: '保存修改'
+        okText: '保存修改',
+        bodyStyle: {
+          maxHeight: 400,
+          overflow: 'auto',
+        },
       }}
       btnProps={{
         type: 'default'
@@ -315,9 +319,10 @@ const ScriptFileManageModal: React.FC<Props> = props => {
       onClick={handleClick}
       beforeOk={handleSubmit}
       afterCancel={handleCancle}
+      
     >
       <div
-        style={{ position: 'relative', maxHeight: 400, overflowY: 'scroll' }}
+        style={{ position: 'relative' }}
       >
         <CommonForm
           getForm={form => setState({ form })}
