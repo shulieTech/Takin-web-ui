@@ -29,13 +29,13 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
+                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
                 }}
               >
-                {text?.result || 0}
+                {text.result}
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text?.value || 0}</span>
+              <span>{text.value}</span>
             </Fragment>
           );
         }
@@ -50,13 +50,13 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text?.result) > Number(text?.value) ? '#FE7D61' : ''
+                    Number(text.result) > Number(text.value) ? '#FE7D61' : ''
                 }}
               >
-                {text?.result || 0}ms
+                {text.result}ms
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text?.value || 0}ms</span>
+              <span>{text.value}ms</span>
             </Fragment>
           );
         }
@@ -71,13 +71,13 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
+                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
                 }}
               >
-                {text?.result || 0}%
+                {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text?.value || 0}%</span>
+              <span>{text.value}%</span>
             </Fragment>
           );
         }
@@ -92,13 +92,13 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
+                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
                 }}
               >
-                {text?.result || 0}%
+                {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text?.value || 0}%</span>
+              <span>{text.value}%</span>
             </Fragment>
           );
         }
