@@ -108,7 +108,7 @@ const MissingDataScriptModal: React.FC<Props> = props => {
             数据验证脚本设置
             <Tooltip
               trigger="click"
-              title="数据验证脚本可在调试工具和压测试跑时执行数据验证命令，配置命令前请先在【设置中心-数据源配置】中完善数据源配置。"
+              title="数据验证脚本可在调试工具和压测试跑时执行数据验证命令，配置命令前请先在【仿真平台-数据源管理-数据源配置】中完善数据源配置。"
               placement="bottom"
             >
               <Icon style={{ marginLeft: 8 }} type="question-circle" />
