@@ -1,15 +1,7 @@
-import {
-  Button,
-  Col,
-  Icon,
-  Input,
-  Pagination,
-  Row,
-  Switch
-} from 'antd';
+import { Button, Col, Icon, Input, Pagination, Row, Switch } from 'antd';
 import moment from 'moment';
 import { useStateReducer, CommonSelect } from 'racc';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import CustomTable from 'src/components/custom-table';
 import AppManageService from '../service';
@@ -41,7 +33,7 @@ interface State {
   allByActivityList: any;
   val: boolean;
 }
-const ApplicationMonitor: React.FC<Props> = props => {
+const ApplicationMonitor: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     total: 0,
@@ -51,7 +43,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
     detailLoading: false,
     searchParams: {
       current: 0,
-      pageSize: 10
+      pageSize: 10,
     },
     sorter: undefined,
     clusterTest: '-1',
@@ -59,26 +51,18 @@ const ApplicationMonitor: React.FC<Props> = props => {
     serviceNameList: [],
     allByActivityName: undefined,
     allByActivityList: [],
-    val: false
+    val: false,
   });
   const { Search } = Input;
   const { detailData, id, detailState, action } = props;
-  useEffect(() => { queryService(); queryallByActivity(); }, []);
+  const [lastUpdateTime, setLastUpdateTime] = useState(
+    moment().format('YYYY-MM-DD HH:mm:ss')
+  );
+
   useEffect(() => {
-    queryBlackListList({
-      ...state.searchParams,
-      orderBy: state.sorter,
-      clusterTest: state.clusterTest,
-      serviceName: state.serviceName,
-      activityName: state.allByActivityName?.split(':')[0],
-    });
-  }, [
-    state.searchParams,
-    state.sorter,
-    state.clusterTest,
-    state.isReload,
-    state.serviceName,
-    state.allByActivityName]);
+    queryService();
+    queryallByActivity();
+  }, []);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -93,7 +77,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
       if (state.refreshTime) {
         timer = setTimeout(refreshData, state.refreshTime);
       }
-      if (!state.detailLoading && state.total !== 0) {
+      if (!state.detailLoading) {
         queryBlackListList({
           ...state.searchParams,
           orderBy: state.sorter,
@@ -113,13 +97,22 @@ const ApplicationMonitor: React.FC<Props> = props => {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.reload, state.refreshTime, state.searchParams]);
+  }, [
+    state.searchParams,
+    state.sorter,
+    state.clusterTest,
+    state.isReload,
+    state.serviceName,
+    state.allByActivityName,
+    state.refreshTime,
+    state.reload,
+  ]);
 
   const queryService = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await AppManageService.entrances({
-      appName: detailData.applicationName
+      appName: detailData.applicationName,
     });
     if (success) {
       setState({
@@ -128,7 +121,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
           data.map((item, k) => {
             return {
               label: item.serviceName,
-              value: item.serviceName
+              value: item.serviceName,
             };
           }),
       });
@@ -137,7 +130,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
 
   const queryallByActivity = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await AppManageService.allByActivity({
       appName: detailData.applicationName,
       clusterTest: state.clusterTest,
@@ -146,7 +139,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
       const arr = [];
       data?.map((item, k) => {
         const obj = { label: '', value: '' };
-        Object.keys(item).map(ite => {
+        Object.keys(item).map((ite) => {
           obj.label = item[ite];
           obj.value = ite;
           return obj;
@@ -163,23 +156,24 @@ const ApplicationMonitor: React.FC<Props> = props => {
   /**
    * @name 获取黑名单列表
    */
-  const queryBlackListList = async values => {
+  const queryBlackListList = async (values) => {
     setState({
-      detailLoading: true
+      detailLoading: true,
     });
     const {
       total,
-      data: { success, data }
+      data: { success, data },
     } = await AppManageService.monitorDetailes({
       appName: detailData.applicationName,
-      ...values
+      ...values,
     });
     if (success) {
       setState({
         total,
         List: data,
-        detailLoading: false
+        detailLoading: false,
       });
+      setLastUpdateTime(moment().format('YYYY-MM-DD HH:mm:ss'));
       return;
     }
   };
@@ -188,8 +182,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
     setState({
       searchParams: {
         pageSize,
-        current: current - 1
-      }
+        current: current - 1,
+      },
     });
   };
 
@@ -197,8 +191,8 @@ const ApplicationMonitor: React.FC<Props> = props => {
     setState({
       searchParams: {
         pageSize,
-        current: 0
-      }
+        current: 0,
+      },
     });
   };
 
@@ -212,24 +206,23 @@ const ApplicationMonitor: React.FC<Props> = props => {
     } else {
       setState({ sorter: undefined });
     }
-
   };
 
   const clusterTestChange = (value) => {
     setState({
-      clusterTest: value
+      clusterTest: value,
     });
   };
 
   const serviceNameChange = (value) => {
     setState({
-      serviceName: value
+      serviceName: value,
     });
   };
 
   const allByActivityChange = (value) => {
     setState({
-      allByActivityName: value
+      allByActivityName: value,
     });
   };
 
@@ -248,8 +241,9 @@ const ApplicationMonitor: React.FC<Props> = props => {
               optionFilterProp="children"
               showSearch
               filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                0
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
               }
               onChange={serviceNameChange}
               dataSource={state.serviceNameList}
@@ -263,8 +257,9 @@ const ApplicationMonitor: React.FC<Props> = props => {
               optionFilterProp="children"
               showSearch
               filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                0
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
               }
               onChange={allByActivityChange}
               dataSource={state.allByActivityList}
@@ -273,7 +268,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
           <Col span={8} offset={5} style={{ marginTop: 5 }}>
             <span>
               <span style={{ marginRight: 8, marginLeft: 18 }}>
-                最后统计时间：{moment().format('YYYY-MM-DD HH:mm:ss')}
+                最后统计时间：{lastUpdateTime}
               </span>
               5秒刷新一次
               <Switch
@@ -293,7 +288,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
               spin={state.detailLoading}
               type="sync"
               style={{
-                cursor: 'pointer',
+                verticalAlign: -2,
                 marginLeft: 8,
               }}
               onClick={() => {
@@ -309,10 +304,11 @@ const ApplicationMonitor: React.FC<Props> = props => {
               style={{ width: '95%' }}
               onChange={clusterTestChange}
               defaultValue="-1"
-              dataSource={
-              [{ value: '-1', label: '混合流量', num: 1, disable: false },
+              dataSource={[
+                { value: '-1', label: '混合流量', num: 1, disable: false },
                 { value: '0', label: '业务流量', num: 1, disable: false },
-                { value: '1', label: '压测流量', num: 1, disable: false }]}
+                { value: '1', label: '压测流量', num: 1, disable: false },
+              ]}
             />
           </Col>
         </Row>
@@ -344,7 +340,7 @@ const ApplicationMonitor: React.FC<Props> = props => {
           width: 'calc(100% - 178px)',
           backgroundColor: '#fff',
           boxShadow:
-            '0px 2px 20px 0px rgba(92,80,133,0.15),0px -4px 8px 0px rgba(222,223,233,0.3)'
+            '0px 2px 20px 0px rgba(92,80,133,0.15),0px -4px 8px 0px rgba(222,223,233,0.3)',
         }}
       >
         <Pagination
@@ -353,8 +349,9 @@ const ApplicationMonitor: React.FC<Props> = props => {
           current={state.searchParams.current + 1}
           pageSize={state.searchParams.pageSize}
           showTotal={(t, range) =>
-            `共 ${state.total} 条数据 第${state.searchParams.current +
-            1}页 / 共 ${Math.ceil(
+            `共 ${state.total} 条数据 第${
+              state.searchParams.current + 1
+            }页 / 共 ${Math.ceil(
               state.total / (state.searchParams.pageSize || 10)
             )}页`
           }
