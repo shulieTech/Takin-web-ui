@@ -6,7 +6,7 @@ import { Col, Row } from 'antd';
 import { CommonForm, separateArrayToKey } from 'racc';
 import React, { useContext } from 'react';
 import ToolTipIcon from 'src/common/tooltip-icon';
-import { SearchTableContext } from '../context';
+import { SearchTableContext, getInitState } from '../context';
 import { SearchTableProps } from '../type';
 
 const SearchNode: React.FC<SearchTableProps> = props => {
@@ -39,31 +39,40 @@ const SearchNode: React.FC<SearchTableProps> = props => {
     if (!props.commonFormProps || !state.form) {
       return;
     }
-    const resetParams = {};
-    props.commonFormProps.formData.forEach(item => {
-      resetParams[item.key] = undefined;
-    });
-    if (props.datekeys) {
-      props.datekeys.forEach(item => {
-        item.separateKey.forEach(key => {
-          resetParams[key] = undefined;
-        });
-      });
-    }
-    if (props.cascaderKeys) {
-      props.cascaderKeys.forEach(item => {
-        item.separateKey.forEach(key => {
-          resetParams[key] = undefined;
-        });
-      });
-    }
-    const searchParams = { ...state.searchParams, ...resetParams };
-    state.form.resetFields();
+    
+    // 旧的重置逻辑 
+    // const resetParams = {};
+    // props.commonFormProps.formData.forEach(item => {
+    //   resetParams[item.key] = undefined;
+    // });
+    // if (props.datekeys) {
+    //   props.datekeys.forEach(item => {
+    //     item.separateKey.forEach(key => {
+    //       resetParams[key] = undefined;
+    //     });
+    //   });
+    // }
+    // if (props.cascaderKeys) {
+    //   props.cascaderKeys.forEach(item => {
+    //     item.separateKey.forEach(key => {
+    //       resetParams[key] = undefined;
+    //     });
+    //   });
+    // }
+    // const searchParams = { ...state.searchParams, ...resetParams };
+    // state.form.resetFields();
+    // if (props.onTabReset) {
+    //   props.onTabReset(searchParams);
+    //   // return;
+    // }
+    // setState({ searchParams });
+
+    // 新的重置逻辑
+    const defaultSearchParams = getInitState().searchParams;
+    setState({ searchParams: defaultSearchParams });
     if (props.onTabReset) {
-      props.onTabReset(searchParams);
-      // return;
+      props.onTabReset(defaultSearchParams);
     }
-    setState({ searchParams });
   };
   return (
     <Row
