@@ -196,7 +196,7 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
             overflow: 'hidden',
           }}
         >
-          <HeaderNode />
+          <HeaderNode isTempActivity={state.queryParams.tempActivity}/>
           <div
             style={{ position: 'relative', height: '100%' }}
             id="detail_graph_box"

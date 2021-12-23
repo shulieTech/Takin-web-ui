@@ -11,6 +11,7 @@ import moment from 'moment';
 
 interface Props {
   onChangeBottleStatus?: (status: number) => void;
+  isTempActivity?: boolean;
 }
 const HeaderNode: React.FC<Props> = (props) => {
   const { state, setState } = useContext(BusinessActivityDetailsContext);
@@ -83,17 +84,21 @@ const HeaderNode: React.FC<Props> = (props) => {
                   {moment(state?.details?.refreshTime).format('HH:mm:ss')}
                 </span>
               )}
-              5秒刷新一次
-              <Switch
-                size="small"
-                style={{ marginLeft: 8 }}
-                checked={state.refreshTime > 0}
-                onChange={(val) => {
-                  setState({
-                    refreshTime: val ? 5000 : 0,
-                  });
-                }}
-              />
+              {!props.isTempActivity && (
+                <>
+                  5秒刷新一次
+                  <Switch
+                    size="small"
+                    style={{ marginLeft: 8 }}
+                    checked={state.refreshTime > 0}
+                    onChange={(val) => {
+                      setState({
+                        refreshTime: val ? 5000 : 0,
+                      });
+                    }}
+                  />
+                </>
+              )}
             </span>
             <Icon
               title="刷新"
