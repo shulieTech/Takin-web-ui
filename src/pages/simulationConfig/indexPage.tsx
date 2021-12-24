@@ -39,6 +39,9 @@ const Admin: React.FC<AdminProps> = props => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
+
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     queryPatrolSceneAndDashbordList();
   }, [state.isEffect, state.effectMechanism, state.projectName, state.readProjectConfig]);
@@ -66,6 +69,7 @@ const Admin: React.FC<AdminProps> = props => {
    * @name 获取巡检场景和看板列表
    */
   const queryPatrolSceneAndDashbordList = async () => {
+    setLoading(true);
     const {
       data: { data, success }
     } = await configService.configList({
@@ -74,6 +78,7 @@ const Admin: React.FC<AdminProps> = props => {
       projectName: state.projectName,
       readProjectConfig: state.readProjectConfig
     });
+    setLoading(false);
     if (success) {
       setState({
         configList: data,
@@ -381,7 +386,7 @@ const Admin: React.FC<AdminProps> = props => {
                 <Button type="default" icon="redo" onClick={resets} />
               </Col>
             </Row>
-            <CustomTable columns={columns} dataSource={state.configList} pagination={false} />
+            <CustomTable columns={columns} dataSource={state.configList} pagination={false} loading={loading}/>
           </TabPane>
           <TabPane tab="应用配置" key="2">
             <Row style={{ marginBottom: 20, marginLeft: 20 }}>
@@ -439,7 +444,7 @@ const Admin: React.FC<AdminProps> = props => {
                 <Button type="default" icon="redo" onClick={resets} />
               </Col>
             </Row>
-            <CustomTable columns={column} dataSource={state.configList} pagination={false} />
+            <CustomTable columns={column} dataSource={state.configList} pagination={false} loading={loading}/>
           </TabPane>
         </Tabs>
       </div>
