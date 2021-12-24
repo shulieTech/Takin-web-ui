@@ -61,6 +61,8 @@ const getDataSourceConfigTagFormData = (state, setState): FormDataType[] => {
           placeholder="请输入脚本标签"
           dataSource={state.tagList}
           onChange={(value, option) => handleChange(value, option)}
+          optionFilterProp="children"
+          getInputElement={() => <input maxLength={30}/>}
         />
       )
     }

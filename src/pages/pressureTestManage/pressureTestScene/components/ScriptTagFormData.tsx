@@ -33,6 +33,7 @@ const getScriptTagFormData = (state, setState): FormDataType[] => {
           dataSource={state.tagList}
           onChange={(value, option) => handleChange(value, option)}
           optionFilterProp="children"
+          getInputElement={() => <input maxLength={30}/>}
         />
       )
     }

@@ -61,6 +61,7 @@ const ConditionTableField = (props) => {
                 'x-component-props': {
                   placeholder: '请选择',
                   mode: 'multiple',
+                  optionFilterProp: 'children',
                 },
                 'x-rules': [{ required: true, message: '请选择对象' }],
                 enum: [
