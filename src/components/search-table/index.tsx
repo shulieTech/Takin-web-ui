@@ -14,8 +14,11 @@ import { getInitState, SearchTableContext } from './context';
 import styles from './index.less';
 import { SearchTableProps } from './type';
 
+declare var window: any;
+
 const SearchTable: React.FC<SearchTableProps> = props => {
   const [state, setState] = useStateReducer(getInitState());
+
   useEffect(() => {
     if (!state.flag && props.searchParams) {
       return;
@@ -28,6 +31,7 @@ const SearchTable: React.FC<SearchTableProps> = props => {
     // setState({ searchParams: { ...state.searchParams, current: 0 } });
     queryList(true);
   }, [props.toggleRoload]);
+
   useEffect(() => {
     if (!props.searchParams) {
       return;
@@ -41,12 +45,14 @@ const SearchTable: React.FC<SearchTableProps> = props => {
       flag: true
     });
   }, [props.searchParams]);
+
   useEffect(() => {
     if (!state.flag) {
       return;
     }
     queryList();
   }, [state.searchParams, state.toggleRoload]);
+
   const queryList = async (reload: boolean = false) => {
     // return;
     // if (props.onCheck) {
@@ -58,18 +64,15 @@ const SearchTable: React.FC<SearchTableProps> = props => {
     const { method, url } = props.ajaxProps;
     const getSearchParams = { ...state.searchParams };
     window._search_table_params = getSearchParams; // 某些情况下外部需要获取页码信息
+
     Object.keys(getSearchParams).forEach(item => {
       if (typeof getSearchParams[item] === 'string') {
         getSearchParams[item] = getSearchParams[item].trim();
       }
+      if (method === 'GET' && Array.isArray(getSearchParams[item])) {
+        getSearchParams[item] = getSearchParams[item].join(',');
+      }
     });
-    if (method === 'GET') {
-      Object.keys(getSearchParams).forEach(item => {
-        if (Array.isArray(getSearchParams[item])) {
-          getSearchParams[item] = getSearchParams[item].join(',');
-        }
-      });
-    }
 
     const ajaxEvent =
       method === 'GET'
