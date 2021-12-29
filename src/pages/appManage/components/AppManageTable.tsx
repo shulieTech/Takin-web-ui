@@ -70,7 +70,7 @@ const getColumns = (state, setState): ColumnProps<any>[] => {
                 </span>
               )}
 
-            <a target="_blank" href={`/#/appManage/details?tabKey=0&id=${row.id}`}>
+            <a target="_blank" href={`/tro/#/appManage/details?tabKey=0&id=${row.id}`}>
               应用详情
             </a>
           </Fragment>
