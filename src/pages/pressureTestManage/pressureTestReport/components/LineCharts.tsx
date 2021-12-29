@@ -197,7 +197,7 @@ const LineCharts: React.FC<Props> = (props) => {
           yAxis,
           series,
           backgroundColor: '#F5F7F9',
-          color: ['#00CBBF'],
+          color: ['#00CBBF', '#ffa425', '#e64d03', '#00d77d', '#eaa4a1'],
           tooltip: {
             trigger: 'axis',
             axisPointer: {

@@ -259,7 +259,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   const extra = (
     <Button
       type="primary"
-      onClick={() => router.push(`/analysisManage?type=report&reportId=${id}`)}
+      onClick={() => window.open(`/#/analysisManage?type=report&reportId=${id}`)}
     >
       查看性能分析报告
     </Button>
