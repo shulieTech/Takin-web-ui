@@ -317,7 +317,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                 menuAuthority.pressureTestManage_pressureTestReport)) && (
               <Link
                 style={{ marginRight: 8 }}
-                to={`/pressureTestManage/pressureTestReport?sceneId=${row.id}`}
+                to={`/pressureTestManage/pressureTestReport?sceneId=${row.id}&sceneId=${row.sceneId}`}
               >
                 查看报告
               </Link>

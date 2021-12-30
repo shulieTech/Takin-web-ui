@@ -44,6 +44,14 @@ const UserService = {
   async apiSys(data) {
     const url = '/sys';
     return httpGet(url, data);
+  },
+  async thirdPartylogin(data) {
+    const url = '/thirdParty/user';
+    return httpGet(url, data);
+  },
+  async redirect(data) {
+    const url = '/thirdParty/redirect';
+    return httpGet(url, data);
   }
 };
 

@@ -182,6 +182,10 @@ const PressureTestReportService = {
   async getLiveGraphData(data) {
     const url = '/report/queryTempReportTrendWithTopology';
     return httpGet(url, data);
+  },
+  async monitor(data) {
+    const url = '/scene/monitor/list';
+    return httpGet(url, data);
   }
 };
 

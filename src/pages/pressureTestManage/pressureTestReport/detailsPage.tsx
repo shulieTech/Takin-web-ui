@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Icon, Row, Statistic } from 'antd';
+import { Alert, Button, Col, Dropdown, Icon, Menu, Row, Statistic } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
@@ -27,6 +27,7 @@ interface State {
   failedCount: number;
   hasMissingData: number;
   graphData?: GraphData;
+  tenantList: any;
 }
 interface Props {
   location?: { query?: any };
@@ -45,16 +46,18 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     reportCountData: null,
     failedCount: null,
     /** 是否漏数 */
-    hasMissingData: null
+    hasMissingData: null,
+    tenantList: []
   });
 
   const { location } = props;
   const { query } = location;
-  const { id } = query;
+  const { id, sceneId } = query;
   const { detailData, reportCountData, hasMissingData } = state;
 
   useEffect(() => {
     queryReportBusinessActivity(id);
+    tenantList();
   }, []);
 
   useEffect(() => {
@@ -64,6 +67,18 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     queryRequestCount(id);
   }, [state.isReload]);
 
+  const tenantList = async () => {
+    const {
+      data: { data, success },
+    } = await PressureTestReportService.monitor({
+      sceneId
+    });
+    if (success) {
+      setState({
+        tenantList: data,
+      });
+    }
+  };
   useEffect(() => {
     if (state.tabKey) {
       queryReportChartsInfo(id, state.tabKey);
@@ -158,6 +173,10 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     }
   };
 
+  const changeTenant = (url) => {
+    window.open(url);
+  };
+
   const headList = [
     { label: '报告ID', value: detailData.id },
     { label: '场景ID', value: detailData.sceneId },
@@ -248,12 +267,36 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   ];
 
   const extra = (
-    <Button
-      type="primary"
-      onClick={() => router.push(`/analysisManage?type=report&reportId=${id}`)}
-    >
-      查看性能分析报告
-    </Button>
+    <Button.Group style={{ marginTop: '-5px' }} >
+      {
+        state.tenantList.length > 0 &&
+        <Dropdown
+          overlay={
+            <Menu>
+              {state.tenantList.map(x => (
+                <Menu.Item
+                  key={x.url}
+                  onClick={() => changeTenant(x.url)}
+                >
+                  {x.title}
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
+        >
+          <Button type="primary">中间件监控
+          <Icon type="down" />
+          </Button>
+        </Dropdown>
+      }
+      <Button
+        type="primary"
+        onClick={() => router.push(`/analysisManage?type=report&reportId=${id}`)}
+      >
+        查看性能分析报告
+      </Button>
+    </Button.Group>
+
   );
 
   return JSON.stringify(state.detailData) !== '{}' &&
@@ -341,9 +384,8 @@ const PressureTestReportDetail: React.FC<Props> = props => {
                 <Col>
                   <img
                     style={{ width: 40 }}
-                    src={require(`./../../../assets/${
-                      detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
-                    }.png`)}
+                    src={require(`./../../../assets/${detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
+                      }.png`)}
                   />
                 </Col>
                 <Col style={{ marginLeft: 8 }}>

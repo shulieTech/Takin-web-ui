@@ -66,7 +66,7 @@ const PressureResult: React.FC<Props> = props => {
       render: (text, row) => {
         return (
           <Link
-            to={`/pressureTestManage/pressureTestReport/details?id=${row.id}`}
+            to={`/pressureTestManage/pressureTestReport/details?id=${row.id}&sceneId=${row.sceneId}`}
           >
             查看报告
           </Link>
