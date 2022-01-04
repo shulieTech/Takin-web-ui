@@ -1,4 +1,4 @@
-import { Col, message, Modal, Radio, Row, Switch } from 'antd';
+import { Col, message, Modal, Radio, Row, Switch, Button } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
@@ -29,24 +29,24 @@ export interface PressureTestSceneState {
   configErrorList: string[];
   startStatus: string;
   startErrorList: string[];
-  usableFlow: Number;
+  usableFlow: number;
   missingDataSwitch: boolean;
   missingDataStatus: boolean;
-  sceneId: Number;
+  sceneId: number;
   hasMissingData: boolean;
   showIndex: number;
   pressureStyle: string;
   dataScriptNum: any[];
 }
 const liList = [1, 1, 1, 1, 1, 1, 1, 1];
-const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
+const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   const [state, setState] = useStateReducer<PressureTestSceneState>({
     isReload: false,
     switchStatus: null,
     visible: false,
     searchParams: {
       current: 0,
-      pageSize: 10
+      pageSize: 10,
     },
     /**
      * @name 配置监测状态
@@ -65,7 +65,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
     hasMissingData: false,
     showIndex: 0,
     pressureStyle: PressureStyle.从头开始压测,
-    dataScriptNum: null // 数据脚本数
+    dataScriptNum: null, // 数据脚本数
   });
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
       showIndex = showIndex + 1;
     }
     setState({
-      showIndex
+      showIndex,
     });
   };
 
@@ -104,11 +104,11 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
    */
   const querySwitchStatus = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await AppManageService.querySwitchStatus({});
     if (success) {
       setState({
-        switchStatus: data.switchStatus
+        switchStatus: data.switchStatus,
       });
     }
   };
@@ -118,11 +118,11 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
    */
   const queryFlowAccountInfo = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.queryFlowAccountInfoDic({});
     if (success) {
       setState({
-        usableFlow: data.balance
+        usableFlow: data.balance,
       });
     }
   };
@@ -130,28 +130,28 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
   /**
    * @name 启动检查并开启压测
    */
-  const handleCheckAndStart = async sceneId => {
+  const handleCheckAndStart = async (sceneId) => {
     setState({
       visible: true,
       configStatus: 'loading',
-      missingDataStatus: false
+      missingDataStatus: false,
     });
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.startPressureTestScene({
       sceneId,
       leakSqlEnable: state.missingDataSwitch,
-      continueRead: state.pressureStyle
+      continueRead: state.pressureStyle,
     });
     if (success && data.data) {
       setState({
-        configStatus: 'success'
+        configStatus: 'success',
       });
       handleStart(sceneId, data.data);
     } else {
       setState({
         configStatus: 'fail',
-        configErrorList: data && data.msg
+        configErrorList: data && data.msg,
       });
     }
   };
@@ -161,15 +161,15 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
    */
   const handleStart = async (sceneId, reportId) => {
     setState({
-      startStatus: 'loading'
+      startStatus: 'loading',
     });
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.checkStartStatus({ sceneId, reportId });
     if (success && data.data !== 0) {
       if (data.data === 2) {
         setState({
-          startStatus: 'success'
+          startStatus: 'success',
         });
         const startTime: any = new Date().getTime();
         localStorage.setItem('startTime', startTime);
@@ -185,7 +185,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
     } else {
       setState({
         startStatus: 'fail',
-        startErrorList: data.msg
+        startErrorList: data.msg,
       });
     }
   };
@@ -197,37 +197,41 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
       missingDataStatus: false,
       missingDataSwitch: false,
       isReload: !state.isReload,
-      pressureStyle: PressureStyle.继续压测
+      pressureStyle: PressureStyle.继续压测,
     });
   };
 
   const handleChangeMissingDataSwitch = () => {
     setState({
-      missingDataSwitch: !state.missingDataSwitch
+      missingDataSwitch: !state.missingDataSwitch,
     });
   };
 
-  const handleChangePressureStyle = e => {
+  const handleChangePressureStyle = (e) => {
     setState({
-      pressureStyle: e.target.value
+      pressureStyle: e.target.value,
     });
   };
+
+  const { columns, cancelLaunch } = getPressureTestSceneColumns(
+    state,
+    setState,
+    props.dictionaryMap
+  );
 
   return (
     <Fragment>
       <SearchTable
         commonTableProps={{
-          columns: getPressureTestSceneColumns(
-            state,
-            setState,
-            props.dictionaryMap
-          )
+          columns 
         }}
         commonFormProps={{
           formData: getPressureTestSceneFormData(),
           rowNum: 4
         }}
         ajaxProps={{ url: '/scenemanage/list', method: 'GET' }}
+        // searchParams={{ ...state.searchParams }}
+        // onSearch={searchParams => setState({ searchParams })}
         toggleRoload={state.isReload}
         tableAction={
           <PressureTestSceneTableAction state={state} setState={setState} />}
@@ -361,70 +365,77 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
               })}
           </div>
         ) : (
-          <Row
-            type="flex"
-            align="middle"
-            justify="center"
-            style={{ marginTop: 24 }}
-          >
-            <Col style={{ textAlign: 'center' }}>
-              <p>
-                <img
-                  style={{ width: 72, marginBottom: 8 }}
-                  src={require(`./../../../assets/${
-                    state.configStatus === 'ready' ||
-                    state.configStatus === 'loading'
-                      ? 'config_ready'
-                      : 'config_success'
-                  }.png`)}
-                />
-              </p>
-              <span style={{ color: '#474C50' }}>
-                {state.configStatus === 'success'
-                  ? '压测配置检查无误'
-                  : '压测配置检查中···'}
-              </span>
-            </Col>
-            <Col style={{ top: -12, left: -10 }}>
-              <ul className={`${styles.loadingLine} ${styles.ul} `}>
-                {liList.map((item, k) => {
-                  return (
-                    <li
-                      key={k}
-                      className={`${styles.dot} ${
-                        k === state.showIndex ? styles.active : ''
-                      }`}
-                    />
-                  );
-                })}
-              </ul>
-            </Col>
-            <Col
-              style={{
-                textAlign: 'center'
-              }}
+          <div>
+            <Row
+              type="flex"
+              align="middle"
+              justify="center"
+              style={{ marginTop: 24 }}
             >
-              <p>
-                <img
-                  style={{ width: 72, marginBottom: 8 }}
-                  src={require(`./../../../assets/${
-                    state.startStatus === 'ready'
-                      ? 'start_ready'
-                      : state.startStatus === 'loading'
-                      ? 'start_ready'
-                      : 'start_ing'
-                  }.png`)}
+              <Col style={{ textAlign: 'center' }}>
+                <p>
+                  <img
+                    style={{ width: 72, marginBottom: 8 }}
+                    src={require(`./../../../assets/${
+                      state.configStatus === 'ready' ||
+                      state.configStatus === 'loading'
+                        ? 'config_ready'
+                        : 'config_success'
+                    }.png`)}
+                  />
+                </p>
+                <span style={{ color: '#474C50' }}>
+                  {state.configStatus === 'success'
+                    ? '压测配置检查无误'
+                    : '压测配置检查中···'}
+                </span>
+              </Col>
+              <Col>
+                <div
+                  style={{
+                    width: 80,
+                    height: 1,
+                    border:
+                      state.configStatus === 'success'
+                        ? '1px dotted #29C7D7'
+                        : '1px dotted #CACED5',
+                    marginBottom: 8,
+                    marginRight: 8
+                  }}
                 />
-              </p>
-              <span
+              </Col>
+              <Col
                 style={{
-                  color: state.startStatus === 'ready' ? '#E4EAF0' : '#474C50'
+                  textAlign: 'center'
                 }}
               >
-                {state.startStatus === 'ready' ? '启动压测' : '启动中'}
-              </span>
-            </Col>
-          </Row>
+                <p>
+                  <img
+                    style={{ width: 72, marginBottom: 8 }}
+                    src={require(`./../../../assets/${
+                      state.startStatus === 'ready'
+                        ? 'start_ready'
+                        : state.startStatus === 'loading'
+                        ? 'start_ready'
+                        : 'start_ing'
+                    }.png`)}
+                  />
+                </p>
+                <span
+                  style={{
+                    color: state.startStatus === 'ready' ? '#E4EAF0' : '#474C50'
+                  }}
+                >
+                  {state.startStatus === 'ready' ? '启动压测' : '启动中'}
+                </span>
+              </Col>
+            </Row>
+            {state.startStatus === 'loading' && <div 
+              style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 70 }}
+            >
+              <Button type="danger" onClick={() => cancelLaunch(state.sceneId)}>停止</Button>
+            </div>}
+          </div>
         )}
       </Modal>
     </Fragment>

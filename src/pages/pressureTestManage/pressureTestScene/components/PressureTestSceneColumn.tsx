@@ -9,7 +9,8 @@ import {
   Icon,
   message,
   Popconfirm,
-  Popover
+  Popover,
+  Modal,
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
@@ -25,7 +26,14 @@ import { PressureTestSceneEnum } from '../enum';
 import AddTagsModal from '../modals/AddTagsModal';
 import PressureTestSceneService from '../service';
 
-const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
+const getPressureTestSceneColumns = (
+  state,
+  setState,
+  dictionaryMap
+): {
+  columns: ColumnProps<any>[];
+  cancelLaunch: (id?: number) => void;
+} => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
@@ -39,14 +47,14 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
   /**
    * @name 删除压测场景
    */
-  const handleDelete = async id => {
+  const handleDelete = async (id) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.deletePressureTestScene({ id });
     if (success) {
       message.success('删除压测场景成功！');
       setState({
-        isReload: !state.isReload
+        isReload: !state.isReload,
       });
     }
   };
@@ -56,15 +64,15 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
    */
   const handleStart = async (sceneId, reportId) => {
     setState({
-      startStatus: 'loading'
+      startStatus: 'loading',
     });
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.checkStartStatus({ sceneId, reportId });
     if (success && data.data !== 0) {
       if (data.data === 2) {
         setState({
-          startStatus: 'success'
+          startStatus: 'success',
         });
         const startTime: any = new Date().getTime();
         localStorage.setItem('startTime', startTime);
@@ -80,7 +88,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
     } else {
       setState({
         startStatus: 'fail',
-        startErrorList: data.msg
+        startErrorList: data.msg,
       });
     }
   };
@@ -88,14 +96,14 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
   /**
    * @name 停止压测
    */
-  const handleStop = async sceneId => {
+  const handleStop = async (sceneId) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.stopPressureTestScene({ sceneId });
     if (success) {
       message.success('停止压测场景成功！');
       setState({
-        isReload: !state.isReload
+        isReload: !state.isReload,
       });
     }
   };
@@ -103,15 +111,15 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
   /**
    * @name 是否有数据验证
    */
-  const queryHasMissingDataScript = async sceneId => {
+  const queryHasMissingDataScript = async (sceneId) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId });
     if (success) {
       setState({
         sceneId,
         missingDataStatus: true,
-        hasMissingData: data
+        hasMissingData: data,
       });
     }
   };
@@ -119,44 +127,65 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
   /**
    * @name 是否位点已经发生偏移
    */
-  const queryDataScriptNum = async sceneId => {
+  const queryDataScriptNum = async (sceneId) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.queryDataScriptNum({ id: sceneId });
     if (success) {
       setState({
-        dataScriptNum: data
+        dataScriptNum: data,
       });
     }
   };
 
-  const handleClickStart = async sceneId => {
+  const handleClickStart = async (sceneId) => {
     queryHasMissingDataScript(sceneId);
     queryDataScriptNum(sceneId);
   };
 
   const handleCloseTiming = async (sceneId: number) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestSceneService.closeTiming({ sceneId });
     if (success) {
       message.info('成功关闭定时');
       setState({
-        isReload: !state.isReload
+        isReload: !state.isReload,
       });
     }
   };
 
-  return [
+  const cancelLaunch = (id) => {
+    Modal.confirm({
+      title: '提示',
+      content: '确认停止启动？',
+      onOk: async () => {
+        const {
+          data: { success },
+        } = await PressureTestSceneService.scencePreStop({
+          sceneId: id,
+        });
+        if (success) {
+          message.success('操作成功');
+          setState({
+            isReload: !state.isReload,
+            visible: false,
+          });
+        }
+      },
+    });
+  };
+
+  const columns = [
     {
       ...customColumnProps,
       title: 'ID',
-      dataIndex: 'id'
+      dataIndex: 'id',
     },
     {
       ...customColumnProps,
       title: '压测场景名称',
-      dataIndex: 'sceneName'
+      dataIndex: 'sceneName',
     },
     {
       ...customColumnProps,
@@ -208,26 +237,26 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
               }
               onSccuess={() => {
                 setState({
-                  isReload: !state.isReload
+                  isReload: !state.isReload,
                 });
               }}
             />
           </div>
         );
-      }
+      },
     },
     {
       ...customColumnProps,
       title: '状态',
       dataIndex: 'status',
-      render: text => {
+      render: (text) => {
         return (
           <Badge
             text={text === 0 ? '待启动' : text === 1 ? '启动中' : '压测中'}
             color={text === 2 ? 'var(--BrandPrimary-500)' : 'var(--Netural-06)'}
           />
         );
-      }
+      },
     },
     {
       ...customColumnProps,
@@ -248,7 +277,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '负责人',
       dataIndex: 'userName',
-      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle',
     },
     {
       ...customColumnProps,
@@ -278,8 +307,11 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
               >
                 <Link
                   style={{ marginRight: 8 }}
-                  to={row.hasAnalysisResult ? `/pressureTestManage/pressureTestSceneV2/edit?id=${row.id}` : 
-                  `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`}
+                  to={
+                    row.hasAnalysisResult
+                      ? `/pressureTestManage/pressureTestSceneV2/edit?id=${row.id}`
+                      : `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`
+                  }
                 >
                   编辑
                 </Link>
@@ -305,7 +337,11 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
               </AuthorityBtn>
             )}
             {row.status === 1 && (
-              <Button disabled type="link" style={{ marginRight: 8 }}>
+              <Button
+                type="link"
+                style={{ marginRight: 8 }}
+                onClick={() => cancelLaunch(row.id)}
+              >
                 启动中
               </Button>
             )}
@@ -332,7 +368,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                     menuCode="SCENE_MANAGE"
                     onSccuess={() => {
                       setState({
-                        isReload: !state.isReload
+                        isReload: !state.isReload,
                       });
                     }}
                   />
@@ -395,9 +431,14 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
             )}
           </Fragment>
         );
-      }
-    }
+      },
+    },
   ];
+
+  return {
+    columns,
+    cancelLaunch,
+  };
 };
 
 export default getPressureTestSceneColumns;

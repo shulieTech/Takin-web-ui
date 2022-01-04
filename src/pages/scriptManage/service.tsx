@@ -175,7 +175,14 @@ const ScriptManageService = {
   async queryBusinessFlow(data = {}) {
     const url = '/link/businessFlow';
     return httpGet(url, data);
-  }
+  },
+  /**
+   * @name 停止调试
+   */
+  async stopDebug(data = {}) {
+    const url = '/scriptDebug/stop';
+    return httpPut(url, data);
+  },
 };
 
 export default ScriptManageService;
