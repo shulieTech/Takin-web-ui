@@ -52,7 +52,7 @@ const AgentVersin: React.FC<Props> = props => {
         return;
       }
       let result = {};
-      if (props.state.row.type !== 0) {
+      if (props.state.key === '1') {
         result = {
           id: props.state.row.id,
           defaultValue: values.defaultValue.toString()
