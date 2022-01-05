@@ -9,6 +9,7 @@ import React from 'react';
 import DocumentTitle from 'react-document-title';
 import HeaderLayout from 'src/layouts/HeaderLayout';
 import LoginPage from 'src/pages/user/loginPage';
+import NullPage from 'src/pages/user/nullPage';
 import { Basic } from 'src/types';
 import { getTakinAuthority } from 'src/utils/utils';
 import venomBasicConfig from 'src/venom.config';
@@ -24,6 +25,8 @@ const IndexLayout: React.FC<Basic.BaseProps> = props => {
   // 权限判断
   if (getTakinAuthority() !== 'false' && location.pathname === '/login') {
     layout = <LoginPage />;
+  } else if (location.pathname.indexOf('/oauth/callback') !== -1) {
+    layout = <NullPage />;
   } else {
     // 跳转到首页
     if (location.pathname === '/login') {

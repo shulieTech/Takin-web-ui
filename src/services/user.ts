@@ -52,7 +52,11 @@ const UserService = {
   async redirect(data) {
     const url = '/thirdParty/redirect';
     return httpGet(url, data);
-  }
+  },
+  async oauthcallback(data) {
+    const url = '/thirdParty/callback';
+    return httpGet(url, data);
+  },
 };
 
 export default UserService;
