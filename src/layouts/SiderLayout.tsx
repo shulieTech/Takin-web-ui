@@ -77,7 +77,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
     const {
       data: { success, data }
     } = await UserService.redirect({
-      thirdParty: '99'
+      thirdParty: '1'
     });
   };
 
