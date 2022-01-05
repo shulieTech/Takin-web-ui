@@ -21,6 +21,7 @@ interface Props {
   fileList?: any[];
   id?: string;
   detailData: {
+    scriptFile?: {};
     pluginConfigs?: any[];
   };
 }
@@ -32,13 +33,17 @@ interface State {
   required: boolean;
 }
 const AddJmeterModal: React.FC<Props> = (props) => {
-  const { detailData } = props;
+  const { detailData = {} } = props;
   const [state, setState] = useStateReducer<State>({
     fileList: null,
     form: null as WrappedFormUtils,
     loading: false,
     required: false,
   });
+
+  const [scriptFileInfo, setScriptFileInfo] = useState(
+    detailData?.scriptFile || {}
+  );
 
   const [pluginList, setPluginList] = useState([]);
 
@@ -53,19 +58,21 @@ const AddJmeterModal: React.FC<Props> = (props) => {
   const queryPluginList = async () => {
     const {
       data: { data, success },
-    } = await BusinessFlowService.queryPluginList({
-      relatedType: 1,
-      relatedId: 289,
-    });
+    } = await BusinessFlowService.queryPluginList(scriptFileInfo);
     if (success) {
       setPluginList(data || []);
     }
   };
 
   useEffect(() => {
-    // TODO  判断是否需要获取插件列表
-    queryPluginList();
-  }, []);
+    setScriptFileInfo(detailData.scriptFile || {});
+  }, [JSON.stringify(detailData.scriptFile)]);
+
+  useEffect(() => {
+    if (scriptFileInfo.id || scriptFileInfo.uploadId) {
+      queryPluginList();
+    }
+  }, [scriptFileInfo.id, scriptFileInfo.uploadId]);
 
   const getColumns = (): ColumnProps<any>[] => {
     return [
@@ -121,6 +128,10 @@ const AddJmeterModal: React.FC<Props> = (props) => {
     } = await BusinessFlowService.uploadJmeter(file);
 
     if (success) {
+      setScriptFileInfo(data?.[0] || {});
+      state.form.setFieldsValue({
+        pluginConfigs: [],
+      });
       setState({
         loading: false,
       });
@@ -136,7 +147,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
   };
 
   const getFormData = (): FormDataType[] => {
-    return [
+    const fieldsArr = [
       {
         key: 'appName',
         label: '上传文件',
@@ -165,11 +176,14 @@ const AddJmeterModal: React.FC<Props> = (props) => {
           </div>
         ),
       },
-      {
+    ];
+
+    if (pluginList.length > 0) {
+      fieldsArr.push({
         key: 'pluginConfigs',
         label: '关联插件',
         options: {
-          initialValue: detailData?.pluginConfigs,
+          initialValue: detailData?.pluginConfigs || [],
           rules: [
             // {
             //   required: pluginList?.length > 0,
@@ -178,8 +192,10 @@ const AddJmeterModal: React.FC<Props> = (props) => {
           ],
         },
         node: <RelatePlugin pluginList={pluginList} />,
-      },
-    ];
+      });
+    }
+
+    return fieldsArr;
   };
 
   const handleCancle = () => {
@@ -199,8 +215,10 @@ const AddJmeterModal: React.FC<Props> = (props) => {
           resolve(false);
           return false;
         }
-
-        if (!state.fileList || !(pluginList?.length > 0 && values.pluginConfigs?.length > 0)) {
+        if (
+          !state.fileList
+          // || (pluginList?.length > 0 && (values.pluginConfigs || [])?.length === 0)
+        ) {
           message.error('请检查表单必填项');
           resolve(false);
           return false;
@@ -208,12 +226,13 @@ const AddJmeterModal: React.FC<Props> = (props) => {
         const {
           data: { data, success },
         } = await BusinessFlowService.saveAndAnalysis({
+          ...values,
           id: props.action === 'edit' ? props.id : null,
           scriptFile: {
             ...(state.fileList && state.fileList[0]),
             id: state.fileList && state.fileList[0] && state.fileList[0].id,
           },
-          pluginConfigs: values.pluginConfigs,
+          pluginConfigs: values.pluginConfigs || [],
         });
         if (success) {
           message.success('保存成功!');

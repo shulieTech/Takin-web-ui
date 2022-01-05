@@ -181,7 +181,7 @@ const BusinessFlowService = {
    * @name 获取插件列表
    */
   async queryPluginList(data = {}) {
-    const url = '/scriptManage/support/plugin/list';
+    const url = '/scriptManage/support/plugin/list/all';
     return httpGet(url, data);
   },
   /**

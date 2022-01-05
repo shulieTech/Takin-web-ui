@@ -26,10 +26,10 @@ interface State {
   isReload?: boolean;
   scriptCode: any;
 }
-const EditJmeterModal: React.FC<Props> = props => {
+const EditJmeterModal: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer<State>({
     isReload: false,
-    scriptCode: null
+    scriptCode: null,
   });
 
   const { fileId, fileData } = props;
@@ -40,7 +40,7 @@ const EditJmeterModal: React.FC<Props> = props => {
 
   const handleCancle = () => {
     setState({
-      scriptCode: null
+      scriptCode: null,
     });
   };
 
@@ -49,13 +49,13 @@ const EditJmeterModal: React.FC<Props> = props => {
    */
   const queryScriptCode = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await BusinessFlowService.queryScriptCode({
-      scriptFileUploadPath: fileId
+      scriptFileUploadPath: fileId,
     });
     if (success) {
       setState({
-        scriptCode: data.content
+        scriptCode: data.content,
       });
     }
   };
@@ -63,9 +63,9 @@ const EditJmeterModal: React.FC<Props> = props => {
   /**
    * @name 修改文件脚本代码
    */
-  const handleChangeCode = value => {
+  const handleChangeCode = (value) => {
     setState({
-      scriptCode: value
+      scriptCode: value,
     });
   };
 
@@ -74,7 +74,7 @@ const EditJmeterModal: React.FC<Props> = props => {
    */
 
   const handleSubmit = async () => {
-    return await new Promise(resolve => {
+    return await new Promise((resolve) => {
       props.state.form.validateFields(async (err, values) => {
         if (err) {
           message.error('请检查表单必填项');
@@ -82,13 +82,15 @@ const EditJmeterModal: React.FC<Props> = props => {
           return false;
         }
         const {
-          data: { data, success }
+          data: { data, success },
         } = await BusinessFlowService.saveAndAnalysis({
+          ...values,
           id: props.id,
           scriptFile: {
             ...fileData,
-            scriptContent: state.scriptCode
-          }
+            scriptContent: state.scriptCode,
+          },
+          pluginConfigs: values.pluginConfigs || [],
         });
         if (success) {
           message.success('保存成功!');
@@ -111,7 +113,7 @@ const EditJmeterModal: React.FC<Props> = props => {
         width: 'calc(100% - 40px)',
         title: '编辑代码',
         centered: true,
-        okText: '保存并解析'
+        okText: '保存并解析',
       }}
       btnProps={{ type: 'link' }}
       btnText={props.btnText}
@@ -126,7 +128,7 @@ const EditJmeterModal: React.FC<Props> = props => {
           options={{
             mode: 'xml',
             theme: 'material',
-            lineNumbers: true
+            lineNumbers: true,
           }}
           onBeforeChange={(editor, data, value) => {
             handleChangeCode(value);
