@@ -176,7 +176,21 @@ const BusinessFlowService = {
   async deleteBusinessFlow(data = {}) {
     const url = '/link/scene/manage';
     return httpDelete(url, data);
-  }
+  },
+  /**
+   * @name 获取插件列表
+   */
+  async queryPluginList(data = {}) {
+    const url = '/scriptManage/support/plugin/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取插件版本列表
+   */
+  async queryPluginVersionList(data = {}) {
+    const url = '/scriptManage/support/plugin/version';
+    return httpGet(url, data);
+  },
 };
 
 export default BusinessFlowService;

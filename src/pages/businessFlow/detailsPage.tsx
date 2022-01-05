@@ -403,6 +403,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                     btnText="管理脚本"
                     action="edit"
                     fileList={detailData.scriptFile}
+                    detailData={detailData}
                     id={detailData.id}
                     onSuccess={() => {
                       setState({

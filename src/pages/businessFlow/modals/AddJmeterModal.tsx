@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { CommonForm, CommonModal, ImportFile, useStateReducer } from 'racc';
 import { Col, Collapse, Divider, Icon, Input, message, Row, Spin } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
@@ -11,6 +11,7 @@ import { router } from 'umi';
 import styles from './../index.less';
 import EditJmeterModal from './EditJmeterModal';
 import { fileTypeMap } from '../enum';
+import RelatePlugin from '../components/RelatePlugin';
 
 interface Props {
   btnText?: string | React.ReactNode;
@@ -19,27 +20,52 @@ interface Props {
   action?: string;
   fileList?: any[];
   id?: string;
+  detailData: {
+    pluginConfigs?: any[];
+  };
 }
 
 interface State {
   fileList: any;
   form: any;
   loading: boolean;
+  required: boolean;
 }
-const AddJmeterModal: React.FC<Props> = props => {
+const AddJmeterModal: React.FC<Props> = (props) => {
+  const { detailData } = props;
   const [state, setState] = useStateReducer<State>({
     fileList: null,
     form: null as WrappedFormUtils,
-    loading: false
+    loading: false,
+    required: false,
   });
+
+  const [pluginList, setPluginList] = useState([]);
 
   const handleClick = () => {
     if (props.action === 'edit') {
       setState({
-        fileList: [props.fileList]
+        fileList: [props.fileList],
       });
     }
   };
+
+  const queryPluginList = async () => {
+    const {
+      data: { data, success },
+    } = await BusinessFlowService.queryPluginList({
+      relatedType: 1,
+      relatedId: 289,
+    });
+    if (success) {
+      setPluginList(data || []);
+    }
+  };
+
+  useEffect(() => {
+    // TODO  判断是否需要获取插件列表
+    queryPluginList();
+  }, []);
 
   const getColumns = (): ColumnProps<any>[] => {
     return [
@@ -47,21 +73,21 @@ const AddJmeterModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '文件名',
         dataIndex: 'fileName',
-        width: 250
+        width: 250,
       },
       {
         ...customColumnProps,
         title: '类型',
         dataIndex: 'fileType',
         width: 100,
-        render: text => {
+        render: (text) => {
           return <span>{fileTypeMap[text]}</span>;
-        }
+        },
       },
       {
         ...customColumnProps,
         title: '最后更新时间',
-        dataIndex: 'uploadTime'
+        dataIndex: 'uploadTime',
       },
       {
         ...customColumnProps,
@@ -78,34 +104,34 @@ const AddJmeterModal: React.FC<Props> = props => {
               onSuccess={() => props.onSuccess()}
             />
           );
-        }
-      }
+        },
+      },
     ];
   };
 
   /**
    * @name 上传jmeter文件
    */
-  const handleImport = async file => {
+  const handleImport = async (file) => {
     setState({
-      loading: true
+      loading: true,
     });
     const {
-      data: { data, success }
+      data: { data, success },
     } = await BusinessFlowService.uploadJmeter(file);
 
     if (success) {
       setState({
-        loading: false
+        loading: false,
       });
       message.success('上传文件成功!');
       setState({
-        fileList: data
+        fileList: data,
       });
       return;
     }
     setState({
-      loading: false
+      loading: false,
     });
   };
 
@@ -120,7 +146,7 @@ const AddJmeterModal: React.FC<Props> = props => {
             onImport={handleImport}
             UploadProps={{
               type: 'drag',
-              multiple: false
+              multiple: false,
             }}
           >
             <p>
@@ -137,14 +163,28 @@ const AddJmeterModal: React.FC<Props> = props => {
               dataSource={state.fileList || []}
             />
           </div>
-        )
-      }
+        ),
+      },
+      {
+        key: 'pluginConfigs',
+        label: '关联插件',
+        options: {
+          initialValue: detailData?.pluginConfigs,
+          rules: [
+            // {
+            //   required: pluginList?.length > 0,
+            //   message: '请选择关联插件及版本',
+            // },
+          ],
+        },
+        node: <RelatePlugin pluginList={pluginList} />,
+      },
     ];
   };
 
   const handleCancle = () => {
     setState({
-      fileList: null
+      fileList: null,
     });
   };
 
@@ -152,7 +192,7 @@ const AddJmeterModal: React.FC<Props> = props => {
    * @name 保存并解析jmeter脚本，跳转到详情
    */
   const handleSubmit = async () => {
-    return await new Promise(resolve => {
+    return await new Promise((resolve) => {
       state.form.validateFields(async (err, values) => {
         if (err) {
           message.error('请检查表单必填项');
@@ -160,19 +200,20 @@ const AddJmeterModal: React.FC<Props> = props => {
           return false;
         }
 
-        if (!state.fileList) {
+        if (!state.fileList || !(pluginList?.length > 0 && values.pluginConfigs?.length > 0)) {
           message.error('请检查表单必填项');
           resolve(false);
           return false;
         }
         const {
-          data: { data, success }
+          data: { data, success },
         } = await BusinessFlowService.saveAndAnalysis({
           id: props.action === 'edit' ? props.id : null,
           scriptFile: {
             ...(state.fileList && state.fileList[0]),
-            id: state.fileList && state.fileList[0] && state.fileList[0].id
-          }
+            id: state.fileList && state.fileList[0] && state.fileList[0].id,
+          },
+          pluginConfigs: values.pluginConfigs,
         });
         if (success) {
           message.success('保存成功!');
@@ -195,11 +236,11 @@ const AddJmeterModal: React.FC<Props> = props => {
         okText: '保存并解析',
         bodyStyle: {
           height: 500,
-          overflow: 'auto'
-        }
+          overflow: 'auto',
+        },
       }}
       btnProps={{
-        type: props.action === 'edit' ? 'primary' : 'link'
+        type: props.action === 'edit' ? 'primary' : 'link',
       }}
       btnText={props.btnText}
       onClick={handleClick}
@@ -213,7 +254,7 @@ const AddJmeterModal: React.FC<Props> = props => {
               position: 'absolute',
               top: 50,
               left: 270,
-              zIndex: 100
+              zIndex: 100,
             }}
           >
             <Spin />
@@ -232,7 +273,7 @@ const AddJmeterModal: React.FC<Props> = props => {
                 fontSize: '16px',
                 color: '#424242',
                 fontWeight: 600,
-                height: '26px'
+                height: '26px',
               }}
             >
               说明
@@ -248,11 +289,11 @@ const AddJmeterModal: React.FC<Props> = props => {
           </Col>
         </Row>
         <CommonForm
-          getForm={form => setState({ form })}
+          getForm={(form) => setState({ form })}
           formData={getFormData()}
           btnProps={{
             isResetBtn: false,
-            isSubmitBtn: false
+            isSubmitBtn: false,
           }}
           rowNum={1}
         />
