@@ -168,6 +168,7 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请选择应用'
           }
         ]
@@ -263,19 +264,19 @@ const getAddDynamicDbFormData = (
   ];
 
   const tempData = `{
-    /*
-    必填项:
-    哨兵模式:master,nodes;
-    主从模式:master,nodes;
-    单机模式:nodes;
-    集群模式:nodes;
-    选填项:
-    database
-    */
-    "master": "mymaster",
-    "nodes":"192.168.1.227:7002,192.168.1.227:7003",
-    "database":""
-    }`;
+     /*
+     必填项:
+     哨兵模式:master,nodes;
+     主从模式:master,nodes;
+     单机模式:nodes;
+     集群模式:nodes;
+     选填项:
+     database
+     */
+     "master": "mymaster",
+     "nodes":"192.168.1.227:7002,192.168.1.227:7003",
+     "database":""
+     }`;
 
   const cacheTypeFormData = [
     {
@@ -404,7 +405,12 @@ const getAddDynamicDbFormData = (
             required: item.required ? true : false,
             message: '请检查表单必填项',
             whitespace: true,
-            type: item.nodeType === 4 ? 'array' : 'string'
+            type:
+              item.nodeType === 4
+                ? 'array'
+                : item.nodeType === 3
+                  ? 'object'
+                  : 'string'
           }
         ]
       },
