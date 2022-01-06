@@ -70,7 +70,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
         localStorage.setItem('startTime', startTime);
         message.success('开启压测场景成功！');
         router.push(
-          `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sceneId}`
+          `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sceneId}&sceneId=${sceneId}`
         );
       } else if (data.data === 1) {
         setTimeout(() => {
@@ -387,7 +387,7 @@ const getPressureTestSceneColumns = (state, setState): ColumnProps<any>[] => {
                 }
               >
                 <Link
-                  to={`/pressureTestManage/pressureTestReport/pressureTestLive?id=${row.id}`}
+                  to={`/pressureTestManage/pressureTestReport/pressureTestLive?id=${row.id}&sceneId=${row.id}`}
                 >
                   压测实况
                 </Link>
