@@ -24,23 +24,26 @@ interface Props {
     tooltip?: string | ReactNode;
   };
 }
-const LinkCharts: React.FC<Props> = props => {
+const LinkCharts: React.FC<Props> = (props) => {
   const { chartsInfo, setState, state, tabList } = props;
   const [targetTps, setTargetTps] = useState<number>(undefined);
+  const [selectedTreeNode, setSelectedTreeNode] = useState(state.tabList?.[0]);
 
-  const handleChangeTab = value => {
+  const handleChangeTab = (value, e) => {
     if (value[0]) {
       setState({
-        tabKey: value[0]
+        tabKey: value[0],
       });
+      setSelectedTreeNode(e?.node?.props?.dataRef);
     }
   };
   const getDefaultValue = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestReportService.getTpsValue({
       reportId: state.detailData.id,
-      sceneId: state.detailData.sceneId
+      sceneId: state.detailData.sceneId,
+      xpathMd5: selectedTreeNode.xpathMd5,
     });
     if (success) {
       setTargetTps(data);
@@ -51,13 +54,14 @@ const LinkCharts: React.FC<Props> = props => {
       message.info('请填写TPS');
       return;
     }
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const {
-        data: { success }
+        data: { success },
       } = await PressureTestReportService.adjustTPS({
         targetTps,
         reportId: state.detailData.id,
-        sceneId: state.detailData.sceneId
+        sceneId: state.detailData.sceneId,
+        xpathMd5: selectedTreeNode.xpathMd5,
       });
       if (success) {
         message.success('调整成功');
@@ -67,10 +71,10 @@ const LinkCharts: React.FC<Props> = props => {
     });
   };
 
-  const renderTreeNodes = data => {
+  const renderTreeNodes = (data) => {
     return (
       data &&
-      data.map(item => {
+      data.map((item) => {
         if (item.children && item.children.length) {
           return (
             <Tree.TreeNode
@@ -107,7 +111,7 @@ const LinkCharts: React.FC<Props> = props => {
     <div
       style={{
         display: 'flex',
-        marginTop: 16
+        marginTop: 16,
       }}
     >
       <div className={styles.leftSelected}>
@@ -122,6 +126,36 @@ const LinkCharts: React.FC<Props> = props => {
         )}
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
+        {props.isLive && selectedTreeNode.pressureType === TestMode.TPS模式 && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              paddingBottom: 10,
+            }}
+          >
+            <CommonModal
+              modalProps={{
+                okText: '确定',
+                cancelText: '取消',
+                title: '调整TPS',
+                destroyOnClose: true,
+              }}
+              btnText="调整TPS"
+              btnProps={{ ghost: true }}
+              beforeOk={adjustTps}
+              onClick={() => getDefaultValue()}
+            >
+              TPS：
+              <InputNumber
+                value={targetTps}
+                onChange={(value) => setTargetTps(value)}
+                precision={0}
+                min={0}
+              />
+            </CommonModal>
+          </div>
+        )}
         <LineCharts
           // columnNum={state.tabKey === 0 ? 2 : 1}
           columnNum={2}
@@ -130,28 +164,6 @@ const LinkCharts: React.FC<Props> = props => {
           {...props.chartConfig}
         />
       </div>
-      {props.isLive && state.detailData.pressureType === TestMode.TPS模式 && (
-        <CommonModal
-          modalProps={{
-            okText: '确定',
-            cancelText: '取消',
-            title: '调整TPS',
-            destroyOnClose: true
-          }}
-          btnText="调整TPS"
-          btnProps={{ style: { transform: 'translateY(8px)' } }}
-          beforeOk={adjustTps}
-          onClick={() => getDefaultValue()}
-        >
-          TPS：
-          <InputNumber
-            value={targetTps}
-            onChange={value => setTargetTps(value)}
-            precision={0}
-            min={0}
-          />
-        </CommonModal>
-      )}
     </div>
   );
 };
