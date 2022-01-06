@@ -7,31 +7,47 @@ export default () => {
     return {};
   }
   const emptyConfig = {
-    vars: {},
+    antVars: {}, // antd主题变量
+    cssVars: {}, // css 主题变量
     logo: '',
-    loginPic: '',
+    loginPic: '', // 登录页图片
   };
   const getThemeConfig = () => {
     let config = emptyConfig;
     try {
       config = JSON.parse(localStorage['takin-theme']);
     } catch (error) {
-      // console.log('获取主题设置失败'); 
+      // console.log('获取主题设置失败');
     }
     return config;
   };
 
-  const loadThemeConfig = (vars = getThemeConfig().vars) => {
-    window.less.modifyVars(vars);
+  const rootEle = document.querySelector('[id^=root-]');
+
+  const loadThemeConfig = ({
+    antVars = getThemeConfig().antVars || {},
+    cssVars = getThemeConfig().cssVars || {},
+  } = {}) => {
+    window.less.modifyVars(antVars);
+    Object.entries(cssVars).forEach(([k, v]) => {
+      rootEle?.style?.setProperty(k, v);
+    });
   };
 
-  const setThemeVars = (option) => {
-    const config = getThemeConfig();
-    config.vars = {
-      ...config.vars,
-      ...option,
+  const setThemeVars = (option: { antVars?: object, cssVars?: object }) => {
+    const oldConfig = getThemeConfig();
+    const config = {
+      ...oldConfig,
+      antVars: {
+        ...oldConfig.antVars,
+        ...(option.antVars || {}),
+      },
+      cssVars: {
+        ...oldConfig.cssVars,
+        ...(option.cssVars || {}),
+      },
     };
-    loadThemeConfig(config.vars);
+    loadThemeConfig(config);
     localStorage['takin-theme'] = JSON.stringify(config);
   };
 
@@ -47,8 +63,9 @@ export default () => {
   };
 
   const resetTheme = () => {
-    loadThemeConfig({});
     localStorage['takin-theme'] = JSON.stringify(emptyConfig);
+    rootEle?.style = '';
+    loadThemeConfig();
   };
 
   return {
@@ -59,3 +76,26 @@ export default () => {
     resetTheme,
   };
 };
+
+// import useTheme from 'src/utils/useTheme';
+
+// const { setThemeVars, resetTheme, loadThemeConfig } = useTheme();
+
+// useEffect(() => {
+//   loadThemeConfig();
+// }, []);
+
+// const setTheme = () => {
+//   setThemeVars({
+//     antVars: {
+//       'primary-color': 'red',
+//     },
+//     cssVars: {
+//       '--BrandPrimary-500': 'red',
+//       '--BrandPrimary-600': 'dark',
+//     },
+//   });
+// };
+
+// <span onClick={setTheme}>changeTheme</span>
+// <span onClick={resetTheme}>resetTheme</span>
