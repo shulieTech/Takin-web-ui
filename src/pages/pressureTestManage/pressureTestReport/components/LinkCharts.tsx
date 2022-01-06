@@ -43,7 +43,7 @@ const LinkCharts: React.FC<Props> = (props) => {
     } = await PressureTestReportService.getTpsValue({
       reportId: state.detailData.id,
       sceneId: state.detailData.sceneId,
-      xpathMd5: selectedTreeNode.xpathMd5,
+      xpathMd5: selectedTreeNode?.xpathMd5,
     });
     if (success) {
       setTargetTps(data);
@@ -61,7 +61,7 @@ const LinkCharts: React.FC<Props> = (props) => {
         targetTps,
         reportId: state.detailData.id,
         sceneId: state.detailData.sceneId,
-        xpathMd5: selectedTreeNode.xpathMd5,
+        xpathMd5: selectedTreeNode?.xpathMd5,
       });
       if (success) {
         message.success('调整成功');
@@ -126,7 +126,7 @@ const LinkCharts: React.FC<Props> = (props) => {
         )}
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
-        {props.isLive && selectedTreeNode.pressureType === TestMode.TPS模式 && (
+        {props.isLive && selectedTreeNode?.pressureType === TestMode.TPS模式 && (
           <div
             style={{
               display: 'flex',
