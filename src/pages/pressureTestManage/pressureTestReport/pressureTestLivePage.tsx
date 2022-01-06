@@ -298,7 +298,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
    */
   const handleOk = () => {
     router.push(
-      `/pressureTestManage/pressureTestReport/details?id=${detailData.id}`
+      `/pressureTestManage/pressureTestReport/details?id=${detailData.id}&sceneId=${detailData.sceneId}`
     );
   };
 
