@@ -4,6 +4,10 @@ import router from 'umi/router';
 
 export default class NotFound extends Component {
 
+  componentWillUnmount() {
+    window.location.reload();
+  }
+
   render() {
     return (
       <div
