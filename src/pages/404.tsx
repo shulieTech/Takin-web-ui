@@ -3,9 +3,7 @@ import React, { Component } from 'react';
 import router from 'umi/router';
 
 export default class NotFound extends Component {
-  componentDidMount() {
-    window.location.reload();
-  }
+
   render() {
     return (
       <div
