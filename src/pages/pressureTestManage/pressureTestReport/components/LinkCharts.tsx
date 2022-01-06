@@ -29,6 +29,11 @@ const LinkCharts: React.FC<Props> = (props) => {
   const [targetTps, setTargetTps] = useState<number>(undefined);
   const [selectedTreeNode, setSelectedTreeNode] = useState(state.tabList?.[0]);
 
+  // 旧版的压测模式pressureType在detailData里，新版的混合场景压测在tree的节点数据里
+  const isOldVersionTpsTest =
+    state.detailData.pressureType === TestMode.TPS模式;
+  const isMutiTpsTest = selectedTreeNode?.pressureType === TestMode.TPS模式;
+
   const handleChangeTab = (value, e) => {
     if (value[0]) {
       setState({
@@ -43,7 +48,7 @@ const LinkCharts: React.FC<Props> = (props) => {
     } = await PressureTestReportService.getTpsValue({
       reportId: state.detailData.id,
       sceneId: state.detailData.sceneId,
-      xpathMd5: selectedTreeNode?.xpathMd5,
+      xpathMd5: isOldVersionTpsTest ? '' : selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
     });
     if (success) {
       setTargetTps(data);
@@ -61,7 +66,7 @@ const LinkCharts: React.FC<Props> = (props) => {
         targetTps,
         reportId: state.detailData.id,
         sceneId: state.detailData.sceneId,
-        xpathMd5: selectedTreeNode?.xpathMd5,
+        xpathMd5: isOldVersionTpsTest ? '' : selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
       });
       if (success) {
         message.success('调整成功');
@@ -126,7 +131,7 @@ const LinkCharts: React.FC<Props> = (props) => {
         )}
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
-        {props.isLive && selectedTreeNode?.pressureType === TestMode.TPS模式 && (
+        {props.isLive && (isOldVersionTpsTest || isMutiTpsTest) && (
           <div
             style={{
               display: 'flex',
