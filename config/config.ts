@@ -1,5 +1,8 @@
 import { resolve } from 'path';
 import theme from './theme';
+const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
+const path = require('path');
+
 function getRouter(router) {
   if (router.routes) {
     router.routes = router.routes
@@ -33,7 +36,7 @@ function getRouter(router) {
 }
 export default {
   // proxy,
-  theme,
+  // theme,
   history: 'hash',
   publicPath: './',
   hash: true,
@@ -164,6 +167,16 @@ export default {
         },
       }
     });
+
+    config.plugin('theme').use(new AntDesignThemePlugin({
+      antDir: path.join(__dirname, '../node_modules/antd'),
+      stylesDir: path.join(__dirname, '../src'),
+      varFile: path.join(__dirname, '../src/styles/variables.less'),
+      themeVariables: ['@primary-color'],
+      // indexFileName: path.join(__dirname, '../src/pages/document.ejs'),
+      indexFileName: 'document.ejs',
+    }));
+    
     // 过滤掉moment的那些不使用的国际化文件
     config.plugin('replace').use(require('webpack').ContextReplacementPlugin).tap(() => {
       return [/moment[/\\]locale$/, /zh-cn/];
