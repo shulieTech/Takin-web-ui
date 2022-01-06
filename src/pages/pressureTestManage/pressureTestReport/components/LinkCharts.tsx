@@ -76,6 +76,12 @@ const LinkCharts: React.FC<Props> = (props) => {
     });
   };
 
+  useEffect(() => {
+    if (isOldVersionTpsTest || isMutiTpsTest) {
+      getDefaultValue();
+    }
+  }, [selectedTreeNode?.xpathMd5]);
+
   const renderTreeNodes = (data) => {
     return (
       data &&
@@ -149,7 +155,6 @@ const LinkCharts: React.FC<Props> = (props) => {
               btnText="调整TPS"
               btnProps={{ ghost: true }}
               beforeOk={adjustTps}
-              onClick={() => getDefaultValue()}
             >
               TPS：
               <InputNumber
