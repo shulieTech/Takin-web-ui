@@ -52,6 +52,7 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
   };
   
   useEffect(() => {
+    loadThemeConfig();
     setTimeout(() => {
       if (getTakinAuthority() === 'true') {
         getThemeFromRemote();
