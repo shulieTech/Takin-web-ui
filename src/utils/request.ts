@@ -6,7 +6,7 @@ import { getTakinAuthority } from './utils';
 declare var window: Window;
 declare var serverUrl: string;
 import UserService from 'src/services/user';
-
+import version from '../../public/version.json';
 axios.defaults.withCredentials = true;
 let outloginFlag = false;
 // axios.interceptors.request.use(
@@ -77,9 +77,7 @@ const getBackLogin = response => {
     okText: '确认',
     onOk: () => {
       outloginFlag = false;
-      const redirect =  UserService.troRedirect({
-        thirdParty: 1
-      });
+      window.location.href = version.indexHtml;
     }
   });
 };

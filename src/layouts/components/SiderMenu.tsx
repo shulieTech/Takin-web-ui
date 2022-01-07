@@ -27,6 +27,7 @@ import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
 import { getTakinAuthority, treeFindPath } from 'src/utils/utils';
+import version from '../../../public/version.json';
 
 const { Sider } = Layout;
 
@@ -77,9 +78,7 @@ const SiderMenu: React.FC<Props> = props => {
         'Access-Token'
       ];
       storageList.forEach(item => localStorage.removeItem(item));
-      const redirect = await UserService.troRedirect({
-        thirdParty: 1
-      });
+      window.location.href = version.indexHtml;
     }
   };
 
