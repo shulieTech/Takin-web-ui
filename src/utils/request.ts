@@ -5,6 +5,7 @@ import BaseResponse = Basic.BaseResponse;
 import { getTakinAuthority } from './utils';
 declare var window: Window;
 declare var serverUrl: string;
+import UserService from 'src/services/user';
 
 axios.defaults.withCredentials = true;
 let outloginFlag = false;
@@ -76,11 +77,8 @@ const getBackLogin = response => {
     okText: '确认',
     onOk: () => {
       outloginFlag = false;
-      window.g_app._store.dispatch({
-        type: 'user/troLogout',
-        payload: {
-          thirdParty: 1
-        }
+      const redirect =  UserService.troRedirect({
+        thirdParty: 1
       });
     }
   });

@@ -12,6 +12,10 @@ const UserService = {
     return httpPost(url, data);
   },
   async troLogout(data) {
+    const url = '/logout';
+    return httpGet(url, data);
+  },
+  async troRedirect(data) {
     const url = '/thirdParty/redirect';
     return httpGet(url, data);
   },
