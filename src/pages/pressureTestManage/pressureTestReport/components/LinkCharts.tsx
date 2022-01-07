@@ -33,6 +33,7 @@ const LinkCharts: React.FC<Props> = (props) => {
   const isOldVersionTpsTest =
     state.detailData.pressureType === TestMode.TPS模式;
   const isMutiTpsTest = selectedTreeNode?.pressureType === TestMode.TPS模式;
+  const xpathMd5ForOldTpsTest = 'cec45d27c5e20cca29526c54b4c9ad34';
 
   const handleChangeTab = (value, e) => {
     if (value[0]) {
@@ -48,7 +49,9 @@ const LinkCharts: React.FC<Props> = (props) => {
     } = await PressureTestReportService.getTpsValue({
       reportId: state.detailData.id,
       sceneId: state.detailData.sceneId,
-      xpathMd5: isOldVersionTpsTest ? '' : selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
+      xpathMd5: isOldVersionTpsTest
+        ? xpathMd5ForOldTpsTest
+        : selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
     });
     if (success) {
       setTargetTps(data);
@@ -66,7 +69,9 @@ const LinkCharts: React.FC<Props> = (props) => {
         targetTps,
         reportId: state.detailData.id,
         sceneId: state.detailData.sceneId,
-        xpathMd5: isOldVersionTpsTest ? '' : selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
+        xpathMd5: isOldVersionTpsTest
+          ? xpathMd5ForOldTpsTest
+          : selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
       });
       if (success) {
         message.success('调整成功');
