@@ -14,6 +14,7 @@ import styles from './index.less';
 import MissingDataListModal from './modals/MissingDataListModal';
 import PressureTestReportService from './service';
 import { GraphData } from '@antv/g6';
+import downloadFile from 'src/utils/downloadFile';
 
 interface State {
   isReload?: boolean;
@@ -258,9 +259,9 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       reportId: id,
     });
     if (success && typeof data.content === 'string') {
-      window.location.href = `${
-        window.serverUrl
-      }/file/downloadFileByPath?filePath=${encodeURIComponent(data.content)}`;
+      const filePath: string = data.content;
+      const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+      downloadFile(filePath, fileName);
     }
   };
 

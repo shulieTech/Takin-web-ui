@@ -190,6 +190,13 @@ const PressureTestReportService = {
     const url = '/report/getJtlDownLoadUrl';
     return httpGet(url, data);
   },
+  /**
+   * @name 下载文件
+   */
+  async downloadFileByPath(data = {}, options = {}) {
+    const url = '/file/downloadFileByPath';
+    return httpGet(url, data, options);
+  },
 };
 
 export default PressureTestReportService;
