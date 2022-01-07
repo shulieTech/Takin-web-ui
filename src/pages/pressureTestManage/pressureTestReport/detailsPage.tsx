@@ -31,6 +31,9 @@ interface State {
 interface Props {
   location?: { query?: any };
 }
+
+declare var window;
+
 const PressureTestReportDetail: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     isReload: false,
@@ -248,13 +251,35 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     }
   ];
 
+  const downloadJtlFile = async () => {
+    const {
+      data: { data, success },
+    } = await PressureTestReportService.getJtlDownLoadUrl({
+      reportId: id,
+    });
+    if (success && typeof data.content === 'string') {
+      window.location.href = `${
+        window.serverUrl
+      }/file/downloadFileByPath?filePath=${encodeURIComponent(data.content)}`;
+    }
+  };
+
   const extra = (
-    <Button
-      type="primary"
-      onClick={() => router.push(`/analysisManage?type=report&reportId=${id}`)}
-    >
-      查看性能分析报告
-    </Button>
+    <>
+      {detailData?.hasJtl && (
+        <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }}>
+          下载Jtl文件
+        </Button>
+      )}
+      <Button
+        type="primary"
+        onClick={() =>
+          router.push(`/analysisManage?type=report&reportId=${id}`)
+        }
+      >
+        查看性能分析报告
+      </Button>
+    </>
   );
 
   return JSON.stringify(state.detailData) !== '{}' &&

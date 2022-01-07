@@ -182,7 +182,14 @@ const PressureTestReportService = {
   async getLiveGraphData(data) {
     const url = '/report/queryTempReportTrendWithTopology';
     return httpGet(url, data);
-  }
+  },
+  /**
+   * @name 获取jtl文件下载地址
+   */
+  async getJtlDownLoadUrl(data = {}) {
+    const url = '/report/getJtlDownLoadUrl';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;
