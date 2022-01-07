@@ -12,7 +12,7 @@ const UserService = {
     return httpPost(url, data);
   },
   async troLogout(data) {
-    const url = '/logout';
+    const url = '/thirdParty/redirect';
     return httpGet(url, data);
   },
   async updatePassword(data) {

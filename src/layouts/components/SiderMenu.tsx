@@ -61,7 +61,9 @@ const SiderMenu: React.FC<Props> = props => {
   const handleLogout = async () => {
     const {
       data: { success, data }
-    } = await UserService.troLogout({});
+    } = await UserService.troLogout({
+      thirdParty: '1'
+    });
     if (success) {
       message.success('登录已失效，请重新登录');
       const storageList = [
@@ -78,11 +80,6 @@ const SiderMenu: React.FC<Props> = props => {
         'Access-Token'
       ];
       storageList.forEach(item => localStorage.removeItem(item));
-      if (data && data.indexUrl) {
-        location.href = `${data.indexUrl}`;
-        return;
-      }
-      router.push('/login');
     }
   };
 
@@ -135,7 +132,7 @@ const SiderMenu: React.FC<Props> = props => {
         // paddingTop: venomBasicConfig.fixHeader && venomBasicConfig.headerHeight,
         backgroundColor: 'var(--BrandPrimary-500)'
       }}
-      // onCollapse={}
+    // onCollapse={}
     >
       {/* {!venomBasicConfig.fixHeader && <TitleNode />} */}
       <TitleNode

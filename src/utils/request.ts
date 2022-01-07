@@ -77,7 +77,10 @@ const getBackLogin = response => {
     onOk: () => {
       outloginFlag = false;
       window.g_app._store.dispatch({
-        type: 'user/troLogout'
+        type: 'user/troLogout',
+        payload: {
+          thirdParty: 1
+        }
       });
     }
   });
@@ -93,7 +96,7 @@ function checkStatus(response: BaseResponse) {
       if (!outloginFlag) {
         getBackLogin(response);
       }
-    } 
+    }
   }
   return {
     config: response.config,
@@ -120,9 +123,8 @@ const getUrl = (url: string, options: any) => {
 };
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
-  const myurl = `${
-    options && options.domain ? options.domain : serverUrl
-  }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
+  const myurl = `${options && options.domain ? options.domain : serverUrl
+    }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   // const myurl = `${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   return httpRequest<T>({
     url: myurl,
