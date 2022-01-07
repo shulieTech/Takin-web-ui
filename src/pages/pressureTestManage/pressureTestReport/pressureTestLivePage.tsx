@@ -73,7 +73,6 @@ const PressureTestLive: React.FC<Props> = props => {
 
   useEffect(() => {
     queryLiveBusinessActivity(id);
-    tenantList();
   }, []);
   useEffect(() => {
     setTicker(ticker + 1);
@@ -83,14 +82,14 @@ const PressureTestLive: React.FC<Props> = props => {
     queryRequestList({
       startTime:
         state.startTime &&
-        Date.parse(
-          new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-        ) !== 0 &&
-        !isNaN(
           Date.parse(
             new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+          ) !== 0 &&
+          !isNaN(
+            Date.parse(
+              new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+            )
           )
-        )
           ? Date.parse(state.startTime && state.startTime.replace(/-/g, '/'))
           : null,
       sceneId: id
@@ -107,12 +106,11 @@ const PressureTestLive: React.FC<Props> = props => {
     setTicker(0);
   }, [state.tabKey]);
 
-  const tenantList = async () => {
-    const { sceneId } = query;
+  const tenantList = async (s) => {
     const {
       data: { data, success },
     } = await PressureTestReportService.monitor({
-      sceneId
+      sceneId: s
     });
     if (success) {
       setState({
@@ -147,6 +145,7 @@ const PressureTestLive: React.FC<Props> = props => {
       sceneId: value
     });
     if (success) {
+      tenantList(data.sceneId);
       setState({
         detailData: data,
         startTime: data.startTime,
@@ -308,7 +307,7 @@ const PressureTestLive: React.FC<Props> = props => {
    */
   const handleOk = () => {
     router.push(
-      `/pressureTestManage/pressureTestReport/details?id=${detailData.id}&sceneId=${detailData.sceneId}`
+      `/pressureTestManage/pressureTestReport/details?id=${detailData.id}`
     );
   };
 

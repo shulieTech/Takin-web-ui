@@ -175,7 +175,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = props => {
         localStorage.setItem('startTime', startTime);
         message.success('开启压测场景成功！');
         router.push(
-          `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sceneId}&sceneId=${sceneId}`
+          `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sceneId}`
         );
       } else if (data.data === 1) {
         setTimeout(() => {

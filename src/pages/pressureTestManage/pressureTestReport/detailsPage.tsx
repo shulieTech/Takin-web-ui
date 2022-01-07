@@ -52,12 +52,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
 
   const { location } = props;
   const { query } = location;
-  const { id, sceneId } = query;
+  const { id } = query;
   const { detailData, reportCountData, hasMissingData } = state;
 
   useEffect(() => {
     queryReportBusinessActivity(id);
-    tenantList();
   }, []);
 
   useEffect(() => {
@@ -67,11 +66,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     queryRequestCount(id);
   }, [state.isReload]);
 
-  const tenantList = async () => {
+  const tenantList = async (s) => {
     const {
       data: { data, success },
     } = await PressureTestReportService.monitor({
-      sceneId
+      sceneId: s
     });
     if (success) {
       setState({
@@ -95,6 +94,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       reportId: value
     });
     if (success) {
+      tenantList(data.sceneId);
       setState({
         detailData: data,
         hasMissingData:
