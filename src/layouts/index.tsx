@@ -16,14 +16,15 @@ import { router } from 'umi';
 import withRouter from 'umi/withRouter';
 import SiderLayout from './SiderLayout';
 import useTheme from 'src/utils/useTheme';
+import services from 'src/services/app';
 
 moment.locale('zh-cn');
 
-const IndexLayout: React.FC<Basic.BaseProps> = props => {
+const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
   const { children, location } = props;
   let layout = null;
 
-  const { setThemeVars, resetTheme, loadThemeConfig } = useTheme();
+  const { setTheme, resetTheme, loadThemeConfig } = useTheme();
 
   // 权限判断
   if (getTakinAuthority() !== 'false' && location.pathname === '/login') {
@@ -41,15 +42,24 @@ const IndexLayout: React.FC<Basic.BaseProps> = props => {
       );
   }
 
+  const getThemeFromRemote = async () => {
+    const {
+      data: { data, success },
+    } = await services.getTheme();
+    if (success) {
+      setTheme(data);
+    }
+  };
+  
   useEffect(() => {
-    loadThemeConfig();
+    if (getTakinAuthority() === 'true') {
+      getThemeFromRemote();
+    }
   }, []);
 
   return (
     <DocumentTitle title={venomBasicConfig.title}>
-      <ConfigProvider locale={zh_CN}>
-        {layout}
-      </ConfigProvider>
+      <ConfigProvider locale={zh_CN}>{layout}</ConfigProvider>
     </DocumentTitle>
   );
 };

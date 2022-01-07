@@ -10,7 +10,9 @@ import request from 'src/utils/request';
 import router from 'umi/router';
 import queryString from 'query-string';
 import styles from './indexPage.less';
-interface Props { }
+import { getThemeByKeyName } from 'src/utils/useTheme';
+
+interface Props {}
 
 const state = {
   nums: null,
@@ -18,7 +20,7 @@ const state = {
   rotate: null,
   fz: null,
   imgSrc: '',
-  takinAuthority: null
+  takinAuthority: null,
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -31,17 +33,17 @@ const getFormData = (that: Login): FormDataType[] => {
           {
             required: true,
             whitespace: true,
-            message: '请输入账号'
-          }
-        ]
+            message: '请输入账号',
+          },
+        ],
       },
       node: (
         <Input
           className={styles.inputStyle}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
-          placeholder="<用户名>@<企业别名>，例如： username@shulie"
+          placeholder="<用户名>@<企业别名>，例如： username@shulie"
         />
-      )
+      ),
     },
     {
       key: 'password',
@@ -51,9 +53,9 @@ const getFormData = (that: Login): FormDataType[] => {
           {
             required: true,
             whitespace: true,
-            message: '请输入密码'
-          }
-        ]
+            message: '请输入密码',
+          },
+        ],
       },
       node: (
         <Input
@@ -62,7 +64,7 @@ const getFormData = (that: Login): FormDataType[] => {
           placeholder="密码"
           type="password"
         />
-      )
+      ),
     },
     {
       key: 'code',
@@ -72,9 +74,9 @@ const getFormData = (that: Login): FormDataType[] => {
           {
             required: true,
             whitespace: true,
-            message: '请输入验证码'
-          }
-        ]
+            message: '请输入验证码',
+          },
+        ],
       },
       node: (
         <Input
@@ -94,8 +96,8 @@ const getFormData = (that: Login): FormDataType[] => {
             <Icon type="redo" />
           </span>
         </div>
-      )
-    }
+      ),
+    },
   ];
 };
 declare var serverUrl: string;
@@ -116,7 +118,7 @@ export default class Login extends DvaComponent<Props, State> {
   queryMenuList = async () => {
     const {
       headers,
-      data: { data, success }
+      data: { data, success },
     } = await UserService.queryHealth({});
     const headerTakin = headers['takin-authority'];
     if (headerTakin === 'true') {
@@ -134,14 +136,14 @@ export default class Login extends DvaComponent<Props, State> {
       url: `${serverUrl}/verification/code`,
       responseType: 'blob',
       headers: {
-        'Access-Token': localStorage.getItem('Access-Token')
-      }
+        'Access-Token': localStorage.getItem('Access-Token'),
+      },
     });
 
     const url = URL.createObjectURL(data);
     this.setState({
       imgSrc: url,
-      takinAuthority: 'true'
+      takinAuthority: 'true',
     });
     localStorage.setItem('Access-Token', headers['access-token']);
   };
@@ -151,13 +153,13 @@ export default class Login extends DvaComponent<Props, State> {
       return;
     }
     const {
-      data: { success, data }
+      data: { success, data },
     } = await UserService.troLogin({ ...value });
     if (success) {
       notification.success({
         message: '通知',
         description: '登录成功',
-        duration: 1.5
+        duration: 1.5,
       });
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
@@ -191,21 +193,37 @@ export default class Login extends DvaComponent<Props, State> {
     if (this.state.takinAuthority === null) {
       return <Loading />;
     }
+
+    const loginPic = getThemeByKeyName('loginPic');
+
     return (
       <div className={styles.mainWrap}>
-        <img
-          className={styles.bg1}
-          src={require('./../../assets/login_bg.png')}
-        />
-        <img
-          className={styles.bg2}
-          src={require('./../../assets/login_bg2.png')}
-        />
-        <img
-          className={styles.bg3}
-          src={require('./../../assets/login_img.png')}
-        />
-        <img className={styles.bg4} src={require('./../../assets/logo.png')} />
+        {loginPic ? (
+          <img
+            className={styles.bg1}
+            src={loginPic}
+          />
+        ) : (
+          <>
+            <img
+              className={styles.bg1}
+              src={require('./../../assets/login_bg.png')}
+            />
+            <img
+              className={styles.bg2}
+              src={require('./../../assets/login_bg2.png')}
+            />
+            <img
+              className={styles.bg3}
+              src={require('./../../assets/login_img.png')}
+            />
+            <img
+              className={styles.bg4}
+              src={require('./../../assets/logo.png')}
+            />
+          </>
+        )}
+
         <div className={styles.main}>
           <div className={styles.login}>
             <p className={styles.sysName}>全链路压测</p>
@@ -219,8 +237,8 @@ export default class Login extends DvaComponent<Props, State> {
                 submitText: '登录',
                 submitBtnProps: {
                   style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
+                  type: 'primary',
+                },
               }}
             />
             <p className={styles.applyAccount}>

@@ -1,28 +1,44 @@
 import { useEffect } from 'react';
 
 declare var window;
+interface ThemmeConfig {
+  antVars?: object;
+  cssVars?: object;
+  loginPic?: string;
+  logo?: string;
+}
+
+const emptyConfig = {
+  antVars: {}, // antd主题变量
+  cssVars: {}, // css 主题变量
+  logo: '',
+  loginPic: '', // 登录页图片
+};
+
+const getThemeConfig = () => {
+  let config = emptyConfig;
+  try {
+    config = JSON.parse(localStorage['takin-theme']);
+  } catch (error) {
+    // console.log('获取主题设置失败');
+  }
+  return config;
+};
+
+/**
+ * 登录页用的class写的，所以这个方法没有放到hooks里
+ */
+export const getThemeByKeyName = (keyName: 'logo' | 'loginPic') => {
+  const config = getThemeConfig();
+  return config[keyName];
+};
 
 export default () => {
   if (!window.less) {
     return {};
   }
-  const emptyConfig = {
-    antVars: {}, // antd主题变量
-    cssVars: {}, // css 主题变量
-    logo: '',
-    loginPic: '', // 登录页图片
-  };
-  const getThemeConfig = () => {
-    let config = emptyConfig;
-    try {
-      config = JSON.parse(localStorage['takin-theme']);
-    } catch (error) {
-      // console.log('获取主题设置失败');
-    }
-    return config;
-  };
 
-  const rootEle = document.querySelector('[id^=root-]');
+  const rootEle = document.querySelector('#root-master');
 
   const loadThemeConfig = ({
     antVars = getThemeConfig().antVars || {},
@@ -34,31 +50,21 @@ export default () => {
     });
   };
 
-  const setThemeVars = (option: { antVars?: object, cssVars?: object }) => {
+  const setTheme = ({ antVars, cssVars, ...rest }: ThemmeConfig = {}) => {
     const oldConfig = getThemeConfig();
     const config = {
       ...oldConfig,
       antVars: {
         ...oldConfig.antVars,
-        ...(option.antVars || {}),
+        ...(antVars || {}),
       },
       cssVars: {
         ...oldConfig.cssVars,
-        ...(option.cssVars || {}),
+        ...(cssVars || {}),
       },
+      ...rest,
     };
     loadThemeConfig(config);
-    localStorage['takin-theme'] = JSON.stringify(config);
-  };
-
-  const getThemeByKeyName = (keyName: 'logo' | 'loginPic') => {
-    const config = getThemeConfig();
-    return config[keyName];
-  };
-
-  const setThemeByKeyName = (keyName: 'logo' | 'loginPic', value: any) => {
-    const config = getThemeConfig();
-    config[keyName] = value;
     localStorage['takin-theme'] = JSON.stringify(config);
   };
 
@@ -70,9 +76,7 @@ export default () => {
 
   return {
     loadThemeConfig,
-    setThemeVars,
-    getThemeByKeyName,
-    setThemeByKeyName,
+    setTheme,
     resetTheme,
   };
 };
