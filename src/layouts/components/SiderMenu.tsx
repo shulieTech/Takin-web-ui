@@ -59,28 +59,25 @@ const SiderMenu: React.FC<Props> = props => {
   }, []);
 
   const handleLogout = async () => {
+    const storageList = [
+      'troweb-role',
+      'troweb-userName',
+      'full-link-token',
+      'trowebUserResource',
+      'trowebBtnResource',
+      'auth-cookie',
+      'troweb-expire',
+      'troweb-userId',
+      'trowebUserMenu',
+      'takinAuthority',
+      'Access-Token'
+    ];
+    storageList.forEach(item => localStorage.removeItem(item));
     const {
       data: { success, data }
     } = await UserService.troLogout({
       thirdParty: '1'
     });
-    if (success) {
-      message.success('登录已失效，请重新登录');
-      const storageList = [
-        'troweb-role',
-        'troweb-userName',
-        'full-link-token',
-        'trowebUserResource',
-        'trowebBtnResource',
-        'auth-cookie',
-        'troweb-expire',
-        'troweb-userId',
-        'trowebUserMenu',
-        'takinAuthority',
-        'Access-Token'
-      ];
-      storageList.forEach(item => localStorage.removeItem(item));
-    }
   };
 
   const content = (
