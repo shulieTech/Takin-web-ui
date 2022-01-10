@@ -1,5 +1,6 @@
 import { resolve } from 'path';
-import theme from './theme';
+// import theme from './theme';
+
 const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
 const path = require('path');
 
