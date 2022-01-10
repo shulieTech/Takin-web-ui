@@ -27,7 +27,7 @@ import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
 import { getTakinAuthority, treeFindPath } from 'src/utils/utils';
-import version from '../../../public/version.json';
+import axios from 'axios';
 
 const { Sider } = Layout;
 
@@ -78,7 +78,8 @@ const SiderMenu: React.FC<Props> = props => {
         'Access-Token'
       ];
       storageList.forEach(item => localStorage.removeItem(item));
-      window.location.href = version.indexHtml;
+      const { data: json } = await axios.get('./version.json');
+      window.location.href = json.loginUrl;
     }
   };
 

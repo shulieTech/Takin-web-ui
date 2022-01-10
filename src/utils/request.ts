@@ -6,7 +6,6 @@ import { getTakinAuthority } from './utils';
 declare var window: Window;
 declare var serverUrl: string;
 import UserService from 'src/services/user';
-import version from '../../public/version.json';
 axios.defaults.withCredentials = true;
 let outloginFlag = false;
 // axios.interceptors.request.use(
@@ -77,9 +76,14 @@ const getBackLogin = response => {
     okText: '确认',
     onOk: () => {
       outloginFlag = false;
-      window.location.href = version.indexHtml;
+      loginout();
     }
   });
+};
+
+const loginout = async () => {
+  const { data: json } = await axios.get('./version.json');
+  window.location.href = json.loginUrl;
 };
 function checkStatus(response: BaseResponse) {
   if (response.status >= 200 && response.status < 300) {

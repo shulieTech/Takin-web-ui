@@ -15,7 +15,7 @@ import ContentNode from './components/ContentNode';
 import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
 import queryString from 'query-string';
-import version from '../../public/version.json';
+import axios from 'axios';
 
 declare var window: any;
 let path = '';
@@ -66,12 +66,17 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
           title: '登录失败',
           content: data.errorMessage,
           onOk() {
-            window.location.href = version.indexHtml;
+            loginout();
           },
         });
         setState({ request: false });
       }
     }
+  };
+
+  const loginout = async () => {
+    const { data: json } = await axios.get('./version.json');
+    window.location.href = json.loginUrl;
   };
 
   const { location } = props;
