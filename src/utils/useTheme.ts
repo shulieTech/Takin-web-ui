@@ -38,7 +38,7 @@ export default () => {
     return {};
   }
 
-  const rootEle = document.querySelector('#root-master');
+  const rootEle = document.querySelector('#root');
 
   const loadThemeConfig = ({
     antVars = getThemeConfig().antVars || {},
