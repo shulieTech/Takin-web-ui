@@ -33,7 +33,7 @@ const LinkCharts: React.FC<Props> = (props) => {
   const isOldVersionTpsTest =
     state.detailData.pressureType === TestMode.TPS模式;
   const isMutiTpsTest = selectedTreeNode?.pressureType === TestMode.TPS模式;
-  const xpathMd5ForOldTpsTest = 'cec45d27c5e20cca29526c54b4c9ad34';
+  const xpathMd5ForOldTpsTest = 'all';
 
   const handleChangeTab = (value, e) => {
     if (value[0]) {

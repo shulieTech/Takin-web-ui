@@ -30,7 +30,11 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
 
   const { location } = props;
   useEffect(() => {
-    qiankunStart();
+    qiankunStart({
+      sandbox: {
+        strictStyleIsolation: true,
+      },
+    });
   }, []);
   useEffect(() => {
     handleDispatch({
