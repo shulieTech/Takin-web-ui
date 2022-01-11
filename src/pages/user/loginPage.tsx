@@ -1,4 +1,5 @@
 import { Icon, Input, message, notification, Popover } from 'antd';
+import axios from 'axios';
 import { connect } from 'dva';
 import { CommonForm } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
@@ -17,7 +18,8 @@ const state = {
   rotate: null,
   fz: null,
   imgSrc: '',
-  takinAuthority: null
+  takinAuthority: null,
+  Wechat: null
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -101,8 +103,12 @@ export default class Login extends DvaComponent<Props, State> {
   namespace = 'user';
   state = state;
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
+    const { data: json } = await axios.get('./version.json');
     this.queryMenuList();
+    this.setState({
+      Wechat: json.WechatQRcode,
+    });
   };
 
   refresh = () => {
@@ -168,14 +174,14 @@ export default class Login extends DvaComponent<Props, State> {
     }
     this.refresh();
   };
-
-  content = () => {
+  
+  content = (WechatQRcode) => {
     return (
       <div style={{ position: 'relative', zIndex: 100000 }}>
         <p className={styles.wechat}>微信扫码联系</p>
         <img
           style={{ width: 100 }}
-          src={require('./../../assets/wechat.png')}
+          src={WechatQRcode}
         />
       </div>
     );
@@ -220,7 +226,7 @@ export default class Login extends DvaComponent<Props, State> {
             />
             <p className={styles.applyAccount}>
               <Popover
-                content={this.content()}
+                content={this.content(this.state.Wechat)}
                 trigger="click"
                 placement="bottom"
               >
