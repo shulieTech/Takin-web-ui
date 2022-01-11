@@ -49,6 +49,7 @@ const NotFound = withRouter((props) => {
         backgroundColor: '#fff',
         borderRadius: '4px 4px 0 0',
         overflow: 'scroll',
+        border: 'none',
       }}
     />
   );
