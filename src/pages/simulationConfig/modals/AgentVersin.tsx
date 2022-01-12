@@ -102,7 +102,7 @@ const AgentVersin: React.FC<Props> = props => {
           >
             {props.form.getFieldDecorator('zhKey', {
               initialValue: row.zhKey || '',
-              rules: [{ required: true, whitespace: true, message: `请输入配置项中文名` }],
+              rules: [{ required: true, message: `请输入配置项中文名` }],
             })(
               <Input placeholder="配置项中文名" disabled />
             )}
@@ -112,7 +112,7 @@ const AgentVersin: React.FC<Props> = props => {
           >
             {props.form.getFieldDecorator('valueType', {
               initialValue: row.valueType === 0 ? '文本' : '单选',
-              rules: [{ required: true, whitespace: true, message: `请输入值类型` }],
+              rules: [{ required: true, message: `请输入值类型` }],
             })(
               <Input placeholder="值类型" disabled />
             )}
@@ -124,7 +124,7 @@ const AgentVersin: React.FC<Props> = props => {
               row.valueType === 0 ? (
                 props.form.getFieldDecorator('defaultValue', {
                   initialValue: row.defaultValue || '',
-                  rules: [{ required: true, whitespace: true, message: `请输入配置值` }],
+                  rules: [{ required: true, message: `请输入配置值` }],
                 })(
                   <Input placeholder="配置值" />
                 )
@@ -154,7 +154,7 @@ const AgentVersin: React.FC<Props> = props => {
           >
             {props.form.getFieldDecorator('name', {
               initialValue: row.desc || '',
-              rules: [{ required: true, whitespace: true, message: `请输入配置描述` }],
+              rules: [{ required: true, message: `请输入配置描述` }],
             })(
               <TextArea placeholder="配置描述" rows={4} disabled />
             )}

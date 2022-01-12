@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AgentVersin from './modals/AgentVersin';
 import TakeEffect from './modals/takeEffect';
-import { Input, Form, Button, Row, Col, Select, Radio, Tabs, Badge } from 'antd';
+import { Input, Form, Button, Row, Col, Select, Radio, Tabs, Badge, Tooltip, Popover } from 'antd';
 import { useStateReducer } from 'racc';
 import configService from './service';
 import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
@@ -12,6 +12,7 @@ import moment from 'moment';
 import { FormItemProps } from 'antd/lib/form';
 import CustomTable from 'src/components/custom-table';
 import { values } from 'lodash';
+import RootDirectory from './modals/RootDirectory';
 const InputGroup = Input.Group;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -30,7 +31,24 @@ const getInitState = () => ({
   readProjectConfig: false,
   allApplicationList: [],
   row: {},
-  key: '1'
+  key: '1',
+  visible: false,
+  buDisabled: true,
+  datas: {
+    pathType: 0
+  },
+  context: {
+    endpoint: '',
+    bucketName: '',
+    accessKeySecret: '',
+    accessKeyId: '',
+    ftpHost: '',
+    ftpPort: '',
+    username: '',
+    passwd: ''
+  },
+  validStatus: 0,
+  errorMsg: null
 });
 export type AdminState = ReturnType<typeof getInitState>;
 
@@ -39,9 +57,6 @@ const Admin: React.FC<AdminProps> = props => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
-
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     queryPatrolSceneAndDashbordList();
   }, [state.isEffect, state.effectMechanism, state.projectName, state.readProjectConfig]);
@@ -52,7 +67,31 @@ const Admin: React.FC<AdminProps> = props => {
 
   useEffect(() => {
     allApplication();
+    onClick();
   }, []);
+
+  const onClick = async () => {
+    const {
+      data: { data, success }
+    } = await configService.pathConfig({});
+    if (success) {
+      if (data?.editable === 1) {
+        setState({
+          buDisabled: true,
+        });
+      } else {
+        setState({
+          buDisabled: false,
+        });
+      }
+      setState({
+        datas: data,
+        context: data && JSON.parse(data?.context),
+        validStatus: data.validStatus,
+        errorMsg: data.errorMsg
+      });
+    }
+  };
 
   const allApplication = async () => {
     const {
@@ -69,7 +108,6 @@ const Admin: React.FC<AdminProps> = props => {
    * @name 获取巡检场景和看板列表
    */
   const queryPatrolSceneAndDashbordList = async () => {
-    setLoading(true);
     const {
       data: { data, success }
     } = await configService.configList({
@@ -78,7 +116,6 @@ const Admin: React.FC<AdminProps> = props => {
       projectName: state.projectName,
       readProjectConfig: state.readProjectConfig
     });
-    setLoading(false);
     if (success) {
       setState({
         configList: data,
@@ -156,6 +193,12 @@ const Admin: React.FC<AdminProps> = props => {
 
   const resets = () => {
     queryPatrolSceneAndDashbordList();
+  };
+
+  const visible = () => {
+    setState({
+      visible: true,
+    });
   };
 
   const useGlobal = async (id) => {
@@ -355,7 +398,7 @@ const Admin: React.FC<AdminProps> = props => {
         <Tabs defaultActiveKey="1" onChange={callback}>
           <TabPane tab="全局配置" key="1">
             <Row style={{ marginBottom: 20, marginLeft: 20 }}>
-              <Col span={1} offset={14}>
+              <Col span={1} offset={9}>
                 <Button type="link" onClick={() => reset(1)} style={{ marginTop: 10 }}>重置</Button>
               </Col>
               <Col span={4}>
@@ -382,11 +425,40 @@ const Admin: React.FC<AdminProps> = props => {
                   <Option value="1">立即生效</Option>
                 </Select>
               </Col>
+              <Col span={3}>
+                <Button type="default" onClick={visible}>探针根目录管理</Button>
+              </Col>
+              <Col span={2} style={{ marginTop: 6 }}>
+                <Badge
+                  text={state.validStatus === 0 ? '未配置' : state.validStatus === 1 ? '检测中' :
+                    state.validStatus === 2 ? '异常' : '检测成功'}
+                  color={state.validStatus === 2 ? 'var(--FunctionalError-400)' :
+                    state.validStatus === 1 ? 'var(--FunctionalAlert-300)' : state.validStatus === 3 ? 'var(--BrandPrimary-500)' :
+                      '--FunctionalNetural-400'}
+                />
+                {
+                  state.validStatus === 2 &&
+                  <Popover
+                    title="详情"
+                    content={
+                      <div
+                        style={{ width: 180, height: 280, overflowY: 'scroll' }}
+                      >
+                        <p>{state.errorMsg}</p>
+                      </div>
+                    }
+                    trigger="click"
+                  >
+                    <Button type="link" style={{ marginLeft: 8 }}>
+                      详情
+                  </Button>
+                  </Popover>}
+              </Col>
               <Col span={1}>
                 <Button type="default" icon="redo" onClick={resets} />
               </Col>
             </Row>
-            <CustomTable columns={columns} dataSource={state.configList} pagination={false} loading={loading}/>
+            <CustomTable columns={columns} dataSource={state.configList} pagination={false} />
           </TabPane>
           <TabPane tab="应用配置" key="2">
             <Row style={{ marginBottom: 20, marginLeft: 20 }}>
@@ -444,12 +516,13 @@ const Admin: React.FC<AdminProps> = props => {
                 <Button type="default" icon="redo" onClick={resets} />
               </Col>
             </Row>
-            <CustomTable columns={column} dataSource={state.configList} pagination={false} loading={loading}/>
+            <CustomTable columns={column} dataSource={state.configList} pagination={false} />
           </TabPane>
         </Tabs>
       </div>
       <AgentVersin state={state} setState={setState} />
       <TakeEffect state={state} setState={setState} />
+      {state.visible && <RootDirectory state={state} setState={setState} />}
     </div>
   );
 };
