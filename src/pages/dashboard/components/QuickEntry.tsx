@@ -26,8 +26,7 @@ const QuickEntry: React.FC<Props> = props => {
             className={styles.iconWrap}
             style={{
               display:
-                menuAuthority?.pressureTestManage_pressureTestScene &&
-                  menuAuthority?.flowAccount ? 'block' : 'none'
+                menuAuthority?.pressureTestManage_pressureTestScene ? 'block' : 'none'
             }}
           >
             <Link to="/pressureTestManage/pressureTestScene">
