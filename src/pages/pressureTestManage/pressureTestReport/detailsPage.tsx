@@ -274,9 +274,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       )}
       <Button
         type="primary"
-        onClick={() =>
-          router.push(`/analysisManage?type=report&reportId=${id}`)
-        }
+        onClick={() => window.open(`#/analysisManage?type=report&reportId=${id}`)}
       >
         查看性能分析报告
       </Button>
@@ -324,32 +322,31 @@ const PressureTestReportDetail: React.FC<Props> = props => {
         style={{ padding: 8 }}
         extraPosition="top"
         extra={extra}
-        title={
-          <div style={{ position: 'relative' }}>
-            <span style={{ fontSize: 20 }}>
-              {detailData.sceneName ? detailData.sceneName : '-'}
+        title={<div style={{ position: 'relative' }}>
+          <span style={{ fontSize: 20 }}>
+            {detailData.sceneName ? detailData.sceneName : '-'}
+          </span>
+          {hasMissingData === 0 && (
+            <span
+              style={{
+                display: 'inline-block',
+                color: '#666666',
+                padding: '6px 8px',
+                background: '#F2F2F2',
+                borderRadius: '4px',
+                float: 'right',
+              }}
+            >
+              <Icon type="exclamation-circle" />
+              <span style={{ marginRight: 16, marginLeft: 8 }}>无漏数</span>
+              <MissingDataListModal
+                reportId={id}
+                hasMissingData={0}
+                btnText="查看详情"
+              />
             </span>
-            {hasMissingData === 0 && (
-              <span
-                style={{
-                  display: 'inline-block',
-                  color: '#666666',
-                  padding: '6px 8px',
-                  background: '#F2F2F2',
-                  borderRadius: '4px',
-                  float: 'right'
-                }}
-              >
-                <Icon type="exclamation-circle" />
-                <span style={{ marginRight: 16, marginLeft: 8 }}>无漏数</span>
-                <MissingDataListModal
-                  reportId={id}
-                  hasMissingData={0}
-                  btnText="查看详情"
-                />
-              </span>
-            )}
-          </div>}
+          )}
+        </div>}
       >
         {/* <Button onClick={() => exportPdf()}>导出PDF</Button> */}
         <Header list={headList} isExtra={false} />
@@ -362,34 +359,32 @@ const PressureTestReportDetail: React.FC<Props> = props => {
             marginBottom: 24,
             background: detailData.conclusion === 1 ? '#75D0DD' : '#F58D76'
           }}
-          leftWrap={
-            <Col span={4}>
-              <Row type="flex" align="middle">
-                <Col>
-                  <img
-                    style={{ width: 40 }}
-                    src={require(`./../../../assets/${
-                      detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
+          leftWrap={<Col span={4}>
+            <Row type="flex" align="middle">
+              <Col>
+                <img
+                  style={{ width: 40 }}
+                  src={require(`./../../../assets/${detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
                     }.png`)}
-                  />
-                </Col>
-                <Col style={{ marginLeft: 8 }}>
-                  <p
-                    style={{
-                      fontSize: 20,
-                      color: '#fff'
-                    }}
-                  >
-                    {detailData.conclusion === 1 ? '压测通过' : '压测不通过'}
+                />
+              </Col>
+              <Col style={{ marginLeft: 8 }}>
+                <p
+                  style={{
+                    fontSize: 20,
+                    color: '#fff',
+                  }}
+                >
+                  {detailData.conclusion === 1 ? '压测通过' : '压测不通过'}
+                </p>
+                {detailData.conclusion === 0 && (
+                  <p style={{ color: '#fff' }}>
+                    {detailData.conclusionRemark}
                   </p>
-                  {detailData.conclusion === 0 && (
-                    <p style={{ color: '#fff' }}>
-                      {detailData.conclusionRemark}
-                    </p>
-                  )}
-                </Col>
-              </Row>
-            </Col>}
+                )}
+              </Col>
+            </Row>
+          </Col>}
         />
         <ModuleTabs
           id={id}
@@ -407,18 +402,17 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     <div style={{ marginTop: 200 }}>
       <EmptyNode
         title="报告生成中..."
-        extra={
-          <div style={{ marginTop: 16 }}>
-            <Button
-              onClick={() => {
-                setState({
-                  isReload: !state.isReload
-                });
-              }}
-            >
-              刷新
-            </Button>
-          </div>}
+        extra={<div style={{ marginTop: 16 }}>
+          <Button
+            onClick={() => {
+              setState({
+                isReload: !state.isReload,
+              });
+            }}
+          >
+            刷新
+          </Button>
+        </div>}
       />
     </div>
   ) : (
