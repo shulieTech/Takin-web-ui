@@ -30,7 +30,7 @@ const NotFound = () => {
           <p style={{ fontSize: '20px', color: 'rgba(0, 0, 0, 0.45)' }}>
             抱歉，你访问的页面不存在
           </p>
-          <Button type="primary" onClick={() => router.push('/')}>
+          <Button type="primary" onClick={() => { window.parent.location.hash = '#/dashboard'; }}>
             返回首页
           </Button>
         </Col>
