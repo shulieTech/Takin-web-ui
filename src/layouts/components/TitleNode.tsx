@@ -57,11 +57,7 @@ const TitleNode: React.FC<Props> = props => {
         }}
       >
         <div className={styles.titleName}>
-          <img width={30} src={require('./../../assets/takin_logo.png')} />
-
-          {!props.collapsedStatus && (
-            <span className={styles.logoName}>Takin</span>
-          )}
+        全链路在线压测
         </div>
 
         <Button

@@ -159,9 +159,6 @@ const DashboardPage: React.FC<Props> = props => {
         <Col span={6}>
           <PressureTestSwitch data={switchStatus} />
           {getTakinAuthority() === 'true' && <Blank />}
-          {getTakinAuthority() === 'true' && (
-            <FlowBalance data={flowAccountData} />
-          )}
           <Blank />
           <QuickEntry data={quickEntranceData} />
         </Col>
