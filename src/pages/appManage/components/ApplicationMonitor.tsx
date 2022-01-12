@@ -265,7 +265,7 @@ const ApplicationMonitor: React.FC<Props> = (props) => {
               dataSource={state.allByActivityList}
             />
           </Col>
-          <Col span={8} offset={5} style={{ marginTop: 5 }}>
+          <Col span={16} style={{ textAlign: 'right' }}>
             <span>
               <span style={{ marginRight: 8, marginLeft: 18 }}>
                 最后统计时间：{lastUpdateTime}
@@ -297,11 +297,9 @@ const ApplicationMonitor: React.FC<Props> = (props) => {
                 }
               }}
             />
-          </Col>
-          <Col span={3}>
             <CommonSelect
               placeholder="流量类型"
-              style={{ width: '95%' }}
+              style={{ width: 150, marginLeft: 8 }}
               onChange={clusterTestChange}
               defaultValue="-1"
               dataSource={[
