@@ -99,7 +99,7 @@ const AgentManage: React.FC<Props> = props => {
             img={
               <CustomIcon
                 imgWidth={28}
-                color="#11D0C5"
+                color="var(--BrandPrimary-500, #11D0C5)"
                 imgName="redis_icon"
                 iconWidth={64}
               />
