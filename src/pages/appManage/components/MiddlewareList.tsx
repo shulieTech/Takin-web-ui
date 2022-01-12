@@ -362,6 +362,7 @@ const MiddlewareList: React.FC<Props> = props => {
         style={{
           marginTop: 20,
           position: 'fixed',
+          zIndex: 1,
           padding: '8px 40px',
           bottom: 0,
           right: 10,

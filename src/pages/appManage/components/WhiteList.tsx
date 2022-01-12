@@ -384,6 +384,7 @@ const WhiteList: React.FC<Props> = props => {
           marginTop: 20,
           // textAlign: 'right',
           position: 'fixed',
+          zIndex: 1,
           padding: '8px 40px',
           bottom: 0,
           right: 10,
