@@ -1,29 +1,45 @@
-// import { Button, Col, Row } from 'antd';
-// import React, { Component } from 'react';
-// import router from 'umi/router';
-
-// export default class NotFound extends Component {
-//   render() {
-//     return (
-//       <div
-//         id="app-slave"
-//         style={{
-//           flexDirection: 'column',
-//           width: '100%',
-//           height: '100%',
-//           backgroundColor: '#fff',
-//           borderRadius: '4px 4px 0 0',
-//           overflow: 'scroll'
-//         }}
-//       />
-//     );
-//   }
-// }
-
 import React, { useState, useEffect } from 'react';
+import { Button, Col, Row } from 'antd';
+import router from 'umi/router';
 import { withRouter } from 'umi';
 
-const NotFound = withRouter((props) => {
+const NotFound = () => {
+  return (
+    <div style={{ paddingTop: '150px' }}>
+      <Row>
+        <Col offset={4} span={8}>
+          <div
+            style={{
+              width: '430px',
+              height: '360px',
+              // background:
+              //   'url("https://gw.alipayobjects.com/zos/rmsportal/KpnpchXsobRgLElEozzI.svg")'
+            }}
+          />
+        </Col>
+        <Col span={8}>
+          <h1
+            style={{
+              fontSize: '72px',
+              fontWeight: 600,
+              color: 'rgb(67, 78, 89)',
+            }}
+          >
+            404
+          </h1>
+          <p style={{ fontSize: '20px', color: 'rgba(0, 0, 0, 0.45)' }}>
+            抱歉，你访问的页面不存在
+          </p>
+          <Button type="primary" onClick={() => router.push('/')}>
+            返回首页
+          </Button>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const NotFoundAndChildPage = withRouter((props) => {
   const {
     location: { pathname },
   } = props;
@@ -39,7 +55,7 @@ const NotFound = withRouter((props) => {
     getFrameSrc();
   }, [pathname]);
 
-  return (
+  return frameSrc ? (
     <iframe
       src={frameSrc}
       style={{
@@ -52,7 +68,9 @@ const NotFound = withRouter((props) => {
         border: 'none',
       }}
     />
+  ) : (
+    <NotFound />
   );
 });
 
-export default NotFound;
+export default NotFoundAndChildPage;
