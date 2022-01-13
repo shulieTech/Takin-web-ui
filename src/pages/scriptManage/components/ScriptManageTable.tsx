@@ -175,9 +175,13 @@ const getScriptManageColumns = (
       dataIndex: 'scriptName',
       render: (text, row) => {
         return (
-          <div className={styles.scriptName}>
-            {text}
-            <span style={{ color: '#8C8C8C', marginLeft: 8 }}>
+          <div className={styles.scriptName} style={{ display: 'inline-flex' }}>
+            <Tooltip title={text} arrowPointAtCenter>
+              <div style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {text}
+              </div>
+            </Tooltip>
+            <span style={{ color: '#8C8C8C', marginLeft: 8, flex: 1, }}>
               版本{row.scriptVersion}
             </span>
           </div>
