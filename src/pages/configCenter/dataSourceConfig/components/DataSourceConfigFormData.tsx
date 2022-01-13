@@ -156,24 +156,20 @@ const getAddDataSourceConfigFormData = (
         ]
       },
       node: (
-        <Row type="flex" justify="start" align="middle">
-          <Col>
-            <Button loading={state.loading} onClick={handleDebug}>
-              测试连接
-            </Button>
-          </Col>
-          <Col>
-            <Row type="flex" align="middle" justify="start">
-              <Icon
-                type="info-circle"
-                style={{ color: iconColor, marginLeft: 16, marginRight: 8 }}
-              />
-              <span style={{ color: iconColor, lineHeight: '12px' }}>
-                {state.info}
-              </span>
-            </Row>
-          </Col>
-        </Row>
+        <div>
+          <Button loading={state.loading} onClick={handleDebug}>
+            测试连接
+          </Button>
+          <div>
+            <Icon
+              type="info-circle"
+              style={{ color: iconColor, marginRight: 8 }}
+            />
+            <span style={{ color: iconColor, lineHeight: '12px' }}>
+              {state.info}
+            </span>
+          </div>
+        </div>
       )
     }
   ];
