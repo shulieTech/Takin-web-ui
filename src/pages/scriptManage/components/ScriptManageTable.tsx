@@ -175,9 +175,9 @@ const getScriptManageColumns = (
       dataIndex: 'scriptName',
       render: (text, row) => {
         return (
-          <div className={styles.scriptName} style={{ display: 'inline-flex' }}>
+          <div className={styles.scriptName} style={{ display: 'inline-flex', whiteSpace: 'nowrap' }}>
             <Tooltip title={text} arrowPointAtCenter>
-              <div style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {text}
               </div>
             </Tooltip>
