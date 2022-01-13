@@ -97,20 +97,22 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
           }
           return (
             <Fragment>
-              <div style={{ position: 'relative' }}>
-                <span
-                  style={{
-                    color:
-                      Number(text && text.result) >
-                        Number(text && text.value) && text.value !== -1
-                        ? '#FE7D61'
-                        : ''
-                  }}
-                >
-                  {text.result}ms
+              <div style={{ display: 'flex', alignItems: 'center', }}>
+                <span style={{ flex: 1, }}>
+                  <span
+                    style={{
+                      color:
+                        Number(text && text.result) >
+                          Number(text && text.value) && text.value !== -1
+                          ? '#FE7D61'
+                          : ''
+                    }}
+                  >
+                    {text.result}ms
+                  </span>
+                  <span style={{ margin: '0 8px' }}>/</span>
+                  <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
                 </span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
                 <Popover
                   placement="bottomLeft"
                   content={
@@ -135,7 +137,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                     </div>}
                 >
                   <Icon
-                    style={{ position: 'absolute', right: 6, top: 2 }}
+                    style={{ marginLeft: 4 }}
                     type="pie-chart"
                     theme="filled"
                   />
