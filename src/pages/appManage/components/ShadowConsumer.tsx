@@ -238,7 +238,7 @@ const getFormData = (
     {
       key: ShadowConsumerBean.groupId,
       label: '',
-      node: <Input placeholder="业务的topic#业务的消费组" />
+      node: <Input placeholder="业务topic#业务的消费组"/>
     }
   ];
 };
