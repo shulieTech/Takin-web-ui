@@ -46,9 +46,9 @@ export default {
     [
       'umi-plugin-react',
       {
-        antd: {
-          dynamicImport: false
-        },
+        // antd: {
+        //   dynamicImport: false
+        // },
         dva: {
           dynamicImport: false
         },
