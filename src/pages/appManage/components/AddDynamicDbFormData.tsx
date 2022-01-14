@@ -73,7 +73,9 @@ const getAddDynamicDbFormData = (
    * @name 切换中间件名称
    */
   const handleChangeMiddleWareName = async value => {
-    queryType(state.dbType, value);
+    if (value) {
+      queryType(state.dbType, value);
+    }
     if (state.dbType === '缓存') {
       queryCacheType();
     }
