@@ -207,19 +207,19 @@ const SelectVersionModal: React.FC<Props> = props => {
       modalProps={{
         width: 960,
         title: '选择版本',
-        maskClosable: false
+        maskClosable: false,
+        centered: true,
       }}
       btnText={props.btnText}
       onClick={() => handleClick()}
       beforeOk={handleSubmit}
       afterCancel={handleCancle}
     >
-      <div style={{ minHeight: 500 }}>
+      <div style={{ minHeight: 400 }}>
         <Row
           type="flex"
           align="middle"
           justify="end"
-          style={{ marginBottom: 20 }}
         >
           <Col>
             <Button
@@ -270,7 +270,7 @@ const SelectVersionModal: React.FC<Props> = props => {
           </Col>
         </Row>
         <CustomTable
-          scroll={{ y: 400 }}
+          scroll={{ y: 300 }}
           rowSelection={{
             type: 'radio',
             selectedRowKeys: Array.isArray(modalState.selectedRowKeys) ?
