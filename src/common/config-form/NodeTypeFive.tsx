@@ -256,7 +256,7 @@ const NodeTypeFive: React.FC<Props> = props => {
         ...customColumnProps,
         title: '编辑',
         dataIndex: 'isManual',
-        width: 80,
+        width: 100,
         render: (text, row) => {
           return !text ? (
             '-'
