@@ -64,12 +64,12 @@ const AppManage: React.FC<AppManageProps> = props => {
       commonTableProps={{
         columns: getColumns(state, setState),
         rowKey: 'id',
-        rowSelectProps: {
-          selectedRowKeys: state.checkedKeys
-        },
-        checkable: true
+        // rowSelectProps: {
+        //   selectedRowKeys: state.checkedKeys
+        // },
+        // checkable: true
       }}
-      onCheck={(keys, checkedRows) => handleCheck(keys, checkedRows)}
+      // onCheck={(keys, checkedRows) => handleCheck(keys, checkedRows)}
       commonFormProps={{ formData: getFormData(state), rowNum: 6 }}
       ajaxProps={{ url: '/application/center/list', method: 'GET' }}
       searchParams={state.searchParams}
