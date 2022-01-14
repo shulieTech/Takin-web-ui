@@ -234,7 +234,7 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
     <CommonDrawer
       btnText={title}
       drawerProps={{
-        width: 650,
+        width: 700,
         title: action === 'add' ? '新增挡板配置' : '编辑挡板配置',
         maskClosable: false
       }}
@@ -263,7 +263,7 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
           isSubmitBtn: false
         }}
         rowNum={1}
-        formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 14 } }}
+        formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 16 } }}
       />
     </CommonDrawer>
   );
