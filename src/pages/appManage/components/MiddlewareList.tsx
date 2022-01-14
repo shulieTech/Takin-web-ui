@@ -307,6 +307,7 @@ const MiddlewareList: React.FC<Props> = props => {
                 })
               }
               value={state.searchInputValue}
+              maxLength={100}
             />
           </Col>
           <Col>
