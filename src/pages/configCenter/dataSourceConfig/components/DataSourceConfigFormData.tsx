@@ -3,6 +3,7 @@ import { CommonSelect } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
 import { Button, Col, Icon, Input, message, Row } from 'antd';
 import DataSourceConfigService from '../service';
+import { trimObj } from 'src/utils/utils';
 
 const getAddDataSourceConfigFormData = (
   state,
@@ -27,7 +28,7 @@ const getAddDataSourceConfigFormData = (
       });
       const {
         data: { success, data }
-      } = await DataSourceConfigService.debugDataSource({ ...values });
+      } = await DataSourceConfigService.debugDataSource({ ...trimObj(values) });
       if (success) {
         setState({
           debugStatus: true,
