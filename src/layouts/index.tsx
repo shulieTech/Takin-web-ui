@@ -62,7 +62,12 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
 
   return (
     <DocumentTitle title={venomBasicConfig.title}>
-      <ConfigProvider locale={zh_CN}>{layout}</ConfigProvider>
+      <ConfigProvider 
+        locale={zh_CN} 
+        getPopupContainer={trigger => trigger.parentElement}
+      >
+        {layout}
+      </ConfigProvider>
     </DocumentTitle>
   );
 };
