@@ -35,12 +35,12 @@ const getColumns = (
   };
 
   return [
-    {
-      ...customColumnProps,
-      title: '序号',
-      dataIndex: 'order',
-      render: (text, row, index) => index + 1
-    },
+    // {
+    //   ...customColumnProps,
+    //   title: '序号',
+    //   dataIndex: 'order',
+    //   render: (text, row, index) => index + 1
+    // },
     {
       ...customColumnProps,
       title: 'key',
