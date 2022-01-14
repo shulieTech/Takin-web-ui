@@ -80,6 +80,8 @@ const getDataSourceFormData = (
         <CommonSelect
           style={{ width: 250 }}
           placeholder="请选择数据源"
+          showSearch
+          optionFilterProp="children"
           dataSource={(state && state.dataSourceList) || []}
           onRender={item => (
             <CommonSelect.Option key={item.value} value={item.value}>
