@@ -375,7 +375,7 @@ const getScriptManageColumns = (
       dataIndex: 'action',
       render: (text, row) => {
         return (
-          <Fragment>
+          <div style={{ whiteSpace: 'nowrap' }}>
             <AuthorityBtn
               isShow={
                 btnAuthority &&
@@ -477,7 +477,7 @@ const getScriptManageColumns = (
                 </Link>
               </Button>
             )}
-          </Fragment>
+          </div>
         );
       },
     },

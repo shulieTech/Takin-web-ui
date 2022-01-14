@@ -147,6 +147,12 @@ const AdminDistributeModal: React.FC<Props> = props => {
     });
   };
 
+  useEffect(() => {
+    if (state.form) {
+      handleSearch();
+    }
+  }, [state.form]);
+
   return (
     <CommonModal
       modalProps={{
