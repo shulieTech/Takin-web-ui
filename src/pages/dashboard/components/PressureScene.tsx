@@ -21,14 +21,14 @@ const PressureScene: React.FC<Props> = props => {
         return <div style={{ fontSize: '18px' }}>{text}</div>;
       }
     },
-    {
-      title: '最大并发',
-      dataIndex: 'threadNum',
-      key: 'threadNum',
-      render: text => {
-        return <div style={{ color: '#A2A6B1' }}>最大并发：{text}</div>;
-      }
-    },
+    // {
+    //   title: '最大并发',
+    //   dataIndex: 'threadNum',
+    //   key: 'threadNum',
+    //   render: text => {
+    //     return <div style={{ color: '#A2A6B1' }}>最大并发：{text}</div>;
+    //   }
+    // },
     {
       title: '开始时间',
       dataIndex: 'lastPtTime',
