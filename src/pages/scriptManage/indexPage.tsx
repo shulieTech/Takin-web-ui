@@ -59,7 +59,7 @@ const ScriptManage: React.FC<ScriptManageProps> = (props) => {
     queryBussinessActive();
     querybusinessFlowList();
     queryTagList();
-  }, []);
+  }, [state.isReload]);
 
   /**
    * @name 获取所有业务活动
