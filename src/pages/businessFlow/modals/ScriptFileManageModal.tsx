@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { CommonForm, CommonModal, ImportFile, useStateReducer } from 'racc';
 import { Icon, message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
@@ -32,6 +32,7 @@ const ScriptFileManageModal: React.FC<Props> = props => {
     attachmentList: [],
     uploadFileNum: 0
   });
+  const [uploading, setUploading] = useState(false);
 
   const handleClick = () => {
     setState({
@@ -146,13 +147,20 @@ const ScriptFileManageModal: React.FC<Props> = props => {
    * @name 上传文件
    */
   const uploadFiles = async files => {
-    const {
-      data: { data, success }
-    } = await PressureTestSceneService.uploadFiles(files);
-    if (success) {
-      setState({
-        fileList: state.fileList ? state.fileList.concat(data) : data
-      });
+    setUploading(true);
+    const msg = message.loading('上传中');
+    try {
+      const {
+        data: { data, success }
+      } = await PressureTestSceneService.uploadFiles(files);
+      if (success) {
+        setState({
+          fileList: state.fileList ? state.fileList.concat(data) : data
+        });
+      }
+    } finally {
+      setUploading(false);
+      msg();
     }
   };
 
@@ -307,6 +315,9 @@ const ScriptFileManageModal: React.FC<Props> = props => {
         title: '脚本文件',
         maskClosable: false,
         okText: '保存修改',
+        okButtonProps: {
+          disabled: uploading
+        },
         bodyStyle: {
           maxHeight: 400,
           overflow: 'auto',
