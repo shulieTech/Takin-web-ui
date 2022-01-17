@@ -210,6 +210,37 @@ const Admin: React.FC<AdminProps> = props => {
     }
   };
 
+  const popoverTd = (text) => {
+    return (
+      <Popover
+        placement="bottom"
+        content={
+          <div
+            style={{
+              maxWidth: 400,
+              wordBreak: 'break-word',
+              maxHeight: 300,
+              overflow: 'auto',
+            }}
+          >
+            {text}
+          </div>
+        }
+      >
+        <div
+          style={{
+            maxWidth: 400,
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {text}
+        </div>
+      </Popover>
+    );
+  };
+
   const columns = [
     {
       title: '配置名称',
@@ -234,11 +265,13 @@ const Admin: React.FC<AdminProps> = props => {
     {
       title: '配置值',
       dataIndex: 'defaultValue',
+      width: 200,
+      render: popoverTd,
     },
     {
       title: '生效状态',
       dataIndex: 'isEffect',
-      width: 150,
+      width: 80,
       render: (text, record) => {
         return (
           <div>
@@ -318,11 +351,13 @@ const Admin: React.FC<AdminProps> = props => {
     {
       title: '配置值',
       dataIndex: 'defaultValue',
+      width: 200,
+      render: popoverTd,
     },
     {
       title: '生效状态',
       dataIndex: 'isEffect',
-      width: 150,
+      width: 80,
       render: (text, record) => {
         return (
           <div>
