@@ -231,7 +231,7 @@ const LineCharts: React.FC<Props> = (props) => {
               show: true,
               type: 'slider',
               top: 10,
-              left: columnNum === 1 ? undefined : 10,
+              left: columnNum === 1 ? undefined : 60,
               right: tooltip ? 60 : 10,
               width: columnNum === 1 ? 270 : undefined,
               realtime: true,
