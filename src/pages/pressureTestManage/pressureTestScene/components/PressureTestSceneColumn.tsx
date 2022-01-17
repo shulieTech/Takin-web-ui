@@ -238,6 +238,7 @@ const getPressureTestSceneColumns = (
               onSccuess={() => {
                 setState({
                   isReload: !state.isReload,
+                  tagReloadKey: state.tagReloadKey + 1,
                 });
               }}
             />

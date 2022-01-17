@@ -4,7 +4,7 @@ import { FormDataType } from 'racc/dist/common-form/type';
 import React from 'react';
 import BusinessSelect from 'src/components/business-select';
 
-const getPressureTestSceneFormData = (): FormDataType[] => {
+const getPressureTestSceneFormData = (state): FormDataType[] => {
   return [
     {
       key: 'sceneId',
@@ -21,6 +21,7 @@ const getPressureTestSceneFormData = (): FormDataType[] => {
       label: '',
       node: (
         <BusinessSelect
+          reloadKey={state.tagReloadKey}
           showSearch
           optionFilterProp="children"
           url="/scenemanage/tag"

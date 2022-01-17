@@ -37,6 +37,7 @@ export interface PressureTestSceneState {
   showIndex: number;
   pressureStyle: string;
   dataScriptNum: any[];
+  tagReloadKey: number;
 }
 const liList = [1, 1, 1, 1, 1, 1, 1, 1];
 const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
@@ -66,6 +67,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     showIndex: 0,
     pressureStyle: PressureStyle.从头开始压测,
     dataScriptNum: null, // 数据脚本数
+    tagReloadKey: 1,
   });
 
   useEffect(() => {
@@ -226,7 +228,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           columns 
         }}
         commonFormProps={{
-          formData: getPressureTestSceneFormData(),
+          formData: getPressureTestSceneFormData(state),
           rowNum: 4
         }}
         ajaxProps={{ url: '/scenemanage/list', method: 'GET' }}
