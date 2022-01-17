@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, message } from 'antd';
 import { SchemaField, FormPath, Schema } from '@formily/antd';
+import TipTittle from './TipTittle';
 
 const notEmptyValue = value => {
   return !(isNaN(value) || [undefined, null].includes(value));
@@ -241,7 +242,7 @@ const TargetMap = (props) => {
         }),
     },
     {
-      title: '目标SA(%)',
+      title: <TipTittle tips="RT的达标率，请求中RT达到目标值的百分比">目标SA(%)</TipTittle>,
       dataIndex: 'sa',
       render: (text, record, index) =>
         renderInputTd({
