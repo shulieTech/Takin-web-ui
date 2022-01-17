@@ -428,7 +428,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             <Col>
               <span style={{ marginRight: 8 }}>选择线程组:</span>
               <CommonSelect
-                style={{ width: 150 }}
+                style={{ width: 240 }}
                 dataSource={state.threadGroupList || []}
                 value={state.threadValue}
                 onChange={handleChangeThread}

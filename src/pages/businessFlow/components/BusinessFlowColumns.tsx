@@ -6,7 +6,7 @@ import React, { Fragment } from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
-import { Badge, Button, Col, Popconfirm, Row, Tag } from 'antd';
+import { Badge, Button, Col, Popconfirm, Row, Tag, message, } from 'antd';
 import TableTwoRows from 'src/common/table-two-rows/TableTwoRows';
 import moment from 'moment';
 import styles from './../index.less';
@@ -37,6 +37,7 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
       data: { success, data }
     } = await BusinessFlowService.deleteBusinessFlow({ id });
     if (success) {
+      message.success('删除成功');
       setState({
         isReload: !state.isReload
       });
@@ -171,8 +172,7 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
-            {userType === '0' &&
-              expire === 'false' &&
+            {localStorage.isAdmin === 'true' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>
                   <AdminDistributeModal
