@@ -20,7 +20,7 @@ import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import BusinessFlowService from '../service';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import { getTakinAuthority } from 'src/utils/utils';
-import request from 'src/utils/request';
+import downloadFile from 'src/utils/downloadFile';
 
 declare var serverUrl: string;
 const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
@@ -58,33 +58,34 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
     }
   };
 
-  const downloadFile = async (filePath, fileName) => {
-    const { data, status, headers } = await request({
-      url: `${serverUrl}/file/downloadFileByPath?filePath=${filePath}`,
-      responseType: 'blob',
-      headers: {
-        'x-token': localStorage.getItem('full-link-token'),
-        'Auth-Cookie': localStorage.getItem('auth-cookie')
-      }
-    });
-    const blob = new Blob([data], { type: `` });
+  // const downloadFile = async (filePath, fileName) => {
+  //   const { data, status, headers } = await request({
+  //     url: `${serverUrl}/file/downloadFileByPath?filePath=${filePath}`,
+  //     responseType: 'blob',
+  //     headers: {
+  //       'x-token': localStorage.getItem('full-link-token'),
+  //       'Auth-Cookie': localStorage.getItem('auth-cookie')
+  //     }
+  //   });
+  //   const blob = new Blob([data], { type: `` });
 
-    // 获取heads中的filename文件名
-    const downloadElement = document.createElement('a');
-    // 创建下载的链接
-    const href = window.URL.createObjectURL(blob);
+  //   // 获取heads中的filename文件名
+  //   const downloadElement = document.createElement('a');
+  //   // 创建下载的链接
+  //   const href = window.URL.createObjectURL(blob);
 
-    downloadElement.href = href;
-    // 下载后文件名
-    downloadElement.download = fileName;
-    document.body.appendChild(downloadElement);
-    // 点击下载
-    downloadElement.click();
-    // 下载完成移除元素
-    document.body.removeChild(downloadElement);
-    // 释放掉blob对象
-    window.URL.revokeObjectURL(href);
-  };
+  //   downloadElement.href = href;
+  //   // 下载后文件名
+  //   downloadElement.download = fileName;
+  //   document.body.appendChild(downloadElement);
+  //   // 点击下载
+  //   downloadElement.click();
+  //   // 下载完成移除元素
+  //   document.body.removeChild(downloadElement);
+  //   // 释放掉blob对象
+  //   window.URL.revokeObjectURL(href);
+  // };
+  
   return [
     {
       ...customColumnProps,
