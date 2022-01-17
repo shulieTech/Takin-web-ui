@@ -227,7 +227,8 @@ const ScriptFileManageModal: React.FC<Props> = props => {
             UploadProps={{
               type: 'drag',
               multiple: true,
-              onChange: info => handleChange(info)
+              onChange: info => handleChange(info),
+              disabled: uploading,
             }}
             fileName="file"
             onImport={file => true}
