@@ -160,7 +160,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
         <ConfigProvider getPopupContainer={() => popupDom.current}>
           <div
             className="h-100p"
-            style={{ backgroundColor: '#1D2530' }}
+            style={{ backgroundColor: '#1D2530', display: 'flex', flexDirection: 'column' }}
             ref={popupDom}
           >
             <EnvHeader/>
