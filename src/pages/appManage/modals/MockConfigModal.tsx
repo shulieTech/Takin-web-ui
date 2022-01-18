@@ -57,7 +57,12 @@ const MockConfigModal: React.FC<Props> = props => {
   const handleChangeMockType = value => {
     setState({
       mockType: value,
-      configTypeData: []
+      configTypeData: [],
+      configType: null,
+    });
+    state.form.setFieldsValue({
+      type: undefined,
+      mockValue: null
     });
   };
 
@@ -231,7 +236,7 @@ const MockConfigModal: React.FC<Props> = props => {
                 );
               }}
             >
-              <span style={{ fontSize: 14 }}>返回值mock</span>
+              <span style={{ fontSize: 14 }}>Groovy脚本mock</span>
               <Icon style={{ marginLeft: 4 }} type="question-circle" />
             </Tooltip>
           ) : (
@@ -255,7 +260,7 @@ const MockConfigModal: React.FC<Props> = props => {
                 );
               }}
             >
-              <span style={{ fontSize: 14 }}>固定值mock</span>
+              <span style={{ fontSize: 14 }}>返回值mock</span>
               <Icon style={{ marginLeft: 4 }} type="question-circle" />
             </Tooltip>
           ),
