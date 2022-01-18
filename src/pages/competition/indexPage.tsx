@@ -146,43 +146,37 @@ const DashboardPage: React.FC<Props> = props => {
         <Row style={{ display: show ? 'block' : 'none' }}>
           <Col span={16}>
             <Line
-              // yAxis={{ label: { formatter: text => `${text}MB` } }}
+              // yAxis={{ label: { formatter: text => `tps:${text}` } }}
               height={350}
               data={list1 || []}
               smooth
               xField="time"
               yField="tps"
               seriesField="sceneName"
-              point={{
-                shape: 'breath-point',
-              }}
               tooltip={{
                 showMarkers: false,
               }}
-            // xAxis={{ tickCount: 10 }}
+              xAxis={{ tickCount: 10 }}
             />
             <div style={{ height: 60 }} />
             <Line
-              // yAxis={{ label: { formatter: text => `${text}MB` } }}
+              // yAxis={{ label: { formatter: text => `tps:${text}` } }}
               height={350}
               data={list2 || []}
               smooth
               xField="time"
               yField="tps"
               seriesField="sceneName"
-              point={{
-                shape: 'breath-point',
-              }}
               tooltip={{
                 showMarkers: false,
               }}
-            // xAxis={{ tickCount: 10 }}
+              xAxis={{ tickCount: 10 }}
             />
           </Col>
           <Col span={8}>
 
             <div className={style.top10}>
-              <h3>排行榜</h3>
+              <h3>排行榜（tps）</h3>
               <ul>
                 {lists.map((x, ind) => (
                   <li key={x.id}>
