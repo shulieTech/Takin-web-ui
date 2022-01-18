@@ -157,12 +157,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           onCollapse={handlerCollapsed}
           collapsedStatus={state.collapsedStatus}
         /> */}
-        <ConfigProvider
-          getPopupContainer={() =>
-            window.parent.document.querySelector('main.ant-layout-content') ||
-            popupDom.current
-          }
-        >
+        <ConfigProvider getPopupContainer={() => popupDom.current}>
           <div
             className="h-100p"
             style={{
