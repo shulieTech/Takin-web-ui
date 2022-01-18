@@ -99,6 +99,7 @@ const DashboardPage: React.FC<Props> = props => {
     }
   };
   const handleChange = async (value) => {
+    sceneList();
     if (value.length > 20) {
       message.error('请勿超过20个');
       return;
@@ -144,37 +145,40 @@ const DashboardPage: React.FC<Props> = props => {
           <Empty />
         </Row>
         <Row style={{ display: show ? 'block' : 'none' }}>
-          <Col span={16}>
-            <Line
-              // yAxis={{ label: { formatter: text => `tps:${text}` } }}
-              height={350}
-              data={list1 || []}
-              smooth
-              xField="time"
-              yField="tps"
-              seriesField="sceneName"
-              tooltip={{
-                showMarkers: false,
-              }}
-              xAxis={{ tickCount: 10 }}
-            />
+          <Col span={18}>
+            <div style={{ height: '350px' }}>
+              <Line
+                // yAxis={{ label: { formatter: text => `tps:${text}` } }}
+                height={350}
+                data={list1 || []}
+                smooth
+                xField="time"
+                yField="tps"
+                seriesField="sceneName"
+                tooltip={{
+                  showMarkers: false,
+                }}
+                xAxis={{ tickCount: 10 }}
+              />
+            </div>
             <div style={{ height: 60 }} />
-            <Line
-              // yAxis={{ label: { formatter: text => `tps:${text}` } }}
-              height={350}
-              data={list2 || []}
-              smooth
-              xField="time"
-              yField="tps"
-              seriesField="sceneName"
-              tooltip={{
-                showMarkers: false,
-              }}
-              xAxis={{ tickCount: 10 }}
-            />
+            <div style={{ height: '350px' }}>
+              <Line
+                // yAxis={{ label: { formatter: text => `tps:${text}` } }}
+                height={350}
+                data={list2 || []}
+                smooth
+                xField="time"
+                yField="tps"
+                seriesField="sceneName"
+                tooltip={{
+                  showMarkers: false,
+                }}
+                xAxis={{ tickCount: 10 }}
+              />
+            </div>
           </Col>
-          <Col span={8}>
-
+          <Col span={6}>
             <div className={style.top10}>
               <h3>排行榜（tps）</h3>
               <ul>
