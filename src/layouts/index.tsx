@@ -64,14 +64,7 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
     <DocumentTitle title={venomBasicConfig.title}>
       <ConfigProvider
         locale={zh_CN}
-        getPopupContainer={(trigger) => {
-          const isInModal = window.parent.document
-            .querySelector('.ant-modal-content:not([hidden])')
-            ?.contains(trigger);
-          return isInModal
-            ? trigger?.parentElement
-            : window.parent.document.body;
-        }}
+        getPopupContainer={(trigger) => window.parent.document.body}
       >
         {layout}
       </ConfigProvider>
