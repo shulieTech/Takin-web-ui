@@ -18,11 +18,11 @@ import EnvHeader from './components/EnvHeader';
 
 declare var window: any;
 let path = '';
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
 
-const SiderLayout: React.FC<SiderLayoutProps> = props => {
+const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const [state, setState] = useStateReducer({
-    collapsedStatus: false
+    collapsedStatus: false,
   });
 
   const pathname: string | any = props.location.pathname;
@@ -32,7 +32,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   useEffect(() => {
     handleDispatch({
       type: 'app/filterBreadCrumbs',
-      payload: pathname
+      payload: pathname,
     });
     if (!localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
@@ -45,7 +45,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   useEffect(() => {
     if (JSON.stringify(props.dictionaryMap) === '{}') {
       handleDispatch({
-        type: 'common/getDictionaries'
+        type: 'common/getDictionaries',
       });
     }
     if (!localStorage.getItem('trowebBtnResource')) {
@@ -75,7 +75,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const queryMenuList = async () => {
     if (JSON.parse(localStorage.getItem('trowebUserMenu')) === null) {
       const {
-        data: { data, success }
+        data: { data, success },
       } = await UserService.queryMenuList({});
       if (success) {
         localStorage.setItem('trowebUserMenu', JSON.stringify(data));
@@ -90,7 +90,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const queryUserResource = async () => {
     const {
       headers,
-      data: { data, success }
+      data: { data, success },
     } = await UserService.queryUserResource({});
     if (success) {
       localStorage.setItem('trowebUserResource', JSON.stringify(data));
@@ -112,7 +112,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
     if (lists[0].type === 'Item') {
       path = lists[0].path;
     }
-    [lists[0]].forEach(list => {
+    [lists[0]].forEach((list) => {
       if (list.children) {
         getPath(list.children);
       }
@@ -125,21 +125,21 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
    */
   const queryBtnResource = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await UserService.queryBtnResource({});
     if (success) {
       localStorage.setItem('trowebBtnResource', JSON.stringify(data));
     }
   };
 
-  const handleDispatch = payload => {
+  const handleDispatch = (payload) => {
     window.g_app._store.dispatch(payload);
   };
   const { children } = props;
 
   const handlerCollapsed = () => {
     setState({
-      collapsedStatus: !state.collapsedStatus
+      collapsedStatus: !state.collapsedStatus,
     });
   };
 
@@ -157,15 +157,26 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
           onCollapse={handlerCollapsed}
           collapsedStatus={state.collapsedStatus}
         /> */}
-        <div
-          className="h-100p"
-          style={{ backgroundColor: '#1D2530', display: 'flex', flexDirection: 'column' }}
-          ref={popupDom}
+        <ConfigProvider
+          getPopupContainer={() =>
+            window.parent.document.querySelector('main.ant-layout-content') ||
+            popupDom.current
+          }
         >
-          <EnvHeader/>
-          <ContentNode children={children} />
-          {/* <FooterNode /> */}
-        </div>
+          <div
+            className="h-100p"
+            style={{
+              backgroundColor: '#1D2530',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+            ref={popupDom}
+          >
+            <EnvHeader />
+            <ContentNode children={children} />
+            {/* <FooterNode /> */}
+          </div>
+        </ConfigProvider>
       </Layout>
     </Layout>
   );
