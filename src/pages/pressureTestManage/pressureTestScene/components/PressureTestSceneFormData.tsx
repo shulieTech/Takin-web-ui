@@ -9,7 +9,13 @@ const getPressureTestSceneFormData = (state): FormDataType[] => {
     {
       key: 'sceneId',
       label: '',
-      node: <Input placeholder="压测场景ID" />
+      node: <Input placeholder="压测场景ID" />,
+      options: {
+        getValueFromEvent: e => {
+          const val = parseInt(e.target.value, 10);
+          return isNaN(val) ? undefined : val;
+        }
+      }
     },
     {
       key: 'sceneName',
