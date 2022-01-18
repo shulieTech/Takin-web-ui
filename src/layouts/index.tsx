@@ -50,7 +50,7 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
       setTheme(data);
     }
   };
-  
+
   useEffect(() => {
     loadThemeConfig();
     setTimeout(() => {
@@ -62,10 +62,15 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
 
   return (
     <DocumentTitle title={venomBasicConfig.title}>
-      <ConfigProvider 
-        locale={zh_CN} 
-        getPopupContainer={trigger => {
-          return window.parent.document.body.contains(trigger) ? window.parent.document.body : trigger?.parentElement;
+      <ConfigProvider
+        locale={zh_CN}
+        getPopupContainer={(trigger) => {
+          const isInModal = window.parent.document
+            .querySelector('.ant-modal-content:not([hidden])')
+            ?.contains(trigger);
+          return isInModal
+            ? trigger?.parentElement
+            : window.parent.document.body;
         }}
       >
         {layout}
