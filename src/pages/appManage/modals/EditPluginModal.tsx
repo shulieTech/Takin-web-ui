@@ -137,7 +137,7 @@ const EditPluginModal: React.FC<Props> = props => {
           isSubmitBtn: false
         }}
         rowNum={1}
-        formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 14 } }}
+        formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 16 } }}
       />
     </CommonModal>
   );
