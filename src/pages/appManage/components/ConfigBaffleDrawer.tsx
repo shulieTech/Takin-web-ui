@@ -126,7 +126,7 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
                 <div style={{ textAlign: 'right' }}>
                   <a onClick={() => handleCopy(state.configValue)}>复制</a>
                 </div>
-                <div style={{ width: 250, height: 400, overflow: 'scroll' }}>
+                <div style={{ maxHeight: 400, overflow: 'scroll', wordBreak: 'break-word' }}>
                   {state.configValue}
                 </div>
               </div>

@@ -5,7 +5,7 @@ const primaryColor = '#11bbd5';
 
 export default {
   'font-size-base': '13px',
-  'primary-color': primaryColor,
+  // 'primary-color': primaryColor,
   // 'btn-border-radius-base': '16px',
   // 'btn-border-radius-sm': '16px',
   'btn-primary-bg': primaryColor,
