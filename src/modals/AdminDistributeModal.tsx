@@ -144,6 +144,7 @@ const AdminDistributeModal: React.FC<Props> = props => {
         accountList: [],
         selectedRowKeys: []
       });
+      handleSearch();
     });
   };
 
