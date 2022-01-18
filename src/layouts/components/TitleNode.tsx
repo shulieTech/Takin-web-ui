@@ -41,11 +41,12 @@ const TitleNode: React.FC<Props> = props => {
                 ? venomBasicConfig.siderWidth
                 : '80px'
               : !props.collapsedStatus
-              ? +venomBasicConfig.siderWidth - 1
-              : '79px',
+                ? +venomBasicConfig.siderWidth - 1
+                : '79px',
 
           height: venomBasicConfig.headerHeight,
           marginBottom: 0,
+          padding: 10,
           background:
             venomBasicConfig.theme === 'dark'
               ? 'var(--BrandPrimary-500)'
@@ -57,7 +58,7 @@ const TitleNode: React.FC<Props> = props => {
         }}
       >
         <div className={styles.titleName}>
-        全链路在线压测
+          中国人寿压测平台
         </div>
 
         <Button

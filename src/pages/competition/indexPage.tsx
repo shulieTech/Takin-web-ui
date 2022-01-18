@@ -3,10 +3,11 @@
  * @author chuxu
  */
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Select, Input, Button, Empty } from 'antd';
+import { Row, Col, Card, Select, Input, Button, Empty, message } from 'antd';
 import CompetitionService from './service';
 import { Line } from '@ant-design/charts';
 import style from './index.less';
+import _ from 'lodash';
 const { Option } = Select;
 const InputGroup = Input.Group;
 interface Props { }
@@ -17,8 +18,8 @@ const DashboardPage: React.FC<Props> = props => {
   const [list2, setList2] = useState([]);
   const [lists, setLists] = useState([]);
   const [show, setShow] = useState(false);
-  const [id, setId] = useState(null);
-  const [ids, setIds] = useState(null);
+  const [id, setId] = useState([]);
+  const [ids, setIds] = useState([]);
   useEffect(() => {
     sceneList();
   }, []);
@@ -53,41 +54,55 @@ const DashboardPage: React.FC<Props> = props => {
    * @name 获取应用和系统流程
    */
   const queryAppAndSystemFlow = async () => {
-    const {
-      data: { success, data }
-    } = await CompetitionService.reportList({
-      sceneIds: ids,
-      current: 0,
-      pageSize: 10
-    });
-    if (success) {
-      setList1(data);
+    if (ids?.length < 11) {
+      const {
+        data: { success, data }
+      } = await CompetitionService.reportList({
+        sceneIds: ids,
+      });
+      if (success) {
+        setList1(data);
+      }
+    } else if (ids?.length > 10) {
+      const {
+        data: { success, data }
+      } = await CompetitionService.reportList({
+        sceneIds: _.slice(ids, 0, 10),
+      });
+      if (success) {
+        setList1(data);
+      }
     }
   };
   const queryAppAndSystemFlowtwo = async () => {
-    const {
-      data: { success, data }
-    } = await CompetitionService.reportList({
-      sceneIds: ids,
-      current: 1,
-      pageSize: 10
-    });
-    if (success) {
-      setList2(data);
+    if (ids?.length < 11) {
+      setList2([]);
+    } else if (ids?.length > 10) {
+      const {
+        data: { success, data }
+      } = await CompetitionService.reportList({
+        sceneIds: _.slice(ids, 10, 20)
+      });
+      if (success) {
+        setList2(data);
+      }
     }
   };
   const queryAppAndSystemFlows = async () => {
     const {
       data: { success, data }
-    } = await CompetitionService.reportList({
-      sceneIds: ids,
-      orderType: 2
+    } = await CompetitionService.rank({
+      sceneIds: ids
     });
     if (success) {
       setLists(data);
     }
   };
   const handleChange = async (value) => {
+    if (value.length > 20) {
+      message.error('请勿超过20个');
+      return;
+    }
     setId(value);
   };
   const primary = async () => {
@@ -111,6 +126,8 @@ const DashboardPage: React.FC<Props> = props => {
               placeholder="请选择场景id"
               onChange={handleChange}
               style={{ width: '300px' }}
+              maxTagCount={10}
+              value={id}
             >
               {dataList.map((x) => (
                 <Option key={x.id} value={x.id}>
@@ -168,7 +185,10 @@ const DashboardPage: React.FC<Props> = props => {
               <h3>排行榜</h3>
               <ul>
                 {lists.map((x, ind) => (
-                  <li key={x.id}><a>{x.sceneName}</a><span>{x.tps}</span></li>
+                  <li key={x.id}>
+                    <span>{x.sceneName}</span>
+                    <span className={style.span}>{x.tps}</span>
+                  </li>
                 ))}
 
               </ul>
