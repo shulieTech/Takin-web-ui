@@ -157,17 +157,15 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
           onCollapse={handlerCollapsed}
           collapsedStatus={state.collapsedStatus}
         /> */}
-        <ConfigProvider getPopupContainer={() => popupDom.current}>
-          <div
-            className="h-100p"
-            style={{ backgroundColor: '#1D2530', display: 'flex', flexDirection: 'column' }}
-            ref={popupDom}
-          >
-            <EnvHeader/>
-            <ContentNode children={children} />
-            {/* <FooterNode /> */}
-          </div>
-        </ConfigProvider>
+        <div
+          className="h-100p"
+          style={{ backgroundColor: '#1D2530', display: 'flex', flexDirection: 'column' }}
+          ref={popupDom}
+        >
+          <EnvHeader/>
+          <ContentNode children={children} />
+          {/* <FooterNode /> */}
+        </div>
       </Layout>
     </Layout>
   );
