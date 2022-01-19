@@ -190,10 +190,10 @@ const DashboardPage: React.FC<Props> = props => {
               <Line
                 yAxis={{
                   title: {
-                    text: 'TPS(笔/秒)',
+                    text: 'TPS',
                     position: 'end',
                     autoRotate: false,
-                    offset: 65,
+                    offset: 50,
                   }
                 }}
                 height={350}
@@ -208,7 +208,7 @@ const DashboardPage: React.FC<Props> = props => {
                 xAxis={{
                   tickCount: 10,
                   title: {
-                    text: 't(时间)',
+                    text: '时间',
                     position: 'end',
                     autoRotate: false,
                     offset: 30,
@@ -227,10 +227,10 @@ const DashboardPage: React.FC<Props> = props => {
               <Line
                 yAxis={{
                   title: {
-                    text: 'TPS(笔/秒)',
+                    text: 'TPS',
                     position: 'end',
                     autoRotate: false,
-                    offset: 65,
+                    offset: 50,
                   }
                 }}
                 height={350}
@@ -245,7 +245,7 @@ const DashboardPage: React.FC<Props> = props => {
                 xAxis={{
                   tickCount: 10,
                   title: {
-                    text: 't(时间)',
+                    text: '时间',
                     position: 'end',
                     autoRotate: false,
                     offset: 30,
@@ -256,12 +256,12 @@ const DashboardPage: React.FC<Props> = props => {
           </Col>
           <Col span={6}>
             <div className={style.top10}>
-              <h3>排行榜（tps）</h3>
+              <h3>排行榜（tps/成功率）</h3>
               <ul>
                 {lists.map((x, ind) => (
                   <li key={x.id}>
                     <span>{x.sceneName}</span>
-                    <span className={style.span}>{x.tps}</span>
+                    <span className={style.span}>{x.tps}/{x.successRate}%</span>
                   </li>
                 ))}
 
@@ -280,10 +280,10 @@ const DashboardPage: React.FC<Props> = props => {
           <Line
             yAxis={{
               title: {
-                text: 'TPS(笔/秒)',
+                text: 'TPS',
                 position: 'end',
                 autoRotate: false,
-                offset: 65,
+                offset: 50,
               }
             }}
             height={550}
@@ -298,7 +298,7 @@ const DashboardPage: React.FC<Props> = props => {
             xAxis={{
               tickCount: 10,
               title: {
-                text: 't(时间)',
+                text: '时间',
                 position: 'end',
                 autoRotate: false,
                 offset: 30,
@@ -317,10 +317,10 @@ const DashboardPage: React.FC<Props> = props => {
           <Line
             yAxis={{
               title: {
-                text: 'TPS(笔/秒)',
+                text: 'TPS',
                 position: 'end',
                 autoRotate: false,
-                offset: 65,
+                offset: 50,
               }
             }}
             height={550}
@@ -335,7 +335,7 @@ const DashboardPage: React.FC<Props> = props => {
             xAxis={{
               tickCount: 10,
               title: {
-                text: 't(时间)',
+                text: '时间',
                 position: 'end',
                 autoRotate: false,
                 offset: 30,
