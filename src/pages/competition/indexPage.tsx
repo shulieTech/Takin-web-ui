@@ -3,11 +3,12 @@
  * @author chuxu
  */
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Select, Input, Button, Empty, message } from 'antd';
+import { Row, Col, Card, Select, Input, Button, Empty, message, Modal } from 'antd';
 import CompetitionService from './service';
 import { Line } from '@ant-design/charts';
 import style from './index.less';
 import _ from 'lodash';
+import axios from 'axios';
 const { Option } = Select;
 const InputGroup = Input.Group;
 interface Props { }
@@ -18,10 +19,15 @@ const DashboardPage: React.FC<Props> = props => {
   const [list2, setList2] = useState([]);
   const [lists, setLists] = useState([]);
   const [show, setShow] = useState(false);
+  const [showtwo, setShowtwo] = useState(false);
   const [id, setId] = useState([]);
   const [ids, setIds] = useState([]);
+  const [modalone, setmodalone] = useState(false);
+  const [modaltwo, setmodaltwo] = useState(false);
+  const [title, setTitle] = useState([]);
   useEffect(() => {
     sceneList();
+    axiosF();
   }, []);
 
   useEffect(() => {
@@ -39,7 +45,10 @@ const DashboardPage: React.FC<Props> = props => {
     }, 5000);
     return () => clearInterval(timer2);
   }, [ids]);
-
+  const axiosF = async () => {
+    const { data: json } = await axios.get('./version.json');
+    setTitle(json.competitionTitle);
+  };
   const sceneList = async () => {
     const {
       data: { success, data }
@@ -62,6 +71,7 @@ const DashboardPage: React.FC<Props> = props => {
       });
       if (success) {
         setList1(data);
+        setShowtwo(false);
       }
     } else if (ids?.length > 10) {
       const {
@@ -71,12 +81,14 @@ const DashboardPage: React.FC<Props> = props => {
       });
       if (success) {
         setList1(data);
+        setShowtwo(true);
       }
     }
   };
   const queryAppAndSystemFlowtwo = async () => {
     if (ids?.length < 11) {
       setList2([]);
+      setShowtwo(false);
     } else if (ids?.length > 10) {
       const {
         data: { success, data }
@@ -85,6 +97,7 @@ const DashboardPage: React.FC<Props> = props => {
       });
       if (success) {
         setList2(data);
+        setShowtwo(true);
       }
     }
   };
@@ -106,6 +119,21 @@ const DashboardPage: React.FC<Props> = props => {
     }
     setId(value);
   };
+  const allin = async () => {
+    sceneList();
+    const arr = [];
+    dataList.map(ite => arr.push(ite.id));
+    if (arr?.length > 0) {
+      setShow(true);
+      setId(arr);
+      setIds(arr);
+    } else {
+      setShow(false);
+      setId(arr);
+      setIds(arr);
+    }
+
+  };
   const primary = async () => {
     if (id?.length > 0) {
       setShow(true);
@@ -115,30 +143,42 @@ const DashboardPage: React.FC<Props> = props => {
       setIds(id);
     }
   };
+  const showModalone = async () => {
+    setmodalone(true);
+  };
+  const showModaltwo = async () => {
+    setmodaltwo(true);
+  };
+  const handleCancel = async () => {
+    setmodaltwo(false);
+    setmodalone(false);
+  };
   return (
     <div style={{ padding: 40 }}>
       <Card
-        title="人寿竞赛"
+        title={title}
         style={{ width: '100%' }}
         extra={
-          <InputGroup compact>
-            <Select
-              mode="multiple"
-              placeholder="请选择场景id"
-              onChange={handleChange}
-              style={{ width: '300px' }}
-              maxTagCount={10}
-              value={id}
-            >
-              {dataList.map((x) => (
-                <Option key={x.id} value={x.id}>
-                  {x.name}
-                </Option>
-              ))}
-            </Select>
-            <Button type="primary" onClick={primary}>搜索</Button>
-          </InputGroup>
-
+          <div>
+            <InputGroup compact>
+              <Button type="primary" onClick={allin}>全选</Button>
+              <Select
+                mode="multiple"
+                placeholder="请选择场景id"
+                onChange={handleChange}
+                style={{ width: '300px' }}
+                maxTagCount={2}
+                value={id}
+              >
+                {dataList.map((x) => (
+                  <Option key={x.id} value={x.id}>
+                    {x.name}
+                  </Option>
+                ))}
+              </Select>
+              <Button type="primary" onClick={primary}>搜索</Button>
+            </InputGroup>
+          </div>
         }
       >
         <Row style={{ display: !show ? 'block' : 'none' }}>
@@ -146,9 +186,16 @@ const DashboardPage: React.FC<Props> = props => {
         </Row>
         <Row style={{ display: show ? 'block' : 'none' }}>
           <Col span={18}>
-            <div style={{ height: '350px' }}>
+            <div style={{ height: '350px' }} onClick={showModalone}>
               <Line
-                // yAxis={{ label: { formatter: text => `tps:${text}` } }}
+                yAxis={{
+                  title: {
+                    text: 'TPS(笔/秒)',
+                    position: 'end',
+                    autoRotate: false,
+                    offset: 65,
+                  }
+                }}
                 height={350}
                 data={list1 || []}
                 smooth
@@ -158,13 +205,34 @@ const DashboardPage: React.FC<Props> = props => {
                 tooltip={{
                   showMarkers: false,
                 }}
-                xAxis={{ tickCount: 10 }}
+                xAxis={{
+                  tickCount: 10,
+                  title: {
+                    text: 't(时间)',
+                    position: 'end',
+                    autoRotate: false,
+                    offset: 30,
+                  }
+                }}
               />
             </div>
             <div style={{ height: 60 }} />
-            <div style={{ height: '350px' }}>
+            <div
+              style={{
+                height: '350px',
+                display: showtwo ? 'block' : 'none',
+              }}
+              onClick={showModaltwo}
+            >
               <Line
-                // yAxis={{ label: { formatter: text => `tps:${text}` } }}
+                yAxis={{
+                  title: {
+                    text: 'TPS(笔/秒)',
+                    position: 'end',
+                    autoRotate: false,
+                    offset: 65,
+                  }
+                }}
                 height={350}
                 data={list2 || []}
                 smooth
@@ -174,7 +242,15 @@ const DashboardPage: React.FC<Props> = props => {
                 tooltip={{
                   showMarkers: false,
                 }}
-                xAxis={{ tickCount: 10 }}
+                xAxis={{
+                  tickCount: 10,
+                  title: {
+                    text: 't(时间)',
+                    position: 'end',
+                    autoRotate: false,
+                    offset: 30,
+                  }
+                }}
               />
             </div>
           </Col>
@@ -194,6 +270,76 @@ const DashboardPage: React.FC<Props> = props => {
           </Col>
         </Row>
       </Card>
+      <Modal
+        footer={null}
+        visible={modalone}
+        onCancel={handleCancel}
+        width={1550}
+      >
+        <Line
+          yAxis={{
+            title: {
+              text: 'TPS(笔/秒)',
+              position: 'end',
+              autoRotate: false,
+              offset: 65,
+            }
+          }}
+          height={500}
+          data={list1 || []}
+          smooth
+          xField="time"
+          yField="tps"
+          seriesField="sceneName"
+          tooltip={{
+            showMarkers: false,
+          }}
+          xAxis={{
+            tickCount: 10,
+            title: {
+              text: 't(时间)',
+              position: 'end',
+              autoRotate: false,
+              offset: 30,
+            }
+          }}
+        />
+      </Modal>
+      <Modal
+        footer={null}
+        visible={modaltwo}
+        onCancel={handleCancel}
+        width={1550}
+      >
+        <Line
+          yAxis={{
+            title: {
+              text: 'TPS(笔/秒)',
+              position: 'end',
+              autoRotate: false,
+              offset: 65,
+            }
+          }}
+          height={500}
+          data={list2 || []}
+          smooth
+          xField="time"
+          yField="tps"
+          seriesField="sceneName"
+          tooltip={{
+            showMarkers: false,
+          }}
+          xAxis={{
+            tickCount: 10,
+            title: {
+              text: 't(时间)',
+              position: 'end',
+              autoRotate: false,
+              offset: 30,
+            }
+          }}
+        />
+      </Modal>
     </div>
   );
 };

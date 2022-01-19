@@ -1,5 +1,6 @@
 {
   "version": "V4.18.8",
   "loginUrl": "http://192.168.63.49:11126/server/logout?service=http://192.168.1.97/takin-web/api/thirdParty/redirect?thirdParty=1",
-  "WechatQRcode": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210611094Q512b-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644459895&t=e2dbf0fdb5fc97379760c0ac19334531"
+  "WechatQRcode": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210611094Q512b-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644459895&t=e2dbf0fdb5fc97379760c0ac19334531",
+  "competitionTitle": "国寿竞赛"
 }
