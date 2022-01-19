@@ -276,34 +276,36 @@ const DashboardPage: React.FC<Props> = props => {
         onCancel={handleCancel}
         width={1550}
       >
-        <Line
-          yAxis={{
-            title: {
-              text: 'TPS(笔/秒)',
-              position: 'end',
-              autoRotate: false,
-              offset: 65,
-            }
-          }}
-          height={500}
-          data={list1 || []}
-          smooth
-          xField="time"
-          yField="tps"
-          seriesField="sceneName"
-          tooltip={{
-            showMarkers: false,
-          }}
-          xAxis={{
-            tickCount: 10,
-            title: {
-              text: 't(时间)',
-              position: 'end',
-              autoRotate: false,
-              offset: 30,
-            }
-          }}
-        />
+        <div style={{ height: 600 }}>
+          <Line
+            yAxis={{
+              title: {
+                text: 'TPS(笔/秒)',
+                position: 'end',
+                autoRotate: false,
+                offset: 65,
+              }
+            }}
+            height={550}
+            data={list1 || []}
+            smooth
+            xField="time"
+            yField="tps"
+            seriesField="sceneName"
+            tooltip={{
+              showMarkers: false,
+            }}
+            xAxis={{
+              tickCount: 10,
+              title: {
+                text: 't(时间)',
+                position: 'end',
+                autoRotate: false,
+                offset: 30,
+              }
+            }}
+          />
+        </div>
       </Modal>
       <Modal
         footer={null}
@@ -311,34 +313,36 @@ const DashboardPage: React.FC<Props> = props => {
         onCancel={handleCancel}
         width={1550}
       >
-        <Line
-          yAxis={{
-            title: {
-              text: 'TPS(笔/秒)',
-              position: 'end',
-              autoRotate: false,
-              offset: 65,
-            }
-          }}
-          height={500}
-          data={list2 || []}
-          smooth
-          xField="time"
-          yField="tps"
-          seriesField="sceneName"
-          tooltip={{
-            showMarkers: false,
-          }}
-          xAxis={{
-            tickCount: 10,
-            title: {
-              text: 't(时间)',
-              position: 'end',
-              autoRotate: false,
-              offset: 30,
-            }
-          }}
-        />
+        <div style={{ height: 600 }}>
+          <Line
+            yAxis={{
+              title: {
+                text: 'TPS(笔/秒)',
+                position: 'end',
+                autoRotate: false,
+                offset: 65,
+              }
+            }}
+            height={550}
+            data={list2 || []}
+            smooth
+            xField="time"
+            yField="tps"
+            seriesField="sceneName"
+            tooltip={{
+              showMarkers: false,
+            }}
+            xAxis={{
+              tickCount: 10,
+              title: {
+                text: 't(时间)',
+                position: 'end',
+                autoRotate: false,
+                offset: 30,
+              }
+            }}
+          />
+        </div>
       </Modal>
     </div>
   );
