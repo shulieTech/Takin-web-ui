@@ -21,6 +21,7 @@ interface Props {
   remark: string;
   mockValue: string;
   isManual: boolean;
+  mockValues: any;
 }
 
 const getInitState = () => ({
@@ -31,7 +32,13 @@ const getInitState = () => ({
   configTypeData: null,
   mockTypeData: null,
   mockType: undefined,
-  configValue: undefined
+  configValue: undefined,
+  mockValues:
+ `支持json串和基础类型的固定值返回
+  json示例：{"code": 200, "data": "test", "msg": ""}
+  string实例：success
+  int示例：10
+  Boolean示例：true`
 });
 export type MockConfigModalState = ReturnType<typeof getInitState>;
 const MockConfigModal: React.FC<Props> = props => {
@@ -50,7 +57,12 @@ const MockConfigModal: React.FC<Props> = props => {
   const handleChangeMockType = value => {
     setState({
       mockType: value,
-      configTypeData: []
+      configTypeData: [],
+      configType: null,
+    });
+    state.form.setFieldsValue({
+      type: undefined,
+      mockValue: null
     });
   };
 
@@ -199,16 +211,15 @@ const MockConfigModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: `请输入${
-                state.configType === '3' ? 'URL' : '返回值mock'
-              }`
+              message: `请输入${state.configType === '3' ? 'URL' : '返回值mock'
+                }`
             }
           ]
         },
         label:
           state.configType === '3' ? (
             'URL'
-          ) : (
+          ) : state.configType === '2' ? (
             <Tooltip
               title={() => {
                 return (
@@ -225,14 +236,38 @@ const MockConfigModal: React.FC<Props> = props => {
                 );
               }}
             >
+              <span style={{ fontSize: 14 }}>Groovy脚本mock</span>
+              <Icon style={{ marginLeft: 4 }} type="question-circle" />
+            </Tooltip>
+          ) : (
+            <Tooltip
+              title={() => {
+                return (
+                  <div >
+                    <div style={{ textAlign: 'right' }}>
+                      <a onClick={() => handleCopy(state.mockValues)}>复制</a>
+                    </div>
+                    <div
+                      style={{ width: 270, height: 300, overflow: 'scroll' }}
+                    >
+                      <p>支持json串和基础类型的固定值返回</p>
+                      <p>{`json示例：{"code": 200, "data": "test", "msg": ""}`}</p>
+                      <p> string实例：success</p>
+                      <p>int示例：10</p>
+                      <p>Boolean示例：true</p>
+                    </div>
+                  </div>
+                );
+              }}
+            >
               <span style={{ fontSize: 14 }}>返回值mock</span>
               <Icon style={{ marginLeft: 4 }} type="question-circle" />
             </Tooltip>
           ),
-        node: <Input.TextArea autoSize />
+        node: <Input.TextArea rows={6} />
       }
     ];
-    if (state.configType === '2' || state.configType === '3') {
+    if (state.configType === '2' || state.configType === '3' || state.configType === '4') {
       return [...basicFormData, ...mockFormData, ...remarkFormData];
     }
 

@@ -10,7 +10,8 @@ import {
   Button,
   Input,
   Icon,
-  Tabs
+  Tabs,
+  message
 } from 'antd';
 import styles from './../index.less';
 import AppManageService from '../service';
@@ -18,6 +19,7 @@ import getMockListColumns from './MockListColumn';
 import { connect } from 'dva';
 import CustomAlert from 'src/common/custom-alert/CustomAlert';
 import MockConfigModal from '../modals/MockConfigModal';
+import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm';
 
 interface Props {
   id?: string;
@@ -38,6 +40,8 @@ interface State {
   };
   type: string;
   errorCount: number;
+  selectedRowKeys: any;
+  selectedRows: any;
 }
 const MockList: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
@@ -51,7 +55,9 @@ const MockList: React.FC<Props> = props => {
       pageSize: 10
     },
     type: undefined,
-    errorCount: 0
+    errorCount: 0,
+    selectedRowKeys: [],
+    selectedRows: [],
   });
   const { Search } = Input;
 
@@ -145,6 +151,93 @@ const MockList: React.FC<Props> = props => {
         current: 0
       }
     });
+  };
+  const onSelectChange = (selectedRowKey, selectedRow) => {
+    setState({
+      selectedRowKeys: selectedRowKey,
+      selectedRows: selectedRow
+    });
+  };
+  const handleJoin = async (selectedRowKey) => {
+    const arr = [];
+    selectedRowKey.map(ite => {
+      const obj = {
+        id: {}, isManual: {}, applicationId: {},
+        interfaceName: {}, interfaceType: {}, serverAppName: {}, remark: {}, type: {}
+      };
+      obj.id = ite.id;
+      obj.isManual = ite.isManual;
+      obj.applicationId = props.id;
+      obj.interfaceName = ite.interfaceName;
+      obj.interfaceType = ite.interfaceChildType;
+      obj.serverAppName = ite.serverAppName;
+      obj.remark = ite.remark;
+      obj.type = ite.typeSelectVO && ite.typeSelectVO.value;
+      arr.push(obj);
+    });
+    const {
+      data: { success, data }
+    } = await AppManageService.updateBatch({
+      updateInfos: arr,
+      updateType: 1
+    });
+    if (success) {
+      message.success('批量加入白名单成功');
+      setState({
+        isReload: !state.isReload,
+        selectedRowKeys: [],
+        selectedRows: [],
+        searchParams: {
+          pageSize: state.searchParams.pageSize,
+          current: 0
+        }
+      });
+    }
+  };
+  const handleCancel = async (selectedRowKey) => {
+    const arr = [];
+    selectedRowKey.map(ite => {
+      const obj = {
+        id: {}, isManual: {}, applicationId: {},
+        interfaceName: {}, interfaceType: {}, serverAppName: {}, remark: {}, type: {}
+      };
+      obj.id = ite.id;
+      obj.isManual = ite.isManual;
+      obj.applicationId = props.id;
+      obj.interfaceName = ite.interfaceName;
+      obj.interfaceType = ite.interfaceChildType;
+      obj.serverAppName = ite.serverAppName;
+      obj.remark = ite.remark;
+      obj.type = ite.typeSelectVO && ite.typeSelectVO.value;
+      arr.push(obj);
+    });
+    const {
+      data: { success, data }
+    } = await AppManageService.updateBatch({
+      updateInfos: arr,
+      updateType: 0
+    });
+    if (success) {
+      message.success('批量取消白名单成功');
+      setState({
+        isReload: !state.isReload,
+        selectedRowKeys: [],
+        selectedRows: [],
+        searchParams: {
+          pageSize: state.searchParams.pageSize,
+          current: 0
+        }
+      });
+    }
+  };
+  const { selectedRowKeys } = state;
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    getCheckboxProps: record => ({
+      disabled: record.typeSelectVO.label !== '白名单' && record.typeSelectVO.label !== '未配置',
+      label: record.typeSelectVO.label,
+    }),
   };
 
   return (
@@ -252,10 +345,11 @@ const MockList: React.FC<Props> = props => {
           />
         </Row>
         <CustomTable
-          rowKey={(row, index) => index.toString()}
           loading={state.loading}
           columns={getMockListColumns(state, setState, props.id)}
           dataSource={state.mockList || []}
+          rowKey="id"
+          rowSelection={rowSelection}
         />
       </div>
       <div
@@ -272,6 +366,40 @@ const MockList: React.FC<Props> = props => {
             '0px 2px 20px 0px rgba(92,80,133,0.15),0px -4px 8px 0px rgba(222,223,233,0.3)'
         }}
       >
+        <CustomPopconfirm
+          title="是否确定加入白名单？"
+          okColor="var(--FunctionalError-500)"
+          onConfirm={() => handleJoin(state.selectedRows)}
+          disabled={state.selectedRowKeys.length > 0 ? false : true}
+        >
+          <span
+            style={{
+              color: state.selectedRowKeys.length > 0 ?
+                '#11bbd5' : 'var(--Netural-06)',
+              cursor: state.selectedRowKeys.length > 0 ?
+                'pointer' : 'default',
+              margin: '0 15px'
+            }}
+          > 批量加入白名单
+          </span>
+        </CustomPopconfirm>
+        <CustomPopconfirm
+          title="是否确定取消白名单？"
+          okColor="var(--FunctionalError-500)"
+          onConfirm={() => handleCancel(state.selectedRows)}
+          disabled={state.selectedRowKeys.length > 0 ? false : true}
+        >
+          <span
+            style={{
+              color: state.selectedRowKeys.length > 0 ?
+                '#11bbd5' : 'var(--Netural-06)',
+              cursor: state.selectedRowKeys.length > 0 ?
+                'pointer' : 'default',
+              margin: '0 15px'
+            }}
+          > 批量取消白名单
+          </span>
+        </CustomPopconfirm>
         <Pagination
           style={{ display: 'inline-block', float: 'right' }}
           total={state.total}
@@ -279,7 +407,7 @@ const MockList: React.FC<Props> = props => {
           pageSize={state.searchParams.pageSize}
           showTotal={(t, range) =>
             `共 ${state.total} 条数据 第${state.searchParams.current +
-              1}页 / 共 ${Math.ceil(
+            1}页 / 共 ${Math.ceil(
               state.total / (state.searchParams.pageSize || 10)
             )}页`
           }
