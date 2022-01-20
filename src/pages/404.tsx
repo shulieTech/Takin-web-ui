@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Col, Row, TreeSelect } from 'antd';
+import { Button, Col, Row } from 'antd';
 import router from 'umi/router';
 import { withRouter } from 'umi';
+import 'antd/lib/tree-select/style/index.less';
 
 const NotFound = () => {
   return (
@@ -56,21 +57,18 @@ const NotFoundAndChildPage = withRouter((props) => {
   }, [pathname]);
 
   return frameSrc ? (
-    <>
-      <TreeSelect style={{ display: 'none' }}/>
-      <iframe
-        src={frameSrc}
-        style={{
-          flexDirection: 'column',
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#fff',
-          borderRadius: '4px 4px 0 0',
-          overflow: 'scroll',
-          border: 'none',
-        }}
-      />
-    </>
+    <iframe
+      src={frameSrc}
+      style={{
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#fff',
+        borderRadius: '4px 4px 0 0',
+        overflow: 'scroll',
+        border: 'none',
+      }}
+    />
   ) : (
     <NotFound />
   );
