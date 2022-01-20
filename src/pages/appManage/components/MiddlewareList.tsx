@@ -195,6 +195,7 @@ const MiddlewareList: React.FC<Props> = props => {
     setState({
       loading: true
     });
+    queryMiddlewareDashboard();
     const {
       data: { success, data }
     } = await AppManageService.compare({
