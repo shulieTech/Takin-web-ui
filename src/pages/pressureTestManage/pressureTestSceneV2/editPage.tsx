@@ -275,7 +275,7 @@ const EditPage = (props) => {
               setFieldState('config.podNum', (podState) => {
                 podState.props['x-component-props'].addonAfter = (
                   <Button>
-                    建议Pod数: {data?.min}-{data?.max}
+                    建议Pod数: {data?.min !== data?.max ? `${data?.min}-${data?.max}` : data?.min || '-'}
                   </Button>
                 );
               });
