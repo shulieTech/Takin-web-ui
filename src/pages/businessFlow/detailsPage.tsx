@@ -328,7 +328,9 @@ const BusinessFlowDetail: React.FC<Props> = props => {
     <BusinessFlowDetailContext.Provider value={{ state, setState }}>
       <MainPageLayout>
         <Link to="/businessFlow">
-          <Icon type="left" style={{ marginRight: 8 }} /> 返回
+          <Button type="link" style={{ marginBottom: 16 }}>
+            <Icon type="left" /> 返回
+          </Button>
         </Link>
         <div className={styles.borders}>
           <CustomDetailHeader
