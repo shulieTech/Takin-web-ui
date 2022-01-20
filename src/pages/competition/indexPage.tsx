@@ -256,12 +256,12 @@ const DashboardPage: React.FC<Props> = props => {
           </Col>
           <Col span={6}>
             <div className={style.top10}>
-              <h3>排行榜（tps/成功率）</h3>
+              <h3>排行榜（tps）</h3>
               <ul>
                 {lists.map((x, ind) => (
                   <li key={x.id}>
                     <span>{x.sceneName}</span>
-                    <span className={style.span}>{x.tps}/{x.successRate}%</span>
+                    <span className={style.span}>{x.tps}</span>
                   </li>
                 ))}
 
