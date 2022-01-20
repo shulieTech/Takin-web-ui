@@ -22,6 +22,11 @@ const LinkOverview: React.FC<Props> = props => {
       },
       {
         ...customColumnProps,
+        title: '近5s请求数',
+        dataIndex: 'tempRequestCount'
+      },
+      {
+        ...customColumnProps,
         title: '平均TPS（实际/目标）',
         dataIndex: 'tps',
         render: (text, row) => {
