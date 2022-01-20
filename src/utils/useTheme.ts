@@ -38,7 +38,7 @@ export default () => {
     return {};
   }
 
-  const rootEle = document.querySelector('#root');
+  const rootEle = document.body;
 
   const loadThemeConfig = ({
     antVars = getThemeConfig().antVars || {},
@@ -46,7 +46,7 @@ export default () => {
   } = {}) => {
     window.less.modifyVars(antVars);
     Object.entries(cssVars).forEach(([k, v]) => {
-      rootEle?.style?.setProperty(k, v);
+      rootEle?.style?.setProperty(k, v as string);
     });
   };
 
