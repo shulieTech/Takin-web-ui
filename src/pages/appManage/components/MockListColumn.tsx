@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import styles from './../index.less';
 import TableIndex from 'src/common/table-index/TableIndex';
-import { Badge, Button, Divider, Icon, message, Popover, Tag } from 'antd';
+import { Badge, Button, Divider, Icon, message, Popover, Tag, Tooltip } from 'antd';
 import AppManageService from '../service';
 import MockConfigModal from '../modals/MockConfigModal';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
@@ -51,14 +51,16 @@ const getMockListColumns = (
       width: 300,
       render: (text, row) => {
         return (
-          <span>
+          <span style={{ display: 'flex', alignItems: 'center', maxWidth: 300 }}>
             {row.isException && (
               <img
                 style={{ width: 18, marginRight: 8 }}
                 src={require('./../../../assets/explain_icon.png')}
               />
             )}
-            {text}
+            <Tooltip title={text}>
+              <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{text}</span>
+            </Tooltip>
             {row.isManual && <Tag style={{ marginLeft: 8 }}>手工添加</Tag>}
           </span>
         );
