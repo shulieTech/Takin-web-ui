@@ -29,7 +29,9 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
     middleware: null,
     searchParamss: props.location.query,
     middlewareCascade: null,
-    searchParams: {},
+    searchParams: {
+      type: '0'
+    },
     showModal: false,
   });
 
@@ -115,6 +117,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
         columns: getColumns(state, setState, props),
         size: 'small',
       }}
+      searchParams={state.searchParams}
       ajaxProps={{ url: '/activities', method: 'GET' }}
       commonFormProps={{ formData: getFormData(state, setState), rowNum: 6 }}
       filterData={filterData}
