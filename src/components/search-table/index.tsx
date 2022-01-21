@@ -3,7 +3,7 @@
  * @author MingShined
  */
 import { useStateReducer } from 'racc';
-import React, { useEffect } from 'react';
+import React, { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { httpGet, httpPost } from 'src/utils/request';
 import { filterSearchParams } from 'src/utils/utils';
 import FooterNode from './components/FooterNode';
@@ -16,8 +16,16 @@ import { SearchTableProps } from './type';
 
 declare var window: any;
 
-const SearchTable: React.FC<SearchTableProps> = props => {
+const SearchTable = (props: SearchTableProps, ref) => {
+  const { theme = 'dark' } = props;
   const [state, setState] = useStateReducer(getInitState());
+
+  // 转发内部的一些属性及方法
+  useImperativeHandle(ref, () => ({
+    queryList,
+    tableState: state,
+    setTableState: setState,
+  }), [state]);
 
   useEffect(() => {
     if (!state.flag && props.searchParams) {
@@ -104,7 +112,7 @@ const SearchTable: React.FC<SearchTableProps> = props => {
     <SearchTableContext.Provider value={{ state, setState }}>
       <div className={styles.searchTableWrap}>
         <div
-          className={props.theme === 'dark' && styles.searchWrap}
+          className={theme === 'dark' && styles.searchWrap}
           style={{ padding: '8px 31px 64px 31px' }}
         >
           {props.title && (
@@ -119,8 +127,4 @@ const SearchTable: React.FC<SearchTableProps> = props => {
     </SearchTableContext.Provider>
   );
 };
-export default SearchTable;
-
-SearchTable.defaultProps = {
-  theme: 'dark'
-};
+export default forwardRef(SearchTable);

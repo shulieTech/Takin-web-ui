@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import SearchTable from 'src/components/search-table';
 import getColumns from './components/AppManageTable';
 import getFormData from './components/AppManageSearch';
@@ -23,7 +23,7 @@ export interface AppManageState {
   checkedKeys: string[];
 }
 
-const AppManage: React.FC<AppManageProps> = props => {
+const AppManage: React.FC<AppManageProps> = (props) => {
   const [state, setState] = useStateReducer<AppManageState>({
     isReload: false,
     switchStatus: null,
@@ -32,35 +32,50 @@ const AppManage: React.FC<AppManageProps> = props => {
       pageSize: 10,
       ...props.location.query,
     },
-    checkedKeys: []
+    checkedKeys: [],
   });
+  const searchTableRef = createRef();
 
   useEffect(() => {
     querySwitchStatus();
   }, []);
+
+  useEffect(() => {
+    // 将url中的筛选参数赋给searchTable
+    const refCurrent = searchTableRef?.current as any;
+    if (
+      refCurrent?.tableState?.form &&
+      Object.keys(props.location.query)?.length > 0
+    ) {
+      refCurrent?.tableState?.form.setFieldsValue(
+        props.location.query
+      );
+    }
+  }, [searchTableRef]);
 
   /**
    * @name 获取压测开关状态
    */
   const querySwitchStatus = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await AppManageService.querySwitchStatus({});
     if (success) {
       setState({
-        switchStatus: data.switchStatus
+        switchStatus: data.switchStatus,
       });
     }
   };
 
   const handleCheck = async (keys, selectedRows) => {
     setState({
-      checkedKeys: keys
+      checkedKeys: keys,
     });
   };
 
   return (
     <SearchTable
+      ref={searchTableRef}
       commonTableProps={{
         columns: getColumns(state, setState),
         rowKey: 'id',

@@ -13,9 +13,6 @@ const getFormData = (state): FormDataType[] => {
     {
       key: 'accessStatus',
       label: '',
-      options: {
-        initialValue: state?.searchParams?.accessStatus
-      },
       node: (
         <CommonSelect
           placeholder="接入状态"
