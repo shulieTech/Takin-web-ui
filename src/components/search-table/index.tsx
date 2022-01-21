@@ -119,7 +119,7 @@ const SearchTable = (props: SearchTableProps, ref) => {
             <h1 className="ft-18 ft-white mg-t1x">{props.title}</h1>
           )}
           {props.filterData && <TitleNode {...props} />}
-          {props.commonFormProps && <SearchNode {...props} />}
+          {props.commonFormProps && <SearchNode theme={theme} {...props} />}
         </div>
         <TableNode {...props} />
         <FooterNode {...props} />
