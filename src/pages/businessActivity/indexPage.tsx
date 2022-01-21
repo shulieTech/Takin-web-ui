@@ -83,6 +83,14 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
       key: 'domain',
       label: '业务域',
     },
+    {
+      key: 'type',
+      label: '类型',
+      dataSource: [
+        { label: '普通', value: 0 },
+        { label: '虚拟', value: 1 },
+      ],
+    },
     // {
     //   dataSource: [
     //     { label: '正常', value: '0' },
