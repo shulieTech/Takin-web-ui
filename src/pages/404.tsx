@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button, Col, Row } from 'antd';
 import router from 'umi/router';
 import { withRouter } from 'umi';
-import 'antd/lib/tree-select/style/index.less';
+// fix: #APFF-615
+// https://devops.aliyun.com/task/61ea29902ee206003f6f2a2f
+// ⚠︎ iframe的弹窗挂载到父窗口，可能会因为父窗口没有引入样式，导致内容样式丢失，这里干脆全量引入antd样式
+import 'antd/lib/style/index.less';
 
 const NotFound = () => {
   return (

@@ -195,6 +195,7 @@ const MiddlewareList: React.FC<Props> = props => {
     setState({
       loading: true
     });
+    // 延迟查询对比结果
     setTimeout(() => {
       queryMiddlewareDashboard();
     }, 2000);
