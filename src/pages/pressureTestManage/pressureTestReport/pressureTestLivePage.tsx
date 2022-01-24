@@ -27,6 +27,7 @@ interface State {
   tabList: any;
   chartsInfo: any;
   tabKey: 0;
+  selectedTreeNode?: any;
   flag: boolean;
   requestList: any;
   startTime: any;
@@ -54,6 +55,7 @@ const PressureTestLive: React.FC<Props> = props => {
     tabList: [{ label: '全局趋势', value: 0 }],
     chartsInfo: {},
     tabKey: 0,
+    selectedTreeNode: undefined,
     flag: false,
     requestList: null,
     startTime: null,
@@ -156,7 +158,8 @@ const PressureTestLive: React.FC<Props> = props => {
     if (success) {
       setState({
         tabList: data,
-        tabKey: data && data[0].xpathMd5
+        tabKey: data && data[0].xpathMd5,
+        selectedTreeNode: data?.[0],
       });
     }
   };
