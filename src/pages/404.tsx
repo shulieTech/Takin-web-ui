@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { Button, Col, Row } from 'antd';
 import router from 'umi/router';
 import { withRouter } from 'umi';
@@ -54,7 +54,7 @@ const NotFoundAndChildPage = withRouter((props) => {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getFrameSrc();
   }, [pathname]);
 
