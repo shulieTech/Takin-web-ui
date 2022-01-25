@@ -214,7 +214,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
               title={
                 <div style={{ maxHeight: 300, overflow: 'scroll' }}>{text}</div>}
             >
-              <div style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                 {text}
               </div>
             </Tooltip>
