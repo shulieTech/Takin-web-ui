@@ -715,6 +715,10 @@ const AppManageService = {
     const url = '/application/center/app/gotoActivityInfo';
     return httpPost(url, data);
   },
+  async updateBatch(data = {}) {
+    const url = '/v2/application/remote/call/update/batch';
+    return httpPost(url, data);
+  },
 };
 
 export default AppManageService;
