@@ -1,7 +1,7 @@
 import { Col, message, Modal, Radio, Row, Switch, Button } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, createRef, } from 'react';
 import SearchTable from 'src/components/search-table';
 import AppManageService from 'src/pages/appManage/service';
 import { getTakinAuthority } from 'src/utils/utils';
@@ -41,6 +41,7 @@ export interface PressureTestSceneState {
 }
 const liList = [1, 1, 1, 1, 1, 1, 1, 1];
 const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
+  const searchTableRef = createRef();
   const [state, setState] = useStateReducer<PressureTestSceneState>({
     isReload: false,
     switchStatus: null,
@@ -221,9 +222,18 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     props.dictionaryMap
   );
 
+  useEffect(() => {
+    // 定时刷新列表
+    const refrehTimer = setInterval(() => {
+      searchTableRef?.current?.queryList();
+    }, 10000);
+    return () => clearInterval(refrehTimer);
+  }, [searchTableRef]);
+
   return (
     <Fragment>
       <SearchTable
+        ref={searchTableRef}
         commonTableProps={{
           columns 
         }}
