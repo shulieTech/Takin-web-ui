@@ -226,7 +226,7 @@ const WhiteList: React.FC<Props> = props => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 160 }}
+        style={{ height: document.body.clientHeight - 200 }}
       >
         {state.whitelistSwitchStatus === 0 && (
           <Alert

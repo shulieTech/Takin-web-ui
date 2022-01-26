@@ -230,7 +230,7 @@ const ApplicationMonitor: React.FC<Props> = (props) => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 160 }}
+        style={{ height: document.body.clientHeight - 200 }}
       >
         <Row type="flex" style={{ marginBottom: 20, marginTop: 20 }}>
           <Col span={4}>

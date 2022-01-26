@@ -220,7 +220,7 @@ const MiddlewareList: React.FC<Props> = props => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 160 }}
+        style={{ height: document.body.clientHeight - 200 }}
       >
         <CustomAlert
           message
