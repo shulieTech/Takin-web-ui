@@ -280,13 +280,13 @@ const RequestDetailModal: React.FC<Props> = props => {
                 <div
                   className={styles.timeLineWrap}
                   style={{
-                    left: (150 / state.totalCost) * row.offsetStartTime
+                    left: Math.min(150, (150 / state.totalCost) * row.offsetStartTime)
                   }}
                 >
                   <span
                     className={styles.timeLine}
                     style={{
-                      width: (150 / state.totalCost) * text,
+                      width: Math.min(150, (150 / state.totalCost) * text),
                       marginRight: 2
                     }}
                   />
