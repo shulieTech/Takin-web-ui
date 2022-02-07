@@ -24,7 +24,7 @@ const HeaderMenu: React.FC<Props> = props => {
   const title = breadCrumbs.map(item => item.title);
   // console.log(keys);
 
-  // TODO 关闭导航选项卡
+  // 关闭导航选项卡
   const handlerCloseNavTabItem = e => {
     // console.log(e);
     if (state.navTabItem.length) {
@@ -42,7 +42,7 @@ const HeaderMenu: React.FC<Props> = props => {
     }
   };
 
-  // TODO 添加导航选项卡
+  // 添加导航选项卡
   const handlerAddNavTabItem = () => {
     if (keys.length) {
       const tabNavListTemp = state.navTabItem;

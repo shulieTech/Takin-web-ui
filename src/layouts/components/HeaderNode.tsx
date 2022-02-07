@@ -68,7 +68,7 @@ const HeaderMenu: React.FC<Props> = props => {
     // }
   }, [breadCrumbs]);
 
-  // TODO 关闭导航选项卡
+  // 关闭导航选项卡
   const handlerCloseNavTabItem = (tabPathData, closeTabIdx) => {
     // const navTabItemTemp = navTabItem;
 

@@ -1,4 +1,4 @@
-import { Button, Col, Modal, Statistic, Alert } from 'antd';
+import { Button, Col, Modal, Statistic, Alert, Dropdown, Menu, Icon } from 'antd';
 import { CommonTabs, useStateReducer } from 'racc';
 import { connect } from 'dva';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -33,6 +33,7 @@ interface State {
   startTime: any;
   stopReasons: any;
   graphData?: GraphData;
+  tenantList: any;
 }
 
 interface Props {
@@ -59,7 +60,8 @@ const PressureTestLive: React.FC<Props> = props => {
     flag: false,
     requestList: null,
     startTime: null,
-    stopReasons: null
+    stopReasons: null,
+    tenantList: []
   });
 
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
@@ -82,14 +84,14 @@ const PressureTestLive: React.FC<Props> = props => {
     queryRequestList({
       startTime:
         state.startTime &&
-        Date.parse(
-          new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-        ) !== 0 &&
-        !isNaN(
           Date.parse(
             new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+          ) !== 0 &&
+          !isNaN(
+            Date.parse(
+              new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+            )
           )
-        )
           ? Date.parse(state.startTime && state.startTime.replace(/-/g, '/'))
           : null,
       sceneId: id
@@ -105,6 +107,19 @@ const PressureTestLive: React.FC<Props> = props => {
     setState({ isReload: !state.isReload });
     setTicker(0);
   }, [state.tabKey]);
+
+  const tenantList = async (s) => {
+    const {
+      data: { data, success },
+    } = await PressureTestReportService.monitor({
+      sceneId: s
+    });
+    if (success) {
+      setState({
+        tenantList: data,
+      });
+    }
+  };
 
   /**
    * @name 5s刷新页面
@@ -132,6 +147,8 @@ const PressureTestLive: React.FC<Props> = props => {
       sceneId: value
     });
     if (success) {
+      // TODO 判断是否要调这个接口
+      tenantList(data.sceneId);
       setState({
         detailData: data,
         startTime: data.startTime,
@@ -417,6 +434,9 @@ const PressureTestLive: React.FC<Props> = props => {
       </span>
     </div>
   );
+  const changeTenant = (url) => {
+    window.open(url);
+  };
 
   const leftWrap = (
     <Col span={3}>
@@ -433,35 +453,55 @@ const PressureTestLive: React.FC<Props> = props => {
       title={detailData.sceneName ? detailData.sceneName : '-'}
       extra={
         <Fragment>
-          <AuthorityBtn
-            isShow={
-              btnAuthority &&
-              btnAuthority.pressureTestManage_pressureTestScene_5_start_stop &&
-              detailData &&
-              detailData.canStartStop
-            }
-          >
-            <CustomPopconfirm
-              title="是否确认停止？"
-              okColor="var(--FunctionalError-500)"
-              okText="确认停止"
-              onConfirm={() => handleConfirm()}
-            >
-              <Button
-                type="danger"
-                style={{
-                  position: 'absolute',
-                  top: -20,
-                  right: 20,
-                  background: '#FE7D61',
-                  color: '#fff',
-                  border: 'none'
-                }}
+          <Button.Group style={{ marginTop: '-5px' }} >
+            {
+              state.tenantList.length > 0 &&
+              <Dropdown
+                overlay={
+                  <Menu>
+                    {state.tenantList.map(x => (
+                      <Menu.Item
+                        key={x.url}
+                        onClick={() => changeTenant(x.url)}
+                      >
+                        {x.title}
+                      </Menu.Item>
+                    ))}
+                  </Menu>
+                }
               >
-                停止压测
-              </Button>
-            </CustomPopconfirm>
-          </AuthorityBtn>
+                <Button type="primary">中间件监控
+          <Icon type="down" />
+                </Button>
+              </Dropdown>
+            }
+            <AuthorityBtn
+              isShow={
+                btnAuthority &&
+                btnAuthority.pressureTestManage_pressureTestScene_5_start_stop &&
+                detailData &&
+                detailData.canStartStop
+              }
+            >
+              <CustomPopconfirm
+                title="是否确认停止？"
+                okColor="var(--FunctionalError-500)"
+                okText="确认停止"
+                onConfirm={() => handleConfirm()}
+              >
+                <Button
+                  type="danger"
+                  style={{
+                    background: '#FE7D61',
+                    color: '#fff',
+                    border: 'none'
+                  }}
+                >
+                  停止压测
+                </Button>
+              </CustomPopconfirm>
+            </AuthorityBtn>
+          </Button.Group>
         </Fragment>
       }
       extraPosition="top"

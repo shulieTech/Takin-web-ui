@@ -1,6 +1,7 @@
 import { notification } from 'antd';
 import UserService from 'src/services/user';
 import router from 'umi/router';
+import axios from 'axios';
 
 const { troLogin, troLogout } = UserService;
 
@@ -71,8 +72,17 @@ export default {
             userAuthority: []
           }
         });
+
+        const { data: json } = yield axios.get('./version.json');
+
         if (data && data.indexUrl) {
-          location.href = `${data.indexUrl}`;
+          // 登出接口有返回登录地址
+          window.location.href = `${data.indexUrl}`;
+          return;
+        }  
+        if (json.loginUrl) {
+          // version.json中有配置的第三方登录地址
+          window.location.href = json.loginUrl;
           return;
         }
         router.push('/login');

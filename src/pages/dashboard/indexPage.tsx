@@ -159,6 +159,7 @@ const DashboardPage: React.FC<Props> = props => {
         <Col span={6}>
           <PressureTestSwitch data={switchStatus} />
           {getTakinAuthority() === 'true' && <Blank />}
+          {/* TODO 人寿没有流量余额 */}
           {getTakinAuthority() === 'true' && (
             <FlowBalance data={flowAccountData} />
           )}

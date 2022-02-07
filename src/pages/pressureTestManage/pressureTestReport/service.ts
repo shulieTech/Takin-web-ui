@@ -197,6 +197,10 @@ const PressureTestReportService = {
     const url = '/file/downloadFileByPath';
     return httpGet(url, data, options);
   },
+  async monitor(data) {
+    const url = '/scene/monitor/list';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

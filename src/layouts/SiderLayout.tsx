@@ -2,7 +2,7 @@
  * @name 基础布局Layout
  * @author MingShined
  */
-import { ConfigProvider, Layout } from 'antd';
+import { ConfigProvider, Layout, Modal, notification } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { useEffect, useRef } from 'react';
@@ -12,9 +12,11 @@ import { Basic } from 'src/types';
 import venomBasicConfig from 'src/venom.config';
 import { router } from 'umi';
 import ContentNode from './components/ContentNode';
-import FooterNode from './components/FooterNode';
+// import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
 import EnvHeader from './components/EnvHeader';
+import queryString from 'query-string';
+// import axios from 'axios';
 
 declare var window: any;
 let path = '';
@@ -23,10 +25,63 @@ interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
 const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const [state, setState] = useStateReducer({
     collapsedStatus: false,
+    request: false
   });
 
   const pathname: string | any = props.location.pathname;
   const popupDom = useRef(null);
+  useEffect(() => {
+    if (queryString.parse(location.search).flag) {
+      thirdPartylogin();
+    } else {
+      setState({ request: true });
+    }
+  }, []);
+
+  const thirdPartylogin = async () => {
+    const {
+      data: { success, data }
+    } = await UserService.thirdPartylogin({
+      flag: queryString.parse(location.search).flag
+    });
+    if (success) {
+      if (!data.errorMessage) {
+        notification.success({
+          message: '通知',
+          description: '登录成功',
+          duration: 1.5
+        });
+        localStorage.setItem('troweb-userName', data.name);
+        localStorage.setItem('troweb-userId', data.id);
+        localStorage.setItem('troweb-role', data.userType);
+        localStorage.setItem('isAdmin', data.isAdmin);
+        localStorage.setItem('isSuper', data.isSuper);
+        localStorage.setItem('tenant-code', data.tenantCode);
+        localStorage.setItem('env-code', data.envCode);
+        localStorage.setItem('full-link-token', data.xToken);
+        localStorage.setItem('troweb-expire', data.expire);
+        localStorage.removeItem('Access-Token');
+        setState({ request: true });
+      } else {
+        Modal.error({
+          title: '登录失败',
+          content: data.errorMessage,
+          onOk() {
+            loginout();
+          },
+        });
+        setState({ request: false });
+      }
+    }
+  };
+
+  const loginout = async () => {
+    window.g_app._store.dispatch({
+      type: 'user/troLogout'
+    });
+    // const { data: json } = await axios.get('./version.json');
+    // window.location.href = json.loginUrl;
+  };
 
   const { location } = props;
   useEffect(() => {
@@ -34,43 +89,45 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       type: 'app/filterBreadCrumbs',
       payload: pathname,
     });
-    if (!localStorage.getItem('trowebBtnResource')) {
+    if (state.request && !localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
     }
-    if (!localStorage.getItem('trowebUserResource')) {
+    if (state.request && !localStorage.getItem('trowebUserResource')) {
       queryUserResource();
     }
-  }, [pathname]);
+  }, [pathname, state.request]);
 
   useEffect(() => {
-    if (JSON.stringify(props.dictionaryMap) === '{}') {
+    if (state.request && JSON.stringify(props.dictionaryMap) === '{}') {
       handleDispatch({
         type: 'common/getDictionaries',
       });
     }
-    if (!localStorage.getItem('trowebBtnResource')) {
+    if (state.request && !localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
     }
-  }, []);
+  }, [state.request]);
 
   useEffect(() => {
-    if (!localStorage.getItem('trowebBtnResource')) {
+    if (state.request && !localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
     }
-  }, []);
+  }, [state.request]);
 
   useEffect(() => {
-    if (pathname === '/') {
+    if (state.request && pathname === '/') {
       queryUserResource();
       if (!localStorage.getItem('trowebBtnResource')) {
         queryBtnResource();
       }
     }
-  }, []);
+  }, [state.request]);
 
   useEffect(() => {
-    queryMenuList();
-  }, []);
+    if (state.request) {
+      queryMenuList();
+    }
+  }, [state.request]);
 
   const queryMenuList = async () => {
     if (JSON.parse(localStorage.getItem('trowebUserMenu')) === null) {
@@ -142,7 +199,6 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       collapsedStatus: !state.collapsedStatus,
     });
   };
-
   return (
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
@@ -152,12 +208,18 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
         onCollapse={handlerCollapsed}
         location={location}
       />
-      <Layout className="flex" style={{ backgroundColor: '#1D2530' }}>
+      <Layout
+        className="flex"
+        style={{
+          backgroundColor: '#1D2530',
+        }}
+      >
         {/* <HeaderNode
-          onCollapse={handlerCollapsed}
-          collapsedStatus={state.collapsedStatus}
-        /> */}
-        <ConfigProvider getPopupContainer={() => popupDom.current}>
+           onCollapse={handlerCollapsed}
+           collapsedStatus={state.collapsedStatus}
+         /> */}
+        {
+          state.request && <ConfigProvider getPopupContainer={() => popupDom.current}>
           <div
             className="h-100p"
             style={{
@@ -167,11 +229,12 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
             }}
             ref={popupDom}
           >
+            {/* TODO 人寿没有租户 */}
             <EnvHeader />
             <ContentNode children={children} />
             {/* <FooterNode /> */}
           </div>
-        </ConfigProvider>
+        </ConfigProvider>}
       </Layout>
     </Layout>
   );
