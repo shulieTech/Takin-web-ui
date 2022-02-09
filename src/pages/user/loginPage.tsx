@@ -1,4 +1,4 @@
-import { Icon, Input, message, notification, Popover } from 'antd';
+import { Col, Icon, Input, Tabs, notification, Popover, Row } from 'antd';
 import { connect } from 'dva';
 import { CommonForm } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
@@ -9,8 +9,10 @@ import UserService from 'src/services/user';
 import request from 'src/utils/request';
 import router from 'umi/router';
 import queryString from 'query-string';
+import _ from 'lodash';
 import styles from './indexPage.less';
-interface Props {}
+const { TabPane } = Tabs;
+interface Props { }
 
 const state = {
   nums: null,
@@ -18,7 +20,8 @@ const state = {
   rotate: null,
   fz: null,
   imgSrc: '',
-  takinAuthority: null
+  takinAuthority: null,
+  arr: []
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -37,6 +40,7 @@ const getFormData = (that: Login): FormDataType[] => {
       node: (
         <Input
           className={styles.inputStyle}
+          onBlur={that.onBlur}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
           placeholder="<用户名>@<企业别名>，例如： username@shulie"
         />
@@ -104,10 +108,38 @@ export default class Login extends DvaComponent<Props, State> {
 
   componentDidMount = () => {
     this.queryMenuList();
+    this.thirdParty(location.hash.split('=')[1]);
   };
 
   refresh = () => {
     this.queryCode();
+  };
+
+  onBlur = async (e) => {
+    const code = _.split(e.target.value, '@');
+    const {
+      data: { data, success }
+    } = await UserService.thirdParty({
+      tenantCode: code[code.length - 1]
+    });
+    if (success) {
+      this.setState({
+        arr: data,
+      });
+    }
+  };
+
+  thirdParty = async (tenantCode) => {
+    const {
+      data: { data, success }
+    } = await UserService.thirdParty({
+      tenantCode: tenantCode || undefined
+    });
+    if (success) {
+      this.setState({
+        arr: data,
+      });
+    }
   };
 
   queryMenuList = async () => {
@@ -207,29 +239,48 @@ export default class Login extends DvaComponent<Props, State> {
         <div className={styles.main}>
           <div className={styles.login}>
             <p className={styles.sysName}>全链路压测</p>
-            <CommonForm
-              formData={getFormData(this)}
-              rowNum={1}
-              onSubmit={this.handleSubmit}
-              btnProps={{
-                isResetBtn: false,
-                isSubmitBtn: true,
-                submitText: '登录',
-                submitBtnProps: {
-                  style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
-              }}
-            />
-            <p className={styles.applyAccount}>
-              <Popover
+            <Tabs
+              tabBarGutter={0}
+              tabBarExtraContent={<Popover
                 content={this.content()}
                 trigger="click"
-                placement="bottom"
+                placement="top"
               >
                 <a>申请账号</a>
-              </Popover>
-            </p>
+              </Popover>}
+            >
+              <TabPane tab="SSO登录" key="1">
+                <CommonForm
+                  formData={getFormData(this)}
+                  rowNum={1}
+                  onSubmit={this.handleSubmit}
+                  btnProps={{
+                    isResetBtn: false,
+                    isSubmitBtn: true,
+                    submitText: '登录',
+                    submitBtnProps: {
+                      style: { width: 329, marginTop: 20 },
+                      type: 'primary'
+                    }
+                  }}
+                />
+              </TabPane>
+              <TabPane tab="短信登录" key="3">
+                Content of Tab 3
+              </TabPane>
+            </Tabs>
+            <center className={styles.other}>其他登录方式</center>
+            <Row className={styles.otherimg} type="flex" justify="center">
+              {
+                this.state.arr.map(ite => {
+                  return (
+                    <Col key={ite.id} span={3}>
+                      <img className={styles.img} src={ite.logo} />
+                    </Col>
+                  );
+                })
+              }
+            </Row>
           </div>
         </div>
       </div>

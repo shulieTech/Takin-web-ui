@@ -44,7 +44,11 @@ const UserService = {
   async apiSys(data) {
     const url = '/sys';
     return httpGet(url, data);
-  }
+  },
+  async thirdParty(data) {
+    const url = '/thirdParty/list';
+    return httpGet(url, data);
+  },
 };
 
 export default UserService;
