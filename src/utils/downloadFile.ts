@@ -30,4 +30,5 @@ export default async (filePath, fileName) => {
   document.body.removeChild(downloadElement);
   // 释放掉blob对象
   window.URL.revokeObjectURL(href);
+  return Promise.resolve('');
 };
