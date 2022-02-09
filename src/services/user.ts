@@ -49,6 +49,10 @@ const UserService = {
     const url = '/thirdParty/list';
     return httpGet(url, data);
   },
+  async redirect(data) {
+    const url = '/thirdParty/redirectUrl';
+    return httpGet(url, data);
+  },
 };
 
 export default UserService;

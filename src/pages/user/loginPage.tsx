@@ -216,6 +216,15 @@ export default class Login extends DvaComponent<Props, State> {
     );
   };
 
+  onClick = async (id) => {
+    const {
+      data: { success, data }
+    } = await UserService.redirect({ thirdPartyId: id });
+    if (success) {
+      window.open(data, 'newwindow', 'height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+    }
+  };
+
   render() {
     // 权限判断
     if (this.state.takinAuthority === null) {
@@ -275,7 +284,9 @@ export default class Login extends DvaComponent<Props, State> {
                 this.state.arr.map(ite => {
                   return (
                     <Col key={ite.id} span={3}>
-                      <img className={styles.img} src={ite.logo} />
+                      <a onClick={() => this.onClick(ite.id)}>
+                        <img className={styles.img} src={ite.logo} />
+                      </a>
                     </Col>
                   );
                 })
