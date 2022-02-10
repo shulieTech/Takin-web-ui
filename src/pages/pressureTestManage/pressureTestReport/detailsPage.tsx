@@ -1,6 +1,6 @@
 import { Alert, Button, Col, Dropdown, Icon, Menu, Row, Statistic } from 'antd';
 import { useStateReducer } from 'racc';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
@@ -58,6 +58,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   const { query } = location;
   const { id } = query;
   const { detailData, reportCountData, hasMissingData } = state;
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     queryReportBusinessActivity(id);
@@ -273,6 +274,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   ];
 
   const downloadJtlFile = async () => {
+    setIsDownloading(true);
     const {
       data: { data, success },
     } = await PressureTestReportService.getJtlDownLoadUrl({
@@ -281,7 +283,9 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     if (success && typeof data.content === 'string') {
       const filePath: string = data.content;
       const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
-      downloadFile(filePath, fileName);
+      downloadFile(filePath, fileName).finally(() => {
+        setIsDownloading(false);
+      });
     }
   };
 
@@ -310,7 +314,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
         </Dropdown>
       }
       {detailData?.hasJtl && (
-        <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }}>
+        <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloading}>
           下载Jtl文件
         </Button>
       )}
