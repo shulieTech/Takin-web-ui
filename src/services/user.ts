@@ -53,6 +53,30 @@ const UserService = {
     const url = '/thirdParty/redirectUrl';
     return httpGet(url, data);
   },
+  async bindList(data) {
+    const url = '/user/bind/list';
+    return httpGet(url, data);
+  },
+  async sms(data) {
+    const url = '/sms';
+    return httpPost(url, data);
+  },
+  async bindurl(data) {
+    const url = '/user/bind/url';
+    return httpGet(url, data);
+  },
+  async unbind(data) {
+    const url = '/user/unbind';
+    return httpGet(url, data);
+  },
+  async bindPhone(data) {
+    const url = '/user/bind/phone';
+    return httpGet(url, data);
+  },
+  async serverConfig(data) {
+    const url = '/serverConfig';
+    return httpGet(url, data);
+  },
 };
 
 export default UserService;

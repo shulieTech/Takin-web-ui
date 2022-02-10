@@ -1,4 +1,4 @@
-import { Col, Icon, Input, Tabs, notification, Popover, Row } from 'antd';
+import { Col, Icon, Input, Tabs, notification, Popover, Row, Tooltip, Button, message } from 'antd';
 import { connect } from 'dva';
 import { CommonForm } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
@@ -21,7 +21,11 @@ const state = {
   fz: null,
   imgSrc: '',
   takinAuthority: null,
-  arr: []
+  arr: [],
+  disabled: false,
+  text: '获取短信验证码',
+  settimer: 61,
+  config: {}
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -99,6 +103,64 @@ const getFormData = (that: Login): FormDataType[] => {
     }
   ];
 };
+const getFormDatas = (that: Login): FormDataType[] => {
+  return [
+    {
+      key: 'phone',
+      label: '',
+      options: {
+        rules: [
+          {
+            required: true,
+            message: '请输入手机号'
+          }
+        ]
+      },
+      node: (
+        <Input
+          className={styles.inputStyle}
+          addonBefore="中国+86"
+          placeholder="手机号"
+        />
+      )
+    },
+    {
+      key: 'code',
+      label: '',
+      options: {
+        rules: [
+          {
+            required: true,
+            message: '请输入手机验证码'
+          }
+        ]
+      },
+      node: (
+        <Input
+          style={{ width: 205 }}
+          className={styles.inputStyle}
+          prefix={<Icon type="safety" className={styles.prefixIcon} />}
+          placeholder="手机验证码"
+        />
+      ),
+      extra: (
+        <div style={{ display: 'inline-block' }}>
+          <Button
+            style={{ marginLeft: 10 }}
+            type="link"
+            onClick={that.sms}
+            disabled={that.state.disabled}
+          >
+            {that.state.text}
+          </Button>
+          <Tooltip title="验证码过期时间为10分钟">
+            <Icon type="question-circle" style={{ marginLeft: 6 }} />
+          </Tooltip>
+        </div>
+      )
+    }
+  ];
+};
 declare var serverUrl: string;
 
 @connect()
@@ -109,11 +171,54 @@ export default class Login extends DvaComponent<Props, State> {
   componentDidMount = () => {
     this.queryMenuList();
     this.thirdParty(location.hash.split('=')[1]);
+    this.serverConfig();
   };
 
   refresh = () => {
     this.queryCode();
   };
+
+  serverConfig = async () => {
+    const {
+      data: { data, success }
+    } = await UserService.serverConfig({});
+    if (success) {
+      // console.log(data)
+      this.setState({
+        config: data,
+      });
+    }
+  };
+
+  sms = async () => {
+    const {
+      data: { success, data }
+    } = await UserService.sms({
+      phone: this.state.form.getFieldValue('phone'),
+      type: 1
+    });
+    if (success) {
+      const timer = setInterval(() => {
+        this.setState({
+          disabled: true,
+          settimer: this.state.settimer - 1,
+        }, () => {
+          this.setState({
+            text: `${this.state.settimer}秒后可重发`
+          });
+          if (this.state.settimer === 0) {
+            clearInterval(timer);
+            this.setState({
+              disabled: false,
+              text: '获取短信验证码',
+              settimer: 61,
+            });
+          }
+        });
+
+      }, 1000);
+    }
+  }
 
   onBlur = async (e) => {
     const code = _.split(e.target.value, '@');
@@ -275,7 +380,21 @@ export default class Login extends DvaComponent<Props, State> {
                 />
               </TabPane>
               <TabPane tab="短信登录" key="3">
-                Content of Tab 3
+                <CommonForm
+                  formData={getFormDatas(this)}
+                  rowNum={1}
+                  onSubmit={this.handleSubmit}
+                  getForm={f => this.setState({ form: f })}
+                  btnProps={{
+                    isResetBtn: false,
+                    isSubmitBtn: true,
+                    submitText: '登录',
+                    submitBtnProps: {
+                      style: { width: 329, marginTop: 20 },
+                      type: 'primary'
+                    }
+                  }}
+                />
               </TabPane>
             </Tabs>
             <center className={styles.other}>其他登录方式</center>
