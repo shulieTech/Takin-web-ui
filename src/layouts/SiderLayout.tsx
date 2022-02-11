@@ -76,7 +76,12 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
 
   const loginout = async () => {
     const { data: json } = await axios.get('./version.json');
-    window.location.href = json.loginUrl;
+    if (json.loginUrl) {
+      window.location.href = json.loginUrl;
+    } else {
+      window.location.reload();
+    }
+
   };
 
   const { location } = props;
