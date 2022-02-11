@@ -11,6 +11,10 @@ const UserService = {
     const url = '/login';
     return httpPost(url, data);
   },
+  async trov2Login(data) {
+    const url = '/v2/login';
+    return httpPost(url, data);
+  },
   async troLogout(data) {
     const url = '/logout';
     return httpGet(url, data);
@@ -75,6 +79,10 @@ const UserService = {
   },
   async serverConfig(data) {
     const url = '/serverConfig';
+    return httpGet(url, data);
+  },
+  async thirdPartylogin(data) {
+    const url = '/thirdParty/user';
     return httpGet(url, data);
   },
 };

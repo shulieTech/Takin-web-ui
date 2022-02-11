@@ -108,7 +108,7 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
           thirdPartyId: id
         });
         if (success) {
-          window.open(data, 'newwindow', 'height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+          window.location.href = data;
         }
       } else {
         const {

@@ -25,7 +25,9 @@ const state = {
   disabled: false,
   text: '获取短信验证码',
   settimer: 61,
-  config: {}
+  config: {
+    loginType: null
+  }
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -309,6 +311,35 @@ export default class Login extends DvaComponent<Props, State> {
     this.refresh();
   };
 
+  handleSubmits = async (err, value) => {
+    if (err) {
+      return;
+    }
+    const {
+      data: { success, data }
+    } = await UserService.trov2Login({ ...value });
+    if (success) {
+      notification.success({
+        message: '通知',
+        description: '登录成功',
+        duration: 1.5
+      });
+      localStorage.setItem('troweb-userName', data.name);
+      localStorage.setItem('troweb-userId', data.id);
+      localStorage.setItem('troweb-role', data.userType);
+      localStorage.setItem('isAdmin', data.isAdmin);
+      localStorage.setItem('isSuper', data.isSuper);
+      localStorage.setItem('tenant-code', data.tenantCode);
+      localStorage.setItem('env-code', data.envCode);
+      localStorage.setItem('full-link-token', data.xToken);
+      localStorage.setItem('troweb-expire', data.expire);
+      localStorage.removeItem('Access-Token');
+      router.push('/');
+      return;
+    }
+    this.refresh();
+  };
+
   content = () => {
     return (
       <div style={{ position: 'relative', zIndex: 100000 }}>
@@ -326,7 +357,7 @@ export default class Login extends DvaComponent<Props, State> {
       data: { success, data }
     } = await UserService.redirect({ thirdPartyId: id });
     if (success) {
-      window.open(data, 'newwindow', 'height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+      window.location.href = data;
     }
   };
 
@@ -334,6 +365,118 @@ export default class Login extends DvaComponent<Props, State> {
     // 权限判断
     if (this.state.takinAuthority === null) {
       return <Loading />;
+    }
+    let dom = null;
+    if (this.state.config.loginType) {
+      if (this.state.config.loginType === 1) {
+        dom = (
+          <Tabs
+            tabBarGutter={0}
+            tabBarExtraContent={<Popover
+              content={this.content()}
+              trigger="click"
+              placement="top"
+            >
+              <a>申请账号</a>
+            </Popover>}
+          >
+            <TabPane tab="SSO登录" key="1" >
+              <CommonForm
+                formData={getFormData(this)}
+                rowNum={1}
+                onSubmit={this.handleSubmit}
+                btnProps={{
+                  isResetBtn: false,
+                  isSubmitBtn: true,
+                  submitText: '登录',
+                  submitBtnProps: {
+                    style: { width: 329, marginTop: 20 },
+                    type: 'primary'
+                  }
+                }}
+              />
+            </TabPane>
+          </Tabs>
+        );
+      } else if (this.state.config.loginType === 2) {
+        dom = (
+          <Tabs
+            tabBarGutter={0}
+            tabBarExtraContent={<Popover
+              content={this.content()}
+              trigger="click"
+              placement="top"
+            >
+              <a>申请账号</a>
+            </Popover>}
+          >
+            <TabPane tab="短信登录" key="2">
+              <CommonForm
+                formData={getFormDatas(this)}
+                rowNum={1}
+                onSubmit={this.handleSubmits}
+                getForm={f => this.setState({ form: f })}
+                btnProps={{
+                  isResetBtn: false,
+                  isSubmitBtn: true,
+                  submitText: '登录',
+                  submitBtnProps: {
+                    style: { width: 329, marginTop: 20 },
+                    type: 'primary'
+                  }
+                }}
+              />
+            </TabPane>
+          </Tabs>
+        );
+      } else if (this.state.config.loginType === 3) {
+        dom = (
+          <Tabs
+            tabBarGutter={0}
+            tabBarExtraContent={<Popover
+              content={this.content()}
+              trigger="click"
+              placement="top"
+            >
+              <a>申请账号</a>
+            </Popover>}
+          >
+            <TabPane tab="SSO登录" key="1" >
+              <CommonForm
+                formData={getFormData(this)}
+                rowNum={1}
+                onSubmit={this.handleSubmit}
+                btnProps={{
+                  isResetBtn: false,
+                  isSubmitBtn: true,
+                  submitText: '登录',
+                  submitBtnProps: {
+                    style: { width: 329, marginTop: 20 },
+                    type: 'primary'
+                  }
+                }}
+              />
+            </TabPane>
+            <TabPane tab="短信登录" key="2">
+              <CommonForm
+                formData={getFormDatas(this)}
+                rowNum={1}
+                onSubmit={this.handleSubmits}
+                getForm={f => this.setState({ form: f })}
+                btnProps={{
+                  isResetBtn: false,
+                  isSubmitBtn: true,
+                  submitText: '登录',
+                  submitBtnProps: {
+                    style: { width: 329, marginTop: 20 },
+                    type: 'primary'
+                  }
+                }}
+              />
+            </TabPane>
+          </Tabs>
+        );
+      }
     }
     return (
       <div className={styles.mainWrap}>
@@ -353,50 +496,7 @@ export default class Login extends DvaComponent<Props, State> {
         <div className={styles.main}>
           <div className={styles.login}>
             <p className={styles.sysName}>全链路压测</p>
-            <Tabs
-              tabBarGutter={0}
-              tabBarExtraContent={<Popover
-                content={this.content()}
-                trigger="click"
-                placement="top"
-              >
-                <a>申请账号</a>
-              </Popover>}
-            >
-              <TabPane tab="SSO登录" key="1">
-                <CommonForm
-                  formData={getFormData(this)}
-                  rowNum={1}
-                  onSubmit={this.handleSubmit}
-                  btnProps={{
-                    isResetBtn: false,
-                    isSubmitBtn: true,
-                    submitText: '登录',
-                    submitBtnProps: {
-                      style: { width: 329, marginTop: 20 },
-                      type: 'primary'
-                    }
-                  }}
-                />
-              </TabPane>
-              <TabPane tab="短信登录" key="3">
-                <CommonForm
-                  formData={getFormDatas(this)}
-                  rowNum={1}
-                  onSubmit={this.handleSubmit}
-                  getForm={f => this.setState({ form: f })}
-                  btnProps={{
-                    isResetBtn: false,
-                    isSubmitBtn: true,
-                    submitText: '登录',
-                    submitBtnProps: {
-                      style: { width: 329, marginTop: 20 },
-                      type: 'primary'
-                    }
-                  }}
-                />
-              </TabPane>
-            </Tabs>
+            {dom}
             <center className={styles.other}>其他登录方式</center>
             <Row className={styles.otherimg} type="flex" justify="center">
               {
