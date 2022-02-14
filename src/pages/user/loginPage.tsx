@@ -27,7 +27,8 @@ const state = {
   settimer: 61,
   config: {
     loginType: null
-  }
+  },
+  keyType: 1
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -255,7 +256,7 @@ export default class Login extends DvaComponent<Props, State> {
     } = await UserService.sms({
       phone: this.state.form.getFieldValue('phone'),
       type: 1,
-      loginType: this.state.config.loginType
+      loginType: this.state.keyType
     });
     if (success) {
       const timer = setInterval(() => {
@@ -346,7 +347,7 @@ export default class Login extends DvaComponent<Props, State> {
     }
     const {
       data: { success, data }
-    } = await UserService.troLogin({ ...value, loginType: this.state.config.loginType });
+    } = await UserService.troLogin({ ...value, loginType: this.state.keyType });
     if (success) {
       notification.success({
         message: '通知',
@@ -375,7 +376,7 @@ export default class Login extends DvaComponent<Props, State> {
     }
     const {
       data: { success, data }
-    } = await UserService.trov2Login({ ...value, loginType: this.state.config.loginType });
+    } = await UserService.trov2Login({ ...value, loginType: this.state.keyType });
     if (success) {
       notification.success({
         message: '通知',
@@ -419,6 +420,12 @@ export default class Login extends DvaComponent<Props, State> {
     }
   };
 
+  callback = (key) => {
+    this.setState({
+      keyType: key
+    });
+  }
+
   render() {
     // 权限判断
     if (this.state.takinAuthority === null) {
@@ -429,6 +436,7 @@ export default class Login extends DvaComponent<Props, State> {
       dom = (
         <Tabs
           tabBarGutter={0}
+          onChange={this.callback}
           tabBarExtraContent={<Popover
             content={this.content()}
             trigger="click"
@@ -459,6 +467,7 @@ export default class Login extends DvaComponent<Props, State> {
       dom = (
         <Tabs
           tabBarGutter={0}
+          onChange={this.callback}
           tabBarExtraContent={<Popover
             content={this.content()}
             trigger="click"
@@ -490,6 +499,7 @@ export default class Login extends DvaComponent<Props, State> {
       dom = (
         <Tabs
           tabBarGutter={0}
+          onChange={this.callback}
           tabBarExtraContent={<Popover
             content={this.content()}
             trigger="click"
@@ -537,6 +547,7 @@ export default class Login extends DvaComponent<Props, State> {
       dom = (
         <Tabs
           tabBarGutter={0}
+          onChange={this.callback}
           tabBarExtraContent={<Popover
             content={this.content()}
             trigger="click"
@@ -545,7 +556,7 @@ export default class Login extends DvaComponent<Props, State> {
             <a>申请账号</a>
           </Popover>}
         >
-          <TabPane tab="SSO登录" key="1" >
+          <TabPane tab="SSO登录" key="4" >
             <CommonForm
               formData={getFormData(this)}
               rowNum={1}
