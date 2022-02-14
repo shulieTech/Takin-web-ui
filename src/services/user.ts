@@ -75,7 +75,7 @@ const UserService = {
   },
   async bindPhone(data) {
     const url = '/user/bind/phone';
-    return httpGet(url, data);
+    return httpPut(url, data);
   },
   async serverConfig(data) {
     const url = '/serverConfig';
