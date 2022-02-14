@@ -1,4 +1,4 @@
-import { Button, Checkbox, Col, Input, message, Row } from 'antd';
+import { Button, Checkbox, Col, Input, message, Row, Tag } from 'antd';
 import { ColumnProps } from 'antd/lib/table/interface';
 import { CommonSelect, useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
@@ -66,12 +66,12 @@ const NodeTypeFive: React.FC<Props> = props => {
     });
     handleTransmit(
       state.list &&
-        state.list.map(item => {
-          if (item.id === checkedId) {
-            return { ...item, isCheck: item.isCheck ? false : true };
-          }
-          return { ...item };
-        })
+      state.list.map(item => {
+        if (item.id === checkedId) {
+          return { ...item, isCheck: item.isCheck ? false : true };
+        }
+        return { ...item };
+      })
     );
   };
 
@@ -113,12 +113,12 @@ const NodeTypeFive: React.FC<Props> = props => {
     });
     handleTransmit(
       state.list &&
-        state.list.map(item => {
-          if (item.id === id) {
-            return { ...item, editable: false };
-          }
-          return { ...item };
-        })
+      state.list.map(item => {
+        if (item.id === id) {
+          return { ...item, editable: false };
+        }
+        return { ...item };
+      })
     );
   };
 
@@ -186,11 +186,14 @@ const NodeTypeFive: React.FC<Props> = props => {
         width: 120,
         render: (text, row) => {
           return (
-            <Checkbox
-              disabled={state.editingKey !== ''}
-              checked={text}
-              onChange={() => handleJoin(row.id)}
-            />
+            <div>
+              <Checkbox
+                disabled={state.editingKey !== ''}
+                checked={text}
+                onChange={() => handleJoin(row.id)}
+              />
+              {row.isManual && <Tag style={{ marginLeft: 10 }}>手工添加</Tag>}
+            </div>
           );
         }
       },

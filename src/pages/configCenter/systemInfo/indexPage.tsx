@@ -117,8 +117,8 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
           thirdPartyId: id
         });
         if (success) {
-          message.error('解除绑定成功');
-          handleClick();
+          message.success('解除绑定成功');
+          handleClicks();
         }
       }
     } else {
@@ -132,8 +132,8 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
           thirdPartyId: id
         });
         if (success) {
-          message.error('解除绑定成功');
-          handleClick();
+          message.success('解除绑定成功');
+          handleClicks();
         }
       }
     }

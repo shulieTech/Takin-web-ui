@@ -7,7 +7,7 @@ import { ColumnProps } from 'antd/lib/table';
 import _ from 'lodash';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import Link from 'umi/link';
-import { Badge, Tooltip, Popconfirm, Divider, message, Button } from 'antd';
+import { Badge, Tooltip, Popconfirm, Divider, message, Button, Tag } from 'antd';
 import AppManageService from '../service';
 import CustomPopconfirm from 'src/components/custom-popconfirm/CustomPopconfirm';
 import AddAndEditDbDrawer from './AddAndEditDbDrawer';
@@ -69,10 +69,18 @@ const getLinkDbColumns = (
   };
   return [
     {
-      ...customColumnProps,
+      ...customColumnProps, 
       title: '业务数据源',
       dataIndex: 'url',
-      width: 400
+      width: 400,
+      render: (text, row) => {
+        return (
+          <span>
+            {text}
+            {row.isManual && <Tag style={{ marginLeft: 20 }}>手工添加</Tag>}
+          </span>
+        );
+      }
     },
     {
       ...customColumnProps,

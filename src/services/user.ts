@@ -71,7 +71,7 @@ const UserService = {
   },
   async unbind(data) {
     const url = '/user/unbind';
-    return httpGet(url, data);
+    return httpPut(url, data);
   },
   async bindPhone(data) {
     const url = '/user/bind/phone';
