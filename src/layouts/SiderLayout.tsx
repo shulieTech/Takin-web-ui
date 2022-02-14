@@ -17,6 +17,7 @@ import SiderMenu from './components/SiderMenu';
 import EnvHeader from './components/EnvHeader';
 import queryString from 'query-string';
 // import axios from 'axios';
+import { getThemeByKeyName } from 'src/utils/useTheme';
 
 declare var window: any;
 let path = '';
@@ -199,6 +200,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       collapsedStatus: !state.collapsedStatus,
     });
   };
+
+  const disableTenant = getThemeByKeyName('disableTenant');
   return (
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
@@ -229,8 +232,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
             }}
             ref={popupDom}
           >
-            {/* TODO 人寿没有租户 */}
-            <EnvHeader />
+            {/* 人寿没有租户 */}
+            {!disableTenant && <EnvHeader />}
             <ContentNode children={children} />
             {/* <FooterNode /> */}
           </div>

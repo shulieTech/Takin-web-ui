@@ -184,3 +184,24 @@ export const objEachResultIsEmpty = obj => {
 message.config({
   maxCount: 1
 });
+
+/**
+ * 判读菜单是否存在
+ * @param path 菜单对应路径
+ * @returns 
+ */
+export const checkMenuByPath = (path: string): boolean => {
+  const menus = JSON.parse(localStorage.trowebUserMenu);
+  // 平铺tree数组
+  const flatedMenus = [];
+  const flatMenu = (arr) => {
+    if (arr?.length > 0) {
+      arr.forEach(x => {
+        flatedMenus.push(x);
+        flatMenu(x.children);
+      });
+    }
+  };
+  flatMenu(menus);
+  return flatedMenus.some(x => x.path === path);
+};

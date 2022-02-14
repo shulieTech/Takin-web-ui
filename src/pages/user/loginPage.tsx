@@ -24,6 +24,8 @@ const state = {
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
+  const disableTenant = getThemeByKeyName('disableTenant');
+  const usernamePlaceholder = disableTenant ? '请输入账号' : '<用户名>@<企业别名>，例如： username@shulie';
   return [
     {
       key: 'username',
@@ -41,8 +43,8 @@ const getFormData = (that: Login): FormDataType[] => {
         <Input
           className={styles.inputStyle}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
-          // TODO 人寿没有租户
-          placeholder="<用户名>@<企业别名>，例如： username@shulie"
+          // 人寿没有租户
+          placeholder={usernamePlaceholder}
         />
       ),
     },

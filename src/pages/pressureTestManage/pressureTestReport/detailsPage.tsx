@@ -4,7 +4,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
-import { getTakinAuthority } from 'src/utils/utils';
+import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
 import { router } from 'umi';
 import { TestMode } from '../pressureTestScene/enum';
 import Header from './components/Header';
@@ -99,8 +99,10 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       reportId: value
     });
     if (success) {
-      // TODO 判断是否调这个接口
-      tenantList(data.sceneId);
+      // 判断是否有国寿竞赛这个菜单再调该接口
+      if (checkMenuByPath('/competition')) {
+        tenantList(data.sceneId);
+      }
       setState({
         detailData: data,
         hasMissingData:

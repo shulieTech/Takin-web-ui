@@ -30,7 +30,15 @@ const getThemeConfig = () => {
 /**
  * 登录页用的class写的，所以这个方法没有放到hooks里
  */
-export const getThemeByKeyName = (keyName: 'logo' | 'loginPic' | 'logoTitle' | 'wechatQRcode') => {
+export const getThemeByKeyName = (
+  keyName:
+    | 'logo'
+    | 'loginPic'
+    | 'logoTitle'
+    | 'wechatQRcode'
+    | 'disableTenant' // 停用租户切换
+    | 'disableDashboardFlowBalance' // 停用首页流量余额
+) => {
   const config = getThemeConfig();
   return config[keyName];
 };

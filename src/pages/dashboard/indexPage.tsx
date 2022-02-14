@@ -17,6 +17,8 @@ import AppManageService from '../appManage/service';
 import { useStateReducer } from 'racc';
 import IndexService from './service';
 import { getTakinAuthority } from 'src/utils/utils';
+import { getThemeByKeyName } from 'src/utils/useTheme';
+
 interface Props { }
 interface State {
   switchStatus: any;
@@ -153,14 +155,16 @@ const DashboardPage: React.FC<Props> = props => {
     }
   };
 
+  const disableDashboardFlowBalance = getThemeByKeyName('disableDashboardFlowBalance');
+
   return (
     <BasePageLayout title="工作台">
       <Row type="flex">
         <Col span={6}>
           <PressureTestSwitch data={switchStatus} />
           {getTakinAuthority() === 'true' && <Blank />}
-          {/* TODO 人寿没有流量余额 */}
-          {getTakinAuthority() === 'true' && (
+          {/* 人寿没有流量余额 */}
+          {!disableDashboardFlowBalance && getTakinAuthority() === 'true' && (
             <FlowBalance data={flowAccountData} />
           )}
           <Blank />
