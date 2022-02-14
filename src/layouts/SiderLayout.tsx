@@ -81,7 +81,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
     if (json.loginUrl) {
       window.location.href = json.loginUrl;
     } else {
-      window.location.reload();
+      window.location.hash = '/login';
     }
 
   };

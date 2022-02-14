@@ -22,7 +22,7 @@ const state = {
   imgSrc: '',
   takinAuthority: null,
   arr: [],
-  disabled: false,
+  disabled: true,
   text: '获取短信验证码',
   settimer: 61,
   config: {
@@ -47,7 +47,7 @@ const getFormData = (that: Login): FormDataType[] => {
       node: (
         <Input
           className={styles.inputStyle}
-          onBlur={that.onBlur}
+          onChange={that.onBlur}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
           placeholder="<用户名>@<企业别名>，例如： username@shulie"
         />
@@ -122,8 +122,8 @@ const getFormDatatre = (that: Login): FormDataType[] => {
       node: (
         <Input
           className={styles.inputStyle}
-          addonBefore="中国+86"
-          placeholder="手机号"
+          onChange={that.onBlurs}
+          placeholder="用户名"
         />
       )
     },
@@ -182,6 +182,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           addonBefore="中国+86"
           placeholder="手机号"
+          onChange={that.onBlurs}
         />
       )
     },
@@ -246,18 +247,25 @@ export default class Login extends DvaComponent<Props, State> {
     if (success) {
       this.setState({
         config: data,
+        keyType: data.loginType === 3 ? 1 : data.loginType
       });
     }
   };
 
   sms = async () => {
+    const obj = {};
+    if (this.state.form.getFieldValue('phone')) {
+      obj.phone = this.state.form.getFieldValue('phone');
+      obj.type = 1;
+      obj.loginType = this.state.keyType;
+    } else {
+      obj.username = this.state.form.getFieldValue('username');
+      obj.type = 1;
+      obj.loginType = this.state.keyType;
+    }
     const {
       data: { success, data }
-    } = await UserService.sms({
-      phone: this.state.form.getFieldValue('phone'),
-      type: 1,
-      loginType: this.state.keyType
-    });
+    } = await UserService.sms(obj);
     if (success) {
       const timer = setInterval(() => {
         this.setState({
@@ -282,16 +290,37 @@ export default class Login extends DvaComponent<Props, State> {
   }
 
   onBlur = async (e) => {
-    const code = _.split(e.target.value, '@');
-    const {
-      data: { data, success }
-    } = await UserService.thirdParty({
-      tenantCode: code[code.length - 1]
-    });
-    if (success) {
-      this.setState({
-        arr: data,
+    if (e.target.value) {
+      const code = _.split(e.target.value, '@');
+      const {
+        data: { data, success }
+      } = await UserService.thirdParty({
+        tenantCode: code[code.length - 1]
       });
+      if (success) {
+        this.setState({
+          arr: data,
+        });
+      }
+    }
+  };
+
+  onBlurs = async (e) => {
+    if (e.target.value) {
+      this.setState({
+        disabled: false,
+      });
+      const code = _.split(e.target.value, '@');
+      const {
+        data: { data, success }
+      } = await UserService.thirdParty({
+        tenantCode: code[code.length - 1]
+      });
+      if (success) {
+        this.setState({
+          arr: data,
+        });
+      }
     }
   };
 
@@ -528,7 +557,7 @@ export default class Login extends DvaComponent<Props, State> {
             <CommonForm
               formData={getFormDatas(this)}
               rowNum={1}
-              onSubmit={this.handleSubmit}
+              onSubmit={this.handleSubmits}
               getForm={f => this.setState({ form: f })}
               btnProps={{
                 isResetBtn: false,
@@ -556,27 +585,11 @@ export default class Login extends DvaComponent<Props, State> {
             <a>申请账号</a>
           </Popover>}
         >
-          <TabPane tab="SSO登录" key="4" >
-            <CommonForm
-              formData={getFormData(this)}
-              rowNum={1}
-              onSubmit={this.handleSubmit}
-              btnProps={{
-                isResetBtn: false,
-                isSubmitBtn: true,
-                submitText: '登录',
-                submitBtnProps: {
-                  style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
-              }}
-            />
-          </TabPane>
           <TabPane tab="短信登录" key="2">
             <CommonForm
               formData={getFormDatatre(this)}
               rowNum={1}
-              onSubmit={this.handleSubmits}
+              onSubmit={this.handleSubmit}
               getForm={f => this.setState({ form: f })}
               btnProps={{
                 isResetBtn: false,

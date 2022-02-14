@@ -78,6 +78,7 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
       });
       if (success) {
         setVisible(false);
+        handleClicks();
         message.success('绑定成功');
       }
     });
