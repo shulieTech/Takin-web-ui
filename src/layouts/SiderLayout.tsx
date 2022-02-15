@@ -20,7 +20,7 @@ import axios from 'axios';
 
 declare var window: any;
 let path = '';
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
 
 const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const [state, setState] = useStateReducer({
@@ -226,7 +226,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           state.request && <ConfigProvider getPopupContainer={() => popupDom.current}>
             <div
               className="h-100p"
-              style={{ backgroundColor: '#1D2530', display: 'flex' }}
+              style={{ backgroundColor: '#1D2530', display: 'flex', flexDirection: 'column' }}
               ref={popupDom}
             >
               <EnvHeader />
