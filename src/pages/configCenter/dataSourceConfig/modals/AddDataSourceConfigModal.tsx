@@ -5,6 +5,7 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import styles from './../index.less';
 import DataSourceConfigService from '../service';
 import getAddDataSourceConfigFormData from '../components/DataSourceConfigFormData';
+import { trimObj } from 'src/utils/utils';
 
 interface Props {
   btnText?: string | React.ReactNode;
@@ -90,7 +91,7 @@ const AddDataSourceConfigModal: React.FC<Props> = props => {
             data: { success, data }
           } = await DataSourceConfigService.editDataSourceConfig({
             datasourceId,
-            ...values
+            ...trimObj(values)
           });
           if (success) {
             message.success('操作成功');
@@ -105,7 +106,7 @@ const AddDataSourceConfigModal: React.FC<Props> = props => {
         const {
           data: { success, data }
         } = await DataSourceConfigService.addDataSourceConfig({
-          ...values
+          ...trimObj(values)
         });
         if (success) {
           message.success('操作成功');

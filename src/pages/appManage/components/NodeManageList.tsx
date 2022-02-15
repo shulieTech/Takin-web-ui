@@ -219,7 +219,7 @@ const NodeManageList: React.FC<Props> = props => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 160 }}
+        style={{ height: document.body.clientHeight - 200 }}
       >
         <CustomAlert
           types={state.errorMsg ? 'error' : 'info'}
@@ -330,6 +330,7 @@ const NodeManageList: React.FC<Props> = props => {
           marginTop: 20,
           // textAlign: 'right',
           position: 'fixed',
+          zIndex: 1,
           padding: '8px 40px',
           bottom: 0,
           right: 10,

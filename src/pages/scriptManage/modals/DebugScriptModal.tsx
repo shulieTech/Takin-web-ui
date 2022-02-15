@@ -64,6 +64,7 @@ const DebugScriptModal: React.FC<Props> = props => {
           }
 
           props.setState({
+            scriptRowId: id,
             scriptDebugId: data.scriptDebugId,
             debugStatus: 0
           });

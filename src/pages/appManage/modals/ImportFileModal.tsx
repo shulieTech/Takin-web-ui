@@ -25,7 +25,7 @@ const ImportFileModal: React.FC<Props> = props => {
       formData.set('id', props.id);
     });
     const {
-      data: { data, success }
+      data: { data, success, error }
     } = await AppManageService.importAppConfig(formData);
     if (success) {
       message.success('导入成功');
@@ -35,7 +35,7 @@ const ImportFileModal: React.FC<Props> = props => {
       props.onSuccess();
       return;
     }
-    message.error('导入失败');
+    message.error(error?.msg || '导入失败');
     setState({
       errorInfo: data && data.msg
     });

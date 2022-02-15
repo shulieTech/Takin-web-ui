@@ -67,6 +67,7 @@ const AddWhiteListDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入应用名'
           }
         ]
@@ -114,6 +115,7 @@ const AddWhiteListDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请至少输入一个接口地址'
           }
         ]

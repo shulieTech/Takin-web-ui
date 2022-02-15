@@ -10,7 +10,7 @@ import { AppModelState } from 'src/models/app';
 import UserService from 'src/services/user';
 import { Basic } from 'src/types';
 import venomBasicConfig from 'src/venom.config';
-import { router, qiankunStart } from 'umi';
+import { router } from 'umi';
 import ContentNode from './components/ContentNode';
 import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
@@ -19,9 +19,9 @@ import axios from 'axios';
 
 declare var window: any;
 let path = '';
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
 
-const SiderLayout: React.FC<SiderLayoutProps> = props => {
+const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const [state, setState] = useStateReducer({
     collapsedStatus: false,
     request: false
@@ -88,12 +88,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
 
   const { location } = props;
   useEffect(() => {
-    qiankunStart();
-  }, []);
-  useEffect(() => {
     handleDispatch({
       type: 'app/filterBreadCrumbs',
-      payload: pathname
+      payload: pathname,
     });
     if (state.request && !localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
@@ -106,7 +103,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   useEffect(() => {
     if (state.request && JSON.stringify(props.dictionaryMap) === '{}') {
       handleDispatch({
-        type: 'common/getDictionaries'
+        type: 'common/getDictionaries',
       });
     }
     if (state.request && !localStorage.getItem('trowebBtnResource')) {
@@ -138,7 +135,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const queryMenuList = async () => {
     if (JSON.parse(localStorage.getItem('trowebUserMenu')) === null) {
       const {
-        data: { data, success }
+        data: { data, success },
       } = await UserService.queryMenuList({});
       if (success) {
         localStorage.setItem('trowebUserMenu', JSON.stringify(data));
@@ -153,7 +150,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
   const queryUserResource = async () => {
     const {
       headers,
-      data: { data, success }
+      data: { data, success },
     } = await UserService.queryUserResource({});
     if (success) {
       localStorage.setItem('trowebUserResource', JSON.stringify(data));
@@ -175,7 +172,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
     if (lists[0].type === 'Item') {
       path = lists[0].path;
     }
-    [lists[0]].forEach(list => {
+    [lists[0]].forEach((list) => {
       if (list.children) {
         getPath(list.children);
       }
@@ -188,21 +185,21 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
    */
   const queryBtnResource = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await UserService.queryBtnResource({});
     if (success) {
       localStorage.setItem('trowebBtnResource', JSON.stringify(data));
     }
   };
 
-  const handleDispatch = payload => {
+  const handleDispatch = (payload) => {
     window.g_app._store.dispatch(payload);
   };
   const { children } = props;
 
   const handlerCollapsed = () => {
     setState({
-      collapsedStatus: !state.collapsedStatus
+      collapsedStatus: !state.collapsedStatus,
     });
   };
   return (
@@ -228,7 +225,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
           state.request && <ConfigProvider getPopupContainer={() => popupDom.current}>
             <div
               className="h-100p"
-              style={{ backgroundColor: '#1D2530' }}
+              style={{ backgroundColor: '#1D2530', display: 'flex' }}
               ref={popupDom}
             >
               <ContentNode children={children} />

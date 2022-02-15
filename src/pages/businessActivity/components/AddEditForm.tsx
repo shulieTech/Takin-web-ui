@@ -19,7 +19,7 @@ interface AddEditFormProps extends CommonModelState, AddEditActivityModalState {
   setState: (state: Partial<AddEditActivityModalState>) => void;
   isVirtual?: boolean;
 }
-const AddEditForm: React.FC<AddEditFormProps> = (props) => {
+const AddEditForm: React.FC<AddEditFormProps> = props => {
   const { setState, app, serviceType, form } = props;
   const disabled = !props.app;
 
@@ -30,10 +30,10 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
   }, [app, serviceType]);
   const queryServiceList = async () => {
     const {
-      data: { data, success },
+      data: { data, success }
     } = await BusinessActivityService.queryServiceList({
       applicationName: app,
-      type: serviceType,
+      type: serviceType
     });
     if (success) {
       setState({ serviceList: data });
@@ -45,17 +45,17 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
         key: ActivityBean.业务活动名称,
         label: '业务活动名称',
         options: {
-          rules: [{ required: true, message: '请填写业务活动名称' }],
-          initialValue: props.systemName,
+          rules: [{ required: true, whitespace: true, message: '请填写业务活动名称' }],
+          initialValue: props.systemName
         },
-        node: <Input style={{ fontSize: 12 }} placeholder="业务活动名称" />,
+        node: <Input style={{ fontSize: 12 }} placeholder="业务活动名称" />
       },
       {
         key: ActivityBean.业务活动类型,
         label: '业务活动类型',
         options: {
-          rules: [{ required: true, message: '请选择业务活动类型' }],
-          initialValue: props.isCore,
+          rules: [{ required: false, message: '请选择业务活动类型' }],
+          initialValue: props.isCore ? props.isCore : undefined
         },
         node: (
           <CommonSelect
@@ -64,14 +64,14 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
             dataSource={props.dictionaryMap && props.dictionaryMap.isCore}
             optionFilterProp="children"
           />
-        ),
+        )
       },
       {
         key: ActivityBean.业务活动级别,
         label: '业务活动级别',
         options: {
-          rules: [{ required: true, message: '请选择业务活动级别' }],
-          initialValue: props.link_level,
+          rules: [{ required: false, message: '请选择业务活动级别' }],
+          initialValue: props.link_level ? props.link_level : undefined
         },
         node: (
           <CommonSelect
@@ -80,7 +80,7 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
             dataSource={props.dictionaryMap && props.dictionaryMap.link_level}
             optionFilterProp="children"
           />
-        ),
+        )
       },
       {
         key: ActivityBean.业务域,
@@ -90,11 +90,11 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
           </span>
         ),
         options: {
-          rules: [{ required: true, message: '请选择业务域' }],
+          rules: [{ required: false, message: '请选择业务域' }],
           initialValue:
             typeof props.businessDomain === 'string'
               ? +props.businessDomain
-              : props.businessDomain,
+              : props.businessDomain ?? undefined
         },
         node: (
           // <CommonSelect
@@ -110,15 +110,16 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
             placeholder="请选择业务域"
             showSearch
             optionFilterProp="children"
+            allowClear
           >
-            {props.domains.map((x) => (
+            {props.domains.map(x => (
               <Select.Option key={x.value} value={x.value}>
                 {x.label}
               </Select.Option>
             ))}
           </Select>
-        ),
-      },
+        )
+      }
     ];
     const businessForm = [
       {
@@ -126,7 +127,7 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
         label: '应用',
         options: {
           rules: [{ required: true, message: '请选择应用' }],
-          initialValue: props.app,
+          initialValue: props.app
         },
         node: (
           <BusinessSelect
@@ -134,11 +135,11 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
               setState({
                 app: value,
                 appName: options && options.props.children,
-                service: undefined,
+                service: undefined
               });
               form.resetFields([
                 ActivityBean.服务类型,
-                ActivityBean['服务/入口'],
+                ActivityBean['服务/入口']
               ]);
             }}
             url="/application/names"
@@ -148,19 +149,19 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
             onLoad={() => setState({ loading: false })}
             dropdownClassName={styles.select}
           />
-        ),
+        )
       },
       {
         key: ActivityBean.服务类型,
         label: '服务类型',
         options: {
           rules: [{ required: true, message: '请选择服务类型' }],
-          initialValue: props.serviceType,
+          initialValue: props.serviceType || 'HTTP'
         },
         node: (
           <BusinessSelect
             url="/application/entrances/types"
-            onChange={(_serviceType) => {
+            onChange={_serviceType => {
               setState({ serviceType: _serviceType, service: undefined });
               form.resetFields([ActivityBean['服务/入口']]);
             }}
@@ -170,32 +171,32 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
             optionFilterProp="children"
             dropdownClassName={styles.select}
           />
-        ),
+        )
       },
       {
         key: ActivityBean['服务/入口'],
         label: '服务',
         options: {
           rules: [{ required: true, message: '请选择服务' }],
-          initialValue: props.service,
+          initialValue: props.service
         },
         node: (
           <CommonSelect
             dataSource={props.serviceList}
-            onChange={(service, options: any) =>
+            onChange={(service, options: any) => {
               setState({
                 service,
-                serviceName: options && options.props.children,
-              })
-            }
+                serviceName: options && options.props.children
+              });
+            }}
             placeholder="请选择服务"
             showSearch
             disabled={disabled}
             optionFilterProp="children"
             dropdownClassName={styles.select}
           />
-        ),
-      },
+        )
+      }
     ];
 
     const virtualBusinessForm = [
@@ -204,7 +205,7 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
         label: '服务类型',
         options: {
           rules: [{ required: true, message: '请选择服务类型' }],
-          initialValue: props.serviceType,
+          initialValue: props.serviceType
         },
         node: (
           <BusinessSelect
@@ -214,17 +215,17 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
             optionFilterProp="children"
             dropdownClassName={styles.select}
           />
-        ),
+        )
       },
       {
         key: ActivityBean.虚拟入口,
         label: '虚拟入口',
         options: {
-          rules: [{ required: true, message: '请输入虚拟入口' }],
-          initialValue: props.virtualEntrance,
+          rules: [{ required: true, whitespace: true, message: '请输入虚拟入口' }],
+          initialValue: props.virtualEntrance
         },
-        node: <Input placeholder="请与脚本里的path保持一致" />,
-      },
+        node: <Input placeholder="请与脚本里的path保持一致" />
+      }
     ];
 
     if (props.isVirtual) {
@@ -236,10 +237,10 @@ const AddEditForm: React.FC<AddEditFormProps> = (props) => {
     <Fragment>
       <CommonForm
         btnProps={{ isResetBtn: false, isSubmitBtn: false }}
-        getForm={(f) => setState({ form: f })}
+        getForm={f => setState({ form: f })}
         formItemProps={{
           labelCol: { span: 7 },
-          wrapperCol: { span: 15, push: 1 },
+          wrapperCol: { span: 15, push: 1 }
         }}
         rowNum={1}
         formData={getFormData()}

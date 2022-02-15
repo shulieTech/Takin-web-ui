@@ -209,7 +209,7 @@ const NodeTypeFive: React.FC<Props> = props => {
               maxLength={128}
               value={text}
               onChange={e =>
-                handleChangeData(row.id, e.target.value, 'bizDatabase')
+                handleChangeData(row.id, e.target.value.trim(), 'bizDatabase')
               }
             />
           ) : (
@@ -228,7 +228,7 @@ const NodeTypeFive: React.FC<Props> = props => {
               maxLength={128}
               value={text}
               onChange={e =>
-                handleChangeData(row.id, e.target.value, 'bizTableName')
+                handleChangeData(row.id, e.target.value.trim(), 'bizTableName')
               }
             />
           ) : (
@@ -259,7 +259,7 @@ const NodeTypeFive: React.FC<Props> = props => {
         ...customColumnProps,
         title: '编辑',
         dataIndex: 'isManual',
-        width: 80,
+        width: 100,
         render: (text, row) => {
           return !text ? (
             '-'

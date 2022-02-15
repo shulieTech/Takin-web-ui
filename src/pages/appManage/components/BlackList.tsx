@@ -149,12 +149,20 @@ const BlackList: React.FC<Props> = props => {
 
   const handleChange = (key, value) => {
     setState({
-      searchValues: { ...state.searchValues, [key]: value }
+      searchValues: {
+        ...state.searchValues,
+        [key]: value
+      },
+      searchParams: {
+        ...state.searchParams,
+        current: 0
+      }
     });
     queryBlackListList({
       ...state.searchParams,
       ...state.searchValues,
-      [key]: value
+      [key]: value,
+      current: 0
     });
   };
 
@@ -171,7 +179,11 @@ const BlackList: React.FC<Props> = props => {
         useYn: undefined,
         interfaceName: null
       },
-      selectedRowKeys: []
+      selectedRowKeys: [],
+      searchParams: {
+        current: 0,
+        pageSize: 10
+      }
     });
     queryBlackListList({ ...state.searchParams });
   };
@@ -205,7 +217,7 @@ const BlackList: React.FC<Props> = props => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 160 }}
+        style={{ height: document.body.clientHeight - 200 }}
       >
         <TableTitle
           title="黑名单"
@@ -297,6 +309,7 @@ const BlackList: React.FC<Props> = props => {
           marginTop: 20,
           // textAlign: 'right',
           position: 'fixed',
+          zIndex: 1,
           padding: '8px 40px',
           bottom: 0,
           right: 10,

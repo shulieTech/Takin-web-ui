@@ -36,7 +36,7 @@ const getScriptManageFormData = (state, setState): FormDataType[] => {
           dataSource={
             state.businessActivityList ? state.businessActivityList : []
           }
-          dropdownMatchSelectWidth={false}
+          // dropdownMatchSelectWidth={false}
           showSearch
           filterOption={(input, option) =>
             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=

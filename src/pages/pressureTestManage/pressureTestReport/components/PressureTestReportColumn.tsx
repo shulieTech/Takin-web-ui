@@ -18,6 +18,11 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
     },
     {
       ...customColumnProps,
+      title: '压测场景ID',
+      dataIndex: 'sceneId'
+    },
+    {
+      ...customColumnProps,
       title: '压测场景名称',
       dataIndex: 'sceneName'
     },
@@ -50,7 +55,11 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Badge
             text={text === 1 ? '通过' : '不通过'}
-            color={text === 1 ? 'var(--BrandPrimary-500)' : 'var(--FunctionalError-500)'}
+            color={
+              text === 1
+                ? 'var(--BrandPrimary-500)'
+                : 'var(--FunctionalError-500)'
+            }
           />
         );
       }

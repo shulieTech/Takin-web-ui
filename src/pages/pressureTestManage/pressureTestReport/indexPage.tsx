@@ -16,7 +16,6 @@ export interface PressureTestReportState {
     current: string | number;
     pageSize: string | number;
   };
-  searchParamss: any;
 }
 
 const PressureTestReport: React.FC<PressureTestReportProps> = props => {
@@ -24,14 +23,10 @@ const PressureTestReport: React.FC<PressureTestReportProps> = props => {
     isReload: false,
     searchParams: {
       current: 0,
-      pageSize: 10
+      pageSize: 10,
+      ...props.location.query,
     },
-    searchParamss: props.location.query
   });
-
-  const { location } = props;
-  const { query } = location;
-  const { sceneName } = query;
 
   return (
     <Fragment>
@@ -44,7 +39,7 @@ const PressureTestReport: React.FC<PressureTestReportProps> = props => {
           rowNum: 4
         }}
         ajaxProps={{ url: '/report/listReport', method: 'GET' }}
-        searchParams={{ ...state.searchParams, sceneName }}
+        searchParams={state.searchParams}
         toggleRoload={state.isReload}
         datekeys={[
           {

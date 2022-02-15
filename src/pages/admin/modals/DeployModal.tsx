@@ -126,7 +126,7 @@ const AgentVersin: React.FC<Props> = props => {
               {props.form.getFieldDecorator('zhKey', {
                 initialValue: value.zhKey || '',
                 rules: [
-                  { required: true, message: `请输入配置项中文名` },
+                  { required: true, whitespace: true, message: `请输入配置项中文名` },
                   { validator: validateZhKey }],
               })(
                 <Input placeholder="配置项中文名" />
@@ -144,7 +144,7 @@ const AgentVersin: React.FC<Props> = props => {
             >
               {props.form.getFieldDecorator('enKey', {
                 initialValue: value.enKey || '',
-                rules: [{ required: true, message: `请输入配置项英文名` },
+                rules: [{ required: true, whitespace: true, message: `请输入配置项英文名` },
                 { validator: validateEnKey }],
               })(
                 <Input placeholder="配置项英文名" />
@@ -155,7 +155,7 @@ const AgentVersin: React.FC<Props> = props => {
             >
               {props.form.getFieldDecorator('desc', {
                 initialValue: value.desc || '',
-                rules: [{ required: true, message: `请输入配置项描述，200字以内` }],
+                rules: [{ required: true, whitespace: true, message: `请输入配置项描述，200字以内` }],
               })(
                 <TextArea rows={4} placeholder="请输入配置项描述，200字以内" maxLength={200} />
               )}
@@ -168,7 +168,7 @@ const AgentVersin: React.FC<Props> = props => {
             >
               {props.form.getFieldDecorator('version', {
                 initialValue: value.version || props.state.version,
-                rules: [{ required: true, message: `请输入最低生效版本` }],
+                rules: [{ required: true, whitespace: true, message: `请输入最低生效版本` }],
               })(
                 <Input placeholder="最低生效版本" disabled />
               )}
@@ -230,7 +230,7 @@ const AgentVersin: React.FC<Props> = props => {
             >
               {props.form.getFieldDecorator('defaultValue', {
                 initialValue: value.defaultValue || '',
-                rules: [{ required: true, message: `请输入默认值` }],
+                rules: [{ required: true, whitespace: true, message: `请输入默认值` }],
               })(
                 <Input placeholder="默认值" />
               )}

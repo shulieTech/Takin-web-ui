@@ -26,8 +26,7 @@ const QuickEntry: React.FC<Props> = props => {
             className={styles.iconWrap}
             style={{
               display:
-                menuAuthority?.pressureTestManage_pressureTestScene &&
-                  menuAuthority?.flowAccount ? 'block' : 'none'
+                menuAuthority?.pressureTestManage_pressureTestScene ? 'block' : 'none'
             }}
           >
             <Link to="/pressureTestManage/pressureTestScene">
@@ -56,7 +55,7 @@ const QuickEntry: React.FC<Props> = props => {
                 menuAuthority?.pressureTestManage_pressureTestScene ? 'block' : 'none'
             }}
           >
-            <Link to="/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=add">
+            <Link to="/pressureTestManage/pressureTestSceneV2/edit">
               <Icon style={{ fontSize: 32 }} type={iconType[1]} />
               <p className={styles.iconText}>发起压测</p>
             </Link>

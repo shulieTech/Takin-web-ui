@@ -34,7 +34,7 @@ const StepABaseInfo = (
             action !== 'add'
               ? bussinessFlowDetail && bussinessFlowDetail.businessProcessName
               : undefined,
-          rules: [{ required: true, message: '请输入业务流程名称' }]
+          rules: [{ required: true, whitespace: true, message: '请输入业务流程名称' }]
         },
         node: <Input placeholder="请输入" />
       },

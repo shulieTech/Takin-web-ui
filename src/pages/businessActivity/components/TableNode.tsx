@@ -49,12 +49,20 @@ const getColumns = (
       dataIndex: 'activityName',
       width: 350,
     },
+    // {
+    //   ...customColumnProps,
+    //   title: '类型',
+    //   dataIndex: 'businessType',
+    //   render: (text) => {
+    //     return text === 1 ? '虚拟' : '-';
+    //   },
+    // },
     {
       ...customColumnProps,
-      title: '类型',
-      dataIndex: 'businessType',
+      title: '级别',
+      dataIndex: 'link_level',
       render: (text) => {
-        return text === 1 ? '虚拟' : '-';
+        return text || '-';
       },
     },
     {
@@ -66,25 +74,25 @@ const getColumns = (
             .label || '-'
           : '-',
     },
-    {
-      ...customColumnProps,
-      title: '变更状态',
-      dataIndex: 'isChange',
-      render: (text, row) => {
-        return (
-          <Badge
-            text={
-              +text === 0
-                ? '正常'
-                : row.changeType === '1'
-                  ? '已变更(入口)'
-                  : '已变更(关联链路)'
-            }
-            color={ChangeStatus[text]}
-          />
-        );
-      },
-    },
+    // {
+    //   ...customColumnProps,
+    //   title: '变更状态',
+    //   dataIndex: 'isChange',
+    //   render: (text, row) => {
+    //     return (
+    //       <Badge
+    //         text={
+    //           +text === 0
+    //             ? '正常'
+    //             : row.changeType === '1'
+    //               ? '已变更(入口)'
+    //               : '已变更(关联链路)'
+    //         }
+    //         color={ChangeStatus[text]}
+    //       />
+    //     );
+    //   },
+    // },
     {
       ...customColumnProps,
       title: '创建时间',

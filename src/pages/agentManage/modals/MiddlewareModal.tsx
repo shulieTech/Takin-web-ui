@@ -67,7 +67,7 @@ const MiddlewareModal: React.FC<Props> = props => {
       setState({
         data: dataSource.filter((item, k) => {
           return (
-            item.moduleId.indexOf(state.searchInputValue) > -1 &&
+            item.moduleId.indexOf(state.searchInputValue.trim()) > -1 &&
             item.status === state.status
           );
         })
@@ -77,8 +77,9 @@ const MiddlewareModal: React.FC<Props> = props => {
     setState({
       data: dataSource.filter((item, k) => {
         return (
-          item.moduleId.indexOf(state.searchInputValue) > -1 ||
-          item.status === state.status
+          item.moduleId.indexOf(
+            state.searchInputValue && state.searchInputValue.trim()
+          ) > -1 || item.status === state.status
         );
       })
     });
@@ -123,6 +124,13 @@ const MiddlewareModal: React.FC<Props> = props => {
       btnProps={{ type: 'link' }}
       btnText={props.btnText}
       onClick={() => handleClick()}
+      afterCancel={() => {
+        setState({
+          status: undefined,
+          searchInputValue: undefined,
+          isReload: !state.isReload
+        });
+      }}
     >
       <CustomDescriptions
         title={`AgentID:${props.agentId}`}

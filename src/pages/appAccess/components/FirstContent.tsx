@@ -15,7 +15,7 @@ const FirstContent: React.FC<Props> = props => {
   const { state, setState } = props;
   const handleChange = value => {
     setState({
-      appName: value
+      appName: value.trim()
     });
   };
 

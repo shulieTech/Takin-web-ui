@@ -36,7 +36,7 @@ const AddEditGraph: React.FC<Props> = (props) => {
 
   return (
     <div style={{ background: '#F8F9FA', height: height < 500 ? 500 : height }}>
-      <GraphNode graphData={grapData} graphKey={grapData?.nodes?.length}/>
+      <GraphNode graphData={grapData} graphKey={JSON.stringify(grapData?.nodes)}/>
     </div>
   );
 };

@@ -114,6 +114,7 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请选择应用'
             }
           ]
@@ -162,6 +163,7 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入业务数据源地址'
             }
           ]
@@ -181,6 +183,7 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入用户名'
             }
           ]
@@ -254,7 +257,8 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请输入配置代码'
+              message: '请输入配置代码',
+              whitespace: true
             }
           ]
         },
@@ -312,6 +316,7 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入数据源地址'
             }
           ]
@@ -326,6 +331,7 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入用户名'
             }
           ]
@@ -340,6 +346,7 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入密码'
             }
           ]
@@ -401,7 +408,8 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请输入表名称'
+              message: '请输入表名称',
+              whitespace: true
             }
           ]
         },

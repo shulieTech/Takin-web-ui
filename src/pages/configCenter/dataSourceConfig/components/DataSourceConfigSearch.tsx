@@ -5,17 +5,16 @@ import { CommonSelect } from 'racc';
 
 const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
   const { VERIFY_DATASOURCE_TYPE } = dictionaryMap;
-  // console.log(dictionaryMap);
   return [
     {
       key: 'datasourceName',
       label: '',
-      node: <Input placeholder="数据源名称" />
+      node: <Input placeholder="数据源名称" />,
     },
     {
       key: 'jdbcUrl',
       label: '',
-      node: <Input placeholder="数据源地址" />
+      node: <Input placeholder="数据源地址" />,
     },
     {
       key: 'type',
@@ -27,7 +26,7 @@ const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
             (dictionaryMap && dictionaryMap.VERIFY_DATASOURCE_TYPE) || []
           }
         />
-      )
+      ),
     },
     {
       key: 'tagsIdList',
@@ -37,9 +36,15 @@ const getDataSourceConfigFormData = (state, dictionaryMap): FormDataType[] => {
           placeholder="标签：全部"
           dataSource={state.tagList || []}
           mode="multiple"
+          onRender={(item) => (
+            <CommonSelect.Option key={item.value} value={item.value}>
+              {item.label}
+            </CommonSelect.Option>
+          )}
+          optionFilterProp="children"
         />
-      )
-    }
+      ),
+    },
   ];
 };
 

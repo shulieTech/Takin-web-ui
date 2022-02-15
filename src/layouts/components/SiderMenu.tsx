@@ -11,7 +11,8 @@ import {
   Menu,
   message,
   Popover,
-  Divider
+  Divider,
+  Tooltip,
 } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
@@ -26,7 +27,7 @@ import router from 'umi/router';
 import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
-import { getTakinAuthority } from 'src/utils/utils';
+import { getTakinAuthority, treeFindPath } from 'src/utils/utils';
 
 const { Sider } = Layout;
 
@@ -37,18 +38,19 @@ interface Props extends AppModelState {
   // addNavTabItemEvent?: () => void;
 }
 
-const SiderMenu: React.FC<Props> = props => {
+const SiderMenu: React.FC<Props> = (props) => {
   const [openKeys, setOpenKeys] = useState([]);
   const [visible, setVisible] = useState(false);
   const { location, collapsed } = props;
   const keys = [location.pathname];
 
-  const dismissPopover = e => {
+  const dismissPopover = (e) => {
     e.stopPropagation();
     if (visible) {
       setVisible(false);
     }
   };
+  const menuLists = localStorage.getItem('trowebUserMenu');
 
   useEffect(() => {
     document.body.addEventListener('click', dismissPopover);
@@ -59,7 +61,7 @@ const SiderMenu: React.FC<Props> = props => {
 
   const handleLogout = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await UserService.troLogout({});
     if (success) {
       message.success('登录已失效，请重新登录');
@@ -75,9 +77,9 @@ const SiderMenu: React.FC<Props> = props => {
         'troweb-userId',
         'trowebUserMenu',
         'takinAuthority',
-        'Access-Token'
+        'Access-Token',
       ];
-      storageList.forEach(item => localStorage.removeItem(item));
+      storageList.forEach((item) => localStorage.removeItem(item));
       if (data && data.indexUrl) {
         location.href = `${data.indexUrl}`;
         return;
@@ -88,7 +90,7 @@ const SiderMenu: React.FC<Props> = props => {
   };
 
   const content = (
-    <div onClick={dismissPopover}>
+    <div onClick={dismissPopover} style={{ lineHeight: '32px' }}>
       <div>
         <EditPasswordModal onSuccess={handleLogout} />
       </div>
@@ -98,10 +100,12 @@ const SiderMenu: React.FC<Props> = props => {
           rel="noreferrer"
           target="_blank"
         >
-          <Button type="link">帮助文档</Button>
+          <Button type="link" style={{ padding: '0 15px' }}>
+            帮助文档
+          </Button>
         </a>
       </div>
-      <Button type="link" onClick={handleLogout}>
+      <Button type="link" style={{ padding: '0 15px' }} onClick={handleLogout}>
         登出
       </Button>
     </div>
@@ -109,14 +113,21 @@ const SiderMenu: React.FC<Props> = props => {
 
   const title = (
     <span
-      style={{ color: 'white' }}
-      onClick={e => {
+      style={{ color: 'white', display: 'flex' }}
+      onClick={(e) => {
         e.stopPropagation();
         setVisible(true);
       }}
     >
       {!props.collapsedStatus && (
-        <span> {localStorage.getItem('troweb-userName')}</span>
+        <Tooltip title={localStorage.getItem('troweb-userName')}>
+          <span
+            style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            {' '}
+            {localStorage.getItem('troweb-userName')}
+          </span>
+        </Tooltip>
       )}
       <span style={{ paddingLeft: '20px' }}>
         <Icon type="setting" />
@@ -134,7 +145,7 @@ const SiderMenu: React.FC<Props> = props => {
       className={`${styles.sider}`}
       style={{
         // paddingTop: venomBasicConfig.fixHeader && venomBasicConfig.headerHeight,
-        backgroundColor: 'var(--BrandPrimary-500)'
+        backgroundColor: 'var(--BrandPrimary-500)',
       }}
       // onCollapse={}
     >
@@ -159,30 +170,34 @@ const SiderMenu: React.FC<Props> = props => {
         // }
         selectedKeys={keys}
         defaultSelectedKeys={keys}
-        defaultOpenKeys={keys}
-        onOpenChange={values => {
+        defaultOpenKeys={treeFindPath(
+          JSON.parse(menuLists),
+          (data) => data.path === keys[0]
+        )}
+        onOpenChange={(values) => {
           setOpenKeys(values);
         }}
       >
         {renderMenuNode()}
       </Menu>
       {getTakinAuthority() === 'true' && (
-        <Card className={styles.menuCard}>
-          <Popover
-            content={content}
-            placement="topLeft"
-            visible={visible}
-            trigger="click"
-            arrowPointAtCenter
-            onVisibleChange={v => setVisible(v)}
-          >
+        <Popover
+          content={content}
+          placement="topLeft"
+          visible={visible}
+          trigger="click"
+          arrowPointAtCenter
+          onVisibleChange={(v) => setVisible(v)}
+          getPopupContainer={() => window.document.body}
+        >
+          <Card className={styles.menuCard}>
             <Meta
               avatar={<Avatar style={{ backgroundColor: 'white' }} />}
               title={title}
               className={styles.menuMeta}
             />
-          </Popover>
-        </Card>
+          </Card>
+        </Popover>
       )}
     </Sider>
   );
@@ -193,7 +208,7 @@ export default connect(({ app }) => ({ ...app }))(SiderMenu);
 interface Props {
   onSuccess?: () => void;
 }
-const EditPasswordModal: React.FC<Props> = props => {
+const EditPasswordModal: React.FC<Props> = (props) => {
   const [form, setForm] = useState<WrappedFormUtils>(null);
   const getFormData = (): FormDataType[] => {
     return [
@@ -201,18 +216,18 @@ const EditPasswordModal: React.FC<Props> = props => {
         key: 'account',
         label: '当前账号',
         options: {
-          initialValue: localStorage.getItem('troweb-userName')
+          initialValue: localStorage.getItem('troweb-userName'),
         },
-        node: <Input disabled />
+        node: <Input disabled />,
       },
       {
         key: 'oldPassword',
         options: {
           initialValue: undefined,
-          rules: [{ required: true, message: '请输入旧密码' }]
+          rules: [{ required: true, message: '请输入旧密码' }],
         },
         label: '请输入旧密码',
-        node: <Input />
+        node: <Input />,
       },
       {
         key: 'newPassword',
@@ -223,9 +238,9 @@ const EditPasswordModal: React.FC<Props> = props => {
               required: true,
               message: '请输入新密码,8-20个字符',
               min: 8,
-              max: 20
-            }
-          ]
+              max: 20,
+            },
+          ],
         },
         label: '请输入新密码',
         node: (
@@ -234,12 +249,12 @@ const EditPasswordModal: React.FC<Props> = props => {
             minLength={8}
             maxLength={20}
           />
-        )
-      }
+        ),
+      },
     ];
   };
   const handleSubmit = () => {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       form.validateFields(async (err, values) => {
         if (err) {
           message.info('请检查表单必填项');
@@ -247,10 +262,10 @@ const EditPasswordModal: React.FC<Props> = props => {
           return;
         }
         const {
-          data: { success }
+          data: { success },
         } = await UserService.updatePassword({
           ...values,
-          id: localStorage.getItem('troweb-userId')
+          id: localStorage.getItem('troweb-userId'),
         });
         if (success) {
           // message.success('成功修改密码');
@@ -266,13 +281,13 @@ const EditPasswordModal: React.FC<Props> = props => {
     <CommonModal
       beforeOk={handleSubmit}
       btnText="修改密码"
-      btnProps={{ type: 'link' }}
+      btnProps={{ type: 'link', style: { padding: '0 15px' } }}
       modalProps={{ title: '修改密码' }}
     >
       <CommonForm
         btnProps={{ isSubmitBtn: false, isResetBtn: false }}
         rowNum={1}
-        getForm={f => setForm(f)}
+        getForm={(f) => setForm(f)}
         formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 16 } }}
         formData={getFormData()}
       />

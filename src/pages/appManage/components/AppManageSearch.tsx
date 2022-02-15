@@ -3,7 +3,7 @@ import { Input } from 'antd';
 import React from 'react';
 import { CommonSelect } from 'racc';
 
-const getFormData = (): FormDataType[] => {
+const getFormData = (state): FormDataType[] => {
   return [
     {
       key: 'applicationName',

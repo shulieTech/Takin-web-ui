@@ -29,7 +29,9 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
     middleware: null,
     searchParamss: props.location.query,
     middlewareCascade: null,
-    searchParams: {},
+    searchParams: {
+      type: '0'
+    },
     showModal: false,
   });
 
@@ -73,20 +75,33 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
 
   const filterData: any = [
     {
+      dataSource: props.dictionaryMap.link_level,
+      key: 'linkLevel',
+      label: '级别'
+    },
+    {
       // dataSource: props.dictionaryMap.domain,
       dataSource: props.domains,
       key: 'domain',
       label: '业务域',
     },
     {
+      key: 'type',
+      label: '类型',
       dataSource: [
-        { label: '正常', value: '0' },
-        { label: '变更', value: '1' },
+        { label: '普通', value: 0 },
+        { label: '虚拟', value: 1 },
       ],
-      key: 'isChange',
-      label: '变更状态',
-      type: 'radio',
     },
+    // {
+    //   dataSource: [
+    //     { label: '正常', value: '0' },
+    //     { label: '变更', value: '1' },
+    //   ],
+    //   key: 'isChange',
+    //   label: '变更状态',
+    //   type: 'radio',
+    // },
   ];
 
   useEffect(() => {
@@ -102,6 +117,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
         columns: getColumns(state, setState, props),
         size: 'small',
       }}
+      searchParams={state.searchParams}
       ajaxProps={{ url: '/activities', method: 'GET' }}
       commonFormProps={{ formData: getFormData(state, setState), rowNum: 6 }}
       filterData={filterData}

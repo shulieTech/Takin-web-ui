@@ -54,6 +54,36 @@ const AppErrorListModal: React.FC<Props> = props => {
     }
   };
 
+  const popoverTd = (text) => {
+    return (
+      <Popover
+        placement="bottom"
+        content={
+          <div
+            style={{
+              maxWidth: 400,
+              wordBreak: 'break-word',
+              maxHeight: 300,
+              overflow: 'auto',
+            }}
+          >
+            {text}
+          </div>
+        }
+      >
+        <div
+          style={{
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {text}
+        </div>
+      </Popover>
+    );
+  };
+
   const getColumns = (): ColumnProps<any>[] => {
     return [
       {
@@ -65,13 +95,15 @@ const AppErrorListModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: '异常描述',
         dataIndex: 'description',
-        width: 250
+        width: 250,
+        render: popoverTd,
       },
       {
         ...customColumnProps,
         title: '异常详情',
         dataIndex: 'detail',
-        width: 350
+        width: 350,
+        render: popoverTd,
       },
       {
         ...customColumnProps,
@@ -83,7 +115,7 @@ const AppErrorListModal: React.FC<Props> = props => {
         ...customColumnProps,
         title: 'Agent ID',
         dataIndex: 'agentIds',
-        width: 100,
+        width: 120,
         render: text => {
           return text && text.length >= 1 ? (
             <div style={{ display: 'flex' }}>
@@ -137,8 +169,9 @@ const AppErrorListModal: React.FC<Props> = props => {
       btnText={props.btnText}
       onClick={() => handleClick()}
     >
-      <div style={{ minHeight: 500 }}>
+      <div>
         <CustomTable
+          scroll={{ y: 500 }}
           rowKey={(row, index) => index.toString()}
           columns={getColumns()}
           size="small"

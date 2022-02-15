@@ -10,7 +10,8 @@ import {
   Popconfirm,
   Popover,
   Tag,
-  Tooltip
+  Tooltip,
+  Modal,
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
@@ -28,7 +29,13 @@ import DebugScriptRecordModal from '../modals/DebugScriptRecordModal';
 import { getTakinAuthority } from 'src/utils/utils';
 
 declare var serverUrl: string;
-const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
+const getScriptManageColumns = (
+  state,
+  setState
+): {
+  columns: ColumnProps<any>[];
+  stopDebug: (id?: number) => void;
+} => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
@@ -37,16 +44,16 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
   /**
    * @name  删除脚本
    */
-  const handleDeleteScript = async Id => {
+  const handleDeleteScript = async (Id) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await ScriptManageService.deleteScript({
-      scriptId: Id
+      scriptId: Id,
     });
     if (success) {
       message.success('删除成功');
       setState({
-        isReload: !state.isReload
+        isReload: !state.isReload,
       });
     }
   };
@@ -56,9 +63,9 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
    */
   const handleDownload = async (Id, fileName) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await ScriptManageService.downloadScript({
-      scriptId: Id
+      scriptId: Id,
     });
     if (success) {
       downloadFile(data.content, `${fileName}.zip`);
@@ -74,7 +81,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         'Auth-Cookie': localStorage.getItem('auth-cookie'),
         'tenant-code': localStorage.getItem('tenant-code'),
         'env-code': localStorage.getItem('env-code'),
-      }
+      },
     });
     const blob = new Blob([data], { type: `` });
 
@@ -107,7 +114,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         'Auth-Cookie': localStorage.getItem('auth-cookie'),
         'tenant-code': localStorage.getItem('tenant-code'),
         'env-code': localStorage.getItem('env-code'),
-      }
+      },
     });
     const blob = new Blob([data], { type: `` });
 
@@ -127,12 +134,40 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
     // 释放掉blob对象
     window.URL.revokeObjectURL(href);
   };
+  const stopDebug = (id = state.scriptRowId) => {
+    Modal.confirm({
+      title: '提示',
+      content: '确认停止调试？',
+      onOk: async () => {
+        const {
+          data: { success },
+        } = await ScriptManageService.stopDebug({
+          scriptDeployId: id,
+        });
+        if (success) {
+          message.success('操作成功');
+          setState({
+            isReload: !state.isReload,
+            isShowDebugModal: false,
+            scriptDebugId: undefined,
+            debugStatus: 0,
+            errorInfo: null,
+          });
+        }
+      },
+    });
+  };
 
-  return [
+  const columns = [
     {
       ...customColumnProps,
       title: '序号',
-      dataIndex: 'id'
+      dataIndex: 'scriptId',
+    },
+    {
+      ...customColumnProps,
+      title: '版本号id',
+      dataIndex: 'id',
     },
     {
       ...customColumnProps,
@@ -140,14 +175,18 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
       dataIndex: 'scriptName',
       render: (text, row) => {
         return (
-          <div className={styles.scriptName}>
-            {text}
-            <span style={{ color: '#8C8C8C', marginLeft: 8 }}>
+          <div className={styles.scriptName} style={{ display: 'inline-flex', whiteSpace: 'nowrap' }}>
+            <Tooltip title={text} arrowPointAtCenter>
+              <div style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {text}
+              </div>
+            </Tooltip>
+            <span style={{ color: '#8C8C8C', marginLeft: 8, flex: 1, }}>
               版本{row.scriptVersion}
             </span>
           </div>
         );
-      }
+      },
     },
     {
       ...customColumnProps,
@@ -206,14 +245,14 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                 }
                 onSccuess={() => {
                   setState({
-                    isReload: !state.isReload
+                    isReload: !state.isReload,
                   });
                 }}
               />
             </AuthorityBtn>
           </div>
         );
-      }
+      },
     },
     {
       ...customColumnProps,
@@ -245,7 +284,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
               >
                 {text}
@@ -253,7 +292,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
             </Tooltip>
           </div>
         );
-      }
+      },
     },
     {
       ...customColumnProps,
@@ -270,7 +309,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                   lineHeight: '15px',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {text[0] && text[0].fileName}
@@ -317,18 +356,18 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
         ) : (
           '-'
         );
-      }
+      },
     },
     {
       ...customColumnProps,
       title: '修改时间',
-      dataIndex: 'updateTime'
+      dataIndex: 'updateTime',
     },
     {
       ...customColumnProps,
       title: '负责人',
       dataIndex: 'userName',
-      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
+      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle',
     },
     {
       ...customColumnProps,
@@ -336,7 +375,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
       dataIndex: 'action',
       render: (text, row) => {
         return (
-          <Fragment>
+          <div style={{ whiteSpace: 'nowrap' }}>
             <AuthorityBtn
               isShow={
                 btnAuthority &&
@@ -376,7 +415,9 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                   row.canEdit
                 }
               >
-                <a style={{ marginRight: 8 }}>调试中</a>
+                <a style={{ marginRight: 8 }} onClick={() => stopDebug(row.id)}>
+                  调试中
+                </a>
               </AuthorityBtn>
             )}
 
@@ -391,7 +432,7 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                     menuCode="SCRIPT_MANAGE"
                     onSccuess={() => {
                       setState({
-                        isReload: !state.isReload
+                        isReload: !state.isReload,
                       });
                     }}
                   />
@@ -436,11 +477,16 @@ const getScriptManageColumns = (state, setState): ColumnProps<any>[] => {
                 </Link>
               </Button>
             )}
-          </Fragment>
+          </div>
         );
-      }
-    }
+      },
+    },
   ];
+
+  return {
+    columns,
+    stopDebug,
+  };
 };
 
 export default getScriptManageColumns;

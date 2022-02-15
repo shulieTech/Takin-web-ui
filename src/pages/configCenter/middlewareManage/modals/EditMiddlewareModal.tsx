@@ -35,6 +35,7 @@ const EditMiddlewareModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入Artifact ID'
             }
           ]
@@ -49,6 +50,7 @@ const EditMiddlewareModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入Group ID'
             }
           ]
@@ -132,6 +134,7 @@ const EditMiddlewareModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
+              whitespace: true,
               message: '请输入版本号'
             }
           ]

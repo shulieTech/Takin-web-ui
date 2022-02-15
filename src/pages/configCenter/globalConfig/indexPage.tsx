@@ -15,9 +15,9 @@ const GlobalConfig: React.FC<Props> = props => {
       <Alert
         type="warning"
         message={
-          <p style={{ color: '#646676' }}>
+          <div style={{ color: '#646676' }}>
             本次修改将对【当前环境的所有应用】生效，无须重启应用，请谨慎变更配置
-          </p>}
+          </div>}
         showIcon
       />
       <AgentSwitch />

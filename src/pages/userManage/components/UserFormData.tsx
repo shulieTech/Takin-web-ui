@@ -16,6 +16,7 @@ const getUserFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入客户名称'
           }
         ]
@@ -31,6 +32,7 @@ const getUserFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入账号'
           }
         ]

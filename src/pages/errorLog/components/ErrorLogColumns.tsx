@@ -33,7 +33,8 @@ const getErrorLogColumns = (state, setState): ColumnProps<any>[] => {
                 width: 260,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                verticalAlign: 'middle',
               }}
             >
               {text}

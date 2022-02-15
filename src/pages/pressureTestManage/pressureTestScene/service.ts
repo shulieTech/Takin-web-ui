@@ -131,7 +131,21 @@ const PressureTestSceneService = {
   async queryDataScriptNum(data) {
     const url = '/scenemanage/positionPoint';
     return httpGet(url, data);
-  }
+  },
+  /**
+   * @name 获取所有业务活动
+   */
+  async queryBussinessActive(data = {}) {
+    const url = '/link/bussinessActive';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 启动中停止
+   */
+  async scencePreStop(data) {
+    const url = '/scene/task/preStop';
+    return httpPut(url, data);
+  },
 };
 
 export default PressureTestSceneService;

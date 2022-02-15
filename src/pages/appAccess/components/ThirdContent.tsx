@@ -5,6 +5,7 @@ import CardTitle from './CardTitle';
 import styles from './../index.less';
 import { router } from 'umi';
 import moment from 'moment';
+import { getTakinAuthority } from 'src/utils/utils';
 
 interface Props {
   state: any;
@@ -91,7 +92,11 @@ const ThirdContent: React.FC<Props> = props => {
               selectedRowKeys: undefined
             });
             localStorage.removeItem('checkDate');
-            router.push('/agentManage');
+            if (getTakinAuthority() === 'true') {
+              router.push('/pro/nodeManage');
+            } else {
+              router.push('/agentManage');
+            }
           }, 3000);
           return;
         }

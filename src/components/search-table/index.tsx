@@ -3,7 +3,7 @@
  * @author MingShined
  */
 import { useStateReducer } from 'racc';
-import React, { useEffect } from 'react';
+import React, { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { httpGet, httpPost } from 'src/utils/request';
 import { filterSearchParams } from 'src/utils/utils';
 import FooterNode from './components/FooterNode';
@@ -14,8 +14,19 @@ import { getInitState, SearchTableContext } from './context';
 import styles from './index.less';
 import { SearchTableProps } from './type';
 
-const SearchTable: React.FC<SearchTableProps> = (props) => {
+declare var window: any;
+
+const SearchTable = (props: SearchTableProps, ref) => {
+  const { theme = 'dark' } = props;
   const [state, setState] = useStateReducer(getInitState());
+
+  // 转发内部的一些属性及方法
+  useImperativeHandle(ref, () => ({
+    queryList,
+    tableState: state,
+    setTableState: setState,
+  }), [state]);
+
   useEffect(() => {
     if (!state.flag && props.searchParams) {
       return;
@@ -23,30 +34,33 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
     setState({
       searchParams: { ...state.searchParams },
       checkedKeys: [],
-      checkedRows: [],
+      checkedRows: []
     });
     // setState({ searchParams: { ...state.searchParams, current: 0 } });
     queryList(true);
   }, [props.toggleRoload]);
+
   useEffect(() => {
     if (!props.searchParams) {
       return;
     }
     const searchParams = {
       ...getInitState().searchParams,
-      ...props.searchParams,
+      ...props.searchParams
     };
     setState({
       searchParams,
-      flag: true,
+      flag: true
     });
   }, [props.searchParams]);
+
   useEffect(() => {
     if (!state.flag) {
       return;
     }
     queryList();
   }, [state.searchParams, state.toggleRoload]);
+
   const queryList = async (reload: boolean = false) => {
     // return;
     // if (props.onCheck) {
@@ -58,20 +72,23 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
     const { method, url } = props.ajaxProps;
     const getSearchParams = { ...state.searchParams };
     window._search_table_params = getSearchParams; // 某些情况下外部需要获取页码信息
-    if (method === 'GET') {
-      Object.keys(getSearchParams).forEach((item) => {
-        if (Array.isArray(getSearchParams[item])) {
-          getSearchParams[item] = getSearchParams[item].join(',');
-        }
-      });
-    }
+
+    Object.keys(getSearchParams).forEach(item => {
+      if (typeof getSearchParams[item] === 'string') {
+        getSearchParams[item] = getSearchParams[item].trim();
+      }
+      if (method === 'GET' && Array.isArray(getSearchParams[item])) {
+        getSearchParams[item] = getSearchParams[item].join(',');
+      }
+    });
+
     const ajaxEvent =
       method === 'GET'
         ? httpGet(url, filterSearchParams(getSearchParams))
-        : httpPost(url, filterSearchParams(state.searchParams));
+        : httpPost(url, filterSearchParams(getSearchParams));
     const {
       data: { data, success },
-      total,
+      total
     } = await ajaxEvent;
     if (props.onSearch) {
       props.onSearch(state.searchParams, data);
@@ -82,6 +99,11 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
         dataSource: data,
         loading: false,
         // checkedKeys: reload ? [] : state.checkedKeys,
+        flag: true
+      });
+    } else {
+      setState({
+        loading: false,
         flag: true,
       });
     }
@@ -90,14 +112,14 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
     <SearchTableContext.Provider value={{ state, setState }}>
       <div className={styles.searchTableWrap}>
         <div
-          className={props.theme === 'dark' && styles.searchWrap}
+          className={theme === 'dark' && styles.searchWrap}
           style={{ padding: '8px 31px 64px 31px' }}
         >
           {props.title && (
             <h1 className="ft-18 ft-white mg-t1x">{props.title}</h1>
           )}
           {props.filterData && <TitleNode {...props} />}
-          {props.commonFormProps && <SearchNode {...props} />}
+          {props.commonFormProps && <SearchNode theme={theme} {...props} />}
         </div>
         <TableNode {...props} />
         <FooterNode {...props} />
@@ -105,8 +127,4 @@ const SearchTable: React.FC<SearchTableProps> = (props) => {
     </SearchTableContext.Provider>
   );
 };
-export default SearchTable;
-
-SearchTable.defaultProps = {
-  theme: 'dark',
-};
+export default forwardRef(SearchTable);

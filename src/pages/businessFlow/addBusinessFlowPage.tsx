@@ -6,7 +6,7 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import FormCardMultiple from 'src/components/form-card-multiple';
 import StepABaseInfo from './components/StepABaseInfo';
 import BasePageLayout from 'src/components/page-layout/BasePageLayout';
-import { Row, Col, Button, notification, message } from 'antd';
+import { Row, Col, Button, notification, message, Icon } from 'antd';
 import ProcessComponent from 'src/common/process';
 import BusinessFlowService from './service';
 import StepB from './components/StepB';
@@ -266,6 +266,14 @@ const AddBusinessFlow: React.FC<Props> = props => {
 
   return (
     <BasePageLayout title={'业务流程配置'} extra={controlBottom}>
+      {window.history.length > 1 && (
+        <a
+          onClick={() => window.history.go(-1)}
+          style={{ marginBottom: 8, display: 'inline-block' }}
+        >
+          <Icon type="left" style={{ marginRight: 8 }} /> 返回
+        </a>
+      )}
       <StepsComponent
         columnsData={StepdColumnsData}
         active={businessFlowStep}

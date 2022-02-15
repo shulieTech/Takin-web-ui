@@ -3,6 +3,7 @@ import { CommonSelect } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
 import { Button, Col, Icon, Input, message, Row } from 'antd';
 import DataSourceConfigService from '../service';
+import { trimObj } from 'src/utils/utils';
 
 const getAddDataSourceConfigFormData = (
   state,
@@ -27,7 +28,7 @@ const getAddDataSourceConfigFormData = (
       });
       const {
         data: { success, data }
-      } = await DataSourceConfigService.debugDataSource({ ...values });
+      } = await DataSourceConfigService.debugDataSource({ ...trimObj(values) });
       if (success) {
         setState({
           debugStatus: true,
@@ -63,7 +64,8 @@ const getAddDataSourceConfigFormData = (
           {
             required: true,
             message: '请输入正确数据源名称',
-            max: 20
+            max: 20,
+            whitespace: true
           }
         ]
       },
@@ -104,7 +106,8 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: true,
-            message: '请输入正确数据源地址'
+            message: '请输入正确数据源地址',
+            whitespace: true
           }
         ]
       },
@@ -119,7 +122,8 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: true,
-            message: '请输入用户名'
+            message: '请输入用户名',
+            whitespace: true
           }
         ]
       },
@@ -133,7 +137,8 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: true,
-            message: '请输入密码'
+            message: '请输入密码',
+            whitespace: true
           }
         ]
       },
@@ -152,24 +157,20 @@ const getAddDataSourceConfigFormData = (
         ]
       },
       node: (
-        <Row type="flex" justify="start" align="middle">
-          <Col>
-            <Button loading={state.loading} onClick={handleDebug}>
-              测试连接
-            </Button>
-          </Col>
-          <Col>
-            <Row type="flex" align="middle" justify="start">
-              <Icon
-                type="info-circle"
-                style={{ color: iconColor, marginLeft: 16, marginRight: 8 }}
-              />
-              <span style={{ color: iconColor, lineHeight: '12px' }}>
-                {state.info}
-              </span>
-            </Row>
-          </Col>
-        </Row>
+        <div>
+          <Button loading={state.loading} onClick={handleDebug}>
+            测试连接
+          </Button>
+          <div>
+            <Icon
+              type="info-circle"
+              style={{ color: iconColor, marginRight: 8 }}
+            />
+            <span style={{ color: iconColor, lineHeight: '12px' }}>
+              {state.info}
+            </span>
+          </div>
+        </div>
       )
     }
   ];

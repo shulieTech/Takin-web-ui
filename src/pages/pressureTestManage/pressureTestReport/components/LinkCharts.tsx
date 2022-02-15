@@ -1,4 +1,4 @@
-import { InputNumber, message, Tabs, Tooltip } from 'antd';
+import { InputNumber, message, Tabs, Tooltip, Tree } from 'antd';
 import { CommonModal } from 'racc';
 import React, { useState, useEffect, ReactNode } from 'react';
 import { TestMode } from '../../pressureTestScene/enum';
@@ -28,10 +28,19 @@ const LinkCharts: React.FC<Props> = (props) => {
   const { chartsInfo, setState, state, tabList } = props;
   const [targetTps, setTargetTps] = useState<number>(undefined);
 
-  const handleChangeTab = (value) => {
-    setState({
-      tabKey: value,
-    });
+  // 旧版的压测模式pressureType在detailData里，新版的混合场景压测在tree的节点数据里
+  const isOldVersionTpsTest =
+    state.detailData.pressureType === TestMode.TPS模式;
+  const isMutiTpsTest = state.selectedTreeNode?.pressureType === TestMode.TPS模式;
+  const xpathMd5ForOldTpsTest = 'all';
+
+  const handleChangeTab = (value, e) => {
+    if (value[0]) {
+      setState({
+        tabKey: value[0],
+        selectedTreeNode: e?.node?.props?.dataRef,
+      });
+    }
   };
   const getDefaultValue = async () => {
     const {
@@ -39,6 +48,9 @@ const LinkCharts: React.FC<Props> = (props) => {
     } = await PressureTestReportService.getTpsValue({
       reportId: state.detailData.id,
       sceneId: state.detailData.sceneId,
+      xpathMd5: isOldVersionTpsTest
+        ? xpathMd5ForOldTpsTest
+        : state.selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
     });
     if (success) {
       setTargetTps(data);
@@ -56,6 +68,9 @@ const LinkCharts: React.FC<Props> = (props) => {
         targetTps,
         reportId: state.detailData.id,
         sceneId: state.detailData.sceneId,
+        xpathMd5: isOldVersionTpsTest
+          ? xpathMd5ForOldTpsTest
+          : state.selectedTreeNode?.xpathMd5, // 旧版tps模式xpathMd5是个固定值
       });
       if (success) {
         message.success('调整成功');
@@ -63,6 +78,48 @@ const LinkCharts: React.FC<Props> = (props) => {
       }
       resolve(false);
     });
+  };
+
+  useEffect(() => {
+    if (isOldVersionTpsTest || isMutiTpsTest) {
+      getDefaultValue();
+    }
+  }, [state.selectedTreeNode?.xpathMd5]);
+
+  const renderTreeNodes = (data) => {
+    return (
+      data &&
+      data.map((item) => {
+        if (item.children && item.children.length) {
+          return (
+            <Tree.TreeNode
+              title={
+                <Tooltip title={item.testName} placement="right">
+                  <span>{item.testName}</span>
+                </Tooltip>}
+              key={item.xpathMd5}
+              dataRef={item}
+              treeDefaultExpandAll={true}
+              style={{ color: '#fff', width: 100 }}
+            >
+              {renderTreeNodes(item.children)}
+            </Tree.TreeNode>
+          );
+        }
+        return (
+          <Tree.TreeNode
+            style={{ color: '#fff' }}
+            key={item.xpathMd5}
+            dataRef={item}
+            title={
+              <Tooltip title={item.testName} placement="right">
+                <span>{item.testName}</span>
+              </Tooltip>}
+            children={item.children}
+          />
+        );
+      })
+    );
   };
 
   return (
@@ -73,44 +130,46 @@ const LinkCharts: React.FC<Props> = (props) => {
       }}
     >
       <div className={styles.leftSelected}>
-        {tabList.map((item, key) => {
-          return (
-            <Tooltip key={key} title={item.label} placement="right">
-              <p
-                className={
-                  state.tabKey === item.value
-                    ? styles.appItemActive
-                    : styles.appItem
-                }
-                onClick={() => handleChangeTab(item.value)}
-              >
-                {item.label}
-              </p>
-            </Tooltip>
-          );
-        })}
+        {state.tabList && state.tabList.length > 0 && (
+          <Tree
+            onSelect={handleChangeTab}
+            defaultExpandAll
+            defaultSelectedKeys={[state.tabKey]}
+          >
+            {renderTreeNodes(state.tabList)}
+          </Tree>
+        )}
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
-        {/* {state.tabKey !== 0 && (
+        {props.isLive && (isOldVersionTpsTest || isMutiTpsTest) && (
           <div
             style={{
-              height: 750,
-              position: 'absolute',
-              top: 10,
-              left: 0,
-              right: 330,
-              zIndex: 1,
-              backgroundColor: 'var(--FunctionalNetural-50, #F5F7F9)',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              paddingBottom: 10,
             }}
           >
-            <GraphNode
-              graphData={state.graphData}
-              graphKey={state.tabKey + state.graphData?.nodes?.length}
-              {...props?.graphConfig}
-              defaultLabelSetting={['2', '3', '4']}
-            />
+            <CommonModal
+              modalProps={{
+                okText: '确定',
+                cancelText: '取消',
+                title: '调整TPS',
+                destroyOnClose: true,
+              }}
+              btnText="调整TPS"
+              btnProps={{ ghost: true }}
+              beforeOk={adjustTps}
+            >
+              TPS：
+              <InputNumber
+                value={targetTps}
+                onChange={(value) => setTargetTps(value)}
+                precision={0}
+                min={0}
+              />
+            </CommonModal>
           </div>
-        )} */}
+        )}
         <LineCharts
           // columnNum={state.tabKey === 0 ? 2 : 1}
           columnNum={2}
@@ -119,28 +178,6 @@ const LinkCharts: React.FC<Props> = (props) => {
           {...props.chartConfig}
         />
       </div>
-      {props.isLive && state.detailData.pressureType === TestMode.TPS模式 && (
-        <CommonModal
-          modalProps={{
-            okText: '确定',
-            cancelText: '取消',
-            title: '调整TPS',
-            destroyOnClose: true,
-          }}
-          btnText="调整TPS"
-          btnProps={{ style: { transform: 'translateY(8px)' } }}
-          beforeOk={adjustTps}
-          onClick={() => getDefaultValue()}
-        >
-          TPS：
-          <InputNumber
-            value={targetTps}
-            onChange={(value) => setTargetTps(value)}
-            precision={0}
-            min={0}
-          />
-        </CommonModal>
-      )}
     </div>
   );
 };

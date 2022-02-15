@@ -92,13 +92,15 @@ const DomainManageModal: React.FC<Props> = (props) => {
   return (
     <>
       <Tooltip title="业务域设置">
-        <Icon
-          type="setting"
-          style={{ marginLeft: 4, cursor: 'pointer' }}
-          onClick={() => {
-            setShowListModal(true);
-          }}
-        />
+        <a>
+          <Icon
+            type="setting"
+            style={{ marginLeft: 4, cursor: 'pointer' }}
+            onClick={() => {
+              setShowListModal(true);
+            }}
+          />
+        </a>
       </Tooltip>
       <Modal
         destroyOnClose

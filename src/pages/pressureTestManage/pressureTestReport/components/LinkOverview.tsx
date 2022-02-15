@@ -13,7 +13,7 @@ const LinkOverview: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务活动',
-        dataIndex: 'businessActivityName'
+        dataIndex: 'testName'
       },
       {
         ...customColumnProps,
@@ -22,65 +22,82 @@ const LinkOverview: React.FC<Props> = props => {
       },
       {
         ...customColumnProps,
+        title: '近5s请求数',
+        dataIndex: 'tempRequestCount'
+      },
+      {
+        ...customColumnProps,
         title: '平均TPS（实际/目标）',
         dataIndex: 'tps',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}</span>
-            </Fragment>
-          );
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                  }}
+                >
+                  {text.result}
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value === -1 ? '-' : text.value}</span>
+              </Fragment>
+            );
+          }
+          return '-';
         }
       },
       {
         ...customColumnProps,
         title: '平均RT（实际/目标）',
-        dataIndex: 'avgRT',
+        dataIndex: 'avgRt',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) > Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}ms
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}ms</span>
-            </Fragment>
-          );
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) > Number(text.value) &&
+                      text.value !== -1
+                        ? '#FE7D61'
+                        : ''
+                  }}
+                >
+                  {text.result}ms
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
+              </Fragment>
+            );
+          }
+          return '-';
         }
       },
       {
         ...customColumnProps,
         title: '成功率（实际/目标）',
-        dataIndex: 'sucessRate',
+        dataIndex: 'successRate',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}%
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
-            </Fragment>
-          );
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                  }}
+                >
+                  {text.result}%
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
+              </Fragment>
+            );
+          }
+          return '-';
         }
       },
       {
@@ -88,20 +105,23 @@ const LinkOverview: React.FC<Props> = props => {
         title: 'SA（实际/目标）',
         dataIndex: 'sa',
         render: (text, row) => {
-          return (
-            <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text.result}%
-              </span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
-            </Fragment>
-          );
+          if (text) {
+            return (
+              <Fragment>
+                <span
+                  style={{
+                    color:
+                      Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                  }}
+                >
+                  {text.result}%
+                </span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
+              </Fragment>
+            );
+          }
+          return '-';
         }
       }
     ];
@@ -110,6 +130,7 @@ const LinkOverview: React.FC<Props> = props => {
     <Fragment>
       <Header title="链路概览" />
       <CommonTable
+        rowKey="xpathMd5"
         size="small"
         style={{ marginTop: 8 }}
         columns={getLinkOverviewColumns()}

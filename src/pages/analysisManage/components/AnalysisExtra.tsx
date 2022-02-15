@@ -52,7 +52,7 @@ const AnalysisExtra: React.FC<Props> = props => {
         params={{ reportId: props.query.reportId }}
         value={state.appName}
         onSuccess={data =>
-          setState({ appName: data && data.length && data[0].value })
+          setState({ appName: data?.[0]?.value })
         }
         onChange={value => setState({ appName: value, processName: undefined })}
         {...selectProps}

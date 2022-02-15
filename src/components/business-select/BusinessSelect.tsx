@@ -11,6 +11,7 @@ import { httpGet } from 'src/utils/request';
 type BusinessType = '';
 
 interface Props extends CommonModelState {
+  reloadKey?: number;
   type: BusinessType;
   url?: string;
   labelKey?: string;
@@ -23,7 +24,7 @@ const BusinessSelect: React.FC<Props> = props => {
       return;
     }
     queryDataSource();
-  }, []);
+  }, [props.reloadKey]);
   const queryDataSource = async () => {
     const {
       data: { data, success }

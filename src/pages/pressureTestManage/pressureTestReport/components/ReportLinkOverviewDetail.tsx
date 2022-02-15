@@ -40,7 +40,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
     });
     if (success) {
       setState({
-        data
+        data: data.scriptNodeSummaryBeans
       });
     }
     setState({
@@ -53,7 +53,8 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '业务活动',
-        dataIndex: 'businessActivityName'
+        dataIndex: 'testName',
+        width: 300
       },
       {
         ...customColumnProps,
@@ -65,18 +66,23 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         title: '平均TPS（实际/目标）',
         dataIndex: 'tps',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
               <span
                 style={{
                   color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                    Number(text && text.result) < Number(text && text.value)
+                      ? '#FE7D61'
+                      : ''
                 }}
               >
                 {text.result}
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}</span>
+              <span>{text.value === -1 ? '-' : text.value}</span>
             </Fragment>
           );
         }
@@ -84,21 +90,29 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '平均RT（实际/目标）',
-        dataIndex: 'avgRT',
+        dataIndex: 'avgRt',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
-              <div style={{ position: 'relative' }}>
-                <span
-                  style={{
-                    color:
-                      Number(text.result) > Number(text.value) ? '#FE7D61' : ''
-                  }}
-                >
-                  {text.result}ms
+              <div style={{ display: 'flex', alignItems: 'center', }}>
+                <span style={{ flex: 1, }}>
+                  <span
+                    style={{
+                      color:
+                        Number(text && text.result) >
+                          Number(text && text.value) && text.value !== -1
+                          ? '#FE7D61'
+                          : ''
+                    }}
+                  >
+                    {text.result}ms
+                  </span>
+                  <span style={{ margin: '0 8px' }}>/</span>
+                  <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
                 </span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span>{text.value}ms</span>
                 <Popover
                   placement="bottomLeft"
                   content={
@@ -123,7 +137,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                     </div>}
                 >
                   <Icon
-                    style={{ position: 'absolute', right: 6, top: 2 }}
+                    style={{ marginLeft: 4 }}
                     type="pie-chart"
                     theme="filled"
                   />
@@ -136,20 +150,25 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '请求成功率（实际/目标）',
-        dataIndex: 'sucessRate',
+        dataIndex: 'successRate',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
               <span
                 style={{
                   color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                    Number(text && text.result) < Number(text && text.value)
+                      ? '#FE7D61'
+                      : ''
                 }}
               >
                 {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
           );
         }
@@ -159,18 +178,23 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         title: 'SA（实际/目标）',
         dataIndex: 'sa',
         render: (text, row) => {
+          if (!text) {
+            return '-';
+          }
           return (
             <Fragment>
               <span
                 style={{
                   color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                    Number(text && text.result) < Number(text && text.value)
+                      ? '#FE7D61'
+                      : ''
                 }}
               >
                 {text.result}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
           );
         }
@@ -193,35 +217,24 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
             dataIndex: 'minRt'
           }
         ]
-      },
-      // {
-      //   ...customColumnProps,
-      //   title: '操作',
-      //   align: 'right',
-      //   render: (text, row) => {
-      //     return (
-      //       <BusinessActivityPressureTestDetailModal
-      //         btnText="链路明细"
-      //         businessActivityId={row.businessActivityId}
-      //         businessActivityName={row.businessActivityName}
-      //         reportId={id}
-      //         detailData={detailData}
-      //       />
-      //     );
-      //   }
-      // }
+      }
     ];
   };
   return (
     <Fragment>
-      <CommonTable
-        loading={state.loading}
-        bordered
-        size="small"
-        style={{ marginTop: 8 }}
-        columns={getReportLinkOverviewColumns()}
-        dataSource={state.data ? state.data : []}
-      />
+      {state.data && (
+        <CommonTable
+          rowKey="xpathMd5"
+          loading={state.loading}
+          bordered
+          size="small"
+          style={{ marginTop: 8 }}
+          defaultExpandAllRows={true}
+          columns={getReportLinkOverviewColumns()}
+          dataSource={state.data ? state.data : []}
+          indentSize={8}
+        />
+      )}
     </Fragment>
   );
 };

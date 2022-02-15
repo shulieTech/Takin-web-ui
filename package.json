@@ -16,6 +16,7 @@
     "@types/qs": "^6.5.1",
     "@types/react": "^16.7.3",
     "@types/react-redux": "^6.0.9",
+    "antd-theme-webpack-plugin": "^1.3.9",
     "babel-plugin-module-resolver": "^3.1.1",
     "fast-glob": "^3.1.1",
     "globby": "^10.0.1",
@@ -32,7 +33,8 @@
   "dependencies": {
     "@ant-design/charts": "1.0.9",
     "@antv/g6": "3.8.1",
-    "@umijs/plugin-qiankun": "1.7.0",
+    "@formily/antd": "^1.3.17",
+    "@formily/antd-components": "^1.3.17",
     "antd": "3.26.13",
     "axios": "latest",
     "bizcharts": "^4.1.10",

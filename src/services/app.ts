@@ -11,6 +11,10 @@ const AppService = {
   async getDictionaries(data) {
     const url = '/link/dictionary';
     return httpGet(url, data);
-  }
+  },
+  async getTheme(data = {}) {
+    const url = '/sys/front/config/get';
+    return httpGet(url, data);
+  },
 };
 export default AppService;
