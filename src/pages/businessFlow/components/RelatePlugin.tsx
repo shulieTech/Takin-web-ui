@@ -13,11 +13,17 @@ const RelatePlugin: React.FC<Props> = (props) => {
 
   const handleChange = (val, index) => {
     const result = [...value];
-    result[index] = val;
-    const isEmpty = !result.length || result.find((item) => !item);
-    if (isEmpty) {
-      onChange([]);
-      return;
+    const existIndex = result.findIndex(x => x?.type === val.type);
+    if (existIndex > -1) {
+      if (val?.version) {
+        result[existIndex] = val;
+      } else {
+        result.splice(existIndex, 1);
+      }
+    } else {
+      if (val?.version) {
+        result.push(val);
+      }
     }
     onChange(result);
   };
@@ -27,7 +33,7 @@ const RelatePlugin: React.FC<Props> = (props) => {
       {pluginList.map((item, index) => (
         <PluginSelectItem
           key={index}
-          value={value[index]}
+          value={value.find(x => x?.type === item.type)}
           onChange={(val) => handleChange(val, index)}
           {...item}
           versions={item.version}
