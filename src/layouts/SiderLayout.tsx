@@ -15,6 +15,7 @@ import ContentNode from './components/ContentNode';
 import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
 import queryString from 'query-string';
+import EnvHeader from './components/EnvHeader';
 import axios from 'axios';
 
 declare var window: any;
@@ -231,6 +232,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = props => {
               style={{ backgroundColor: '#1D2530' }}
               ref={popupDom}
             >
+              <EnvHeader />
               <ContentNode children={children} />
               {/* <FooterNode /> */}
             </div>
