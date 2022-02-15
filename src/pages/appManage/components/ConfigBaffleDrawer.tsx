@@ -5,6 +5,7 @@ import { CommonDrawer, CommonForm, useStateReducer } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
 import React from 'react';
 import { openNotification } from 'src/common/custom-notification/CustomNotification';
+import { objEachResultIsEmpty, trimObj } from 'src/utils/utils';
 import AppManageService from '../service';
 interface Props {
   id?: string;
@@ -89,7 +90,8 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
-            message: '请输入应用名'
+            message: '请输入应用名',
+            whitespace: true
           }
         ]
       },
@@ -107,7 +109,8 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
-            message: '请输入类名#方法名'
+            message: '请输入类名#方法名',
+            whitespace: true
           }
         ]
       },
@@ -123,7 +126,7 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
                 <div style={{ textAlign: 'right' }}>
                   <a onClick={() => handleCopy(state.configValue)}>复制</a>
                 </div>
-                <div style={{ width: 250, height: 400, overflow: 'scroll' }}>
+                <div style={{ maxHeight: 400, overflow: 'scroll', wordBreak: 'break-word' }}>
                   {state.configValue}
                 </div>
               </div>
@@ -141,8 +144,9 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
             : undefined,
         rules: [
           {
-            required: false,
-            message: '请输入groovy脚本'
+            required: true,
+            message: '请输入groovy脚本',
+            whitespace: true
           }
         ]
       },
@@ -160,7 +164,8 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
           {
             required: false,
             message: '请输入正确备注',
-            max: 200
+            max: 200,
+            whitespace: true
           }
         ]
       },
@@ -229,7 +234,7 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
     <CommonDrawer
       btnText={title}
       drawerProps={{
-        width: 650,
+        width: 700,
         title: action === 'add' ? '新增挡板配置' : '编辑挡板配置',
         maskClosable: false
       }}
@@ -258,7 +263,7 @@ const ConfigBaffleDrawer: React.FC<Props> = props => {
           isSubmitBtn: false
         }}
         rowNum={1}
-        formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 14 } }}
+        formItemProps={{ labelCol: { span: 6 }, wrapperCol: { span: 16 } }}
       />
     </CommonDrawer>
   );

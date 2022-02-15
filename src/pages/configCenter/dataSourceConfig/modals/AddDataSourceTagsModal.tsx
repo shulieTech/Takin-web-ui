@@ -90,7 +90,9 @@ const AddDataSourceTagsModal: React.FC<Props> = props => {
         } = await DataSourceConfigService.addDataSourceConfigTags({
           ...values,
           datasourceId,
-          tagNames: state.tagsValue
+          tagNames: state.tagsValue.map(item => {
+            return item.trim();
+          })
         });
         if (success) {
           message.success('操作成功');

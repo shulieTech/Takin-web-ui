@@ -1,4 +1,4 @@
-import { Col, Modal, Row } from 'antd';
+import { Alert, Col, Modal, Row, Button, message } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import SearchTable from 'src/components/search-table';
@@ -8,6 +8,7 @@ import getScriptManageColumns from './components/ScriptManageTable';
 import ScriptManageTableAction from './components/ScriptManageTableAction';
 import ScriptManageService from './service';
 import styles from './index.less';
+import CustomAlert from 'src/common/custom-alert/CustomAlert';
 
 interface ScriptManageProps {
   isReload?: boolean;
@@ -31,17 +32,18 @@ export interface ScriptManageState {
   tagList: any[];
   debugStatus: number;
   isShowDebugModal: boolean;
+  scriptRowId?: number;
   scriptDebugId: number;
   errorInfo: any;
 }
 
-const ScriptManage: React.FC<ScriptManageProps> = props => {
+const ScriptManage: React.FC<ScriptManageProps> = (props) => {
   const [state, setState] = useStateReducer<ScriptManageState>({
     isReload: false,
     switchStatus: null,
     searchParams: {
       current: 0,
-      pageSize: 10
+      pageSize: 10,
     },
     searchParamss: props.location.query,
     businessActivityList: null,
@@ -50,29 +52,29 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
     isShowDebugModal: false,
     scriptDebugId: undefined, // 脚本调试id
     debugStatus: 0, // 调试状态，0：未开始, 1：通过第二阶段， 2，3：通过第三阶段，4：通过第四阶段,
-    errorInfo: null
+    errorInfo: null,
   });
 
   useEffect(() => {
     queryBussinessActive();
     querybusinessFlowList();
     queryTagList();
-  }, []);
+  }, [state.isReload]);
 
   /**
    * @name 获取所有业务活动
    */
   const queryBussinessActive = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await BusinessFlowService.queryBussinessActive({});
     if (success) {
       setState({
         businessActivityList:
           data &&
-          data.map(item => {
+          data.map((item) => {
             return { label: item.businessActiveName, value: item.id };
-          })
+          }),
       });
     }
   };
@@ -82,15 +84,15 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
    */
   const querybusinessFlowList = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await ScriptManageService.queryBusinessFlow({});
     if (success) {
       setState({
         businessFlowList:
           data &&
-          data.map(item => {
+          data.map((item) => {
             return { label: item.businessFlowName, value: item.id };
-          })
+          }),
       });
     }
   };
@@ -100,15 +102,15 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
    */
   const queryTagList = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await ScriptManageService.queryScriptTagList({});
     if (success) {
       setState({
         tagList:
           data &&
-          data.map(item => {
+          data.map((item) => {
             return { label: item.tagName, value: item.id };
-          })
+          }),
       });
     }
   };
@@ -117,36 +119,51 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
     {
       key: 1,
       imgSrc: 'debug_process_1',
-      name: '应用配置校验'
+      name: '应用配置校验',
     },
     {
       key: 2,
       imgSrc: 'debug_process_2',
-      name: 'JMeter启动校验'
+      name: 'JMeter启动校验',
     },
     {
       key: 3,
       imgSrc: 'debug_process_3',
-      name: '收集数据'
+      name: '收集数据',
     },
     {
       key: 4,
       imgSrc: 'debug_process_4',
-      name: '验证数据'
-    }
+      name: '验证数据',
+    },
   ];
+
+  const { columns, stopDebug } = getScriptManageColumns(state, setState);
 
   return (
     <Fragment>
+      <Alert
+        message={
+          <span>
+            脚本管理页面
+            <span
+              style={{ fontWeight: 'bold', fontSize: '16px', marginLeft: 4 }}
+            >
+              即将下线
+            </span>
+            ，建议您使用「 Jmeter扫描创建业务流程 」，无需在此额外配置文件
+          </span>
+        }
+      />
       <SearchTable
         key="id"
         commonTableProps={{
-          columns: getScriptManageColumns(state, setState)
+          columns,
           // rowClassName: () => 'show-row'
         }}
         commonFormProps={{
           formData: getScriptManageFormData(state, setState),
-          rowNum: 6
+          rowNum: 6,
         }}
         ajaxProps={{ url: '/scriptManage/list', method: 'POST' }}
         searchParams={state.searchParamss}
@@ -176,7 +193,7 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
             isShowDebugModal: false,
             scriptDebugId: undefined,
             debugStatus: 0,
-            errorInfo: null
+            errorInfo: null,
           });
         }}
       >
@@ -193,52 +210,65 @@ const ScriptManage: React.FC<ScriptManageProps> = props => {
               })}
           </div>
         ) : (
-          <Row type="flex" style={{ padding: '50px 10px' }}>
-            {progressData.map((item, k) => {
-              return (
-                <Fragment key={k}>
-                  <Col>
-                    <div
-                      className={styles.progressCircle}
-                      style={{
-                        borderColor:
-                          (state.debugStatus <= 2 && k <= state.debugStatus) ||
-                          (state.debugStatus === 3 &&
-                            k + 1 <= state.debugStatus) ||
-                          state.debugStatus === 4
-                            ? '#28C6D7'
-                            : '#D9D9D9'
-                      }}
-                    >
-                      <img
-                        style={{ width: 36 }}
-                        src={require(`./../../assets/${item.imgSrc}${
-                          (state.debugStatus <= 2 && k <= state.debugStatus) ||
-                          (state.debugStatus === 3 &&
-                            k + 1 <= state.debugStatus) ||
-                          state.debugStatus === 4
-                            ? '_active'
-                            : ''
-                        }.png`)}
-                      />
-                    </div>
-                    <p className={styles.progressName}>{item.name}</p>
-                  </Col>
-                  {k !== progressData.length - 1 && (
-                    <Col style={{ margin: '0px 5px' }}>
+          <>
+            <Row type="flex" style={{ padding: '50px 10px' }}>
+              {progressData.map((item, k) => {
+                return (
+                  <Fragment key={k}>
+                    <Col>
                       <div
-                        className={styles.dashedLine}
+                        className={styles.progressCircle}
                         style={{
                           borderColor:
-                            k <= state.debugStatus ? '#28C6D7' : '#D9D9D9'
+                            (state.debugStatus <= 2 &&
+                              k <= state.debugStatus) ||
+                            (state.debugStatus === 3 &&
+                              k + 1 <= state.debugStatus) ||
+                            state.debugStatus === 4
+                              ? '#28C6D7'
+                              : '#D9D9D9',
                         }}
-                      />
+                      >
+                        <img
+                          style={{ width: 36 }}
+                          src={require(`./../../assets/${item.imgSrc}${
+                            (state.debugStatus <= 2 &&
+                              k <= state.debugStatus) ||
+                            (state.debugStatus === 3 &&
+                              k + 1 <= state.debugStatus) ||
+                            state.debugStatus === 4
+                              ? '_active'
+                              : ''
+                          }.png`)}
+                        />
+                      </div>
+                      <p className={styles.progressName}>{item.name}</p>
                     </Col>
-                  )}
-                </Fragment>
-              );
-            })}
-          </Row>
+                    {k !== progressData.length - 1 && (
+                      <Col style={{ margin: '0px 5px' }}>
+                        <div
+                          className={styles.dashedLine}
+                          style={{
+                            borderColor:
+                              k <= state.debugStatus ? '#28C6D7' : '#D9D9D9',
+                          }}
+                        />
+                      </Col>
+                    )}
+                  </Fragment>
+                );
+              })}
+            </Row>
+            <div className="clearfix">
+              <Button
+                type="danger"
+                className="flt-rt"
+                onClick={() => stopDebug()}
+              >
+                停止调试
+              </Button>
+            </div>
+          </>
         )}
       </Modal>
     </Fragment>

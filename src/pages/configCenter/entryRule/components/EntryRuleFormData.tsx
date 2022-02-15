@@ -33,7 +33,6 @@ const getEntryRuleFormData = (
           showSearch
           placeholder="请选择"
           dataSource={allAppList ? allAppList : []}
-          showSearch
           filterOption={(input, option) =>
             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
             0
@@ -50,7 +49,8 @@ const getEntryRuleFormData = (
         rules: [
           {
             required: true,
-            message: '请输入入口地址'
+            message: '请输入入口地址',
+            whitespace: true
           }
         ]
       },

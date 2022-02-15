@@ -20,14 +20,16 @@ interface Props extends CommonModelState {
   dataSource: any[];
 }
 const AssertModal: React.FC<Props> = props => {
-  const text = '断言详情';
+  const title = '断言详情';
 
   const getColumns = (): ColumnProps<any>[] => {
     return [
       {
         ...customColumnProps,
         title: '断言名称',
-        dataIndex: 'assertName'
+        width: 120,
+        dataIndex: 'assertName',
+        render: text => <div style={{ whiteSpace: 'nowrap' }}>{text}</div>
       },
       {
         ...customColumnProps,
@@ -40,7 +42,7 @@ const AssertModal: React.FC<Props> = props => {
   return (
     <CommonModal
       modalProps={{
-        title: text,
+        title,
         width: 720,
         destroyOnClose: true,
         footer: null

@@ -78,7 +78,7 @@ const EditModal: React.FC<Props> = props => {
         <Form.Item label="key" required={true} {...formItemLayout}>
           {props.form.getFieldDecorator('zkPath', {
             initialValue: state.details.zkPath || '',
-            rules: [{ required: true, message: '请输入key' },
+            rules: [{ required: true, whitespace: true, message: '请输入key' },
             { pattern: /^\/.*/, message: 'key要以/开头' }],
           })(
             <Input disabled={state.disabled} />
@@ -87,7 +87,7 @@ const EditModal: React.FC<Props> = props => {
         <Form.Item label="说明" required={true} {...formItemLayout}>
           {props.form.getFieldDecorator('remark', {
             initialValue: state.details.remark || '',
-            rules: [{ required: true, message: '请输入说明' }]
+            rules: [{ required: true, whitespace: true, message: '请输入说明' }]
           })(<Input disabled={state.disabled} />)}
         </Form.Item>
         <Form.Item label="类型" required={true} {...formItemLayout}>

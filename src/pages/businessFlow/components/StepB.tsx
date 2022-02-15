@@ -556,16 +556,16 @@ const StepB = (state, setState, props): FormCardMultipleDataSourceBean => {
                 </span>
               )}
               {/* {item.id && (
-                <Popover content={renderContent()} trigger="click">
-                  <span onClick={() => queryBusinessActivityDetail(item.id)}>
-                    <ToolTipIcon
-                      title="查看节点链路"
-                      iconName="detail_icon"
-                      imgStyle={{ marginLeft: 8, width: 20 }}
-                    />
-                  </span>
-                </Popover>
-              )} */}
+                 <Popover content={renderContent()} trigger="click">
+                   <span onClick={() => queryBusinessActivityDetail(item.id)}>
+                     <ToolTipIcon
+                       title="查看节点链路"
+                       iconName="detail_icon"
+                       imgStyle={{ marginLeft: 8, width: 20 }}
+                     />
+                   </span>
+                 </Popover>
+               )} */}
               <span
                 style={{ display: 'inline-block' }}
                 onClick={() => handleDeleteNode(item.key, item)}
@@ -630,31 +630,6 @@ const StepB = (state, setState, props): FormCardMultipleDataSourceBean => {
                 )}
               </div>
             </div>
-            {/** 已经注释，三变要求不展示 */}
-            {/* <div
-              className={styles.linkListRight}
-              style={{ minWidth: 350, width: '30%' }}
-            >
-              <p className={styles.linkListTitle} style={{ minWidth: 350 }}>
-                关联中间件列表
-              </p>
-
-              {(!state.treeData.length || !state.middleWareList) && (
-                <p
-                  className={styles.linkListWithoutData}
-                  style={{ width: 350 }}
-                >
-                  配置业务活动后自动带出
-                </p>
-              )}
-              {state.treeData.length !== 0 && state.middleWareList && (
-                <CommonTable
-                  size="small"
-                  columns={getMiddleWareColumns()}
-                  dataSource={state.middleWareList}
-                />
-              )}
-            </div> */}
           </div>
         )
       }

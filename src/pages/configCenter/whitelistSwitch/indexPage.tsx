@@ -60,10 +60,10 @@ const WhitelistSwitch: React.FC<Props> = props => {
       <Alert
         type="warning"
         message={
-          <p style={{ color: '#646676' }}>
+          <div style={{ color: '#646676' }}>
             风险操作！操作前请仔细阅读
             <SwitchExplanationDrawer />
-          </p>}
+          </div>}
         showIcon
         style={{ marginTop: 40, marginBottom: 10 }}
       />

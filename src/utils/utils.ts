@@ -95,8 +95,7 @@ export const getLoginToken = () => {
 /** @name 下拉模糊搜索 */
 export const filter = (inputValue, path) => {
   return path.some(
-    option =>
-      option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+    option => option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
   );
 };
 
@@ -108,15 +107,15 @@ export const isEmpty = (obj: any) => {
   return false;
 };
 
- /** @name 数组平铺 */
+/** @name 数组平铺 */
 export const flatten = arr => {
   return [].concat(
-      ...arr.map(item => {
-        return item.children
-          ? [].concat(item, ...flatten(item.children))
-          : [].concat(item);
-      })
-    );
+    ...arr.map(item => {
+      return item.children
+        ? [].concat(item, ...flatten(item.children))
+        : [].concat(item);
+    })
+  );
 };
 
 /** @name 获取是否需要权限 */
@@ -127,3 +126,61 @@ export const getTakinAuthority = () => {
 export const getTakinTenantAuthority = () => {
   return localStorage.getItem('takinTenantAuthority');
 };
+/**
+ * @name 查找树子节点的全部父节点
+ */
+export const treeFindPath = (tree, func, path = []) => {
+  if (!tree) {
+    return [];
+  }
+  for (const data of tree) {
+    // 这里按照你的需求来存放最后返回的内容吧
+    path.push(data.path);
+    if (func(data)) {
+      return path;
+    }
+    if (data.children) {
+      const findChildren = treeFindPath(data.children, func, path);
+      if (findChildren.length) {
+        return findChildren;
+      }
+    }
+    path.pop();
+  }
+  return [];
+};
+
+/**
+ * @name 去掉表单对象前后空格
+ */
+export const trimObj = obj => {
+  let newObj = {};
+  // tslint:disable-next-line:forin
+  for (const i in obj) {
+    newObj = {
+      ...newObj,
+      [i]: typeof obj[i] === 'string' ? obj[i].trim() : obj[i]
+    };
+  }
+  return newObj;
+};
+
+/**
+ * @name 判断去掉表单对象前后空格后是否为空，为空返回true，否则false
+ */
+export const objEachResultIsEmpty = obj => {
+  // tslint:disable-next-line:forin
+  for (const i in obj) {
+    if (!obj[i]) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+ * @name 设置全局message
+ */
+message.config({
+  maxCount: 1
+});

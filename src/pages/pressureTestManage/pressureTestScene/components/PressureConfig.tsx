@@ -290,7 +290,7 @@ const PressureConfig = (
           <span style={{ fontSize: 14 }}>
             压力模式
             <Tooltip
-              title="自定义模式是指所有配置都读区jmeter脚本里面的参数"
+              title="并发模式：指定最大并发量，按照对应的施压模式进行施压；TPS模式：以目标TPS为限，系统逐步增压，摸高到目标TPS，过程中也可动态调整TPS"
               placement="right"
               trigger="click"
             >

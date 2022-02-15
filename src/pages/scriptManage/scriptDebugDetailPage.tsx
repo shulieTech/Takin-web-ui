@@ -61,6 +61,12 @@ const scriptDebugDetail: React.FC<Props> = props => {
           <CommonSelect
             placeholder="请搜索业务活动"
             dataSource={(detail && detail.businessActivities) || []}
+            showSearch
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
           />
         )
       }

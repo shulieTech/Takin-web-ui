@@ -172,13 +172,16 @@ const AgentVersin: React.FC<Props> = props => {
     {
       title: '配置项中文名',
       dataIndex: 'zhKey',
+      width: '40%'
     },
     {
       title: '配置项英文名',
       dataIndex: 'enKey',
+      width: '40%'
     },
     {
       title: '操作',
+      width: '200px',
       render: (text, record) => (
         <span>
           <a onClick={() => edit(record)}>编辑</a>
@@ -276,7 +279,7 @@ const AgentVersin: React.FC<Props> = props => {
             >
               {props.form.getFieldDecorator('version', {
                 initialValue: state.uploadFiles ? state.uploadFiles.version : '版本号',
-                rules: [{ required: true, message: `请输入版本号` }],
+                rules: [{ required: true, whitespace: true, message: `请输入版本号` }],
               })(
                 <Input placeholder="版本号" disabled />
               )}
@@ -286,7 +289,7 @@ const AgentVersin: React.FC<Props> = props => {
             >
               {props.form.getFieldDecorator('versionFeatures', {
                 initialValue: '',
-                rules: [{ required: true, message: `请输入版本特性` }],
+                rules: [{ required: true, whitespace: true, message: `请输入版本特性` }],
               })(
                 <TextArea
                   rows={4}

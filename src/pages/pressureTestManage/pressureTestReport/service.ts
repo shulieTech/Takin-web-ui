@@ -37,6 +37,13 @@ const PressureTestReportService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取实况、报告业务活动列表（树）
+   */
+  async queryBusinessActivityTree(data = {}) {
+    const url = '/report/queryNodeTree';
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取报告链路趋势图信息
    */
   async queryLinkChartsInfo(data = {}) {
@@ -175,6 +182,20 @@ const PressureTestReportService = {
   async getLiveGraphData(data) {
     const url = '/report/queryTempReportTrendWithTopology';
     return httpGet(url, data);
+  },
+  /**
+   * @name 获取jtl文件下载地址
+   */
+  async getJtlDownLoadUrl(data = {}) {
+    const url = '/report/getJtlDownLoadUrl';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 下载文件
+   */
+  async downloadFileByPath(data = {}, options = {}) {
+    const url = '/file/downloadFileByPath';
+    return httpGet(url, data, options);
   },
 };
 

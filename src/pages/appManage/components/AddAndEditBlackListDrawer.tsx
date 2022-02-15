@@ -111,6 +111,7 @@ const AddAndEditBlacklistDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入应用名'
           }
         ]
@@ -128,7 +129,8 @@ const AddAndEditBlacklistDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
-            message: '请输入redis key'
+            message: '请输入redis key',
+            whitespace: true
           }
         ]
       },

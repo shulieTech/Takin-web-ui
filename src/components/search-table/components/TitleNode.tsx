@@ -14,36 +14,45 @@ import { FilterDataProps, SearchTableProps } from '../type';
 const TitleNode: React.FC<SearchTableProps> = props => {
   const { state, setState } = useContext(SearchTableContext);
   const handleChange = (v, item) => {
-    const originParams = {};
-    let value = v;
-    const isArray = Array.isArray(v);
-    if (isArray) {
-      const lastItem = [...v].pop();
-      if (lastItem) {
-        value = v.filter(k => k);
-      } else {
-        value = '';
-      }
-    }
-    Object.keys(state.searchParams).forEach(key => {
-      if (props.filterData.find(i => i.key === key)) {
-        originParams[key] = state.searchParams[key];
-      }
-    });
-    const searchParams = {
-      ...getInitState().searchParams,
-      ...originParams,
-      [item.key]: value
-    };
+    // 旧的onChange逻辑
+    // const originParams = {};
+    // let value = v;
+    // const isArray = Array.isArray(v);
+    // if (isArray) {
+    //   const lastItem = [...v].pop();
+    //   if (lastItem) {
+    //     value = v.filter(k => k);
+    //   } else {
+    //     value = '';
+    //   }
+    // }
+    // Object.keys(state.searchParams).forEach(key => {
+    //   if (props.filterData.find(i => i.key === key)) {
+    //     originParams[key] = state.searchParams[key];
+    //   }
+    // });
+    // const searchParams = {
+    //   ...getInitState().searchParams,
+    //   ...originParams,
+    //   [item.key]: value
+    // };
+    // setState({
+    //   searchParams
+    // });
+    // if (state.form) {
+    //   state.form.resetFields();
+    // }
+    // if (props.onTabReset) {
+    //   props.onTabReset(searchParams);
+    // }
+    
+    // 新的逻辑
     setState({
-      searchParams
+      searchParams: {
+        ...state.searchParams,
+        [item.key]: v,
+      },
     });
-    if (state.form) {
-      state.form.resetFields();
-    }
-    if (props.onTabReset) {
-      props.onTabReset(searchParams);
-    }
   };
   const getRenderNode = (item: FilterDataProps): React.ReactNode => {
     let node: React.ReactNode = null;

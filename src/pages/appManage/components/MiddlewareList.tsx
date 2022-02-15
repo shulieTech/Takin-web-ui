@@ -195,6 +195,10 @@ const MiddlewareList: React.FC<Props> = props => {
     setState({
       loading: true
     });
+    // 延迟查询对比结果
+    setTimeout(() => {
+      queryMiddlewareDashboard();
+    }, 2000);
     const {
       data: { success, data }
     } = await AppManageService.compare({
@@ -216,7 +220,7 @@ const MiddlewareList: React.FC<Props> = props => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 160 }}
+        style={{ height: document.body.clientHeight - 200 }}
       >
         <CustomAlert
           message
@@ -307,6 +311,7 @@ const MiddlewareList: React.FC<Props> = props => {
                 })
               }
               value={state.searchInputValue}
+              maxLength={100}
             />
           </Col>
           <Col>
@@ -362,6 +367,7 @@ const MiddlewareList: React.FC<Props> = props => {
         style={{
           marginTop: 20,
           position: 'fixed',
+          zIndex: 1,
           padding: '8px 40px',
           bottom: 0,
           right: 10,

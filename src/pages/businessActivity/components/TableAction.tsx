@@ -24,14 +24,14 @@ const TableAction: React.FC<Props> = props => {
       <AuthorityBtn
         isShow={btnAuthority && btnAuthority.businessActivity_2_create}
       >
-        <span style={{ marginRight: 16 }}>
+        {/* <span style={{ marginRight: 16 }}>
           <AddEditActivityModal
             isVirtual={true}
             onSuccess={() =>
               props.setState({ isReload: !props.state.isReload })
             }
           />
-        </span>
+        </span> */}
 
         <AddEditActivityModal
           onSuccess={() => props.setState({ isReload: !props.state.isReload })}

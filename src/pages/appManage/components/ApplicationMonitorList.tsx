@@ -142,7 +142,7 @@ const getBlackListColumns = (
     },
     {
       ...customColumnProps,
-      title: 'TPS（次/秒）',
+      title: 'TPS(次/秒)',
       dataIndex: 'tps',
       width: 120,
       sorter: true,

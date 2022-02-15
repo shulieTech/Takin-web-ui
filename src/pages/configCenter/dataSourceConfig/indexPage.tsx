@@ -39,7 +39,7 @@ const DataSourceConfig: React.FC<DataSourceConfigProps> = props => {
 
   useEffect(() => {
     queryTagList();
-  }, []);
+  }, [state.isReload]);
 
   /**
    * @name 获取所有标签列表

@@ -1,13 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { message, Modal } from 'antd';
 import { Basic } from 'src/types';
-import BaseResponse = Basic.BaseResponse;
 import { getTakinAuthority } from './utils';
+import BaseResponse = Basic.BaseResponse;
 declare var window: Window;
 declare var serverUrl: string;
 
 axios.defaults.withCredentials = true;
-let outloginFlag = false;
+window.parent.outloginFlag = false;
 // axios.interceptors.request.use(
 //   req => {
 //     const token = getAuthorization();
@@ -71,12 +71,12 @@ function parseJSON(response: BaseResponse) {
   return response;
 }
 const getBackLogin = response => {
-  outloginFlag = true;
+  window.parent.outloginFlag = true;
   Modal.warning({
     content: '请登录',
     okText: '确认',
     onOk: () => {
-      outloginFlag = false;
+      window.parent.outloginFlag = false;
       window.g_app._store.dispatch({
         type: 'user/troLogout'
       });
@@ -91,7 +91,7 @@ function checkStatus(response: BaseResponse) {
   // 权限判断（微应用跳转主应用）
   if (response.status === 401) {
     if (getTakinAuthority() === 'true' && window.location.href.indexOf('/pro/') === -1) {
-      if (!outloginFlag) {
+      if (!window.parent.outloginFlag) {
         getBackLogin(response);
       }
     }

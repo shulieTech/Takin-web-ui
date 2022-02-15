@@ -5,7 +5,8 @@
 import {
   Button,
   Popconfirm,
-  message
+  message,
+  Popover
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
@@ -34,27 +35,50 @@ const getColumns = (
     }
   };
 
+  const popoverTd = (text, maxWidth = 200) => {
+    return (
+      <Popover
+        content={
+          <div style={{ maxWidth: 300, wordBreak: 'break-all' }}>{text}</div>}
+      >
+        <div
+          style={{
+            maxWidth,
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {text}
+        </div>
+      </Popover>
+    );
+  };
+
   return [
-    {
-      ...customColumnProps,
-      title: '序号',
-      dataIndex: 'order',
-      render: (text, row, index) => index + 1
-    },
+    // {
+    //   ...customColumnProps,
+    //   title: '序号',
+    //   dataIndex: 'order',
+    //   render: (text, row, index) => index + 1
+    // },
     {
       ...customColumnProps,
       title: 'key',
-      dataIndex: BigDataBean.key
+      dataIndex: BigDataBean.key,
+      render: text => popoverTd(text),
     },
     {
       ...customColumnProps,
       title: '说明',
-      dataIndex: BigDataBean.说明
+      dataIndex: BigDataBean.说明,
+      render: text => popoverTd(text),
     },
     {
       ...customColumnProps,
       title: 'value',
-      dataIndex: BigDataBean.value
+      dataIndex: BigDataBean.value,
+      render: text => popoverTd(text),
     },
     {
       ...customColumnProps,

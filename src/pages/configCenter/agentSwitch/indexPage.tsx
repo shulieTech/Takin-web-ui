@@ -115,9 +115,9 @@ const AgentSwitch: React.FC<Props> = props => {
       <Alert
         type="warning"
         message={
-          <p style={{ color: '#646676' }}>
+          <div style={{ color: '#646676' }}>
             即时生效。关闭后，探针将不区分压测流量，且无法采集监控日志。无法从平台发起压测流量的压测和调试。（仅对5.1.2.0以上版本探针生效，请升级后使用）
-          </p>}
+          </div>}
         showIcon
         style={{ marginTop: 10, marginBottom: 10 }}
       />

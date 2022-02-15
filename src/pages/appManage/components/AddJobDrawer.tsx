@@ -72,6 +72,7 @@ const AddJobDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入应用名'
           }
         ]
@@ -114,7 +115,8 @@ const AddJobDrawer: React.FC<Props> = props => {
         rules: [
           {
             required: true,
-            message: '请输入配置代码'
+            message: '请输入配置代码',
+            whitespace: true
           }
         ]
       },
@@ -130,7 +132,8 @@ const AddJobDrawer: React.FC<Props> = props => {
           {
             required: false,
             message: '请输入正确备注',
-            max: 200
+            max: 200,
+            whitespace: true
           }
         ]
       },

@@ -76,10 +76,10 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
       <Alert
         type="warning"
         message={
-          <p style={{ color: '#646676' }}>
+          <div style={{ color: '#646676' }}>
             风险操作！操作前请仔细阅读
             <SwitchExplanationDrawer />
-          </p>}
+          </div>}
         showIcon
         style={{ marginTop: 10, marginBottom: 10 }}
       />
@@ -89,7 +89,7 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
         <Alert
           type="error"
           message={
-            <p
+            <div
               style={{
                 color: '#393B4F',
                 fontSize: 14,
@@ -100,14 +100,14 @@ const PressureMeasureSwitch: React.FC<Props> = props => {
               {state.switchStatus === 'CLOSE_FAILING'
                 ? '关闭过程中存在以下异常，请尽快处理'
                 : '部分开启失败，请尽快处理以下问题'}
-            </p>
+            </div>
           }
           description={
-            <p style={{ color: '#646676' }}>
+            <div style={{ color: '#646676' }}>
               {state.switchStatus === 'CLOSE_FAILING'
                 ? '建议重启问题所在应用后，点击右上角「重试」获取最新处理结果，异常处理完毕后才可进行后续操作。'
                 : '建议重启问题所在应用后，点击右上角「重试」获取最新处理结果。异常全部处理完成后状态开启，可以进行后续操作。'}
-            </p>}
+            </div>}
           showIcon
           style={{ marginTop: 10, marginBottom: 10 }}
         />

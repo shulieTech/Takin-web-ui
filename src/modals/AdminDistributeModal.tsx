@@ -144,8 +144,15 @@ const AdminDistributeModal: React.FC<Props> = props => {
         accountList: [],
         selectedRowKeys: []
       });
+      handleSearch();
     });
   };
+
+  useEffect(() => {
+    if (state.form) {
+      handleSearch();
+    }
+  }, [state.form]);
 
   return (
     <CommonModal

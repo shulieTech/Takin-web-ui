@@ -22,6 +22,7 @@ const getJobFormData = (state, action, setState): FormDataType[] => {
         rules: [
           {
             required: true,
+            whitespace: true,
             message: '请输入应用名'
           }
         ]

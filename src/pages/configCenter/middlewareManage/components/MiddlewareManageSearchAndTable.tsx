@@ -4,7 +4,7 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import { MiddlewareManageContext } from '../indexPage';
 import MiddlewareManageService from '../service';
-import { Button, Col, Icon, Pagination, Row } from 'antd';
+import { Button, Col, Icon, Pagination, Row, Empty } from 'antd';
 import Search from 'antd/lib/input/Search';
 import { CommonSelect, ImportFile } from 'racc';
 import CustomTable from 'src/components/custom-table';
@@ -262,6 +262,7 @@ const MiddlewareManageSearchAndTable: React.FC<Props> = props => {
       </div>
       {!state.middlewareSummaryDataSource ||
       state.middlewareSummaryDataSource.length === 0 ? (
+        state.middlewareDashboard.totalNum > 0 ? <Empty/> : 
         <div>
           <EmptyNode
             title="暂无数据,请先导入"

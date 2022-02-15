@@ -29,13 +29,13 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
                 }}
               >
-                {text.result}
+                {text?.result || 0}
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}</span>
+              <span>{text?.value === -1 ? '-' : text?.value || 0}</span>
             </Fragment>
           );
         }
@@ -50,13 +50,16 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text.result) > Number(text.value) ? '#FE7D61' : ''
+                    Number(text?.result) > Number(text?.value) &&
+                    text?.value !== -1
+                      ? '#FE7D61'
+                      : ''
                 }}
               >
-                {text.result}ms
+                {text?.result || 0}ms
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}ms</span>
+              <span>{text?.value === -1 ? '-' : `${text?.value || 0}ms`}</span>
             </Fragment>
           );
         }
@@ -64,20 +67,20 @@ const BusinessActivityFailList: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '成功率（实际/目标）',
-        dataIndex: 'sucessRate',
+        dataIndex: 'successRate',
         render: (text, row) => {
           return (
             <Fragment>
               <span
                 style={{
                   color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
                 }}
               >
-                {text.result}%
+                {text?.result || 0}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text?.value === -1 ? '-' : `${text?.value || 0}%`}</span>
             </Fragment>
           );
         }
@@ -92,13 +95,13 @@ const BusinessActivityFailList: React.FC<Props> = props => {
               <span
                 style={{
                   color:
-                    Number(text.result) < Number(text.value) ? '#FE7D61' : ''
+                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
                 }}
               >
-                {text.result}%
+                {text?.result || 0}%
               </span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span>{text.value}%</span>
+              <span>{text?.value === -1 ? '-' : `${text?.value || 0}%`}</span>
             </Fragment>
           );
         }

@@ -71,7 +71,7 @@ const ErrorLog: React.FC<Props> = props => {
                 iconWidth={64}
               />
             }
-            description="探针异常日志说明"
+            // description="探针异常日志说明"
           />
         </div>
         <ErrorLogSearchAndTable />
