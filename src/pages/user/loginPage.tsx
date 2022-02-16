@@ -187,6 +187,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           addonBefore="中国+86"
           placeholder="手机号"
+          onChange={that.onBlurs}
         />
       )
     },

@@ -23,6 +23,7 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
   useEffect(() => {
     handleClick();
     handleClicks();
+    errormessage();
   }, []);
 
   useEffect(() => {
@@ -42,6 +43,15 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
     }
     return () => clearInterval(timer);
   }, [timers, disabled]);
+
+  const errormessage = async () => {
+    if (location.hash.split('=')[1]) {
+      Modal.error({
+        title: '错误',
+        content: location.hash.split('=')[1],
+      });
+    }
+  };
 
   const handleClicks = async () => {
     const {
