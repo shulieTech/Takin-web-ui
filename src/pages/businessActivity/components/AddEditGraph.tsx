@@ -10,7 +10,7 @@ const AddEditGraph: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (props.service && props.serviceList) {
+    if (props.service && props.serviceList?.length > 0) {
       queryChartInfo();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
