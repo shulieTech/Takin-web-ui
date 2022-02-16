@@ -48,17 +48,19 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
     if (location.hash.split('=')[1]) {
       Modal.error({
         title: '错误',
-        content:  decodeURI(location.hash.split('=')[1]),
+        content: decodeURI(location.hash.split('=')[1]),
       });
     }
   };
 
   const handleClicks = async () => {
-    const {
-      data: { success, data },
-    } = await UserService.bindList({});
-    if (success) {
-      setFileData(data);
+    if (getTakinAuthority() === 'true') {
+      const {
+        data: { success, data },
+      } = await UserService.bindList({});
+      if (success) {
+        setFileData(data);
+      }
     }
   };
 
