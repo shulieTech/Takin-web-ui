@@ -309,7 +309,7 @@ export default class Login extends DvaComponent<Props, State> {
   onBlur = async (e) => {
     if (e.target.value) {
       const code = _.split(e.target.value, '@');
-      if (code[code.length - 1]) {
+      if (code.length > 1) {
         const {
           data: { data, success }
         } = await UserService.thirdParty({
@@ -330,7 +330,7 @@ export default class Login extends DvaComponent<Props, State> {
         disabled: false,
       });
       const code = _.split(e.target.value, '@');
-      if (code[code.length - 1]) {
+      if (code.length > 1) {
         const {
           data: { data, success }
         } = await UserService.thirdParty({
