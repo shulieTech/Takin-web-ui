@@ -48,7 +48,7 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
     if (location.hash.split('=')[1]) {
       Modal.error({
         title: '错误',
-        content: location.hash.split('=')[1],
+        content:  decodeURI(location.hash.split('=')[1]),
       });
     }
   };
