@@ -308,15 +308,17 @@ export default class Login extends DvaComponent<Props, State> {
   onBlur = async (e) => {
     if (e.target.value) {
       const code = _.split(e.target.value, '@');
-      const {
-        data: { data, success }
-      } = await UserService.thirdParty({
-        tenantCode: code[code.length - 1]
-      });
-      if (success) {
-        this.setState({
-          arr: data,
+      if (code[code.length - 1]) {
+        const {
+          data: { data, success }
+        } = await UserService.thirdParty({
+          tenantCode: code[code.length - 1]
         });
+        if (success) {
+          this.setState({
+            arr: data,
+          });
+        }
       }
     }
   };
