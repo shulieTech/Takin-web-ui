@@ -14,7 +14,7 @@ import styles from './indexPage.less';
 import { getThemeByKeyName } from 'src/utils/useTheme';
 
 const { TabPane } = Tabs;
-interface Props {}
+interface Props { }
 
 const state = {
   nums: null,
@@ -237,7 +237,6 @@ export default class Login extends DvaComponent<Props, State> {
 
   componentDidMount = () => {
     this.queryMenuList();
-    this.thirdParty(location.hash.split('=')[1]);
     this.serverConfig();
   };
 
@@ -250,6 +249,19 @@ export default class Login extends DvaComponent<Props, State> {
       data: { data, success }
     } = await UserService.serverConfig({});
     if (success) {
+      if (data.domain) {
+        if (_.endsWith(location.host, data.domain)) {
+          const datas = await UserService.thirdParty({
+            tenantCode: _.trimEnd(location.host, data.domain)
+          });
+          if (datas.data.success) {
+            this.setState({
+              arr: datas.data.data,
+            });
+          }
+
+        }
+      }
       this.setState({
         config: data,
         keyType: data.loginType === 3 ? 1 : data.loginType
@@ -326,19 +338,6 @@ export default class Login extends DvaComponent<Props, State> {
           arr: data,
         });
       }
-    }
-  };
-
-  thirdParty = async (tenantCode) => {
-    const {
-      data: { data, success }
-    } = await UserService.thirdParty({
-      tenantCode: tenantCode || undefined
-    });
-    if (success) {
-      this.setState({
-        arr: data,
-      });
     }
   };
 
