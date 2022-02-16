@@ -238,10 +238,24 @@ export default class Login extends DvaComponent<Props, State> {
   componentDidMount = () => {
     this.queryMenuList();
     this.serverConfig();
+    this.thirdParty(location.hash.split('=')[1]);
   };
 
   refresh = () => {
     this.queryCode();
+  };
+
+  thirdParty = async (tenantCode) => {
+    const {
+      data: { data, success }
+    } = await UserService.thirdParty({
+      tenantCode: tenantCode || undefined
+    });
+    if (success) {
+      this.setState({
+        arr: data,
+      });
+    }
   };
 
   serverConfig = async () => {
