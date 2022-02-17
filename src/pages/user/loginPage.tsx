@@ -263,19 +263,19 @@ export default class Login extends DvaComponent<Props, State> {
       data: { data, success }
     } = await UserService.serverConfig({});
     if (success) {
-      if (data.domain) {
-        if (_.endsWith(location.host, data.domain)) {
-          const datas = await UserService.thirdParty({
-            tenantCode: _.trimEnd(_.split(location.host, data.domain)[0], '.')
-          });
-          if (datas.data.success) {
-            this.setState({
-              arr: datas.data.data,
-            });
-          }
+      // if (data.domain) {
+      //   if (_.endsWith(location.host, data.domain)) {
+      //     const datas = await UserService.thirdParty({
+      //       tenantCode: _.trimEnd(_.split(location.host, data.domain)[0], '.')
+      //     });
+      //     if (datas.data.success) {
+      //       this.setState({
+      //         arr: datas.data.data,
+      //       });
+      //     }
 
-        }
-      }
+      //   }
+      // }
       this.setState({
         config: data,
         keyType: data.loginType === 3 ? 1 : data.loginType
