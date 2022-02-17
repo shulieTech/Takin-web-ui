@@ -146,6 +146,11 @@ const PressureTestSceneService = {
     const url = '/scene/task/preStop';
     return httpPut(url, data);
   },
+
+  async applicationList(data) {
+    const url = '/activities/application/list';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestSceneService;
