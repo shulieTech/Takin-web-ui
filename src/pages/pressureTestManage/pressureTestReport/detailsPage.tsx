@@ -1,10 +1,10 @@
-import { Alert, Button, Col, Icon, Row, Statistic } from 'antd';
+import { Alert, Button, Col, Dropdown, Icon, Menu, Row, Statistic } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useState } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
-import { getTakinAuthority } from 'src/utils/utils';
+import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
 import { router } from 'umi';
 import { TestMode } from '../pressureTestScene/enum';
 import Header from './components/Header';
@@ -28,6 +28,7 @@ interface State {
   failedCount: number;
   hasMissingData: number;
   graphData?: GraphData;
+  tenantList: any;
 }
 interface Props {
   location?: { query?: any };
@@ -49,7 +50,8 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     reportCountData: null,
     failedCount: null,
     /** 是否漏数 */
-    hasMissingData: null
+    hasMissingData: null,
+    tenantList: []
   });
 
   const { location } = props;
@@ -69,6 +71,18 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     queryRequestCount(id);
   }, [state.isReload]);
 
+  const tenantList = async (s) => {
+    const {
+      data: { data, success },
+    } = await PressureTestReportService.monitor({
+      sceneId: s
+    });
+    if (success) {
+      setState({
+        tenantList: data,
+      });
+    }
+  };
   useEffect(() => {
     if (state.tabKey) {
       queryReportChartsInfo(id, state.tabKey);
@@ -85,6 +99,10 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       reportId: value
     });
     if (success) {
+      // 判断是否有国寿竞赛这个菜单再调该接口
+      if (checkMenuByPath('/competition')) {
+        tenantList(data.sceneId);
+      }
       setState({
         detailData: data,
         hasMissingData:
@@ -161,6 +179,10 @@ const PressureTestReportDetail: React.FC<Props> = props => {
         graphData: activity?.topology || { nodes: [], edges: [] }
       });
     }
+  };
+
+  const changeTenant = (url) => {
+    window.open(url);
   };
 
   const headList = [
@@ -271,6 +293,28 @@ const PressureTestReportDetail: React.FC<Props> = props => {
 
   const extra = (
     <>
+      {
+        state.tenantList.length > 0 &&
+        <Dropdown
+          overlay={
+            <Menu>
+              {state.tenantList.map(x => (
+                <Menu.Item
+                  key={x.url}
+                  onClick={() => changeTenant(x.url)}
+                >
+                  {x.title}
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
+        >
+          <Button type="primary" style={{ marginRight: 8 }}>
+            中间件监控
+            <Icon type="down" />
+          </Button>
+        </Dropdown>
+      }
       {detailData?.hasJtl && (
         <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloading}>
           下载Jtl文件

@@ -150,13 +150,13 @@ const AddBusinessFlow: React.FC<Props> = props => {
     StepB(state, setState, props)
   ];
 
-  // TODO 上一步
+  // 上一步
   const handlerBack = () => {
     setState({
       businessFlowStep: businessFlowStep - 1
     });
   };
-  // TODO 下一步
+  // 下一步
   const handlerNext = async e => {
     switch (state.businessFlowStep) {
       case 1:
@@ -188,7 +188,7 @@ const AddBusinessFlow: React.FC<Props> = props => {
         break;
     }
   };
-  // TODO 保存
+  // 保存
   const handlerSubmit = async () => {
     if (
       !state.treeData.length ||
