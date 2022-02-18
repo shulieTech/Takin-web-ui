@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Table } from 'antd';
+import { Select, Table, Tooltip } from 'antd';
 import { SchemaField, FormPath, Schema, IFieldMergeState } from '@formily/antd';
 import services from '../service';
 
@@ -24,7 +24,7 @@ const ExcludeApps = (props: IFieldMergeState) => {
     setLoading(true);
     const {
       data: { success, data },
-      headers: { 'x-total': totalCount },
+      headers: { 'x-total-count': totalCount },
     } = await services.applicationList(queryParams);
     setLoading(false);
     if (success) {
@@ -47,10 +47,27 @@ const ExcludeApps = (props: IFieldMergeState) => {
     {
       title: '应用',
       dataIndex: 'applicationName',
+      render: (text) => {
+        return (
+          <Tooltip title={text}>
+            <div
+              style={{
+                maxWidth: 200,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {text}
+            </div>
+          </Tooltip>
+        );
+      },
     },
     {
       title: '操作',
       dataIndex: 'applicationId',
+      width: 80,
       render: (text, record, index) => {
         const includedIndex = value.findIndex((x) => x === text);
         return (
@@ -76,14 +93,16 @@ const ExcludeApps = (props: IFieldMergeState) => {
         onChange={(val: any) => {
           setQueryParams({
             ...queryParams,
-            applicationName: val?.applicationName,
+            applicationName: val,
             current: 0,
           });
         }}
         loading={loading}
       >
         {appList.map((x) => (
-          <Option key={x.applicationId}>{x.applicationName}</Option>
+          <Option key={x.applicationId} value={x.applicationName}>
+            {x.applicationName}
+          </Option>
         ))}
       </Select>
       <Table
@@ -93,14 +112,14 @@ const ExcludeApps = (props: IFieldMergeState) => {
         loading={loading}
         pagination={{
           total,
-          current: queryParams.current,
+          current: queryParams.current + 1,
           pageSize: queryParams.pageSize,
           simple: true,
           onChange: (current, pageSize) =>
             setQueryParams({
               ...queryParams,
-              current,
               pageSize,
+              current: current - 1,
             }),
         }}
         footer={() => (
