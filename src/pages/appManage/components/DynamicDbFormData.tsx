@@ -3,7 +3,7 @@
  */
 import React, { Fragment, useEffect } from 'react';
 import { FormDataType } from 'racc/dist/common-form/type';
-import { Radio, Icon, Tooltip, message } from 'antd';
+import { Radio, Icon, Tooltip, message, Input } from 'antd';
 import { DbDetailBean } from '../enum';
 import AppManageService from '../service';
 import { EditDynamicDbDrawerState } from './EditDynamicDbDrawer';
@@ -134,13 +134,12 @@ const getDynamicDbFormData = (
 
             rules: [
               {
-                required: true
+                required: true,
+                whitespace: true,
               }
             ]
           },
-          node: (
-              <span>{detailData && detailData[DbDetailBean.业务数据源]}</span>
-            )
+          node: detailData.isManual ? <Input placeholder="请输入"/> : <span>{detailData && detailData[DbDetailBean.业务数据源]}</span>
         }
       ]
       : [
