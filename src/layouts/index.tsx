@@ -5,7 +5,7 @@ import { ConfigProvider } from 'antd';
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-import React, { useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import DocumentTitle from 'react-document-title';
 import HeaderLayout from 'src/layouts/HeaderLayout';
 import LoginPage from 'src/pages/user/loginPage';
@@ -23,6 +23,8 @@ moment.locale('zh-cn');
 const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
   const { children, location } = props;
   let layout = null;
+
+  const [initing, setIniting] = useState(true);
 
   const { setTheme, resetTheme, loadThemeConfig } = useTheme();
 
@@ -46,23 +48,21 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
     const {
       data: { data, success },
     } = await services.getTheme();
-    if (success && Object.keys(data)?.length > 0) {
-      setTheme(data);
+    if (success && Object.keys(data)?.length === 0) {
+      setTheme(data, true);
     }
   };
 
-  useEffect(() => {
-    loadThemeConfig();
-    setTimeout(() => {
-      if (getTakinAuthority() === 'true') {
-        getThemeFromRemote();
-      }
+  useLayoutEffect(() => {
+    getThemeFromRemote().then(() => {
+      loadThemeConfig();
+      setIniting(false);
     });
   }, []);
 
   return (
     <DocumentTitle title={venomBasicConfig.title}>
-      <ConfigProvider locale={zh_CN}>{layout}</ConfigProvider>
+      {!initing && <ConfigProvider locale={zh_CN}>{layout}</ConfigProvider>}
     </DocumentTitle>
   );
 };
