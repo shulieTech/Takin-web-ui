@@ -125,15 +125,18 @@ export interface RequestParams {
 const getUrl = (url: string, options: any) => {
   if (url === '/sys/front/config/get') {
     // 从主题配置中获取安全中心域名，该接口不走安全中心域名
-    return `${options && options.domain ? options.domain : serverUrl}${url}`;
+    return `${options?.domain || serverUrl}${url}`;
   } 
+  if (options?.domain) {
+    return `${options?.domain}${url}`;
+  }
   const securityCenterDomain = getThemeByKeyName('securityCenterDomain');
   if (securityCenterDomain) {
     // 走安全中心域名
-    return `${securityCenterDomain}/api${url}`;
+    return `${securityCenterDomain}/takin-transform/api${url}`;
   }
   // 兜底走当前域名
-  return `${options?.domain || serverUrl}${url}`;
+  return `${serverUrl}${url}`;
 };
 
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
