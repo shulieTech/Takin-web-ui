@@ -285,6 +285,7 @@ function getErrorMessage(statusCode: number): string | undefined {
     503: 'Service Unavailable/服务无法获得!',
     504: 'Gateway Timeout/网关超时!',
     505: 'HTTP Version Not Supported/不支持的 HTTP 版本!',
+    451: '签名不正确',
   };
   return statusMsgMap[statusCode];
 }
