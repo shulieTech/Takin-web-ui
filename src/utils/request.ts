@@ -133,7 +133,7 @@ const getUrl = (url: string, options: any) => {
   const securityCenterDomain = getThemeByKeyName('securityCenterDomain');
   if (securityCenterDomain) {
     // 走安全中心域名
-    return `${securityCenterDomain}/takin-transform/api${url}`;
+    return `${securityCenterDomain}/takin-transform-web/api${url}`;
   }
   // 兜底走当前域名
   return `${serverUrl}${url}`;
