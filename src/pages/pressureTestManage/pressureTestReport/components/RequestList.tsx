@@ -118,11 +118,11 @@ const RequestList: React.FC<Props> = props => {
         title: '请求入口',
         dataIndex: 'interfaceName'
       },
-      {
-        ...customColumnProps,
-        title: '应用（IP）',
-        dataIndex: 'applicationName'
-      },
+      // {
+      //   ...customColumnProps,
+      //   title: '应用（IP）',
+      //   dataIndex: 'applicationName'
+      // },
       {
         ...customColumnProps,
         title: '结果',
