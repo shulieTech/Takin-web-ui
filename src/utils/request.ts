@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { message, Modal } from 'antd';
 import { Basic } from 'src/types';
 import { getTakinAuthority } from './utils';
-import { getThemeByKeyName } from 'src/utils/useTheme';
 import BaseResponse = Basic.BaseResponse;
 
 declare var window: Window;
@@ -130,7 +129,7 @@ const getUrl = (url: string, options: any) => {
   if (options?.domain) {
     return `${options?.domain}${url}`;
   }
-  const securityCenterDomain = getThemeByKeyName('securityCenterDomain');
+  const securityCenterDomain = localStorage.getItem('securityCenterDomain');
   if (securityCenterDomain) {
     // 走安全中心域名
     return `${securityCenterDomain}/takin-transform-web/api${url}`;
