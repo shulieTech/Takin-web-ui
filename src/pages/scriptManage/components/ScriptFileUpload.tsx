@@ -38,8 +38,7 @@ const ScriptFileUpload = (
       stateKeyName = 'fileList',
       acceptFileNames = ['jar', 'csv', 'jmx']
     ) => {
-      // const uploadFileNum = info?.fileList?.length;
-      const uploadFileNum = state[stateKeyName]?.length;
+      const uploadFileNum = state[`${stateKeyName}Num`] || 0;
 
       /**
        * @name 已上传的文件列表名
@@ -72,9 +71,9 @@ const ScriptFileUpload = (
         return acceptFileNames.indexOf(ext.toLowerCase()) !== -1;
       }
 
-      // setState({
-      //   uploadFileNum: info.fileList.length
-      // });
+      setState({
+        [`${stateKeyName}Num`]: info.fileList.length
+      });
 
       /**
        * @name 待上传的元素含有不可接受类型
@@ -150,12 +149,15 @@ const ScriptFileUpload = (
      * @name 上传文件
      */
     const uploadFiles = async (files, stateKeyName = 'fileList') => {
+      const msg = message.loading('文件上传中...', 0);
       const {
         data: { data, success },
       } = await {
         fileList: PressureTestSceneService.uploadFiles,
         attachmentList: ScriptManageService.uploadAttachments,
-      }[stateKeyName](files);
+      }[stateKeyName](files).finally(() => {
+        msg();
+      });
       if (success) {
         setState({
           [stateKeyName]: state[stateKeyName]

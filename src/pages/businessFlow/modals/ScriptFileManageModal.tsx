@@ -148,7 +148,7 @@ const ScriptFileManageModal: React.FC<Props> = props => {
    */
   const uploadFiles = async files => {
     setUploading(true);
-    const msg = message.loading('上传中');
+    const msg = message.loading('上传中', 0);
     try {
       const {
         data: { data, success }
