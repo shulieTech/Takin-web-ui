@@ -95,7 +95,7 @@ const EnvHeader: React.FC<Props> = props => {
   };
 
   const changeEnv = async (env) => {
-    const { code, descs, securityCenterDomain } = env;
+    const { envCode: code, descs, securityCenterDomain } = env;
     const {
       data: { success, data }
     } = await tenantCodeService.envSwitch({
