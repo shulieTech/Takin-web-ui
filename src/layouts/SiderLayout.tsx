@@ -12,11 +12,12 @@ import { Basic } from 'src/types';
 import venomBasicConfig from 'src/venom.config';
 import { router } from 'umi';
 import ContentNode from './components/ContentNode';
-import FooterNode from './components/FooterNode';
+// import FooterNode from './components/FooterNode';
 import SiderMenu from './components/SiderMenu';
 import queryString from 'query-string';
 import EnvHeader from './components/EnvHeader';
-import axios from 'axios';
+// import axios from 'axios';
+import { getThemeByKeyName } from 'src/utils/useTheme';
 
 declare var window: any;
 let path = '';
@@ -78,13 +79,17 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   };
 
   const loginout = async () => {
-    const { data: json } = await axios.get('./version.json');
-    if (json.loginUrl) {
-      window.location.href = json.loginUrl;
-    } else {
-      window.location.hash = '/login';
-    }
-
+    // const { data: json } = await axios.get('./version.json');
+    // if (json.loginUrl) {
+    //   window.location.href = json.loginUrl;
+    // } else {
+    //   window.g_app._store.dispatch({
+    //     type: 'user/troLogout'
+    //   });
+    // }
+    window.g_app._store.dispatch({
+      type: 'user/troLogout'
+    });
   };
 
   const { location } = props;
@@ -203,6 +208,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       collapsedStatus: !state.collapsedStatus,
     });
   };
+
+  const disableTenant = getThemeByKeyName('disableTenant');
+  
   return (
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
@@ -219,21 +227,26 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
         }}
       >
         {/* <HeaderNode
-            onCollapse={handlerCollapsed}
-            collapsedStatus={state.collapsedStatus}
-          /> */}
+           onCollapse={handlerCollapsed}
+           collapsedStatus={state.collapsedStatus}
+         /> */}
         {
           state.request && <ConfigProvider getPopupContainer={() => popupDom.current}>
-            <div
-              className="h-100p"
-              style={{ backgroundColor: '#1D2530', display: 'flex', flexDirection: 'column' }}
-              ref={popupDom}
-            >
-              <EnvHeader />
-              <ContentNode children={children} />
-              {/* <FooterNode /> */}
-            </div>
-          </ConfigProvider>}
+          <div
+            className="h-100p"
+            style={{
+              backgroundColor: '#1D2530',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+            ref={popupDom}
+          >
+            {/* 人寿没有租户 */}
+            {!disableTenant && <EnvHeader />}
+            <ContentNode children={children} />
+            {/* <FooterNode /> */}
+          </div>
+        </ConfigProvider>}
       </Layout>
     </Layout>
   );

@@ -197,6 +197,10 @@ const PressureTestSceneService = {
     const url = '/v2/scene/pod_number';
     return httpPost(url, data);
   },
+  async applicationList(data) {
+    const url = '/v2/activities/application/list';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestSceneService;

@@ -29,6 +29,7 @@ import ConfigMap from './components/ConfigMap';
 import ConditionTableField from './components/ConditionTableField';
 import NumberPicker from './components/NumberPicker';
 import ValidateCommand from './components/ValidateCommand';
+import ExcludeApps from './components/ExcludeApps';
 import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 import { cloneDeep, debounce } from 'lodash';
@@ -154,6 +155,9 @@ const EditPage = (props) => {
       setFieldState('dataValidation.content', (state) => {
         state.props['x-component-props'].flowId = fieldState.value;
       });
+      setFieldState('dataValidation.excludedApplicationIds', (state) => {
+        state.props['x-component-props'].flowId = fieldState.value;
+      });
     });
     onFieldInputChange$('.basicInfo.businessFlowId').subscribe((fieldState) => {
       // 手动变更业务流程时，清空步骤1之前的目标数据
@@ -173,6 +177,10 @@ const EditPage = (props) => {
       });
       // 手动变更业务流程时，清空步骤3之前的告警条件
       setFieldState('warnMonitoringGoal', (state) => {
+        state.value = [];
+      });
+      // 手动变更业务流程时，清空步骤4的排出应用值
+      setFieldState('dataValidation.excludedApplicationIds', (state) => {
         state.value = [];
       });
     });
@@ -348,6 +356,7 @@ const EditPage = (props) => {
             Radio,
             Switch,
             DatePicker,
+            ExcludeApps,
             RadioGroup: Radio.Group,
           }}
           onSubmit={onSubmit}
@@ -631,6 +640,20 @@ const EditPage = (props) => {
                 x-component="ValidateCommand"
                 x-component-props={{
                   flowId: '',
+                }}
+              />
+              <Field
+                name="excludedApplicationIds"
+                title={
+                  <TipTittle
+                    tips="可控制参与压测的应用范围。不参与压测的应用可忽略，忽略的应用将不进行启动校验。请确保这些应用的安全性！"
+                  >
+                    应用范围控制
+                  </TipTittle>
+                }
+                x-component="ExcludeApps"
+                x-component-props={{
+                  flowId: ''
                 }}
               />
             </Field>

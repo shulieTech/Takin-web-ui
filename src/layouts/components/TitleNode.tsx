@@ -9,13 +9,14 @@ import Title from 'antd/lib/typography/Title';
 import { Icon, Button } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
+import { getThemeByKeyName } from 'src/utils/useTheme';
 
 interface Props {
   onCollapsed?: () => void;
   collapsedStatus?: boolean;
   location?: any;
 }
-const TitleNode: React.FC<Props> = props => {
+const TitleNode: React.FC<Props> = (props) => {
   const { location } = props;
   let url = '/';
   if (localStorage.getItem('trowebUserResource')) {
@@ -29,6 +30,8 @@ const TitleNode: React.FC<Props> = props => {
   if (location.pathname) {
     url = location.pathname;
   }
+
+  const logoTitle = getThemeByKeyName('logoTitle');
 
   return (
     <Link to={url}>
@@ -46,6 +49,7 @@ const TitleNode: React.FC<Props> = props => {
 
           height: venomBasicConfig.headerHeight,
           marginBottom: 0,
+          padding: 10,
           background:
             venomBasicConfig.theme === 'dark'
               ? 'var(--BrandPrimary-500)'
@@ -53,14 +57,20 @@ const TitleNode: React.FC<Props> = props => {
           color: venomBasicConfig.theme === 'dark' ? '#fff' : '#1890ff',
           boxShadow:
             venomBasicConfig.theme === 'light' && '1px 1px 0 0 #e8e8e8',
-          borderBottom: '1px solid var(--BrandPrimary-500)'
+          borderBottom: '1px solid var(--BrandPrimary-500)',
         }}
       >
         <div className={styles.titleName}>
-          <img width={30} src={require('./../../assets/takin_logo.png')} />
+          {logoTitle ? (
+            logoTitle
+          ) : (
+            <>
+              <img width={30} src={require('./../../assets/takin_logo.png')} />
 
-          {!props.collapsedStatus && (
-            <span className={styles.logoName}>Takin</span>
+              {!props.collapsedStatus && (
+                <span className={styles.logoName}>Takin</span>
+              )}
+            </>
           )}
         </div>
 

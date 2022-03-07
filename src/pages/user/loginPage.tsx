@@ -34,6 +34,8 @@ const state = {
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
+  const disableTenant = getThemeByKeyName('disableTenant');
+  const usernamePlaceholder = disableTenant ? '请输入账号' : '<用户名>@<企业别名>，例如： username@shulie';
   return [
     {
       key: 'username',
@@ -52,7 +54,8 @@ const getFormData = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           onChange={that.onBlur}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
-          placeholder="<用户名>@<企业别名>，例如： username@shulie"
+          // 人寿没有租户
+          placeholder={usernamePlaceholder}
         />
       ),
     },
@@ -449,14 +452,15 @@ export default class Login extends DvaComponent<Props, State> {
     }
     this.refresh();
   };
-
+  
   content = () => {
+    const wechatQRcode = getThemeByKeyName('wechatQRcode');
     return (
       <div style={{ position: 'relative', zIndex: 100000 }}>
         <p className={styles.wechat}>微信扫码联系</p>
         <img
           style={{ width: 100 }}
-          src={require('./../../assets/wechat.png')}
+          src={wechatQRcode || require('./../../assets/wechat.png')}
         />
       </div>
     );
