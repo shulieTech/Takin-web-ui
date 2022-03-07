@@ -280,7 +280,8 @@ const ScriptFileManageModal: React.FC<Props> = props => {
 
   const handleCancle = () => {
     setState({
-      fileList: null
+      fileList: null,
+      uploadFileNum: 0,
     });
   };
 
