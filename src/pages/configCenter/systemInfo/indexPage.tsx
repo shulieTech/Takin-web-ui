@@ -19,11 +19,13 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
   const [text, setText] = useState('获取短信验证码');
   const [disabled, setDisabled] = useState(false);
   const [timers, settimers] = useState(60);
+  const [config, setConfig] = useState(1);
 
   useEffect(() => {
     handleClick();
     handleClicks();
     errormessage();
+    serverConfig();
   }, []);
 
   useEffect(() => {
@@ -50,6 +52,15 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
         title: '错误',
         content: decodeURI(location.hash.split('=')[1]),
       });
+    }
+  };
+
+  const serverConfig = async () => {
+    const {
+      data: { data, success }
+    } = await UserService.serverConfig({});
+    if (success) {
+      setConfig(data.loginType);
     }
   };
 
@@ -161,6 +172,11 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
       <Row style={{ display: title === '个人信息' ? 'block' : 'none' }}>
         {fileData &&
           fileData.map((item, index) => {
+            if (item.name === '手机号' && config === 1) {
+              return (
+                <span/>
+              );
+            }
             return (
               <Button key={index} style={{ marginLeft: 10 }} onClick={() => onClick(item.id, item.isBound)}>
                 {item.isBound === 1 ? '解绑' : '绑定'}

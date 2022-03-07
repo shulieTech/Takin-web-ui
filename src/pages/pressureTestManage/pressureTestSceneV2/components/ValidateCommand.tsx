@@ -56,6 +56,7 @@ const ValidateCommand = (props) => {
             </div>}
           >
             <Table
+              size="small"
               defaultExpandAllRows
               dataSource={x.sqlResponseList}
               columns={[

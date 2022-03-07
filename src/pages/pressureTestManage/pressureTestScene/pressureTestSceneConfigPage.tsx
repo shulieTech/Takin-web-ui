@@ -17,6 +17,7 @@ import PressureConfig from './components/PressureConfig';
 import SLAConfig from './components/SLAConfig';
 import { PressureSource, PressureTestSceneEnum, TestMode } from './enum';
 import styles from './index.less';
+import ApplicationName from '../pressureTestScene/components/ApplicationName';
 import PressureTestSceneService from './service';
 import { getTakinAuthority } from 'src/utils/utils';
 interface Props {
@@ -78,7 +79,9 @@ const getInitState = () => ({
   missingDataScriptList: [],
   isInterval: 0,
   businessList: [],
-  tpsNum: null
+  tpsNum: null,
+  status: false,
+  excludedApplicationIds: []
 });
 
 declare var serverUrls: string;
@@ -290,7 +293,9 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
       if (action === 'add') {
         const {
           data: { success, data }
-        } = await PressureTestSceneService.addPressureTestScene(result);
+        } = await PressureTestSceneService.addPressureTestScene({
+          ...result,
+          excludedApplicationIds: state.excludedApplicationIds});
         if (success) {
           setState({
             loading: false
@@ -311,7 +316,8 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
           data: { success, data }
         } = await PressureTestSceneService.editPressureTestScene({
           ...result,
-          id
+          id,
+          excludedApplicationIds: state.excludedApplicationIds
         });
         if (success) {
           setState({
@@ -441,7 +447,9 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         ),
         step: data.step,
         increasingTime: data.increasingTime,
-        isInterval: data[PressureTestSceneEnum.是否定时]
+        isInterval: data[PressureTestSceneEnum.是否定时],
+        status: true,
+        excludedApplicationIds: data.excludedApplicationIds
       });
     }
   };
@@ -501,10 +509,21 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         dataSource={formDataSource}
         getForm={form => setState({ form })}
       />
+      {
+        state.status && (
+          <ApplicationName
+            id={state.selectedBussinessActivityIds}
+            excludedApplicationIds={state.excludedApplicationIds}
+            state={state}
+            setState={setState}
+          />
+        )
+      }
       <Button
         type="primary"
         onClick={() => handleSubmit()}
         loading={state.loading}
+        style={{ marginTop: 10 }}
       >
         保存
       </Button>

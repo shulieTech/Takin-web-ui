@@ -11,7 +11,7 @@ import { TestMode } from '../enum';
 import PressureTestSceneService from '../service';
 import BusinessActivityConfigTable from './BusinessActivityConfigTable';
 
-interface Props {}
+interface Props { }
 declare var serverUrls: string;
 const BusinessActivityConfig = (
   state,
@@ -113,14 +113,17 @@ const BusinessActivityConfig = (
             data &&
             data.map((item, k) => {
               return item.businessActivityId;
-            })
+            }),
+          status: true,
         });
       }
     };
 
     const handleChangeConcurrenceNum = _.debounce(async list => {
       setState({
-        businessList: list
+        businessList: list,
+        selectedBussinessActivityIds: [list[0].businessActivityId],
+        status: true
       });
       if (state.testMode !== TestMode.TPS模式) {
         return;

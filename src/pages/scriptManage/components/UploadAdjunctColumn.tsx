@@ -60,7 +60,7 @@ const UploadAdjunctColumn = (
       title: '文件类型',
       dataIndex: 'fileType',
       render: text => {
-        return <span>{text === 1 ? '数据' : '脚本'}</span>;
+        return <span>{text === 1 ? '数据' : '附件'}</span>;
       }
     },
     {

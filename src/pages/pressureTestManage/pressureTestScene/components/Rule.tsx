@@ -93,6 +93,8 @@ const Rule: React.FC<Props> = props => {
           {String(state.ruleObj.indexInfo) === '0'
             ? 'ms'
             : String(state.ruleObj.indexInfo) === '1'
+            ? '' 
+            : String(state.ruleObj.indexInfo) === '6'
             ? ''
             : '%'}
         </span>

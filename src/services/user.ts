@@ -19,6 +19,10 @@ const UserService = {
     const url = '/logout';
     return httpGet(url, data);
   },
+  async troRedirect(data) {
+    const url = '/thirdParty/redirect';
+    return httpGet(url, data);
+  },
   async updatePassword(data) {
     const url = '/user/pwd/update';
     return httpPut(url, data);
@@ -83,6 +87,10 @@ const UserService = {
   },
   async thirdPartylogin(data) {
     const url = '/thirdParty/user';
+    return httpGet(url, data);
+  },
+  async oauthcallback(data) {
+    const url = '/thirdParty/callback';
     return httpGet(url, data);
   },
 };
