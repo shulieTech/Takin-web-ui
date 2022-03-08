@@ -11,7 +11,9 @@ import { withRouter } from 'umi';
 const { Content } = Layout;
 
 const ContentNode: React.FC = props => {
-  const hasPageAuth = checkMenuByPath(`${props?.location?.pathname}`);
+  // 不在菜单中的页面无法判断，所以这里暂时关闭权限判断
+  const hasPageAuth = true || checkMenuByPath(`${props?.location?.pathname}`);
+  
   // const [footerHeight, setFooterHeight] = useState(0);
   // useLayoutEffect(() => {
   //   const footerEl = document.getElementById('footer');
