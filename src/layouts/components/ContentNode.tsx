@@ -2,12 +2,16 @@
  * @name 主体main
  */
 import React, { useLayoutEffect, useState } from 'react';
-import { Layout } from 'antd';
+import { Layout, Result } from 'antd';
 import venomBasicConfig from 'src/venom.config';
 import styles from '../index.less';
+import { checkMenuByPath } from 'src/utils/utils';
+import { withRouter } from 'umi';
+
 const { Content } = Layout;
 
 const ContentNode: React.FC = props => {
+  const hasPageAuth = checkMenuByPath(`${props?.location?.pathname}`);
   // const [footerHeight, setFooterHeight] = useState(0);
   // useLayoutEffect(() => {
   //   const footerEl = document.getElementById('footer');
@@ -45,10 +49,10 @@ const ContentNode: React.FC = props => {
           overflow: 'scroll'
         }}
       >
-        {props.children}
+        {hasPageAuth ? props.children : <Result status="403" title="提示" subTitle="抱歉，你没有权限访问该页面" />}
       </Content>
     </div>
   );
 };
 
-export default ContentNode;
+export default withRouter(ContentNode);
