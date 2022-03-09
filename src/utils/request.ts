@@ -122,17 +122,21 @@ export interface RequestParams {
 }
 
 const getUrl = (url: string, options: any) => {
-  if (url === '/sys/front/config/get') {
-    // 从主题配置中获取安全中心域名，该接口不走安全中心域名
+  const excludeUrl = [
+    '/sys/front/config/get',
+    '/tenant'
+  ];
+  if (excludeUrl.includes(url)) {
+    // 不走安全中心域名的接口
     return `${options?.domain || serverUrl}${url}`;
   } 
   if (options?.domain) {
-    return `${options?.domain}${url}`;
+    return `${options?.domain}${ options?.pathPrefix || '/takin-web/api'}${url}`;
   }
   const securityCenterDomain = localStorage.getItem('securityCenterDomain');
   if (securityCenterDomain) {
     // 走安全中心域名
-    return `${securityCenterDomain}/takin-transform-web/api${url}`;
+    return `${securityCenterDomain}${ options?.pathPrefix || '/takin-web/api'}${url}`;
   }
   // 兜底走当前域名
   return `${serverUrl}${url}`;
