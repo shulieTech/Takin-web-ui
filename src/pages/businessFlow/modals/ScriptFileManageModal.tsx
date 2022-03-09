@@ -69,7 +69,7 @@ const ScriptFileManageModal: React.FC<Props> = props => {
      * @name 判断是否是可接受类型
      */
     function isAcceptType(ext) {
-      return ['jar', 'csv'].indexOf(ext.toLowerCase()) !== -1;
+      return ['jar', 'csv', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'xls', 'xlsx'].indexOf(ext.toLowerCase()) !== -1;
     }
 
     setState({
@@ -148,7 +148,7 @@ const ScriptFileManageModal: React.FC<Props> = props => {
    */
   const uploadFiles = async files => {
     setUploading(true);
-    const msg = message.loading('上传中');
+    const msg = message.loading('上传中', 0);
     try {
       const {
         data: { data, success }
@@ -230,6 +230,7 @@ const ScriptFileManageModal: React.FC<Props> = props => {
               onChange: info => handleChange(info),
               disabled: uploading,
             }}
+            accept={null}
             fileName="file"
             onImport={file => true}
           >
@@ -250,10 +251,13 @@ const ScriptFileManageModal: React.FC<Props> = props => {
                   }}
                 >
                   点击新增或者拖拽到此上传文件
+                  
                 </span>
               </span>
             </p>
-            <p>支持格式：.csv | .jar</p>
+            <p>支持数据文件格式：.csv <br/>
+              支持jar格式：.jar <br/>
+              支持其他附件格式：图片、Excel等</p>
           </ImportFile>
         ),
         extra: (
@@ -276,7 +280,8 @@ const ScriptFileManageModal: React.FC<Props> = props => {
 
   const handleCancle = () => {
     setState({
-      fileList: null
+      fileList: null,
+      uploadFileNum: 0,
     });
   };
 
