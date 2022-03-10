@@ -65,6 +65,7 @@ export default {
         localStorage.removeItem('takinAuthority');
         localStorage.removeItem('Access-Token');
         localStorage.removeItem('isSuper');
+        localStorage.removeItem('securityCenterDomain');
         yield put({
           type: 'updateState',
           payload: {
