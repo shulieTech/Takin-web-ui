@@ -46,6 +46,7 @@ const EnvHeader: React.FC<Props> = props => {
           localStorage.getItem('env-code')
         ]);
         setDesc(data[indexs].envs[ind]?.desc);
+        localStorage.setItem('securityCenterDomain', data[indexs].envs[ind]?.securityCenterDomain || '');
       }
     }
   };
