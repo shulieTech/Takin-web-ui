@@ -303,12 +303,12 @@ const RequestDetailModal: React.FC<Props> = props => {
       dataIndex: 'actions',
       width: 100,
       render: (text, row) => {
-        if (row.entryHostIp && row.agentId) {
+        if (row.entryHostIp && row.agentId && row.trackMethod) {
           return (
             <Button
               onClick={() =>
                 router.push(
-                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually`
+                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually&traceObject=${encodeURIComponent(row.trackMethod)}`
                 )
               }
               style={{ marginLeft: 16 }}

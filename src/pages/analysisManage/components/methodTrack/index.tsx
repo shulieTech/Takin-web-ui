@@ -29,7 +29,7 @@ const MethodTrack: React.FC<Props> = props => {
   const [state, setState] = useStateReducer({
     dataSource: [],
     id: null,
-    traceObject: null,
+    traceObject: props.query.traceObject ? decodeURIComponent(props.query.traceObject) : null,
     loading: false,
     sampleId: null
   });
