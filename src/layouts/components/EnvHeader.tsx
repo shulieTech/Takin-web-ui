@@ -38,7 +38,9 @@ const EnvHeader: React.FC<Props> = props => {
       });
       if (localStorage.getItem('env-code') === null) {
         localStorage.setItem('env-code', arr[indexs]?.envCode);
-        localStorage.setItem('securityCenterDomain', arr[indexs]?.securityCenterDomain || '');
+        // TODO 先写死地址
+        localStorage.setItem('securityCenterDomain', 'http://192.168.1.164:9080');
+        // localStorage.setItem('securityCenterDomain', arr[indexs]?.securityCenterDomain || '');
         setDesc(arr[indexs]?.desc);
       } else {
         const ind = _.findIndex(data[indexs].envs, [
