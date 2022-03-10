@@ -38,8 +38,7 @@ const EnvHeader: React.FC<Props> = props => {
       });
       if (localStorage.getItem('env-code') === null) {
         localStorage.setItem('env-code', arr[indexs]?.envCode);
-        // TODO: 放开
-        // localStorage.setItem('securityCenterDomain', arr[indexs]?.securityCenterDomain || '');
+        localStorage.setItem('securityCenterDomain', arr[indexs]?.securityCenterDomain || '');
         setDesc(arr[indexs]?.desc);
       } else {
         const ind = _.findIndex(data[indexs].envs, [
@@ -48,8 +47,6 @@ const EnvHeader: React.FC<Props> = props => {
         ]);
         setDesc(data[indexs].envs[ind]?.desc);
       }
-      // TODO 先写死安全中心地址
-      localStorage.setItem('securityCenterDomain', 'http://192.168.1.196:9080');
     }
   };
 
