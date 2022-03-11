@@ -142,6 +142,17 @@ const getUrl = (url: string, options: any) => {
   return `${serverUrl}${url}`;
 };
 
+const getHeaders = options => {
+  return {
+    'x-token': localStorage.getItem('full-link-token'),
+    'Auth-Cookie': localStorage.getItem('auth-cookie'),
+    'Access-Token': localStorage.getItem('Access-Token'),
+    'tenant-code': localStorage.getItem('tenant-code'),
+    'env-code': localStorage.getItem('env-code'),
+    ...(options?.headers || {}),
+  };
+};
+
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
   // const myurl = `${options && options.domain ? options.domain : serverUrl
@@ -156,12 +167,7 @@ export function httpGet<T = any>(url: string, data?: any, options?: any) {
     },
     method: Method.GET,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    },
+    headers: getHeaders(options),
   });
 }
 export function httpPost<T>(url, data?: any, options?: any) {
@@ -170,13 +176,7 @@ export function httpPost<T>(url, data?: any, options?: any) {
     payload: data,
     method: Method.POST,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'Access-Token': localStorage.getItem('Access-Token'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    },
+    headers: getHeaders(options),
   });
 }
 export function httpPut<T>(url, data?: any, options?: any) {
@@ -185,12 +185,7 @@ export function httpPut<T>(url, data?: any, options?: any) {
     payload: data,
     method: Method.PUT,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    },
+    headers: getHeaders(options),
   });
 }
 export function httpDelete<T>(url, data?: any, options?: any) {
@@ -199,12 +194,7 @@ export function httpDelete<T>(url, data?: any, options?: any) {
     payload: data,
     method: Method.DELETE,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    },
+    headers: getHeaders(options),
   });
 }
 
