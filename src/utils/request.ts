@@ -2,6 +2,8 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { message, Modal } from 'antd';
 import { Basic } from 'src/types';
 import { getTakinAuthority } from './utils';
+import { EXCLUDED_SECURITY_APIS } from 'src/constants';
+
 import BaseResponse = Basic.BaseResponse;
 
 declare var window: Window;
@@ -122,11 +124,7 @@ export interface RequestParams {
 }
 
 const getUrl = (url: string, options: any) => {
-  const excludeUrl = [
-    '/sys/front/config/get',
-    '/tenant'
-  ];
-  if (excludeUrl.includes(url)) {
+  if (EXCLUDED_SECURITY_APIS.includes(url)) {
     // 不走安全中心域名的接口
     return `${options?.domain || serverUrl}${url}`;
   } 

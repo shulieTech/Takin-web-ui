@@ -37,3 +37,18 @@ export const FLOW_TYPE_ENUM = {
   PRESSURE_MEASUREMENT: '压测流量',
   BUSINESS: '业务流量',
 };
+
+/**
+ * 不走安全中心网关的接口列表
+ */
+export const EXCLUDED_SECURITY_APIS = [
+  '/sys/front/config/get',
+  '/verification/code',
+  '/login',
+  '/logout',
+  '/tenant',
+  '/link/dictionary',
+  '/menu/list',
+  '/menu/button',
+  '/menu/keys',
+];
