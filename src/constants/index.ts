@@ -47,6 +47,7 @@ export const EXCLUDED_SECURITY_APIS = [
   '/login',
   '/logout',
   '/tenant',
+  '/tenant/env/switch',
   '/link/dictionary',
   '/menu/list',
   '/menu/button',
