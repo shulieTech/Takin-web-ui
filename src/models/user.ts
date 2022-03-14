@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { notification, Modal, message } from 'antd';
 import UserService from 'src/services/user';
 import router from 'umi/router';
 import axios from 'axios';
@@ -86,6 +86,8 @@ export default {
           window.location.href = json.loginUrl;
           return;
         }
+        Modal.destroyAll();
+        message.destroy();
         router.push('/login');
       }
     }
