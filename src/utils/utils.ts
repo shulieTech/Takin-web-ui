@@ -191,7 +191,7 @@ message.config({
  * @returns 
  */
 export const checkMenuByPath = (path: string): boolean => {
-  const menus = JSON.parse(localStorage.trowebUserMenu);
+  const menus = JSON.parse(localStorage.trowebUserMenu || '{}');
   // 平铺tree数组
   const flatedMenus = [];
   const flatMenu = (arr) => {
