@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const { troLogin, troLogout } = UserService;
 
-window.clearModal = () => {
+const clearModal = () => {
   Modal.destroyAll();
   message.destroy();
 };
@@ -91,7 +91,7 @@ export default {
           window.location.href = json.loginUrl;
           return;
         }
-        window.clearModal();
+        clearModal();
         router.push('/login');
       }
     }
