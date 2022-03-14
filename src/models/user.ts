@@ -86,8 +86,11 @@ export default {
           window.location.href = json.loginUrl;
           return;
         }
-        Modal.destroyAll();
-        message.destroy();
+        window.clearModal = () => {
+          Modal.destroyAll();
+          message.destroy();
+        };
+        window.clearModal();
         router.push('/login');
       }
     }
