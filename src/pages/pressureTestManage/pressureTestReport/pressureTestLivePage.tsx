@@ -82,7 +82,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     startTime: null,
     stopReasons: null,
     tenantList: [],
-    requestListQueryParams: {}
+    requestListQueryParams: {},
   });
 
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
@@ -231,7 +231,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
       ...value,
     };
     setState({
-      requestListQueryParams: newValue
+      requestListQueryParams: newValue,
     });
     const {
       data: { success, data },

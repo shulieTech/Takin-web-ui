@@ -6,6 +6,11 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import service from '../service';
 import moment from 'moment';
 
+interface Props {
+  defaultQuery?: any;
+  onSubmit: (params: any) => void;
+}
+
 const CostRange = (props) => {
   const { value = [], onChange } = props;
   const inputStyle = {
@@ -42,7 +47,7 @@ const CostRange = (props) => {
   );
 };
 
-const RequestFlowQueryForm = (props) => {
+const RequestFlowQueryForm: React.FC<Props> = (props) => {
   const { defaultQuery, onSubmit, ...rest } = props;
   const [applicationList, setApplicationList] = useState([]);
   const [middlewareList, setMiddlewareList] = useState([]);
