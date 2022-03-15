@@ -46,7 +46,14 @@ interface State {
   stopReasons: any;
   graphData?: GraphData;
   tenantList: any;
-  requestListQueryParams: any;
+  requestListQueryParams: {
+    current: number;
+    pageSize: number;
+    startTime?: number;
+    endTime?: number;
+    sortField?: string;
+    sortType?: 'desc' | 'asc';
+  };
 }
 
 interface Props {
@@ -229,9 +236,10 @@ const PressureTestLive: React.FC<Props> = (props) => {
     const {
       data: { success, data },
     } = await PressureTestReportService.queryRequestList({
-      ...newValue,
       current: 0,
       pageSize: 50,
+      ...newValue,
+      sceneId: id,
     });
     if (success) {
       setState({
@@ -436,18 +444,20 @@ const PressureTestLive: React.FC<Props> = (props) => {
         <>
           <CommonHeader title="请求流量明细" />
           <RequestFlowQueryForm
-            defaultQuery={{
-              sceneId: id,
-            }}
             onSubmit={(values) => {
               queryRequestList({
                 ...values,
+                current: 0,
               });
             }}
           />
           <RequestDetailList
+            requestListQueryParams={state.requestListQueryParams}
             dataSource={state.requestList ? state.requestList : []}
             reportId={detailData.id}
+            requestSearch={(params) => {
+              queryRequestList(params);
+            }}
           />
         </>
       ),
