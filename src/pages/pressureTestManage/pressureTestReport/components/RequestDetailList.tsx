@@ -6,7 +6,7 @@ import RequestDetailModal from '../modals/RequestDetailModal';
 import { message, Tooltip } from 'antd';
 import copy from 'copy-to-clipboard';
 import AssertModal from 'src/pages/scriptManage/modals/AssertModal';
-import Header from 'src/common/header/Header';
+
 interface Props {
   dataSource: any;
   reportId?: string;
@@ -139,7 +139,6 @@ const RequestDetailList: React.FC<Props> = props => {
   };
   return (
     <Fragment>
-      <Header title="请求流量明细" />
       <CommonTable
         size="small"
         style={{ marginTop: 8 }}

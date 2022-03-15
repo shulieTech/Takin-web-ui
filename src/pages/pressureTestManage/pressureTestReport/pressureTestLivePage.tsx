@@ -28,6 +28,9 @@ import styles from './index.less';
 import PressureTestReportService from './service';
 import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
 import { GraphData } from '@antv/g6';
+import CommonHeader from 'src/common/header/Header';
+import RequestFlowQueryForm from './components/RequestFlowQueryForm';
+import moment from 'moment';
 
 interface State {
   isReload?: boolean;
@@ -43,6 +46,7 @@ interface State {
   stopReasons: any;
   graphData?: GraphData;
   tenantList: any;
+  requestListQueryParams: any;
 }
 
 interface Props {
@@ -71,6 +75,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     startTime: null,
     stopReasons: null,
     tenantList: [],
+    requestListQueryParams: {}
   });
 
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
@@ -90,21 +95,22 @@ const PressureTestLive: React.FC<Props> = (props) => {
     reFresh();
     queryLiveDetail(id);
     queryLiveChartsInfo(id, state.tabKey);
-    queryRequestList({
-      startTime:
-        state.startTime &&
-        Date.parse(
-          new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-        ) !== 0 &&
-        !isNaN(
-          Date.parse(
-            new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-          )
-        )
-          ? Date.parse(state.startTime && state.startTime.replace(/-/g, '/'))
-          : null,
-      sceneId: id,
-    });
+    queryRequestList();
+    // queryRequestList({
+    //   startTime:
+    //     state.startTime &&
+    //     Date.parse(
+    //       new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+    //     ) !== 0 &&
+    //     !isNaN(
+    //       Date.parse(
+    //         new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+    //       )
+    //     )
+    //       ? Date.parse(state.startTime && state.startTime.replace(/-/g, '/'))
+    //       : null,
+    //   sceneId: id,
+    // });
     if (ticker % 2 === 0) {
       // 10秒刷新一次链路图
       // queryReportGraphInfo(id, state.tabKey);
@@ -212,11 +218,18 @@ const PressureTestLive: React.FC<Props> = (props) => {
   /**
    * @name 获取压测实况请求流量列表
    */
-  const queryRequestList = async (value) => {
+  const queryRequestList = async (value = {}) => {
+    const newValue = {
+      ...state.requestListQueryParams,
+      ...value,
+    };
+    setState({
+      requestListQueryParams: newValue
+    });
     const {
       data: { success, data },
     } = await PressureTestReportService.queryRequestList({
-      ...value,
+      ...newValue,
       current: 0,
       pageSize: 50,
     });
@@ -420,10 +433,23 @@ const PressureTestLive: React.FC<Props> = (props) => {
     {
       title: '请求流量明细',
       component: (
-        <RequestDetailList
-          dataSource={state.requestList ? state.requestList : []}
-          reportId={detailData.id}
-        />
+        <>
+          <CommonHeader title="请求流量明细" />
+          <RequestFlowQueryForm
+            defaultQuery={{
+              sceneId: id,
+            }}
+            onSubmit={(values) => {
+              queryRequestList({
+                ...values,
+              });
+            }}
+          />
+          <RequestDetailList
+            dataSource={state.requestList ? state.requestList : []}
+            reportId={detailData.id}
+          />
+        </>
       ),
     },
   ];

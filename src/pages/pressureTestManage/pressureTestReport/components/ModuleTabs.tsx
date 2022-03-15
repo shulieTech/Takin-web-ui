@@ -125,7 +125,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
         value: failedCount,
         color: '#FE7D61',
       },
-      renderTabNode: <RequestList id={id} />,
+      renderTabNode: <RequestList id={id} detailData={state.detailData}/>,
     },
   ];
 
