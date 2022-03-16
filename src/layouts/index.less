@@ -315,9 +315,11 @@
 .icon-slide{
   height: 0;
   opacity: 0;
-  transition: all .3s ease;
+  transform: translateY(20px);
+  transition: transform .3s;
   &.active{
     opacity: 1;
-    height: 80px; /* 40 * icon 数目 */
+    height: auto;
+    transform: translateY(0);
   }
 }

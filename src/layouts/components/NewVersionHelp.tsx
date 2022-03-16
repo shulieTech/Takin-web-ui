@@ -42,7 +42,7 @@ const NewVersionHelp: React.FC = (props) => {
       <div
         style={{
           position: 'fixed',
-          bottom: 38,
+          bottom: 48,
           right: 24,
           zIndex: 1,
         }}
