@@ -134,7 +134,7 @@ const getUrl = (url: string, options: any) => {
   const securityCenterDomain = localStorage.getItem('securityCenterDomain');
   if (securityCenterDomain) {
     // 走安全中心域名
-    return `${securityCenterDomain}${ options?.pathPrefix || '/takin-web/api'}${url}`;
+    return `${securityCenterDomain}${ options?.pathPrefix || '/takin-transform-core/takin-web/api'}${url}`;
   }
   // 兜底走当前域名
   return `${serverUrl}${url}`;
