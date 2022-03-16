@@ -290,3 +290,34 @@
   height: 48px;
   line-height: 40px;
 }
+
+.icon-cycle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  border: 1px solid #dee0e3;
+  border-radius: 100%;
+  box-shadow: 0 6px 12px 0 rgba(31, 35, 41, 0.08);
+  cursor: pointer;
+  background-color: #fff;
+  margin-bottom: 9px;
+  margin-top: 9px;
+  color: rgba(0, 0, 0, 0.65)!important;
+  transition: all .3s;
+  &:hover{
+    color: var(--BrandPrimary-500, #11bbd5)!important;
+  }
+}
+
+.icon-slide{
+  height: 0;
+  opacity: 0;
+  transition: all .3s ease;
+  &.active{
+    opacity: 1;
+    height: 80px; /* 40 * icon 数目 */
+  }
+}

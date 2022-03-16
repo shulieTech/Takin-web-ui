@@ -2,7 +2,7 @@
  * @name 基础布局Layout
  * @author MingShined
  */
-import { ConfigProvider, Layout, Modal, notification } from 'antd';
+import { ConfigProvider, Layout, Modal, notification, Alert } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { useEffect, useRef } from 'react';
@@ -18,6 +18,7 @@ import queryString from 'query-string';
 import EnvHeader from './components/EnvHeader';
 // import axios from 'axios';
 import { getThemeByKeyName } from 'src/utils/useTheme';
+import NewVersionHelp from './components/NewVersionHelp';
 
 declare var window: any;
 let path = '';
@@ -226,6 +227,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           backgroundColor: '#1D2530',
         }}
       >
+        <NewVersionHelp/>
         {/* <HeaderNode
            onCollapse={handlerCollapsed}
            collapsedStatus={state.collapsedStatus}

@@ -28,6 +28,7 @@ import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
 import { getTakinAuthority, treeFindPath } from 'src/utils/utils';
+import { DOC_HELP_URL } from 'src/constants';
 
 const { Sider } = Layout;
 
@@ -99,7 +100,8 @@ const SiderMenu: React.FC<Props> = (props) => {
       </div>
       <div>
         <a
-          href="https://docs.shulie.io/docs/forcecop/Takin-about"
+          // href="https://docs.shulie.io/docs/forcecop/Takin-about"
+          href={DOC_HELP_URL}
           rel="noreferrer"
           target="_blank"
         >
