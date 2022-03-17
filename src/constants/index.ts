@@ -44,3 +44,5 @@ export const DOC_HELP_URL =
 // 升级文档地址
 export const DOC_UPDATE_URL =
 'https://shulietech.feishu.cn/docs/doccnvTvNxzVrH29Xvm60l7kgHc#';
+// 用户反馈地址
+export const DOC_FEEDBACK_URL = 'https://shulietech.feishu.cn/share/base/shrcn2DDo2jITnVJyDLHJ4mWpJf';

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Icon, Tooltip } from 'antd';
 import styles from '../index.less';
 import classNames from 'classnames';
-import { DOC_HELP_URL, DOC_UPDATE_URL } from 'src/constants';
+import { DOC_HELP_URL, DOC_UPDATE_URL, DOC_FEEDBACK_URL } from 'src/constants';
 
 const NewVersionHelp: React.FC = (props) => {
   const [isHover, setIsHover] = useState(false);
-  
+
   return (
     <>
       <Alert
@@ -54,6 +54,12 @@ const NewVersionHelp: React.FC = (props) => {
             [styles.active]: isHover,
           })}
         >
+          <Tooltip title="Takin帮助中心" placement="left" arrowPointAtCenter>
+            <a href={DOC_HELP_URL} target="_blank" rel="noreferrer">
+              <Icon className={styles['icon-cycle']} type="file-text" />
+            </a>
+          </Tooltip>
+
           <Tooltip
             title="Takin功能变化路径"
             placement="left"
@@ -64,9 +70,9 @@ const NewVersionHelp: React.FC = (props) => {
             </a>
           </Tooltip>
 
-          <Tooltip title="Takin帮助中心" placement="left" arrowPointAtCenter>
-            <a href={DOC_HELP_URL} target="_blank" rel="noreferrer">
-              <Icon className={styles['icon-cycle']} type="file-text" />
+          <Tooltip title="用户反馈" placement="left" arrowPointAtCenter>
+            <a href={DOC_FEEDBACK_URL} target="_blank" rel="noreferrer">
+              <Icon className={styles['icon-cycle']} type="message" />
             </a>
           </Tooltip>
         </div>
