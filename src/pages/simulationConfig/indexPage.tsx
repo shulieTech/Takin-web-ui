@@ -67,7 +67,7 @@ const Admin: React.FC<AdminProps> = props => {
 
   useEffect(() => {
     allApplication();
-    onClick();
+    // onClick();
   }, []);
 
   const onClick = async () => {
@@ -75,16 +75,8 @@ const Admin: React.FC<AdminProps> = props => {
       data: { data, success }
     } = await configService.pathConfig({});
     if (success) {
-      if (data?.editable === 1) {
-        setState({
-          buDisabled: true,
-        });
-      } else {
-        setState({
-          buDisabled: false,
-        });
-      }
       setState({
+        buDisabled: data?.editable === 1,
         datas: data,
         context: data && JSON.parse(data?.context),
         validStatus: data.validStatus,
@@ -92,6 +84,10 @@ const Admin: React.FC<AdminProps> = props => {
       });
     }
   };
+
+  useEffect(() => {
+    onClick();
+  }, [state.visible]);
 
   const allApplication = async () => {
     const {
