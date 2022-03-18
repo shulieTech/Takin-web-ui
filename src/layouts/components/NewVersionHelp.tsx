@@ -44,7 +44,7 @@ const NewVersionHelp: React.FC = (props) => {
           position: 'fixed',
           bottom: 48,
           right: 24,
-          zIndex: 1,
+          zIndex: 2,
         }}
         onMouseOver={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}

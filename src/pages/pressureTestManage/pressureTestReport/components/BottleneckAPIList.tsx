@@ -1,82 +1,62 @@
-import React, { Fragment, useEffect } from 'react';
-import CustomTable from 'src/components/custom-table';
+import React, { Fragment, useEffect, useState } from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import PressureTestReportService from '../service';
-import { useStateReducer } from 'racc';
-import { Pagination } from 'antd';
 import BusinessActivityTree from './BusinessActivityTree';
 import styles from '../index.less';
+import ServiceCustomTable from 'src/components/service-custom-table';
 
 interface Props {
   id?: string;
   tabList?: any[];
 }
-interface State {
-  searchParams: {
-    current: number;
-    pageSize: number;
-  };
-  data: any[];
-  total?: number;
-  loading?: boolean;
-}
-const BottleneckAPIList: React.FC<Props> = (props) => {
-  const { id } = props;
 
-  const [state, setState] = useStateReducer<State>({
-    searchParams: {
-      current: 0,
-      pageSize: 10,
-    },
-    data: null,
-    total: 0,
-    loading: false,
+const BottleneckAPIList: React.FC<Props> = (props) => {
+  const { id, tabList } = props;
+  const [tableQuery, setTableQuery] = useState({
+    reportId: id,
+    // tabelKey: tabList?.[0]?.xpathMd5,
   });
 
-  useEffect(() => {
-    queryBottleneckAPIList({ reportId: id, ...state.searchParams });
-  }, [state.searchParams.current, state.searchParams.pageSize]);
-  /**
-   * @name 获取瓶颈接口列表
-   */
-  const queryBottleneckAPIList = async (value) => {
-    setState({
-      loading: true,
-    });
-    const {
-      total,
-      data: { success, data },
-    } = await PressureTestReportService.queryBottleneckAPIList({
-      ...value,
-    });
-    if (success) {
-      setState({
-        data,
-        total,
-      });
-    }
-    setState({
-      loading: false,
-    });
-  };
-
-  const handleChange = async (current, pageSize) => {
-    setState({
-      searchParams: {
-        pageSize,
-        current: current - 1,
+  const getBottleneckAPIListColumns = (): ColumnProps<any>[] => {
+    return [
+      {
+        ...customColumnProps,
+        title: '排名',
+        dataIndex: 'rank',
       },
-    });
-  };
-
-  const handlePageSizeChange = async (current, pageSize) => {
-    setState({
-      searchParams: {
-        pageSize,
-        current: 0,
+      {
+        ...customColumnProps,
+        title: '应用',
+        dataIndex: 'applicationName',
       },
-    });
+      {
+        ...customColumnProps,
+        title: '接口',
+        dataIndex: 'interfaceName',
+      },
+      {
+        ...customColumnProps,
+        title: 'TPS',
+        dataIndex: 'tps',
+      },
+      {
+        ...customColumnProps,
+        title: 'RT',
+        dataIndex: 'rt',
+        render: (text) => {
+          return <span>{text}ms</span>;
+        },
+      },
+      {
+        ...customColumnProps,
+        title: '成功率',
+        dataIndex: 'successRate',
+        render: (text) => {
+          return <span>{text}%</span>;
+        },
+      },
+    ];
   };
 
   return (
@@ -86,34 +66,17 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         {/* <div className={styles.leftSelected}>
           <BusinessActivityTree
             tabList={props.tabList}
-            onChange={console.log}
+            onChange={val => setTableQuery({tabelKey: val})}
           />
         </div> */}
         <div
           className={styles.riskMachineList}
           style={{ position: 'relative' }}
         >
-          <CustomTable
-            loading={state.loading}
-            dataSource={state.data ? state.data : []}
+          <ServiceCustomTable
+            service={PressureTestReportService.queryBottleneckAPIList}
+            defaultQuery={tableQuery}
             columns={getBottleneckAPIListColumns()}
-            rowKey={(row, index) => index.toString()}
-          />
-          <Pagination
-            style={{ marginTop: 20, textAlign: 'right' }}
-            total={state.total}
-            current={state.searchParams.current + 1}
-            pageSize={state.searchParams.pageSize}
-            showTotal={(t, range) =>
-              `共 ${state.total} 条数据 第${
-                state.searchParams.current + 1
-              }页 / 共 ${Math.ceil(
-                state.total / (state.searchParams.pageSize || 10)
-              )}页`
-            }
-            showSizeChanger={true}
-            onChange={(current, pageSize) => handleChange(current, pageSize)}
-            onShowSizeChange={handlePageSizeChange}
           />
         </div>
       </div>
@@ -121,44 +84,3 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
   );
 };
 export default BottleneckAPIList;
-
-const getBottleneckAPIListColumns = (): ColumnProps<any>[] => {
-  return [
-    {
-      ...customColumnProps,
-      title: '排名',
-      dataIndex: 'rank',
-    },
-    {
-      ...customColumnProps,
-      title: '应用',
-      dataIndex: 'applicationName',
-    },
-    {
-      ...customColumnProps,
-      title: '接口',
-      dataIndex: 'interfaceName',
-    },
-    {
-      ...customColumnProps,
-      title: 'TPS',
-      dataIndex: 'tps',
-    },
-    {
-      ...customColumnProps,
-      title: 'RT',
-      dataIndex: 'rt',
-      render: (text) => {
-        return <span>{text}ms</span>;
-      },
-    },
-    {
-      ...customColumnProps,
-      title: '成功率',
-      dataIndex: 'successRate',
-      render: (text) => {
-        return <span>{text}%</span>;
-      },
-    },
-  ];
-};

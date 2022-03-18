@@ -26,14 +26,15 @@ const useListService = (props: Props) => {
 
   const getList = async (params = {}) => {
     setLoading(true);
-    const res = await service(query);
+    const newQuery = { ...query, ...params };
+    const res = await service(newQuery);
     const {
       data: { success, data },
       headers: { 'x-total-count': totalCount },
     } = res;
     setLoading(false);
     if (success) {
-      setQuery({ ...query, ...params });
+      setQuery(newQuery);
       setList(data.list);
       setTotal(totalCount || data.count);
     }
@@ -46,7 +47,7 @@ const useListService = (props: Props) => {
     if (isQueryOnQueryChange) {
       getList(query);
     }
-  }, [query]);
+  }, []);
 
   return {
     query,
