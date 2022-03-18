@@ -5,8 +5,12 @@ import { customColumnProps } from 'src/components/custom-table/utils';
 import PressureTestReportService from '../service';
 import { useStateReducer } from 'racc';
 import { Pagination } from 'antd';
+import BusinessActivityTree from './BusinessActivityTree';
+import styles from '../index.less';
+
 interface Props {
   id?: string;
+  tabList?: any[];
 }
 interface State {
   searchParams: {
@@ -17,17 +21,17 @@ interface State {
   total?: number;
   loading?: boolean;
 }
-const BottleneckAPIList: React.FC<Props> = props => {
+const BottleneckAPIList: React.FC<Props> = (props) => {
   const { id } = props;
 
   const [state, setState] = useStateReducer<State>({
     searchParams: {
       current: 0,
-      pageSize: 10
+      pageSize: 10,
     },
     data: null,
     total: 0,
-    loading: false
+    loading: false,
   });
 
   useEffect(() => {
@@ -36,24 +40,24 @@ const BottleneckAPIList: React.FC<Props> = props => {
   /**
    * @name 获取瓶颈接口列表
    */
-  const queryBottleneckAPIList = async value => {
+  const queryBottleneckAPIList = async (value) => {
     setState({
-      loading: true
+      loading: true,
     });
     const {
       total,
-      data: { success, data }
+      data: { success, data },
     } = await PressureTestReportService.queryBottleneckAPIList({
-      ...value
+      ...value,
     });
     if (success) {
       setState({
         data,
-        total
+        total,
       });
     }
     setState({
-      loading: false
+      loading: false,
     });
   };
 
@@ -61,8 +65,8 @@ const BottleneckAPIList: React.FC<Props> = props => {
     setState({
       searchParams: {
         pageSize,
-        current: current - 1
-      }
+        current: current - 1,
+      },
     });
   };
 
@@ -70,34 +74,49 @@ const BottleneckAPIList: React.FC<Props> = props => {
     setState({
       searchParams: {
         pageSize,
-        current: 0
-      }
+        current: 0,
+      },
     });
   };
 
   return (
     <Fragment>
-      <CustomTable
-        loading={state.loading}
-        dataSource={state.data ? state.data : []}
-        columns={getBottleneckAPIListColumns()}
-        rowKey={(row, index) => index.toString()}
-      />
-      <Pagination
-        style={{ marginTop: 20, textAlign: 'right' }}
-        total={state.total}
-        current={state.searchParams.current + 1}
-        pageSize={state.searchParams.pageSize}
-        showTotal={(t, range) =>
-          `共 ${state.total} 条数据 第${state.searchParams.current +
-            1}页 / 共 ${Math.ceil(
-            state.total / (state.searchParams.pageSize || 10)
-          )}页`
-        }
-        showSizeChanger={true}
-        onChange={(current, pageSize) => handleChange(current, pageSize)}
-        onShowSizeChange={handlePageSizeChange}
-      />
+      <div style={{ display: 'flex' }}>
+        {/* TODO 业务活动树 */}
+        {/* <div className={styles.leftSelected}>
+          <BusinessActivityTree
+            tabList={props.tabList}
+            onChange={console.log}
+          />
+        </div> */}
+        <div
+          className={styles.riskMachineList}
+          style={{ position: 'relative' }}
+        >
+          <CustomTable
+            loading={state.loading}
+            dataSource={state.data ? state.data : []}
+            columns={getBottleneckAPIListColumns()}
+            rowKey={(row, index) => index.toString()}
+          />
+          <Pagination
+            style={{ marginTop: 20, textAlign: 'right' }}
+            total={state.total}
+            current={state.searchParams.current + 1}
+            pageSize={state.searchParams.pageSize}
+            showTotal={(t, range) =>
+              `共 ${state.total} 条数据 第${
+                state.searchParams.current + 1
+              }页 / 共 ${Math.ceil(
+                state.total / (state.searchParams.pageSize || 10)
+              )}页`
+            }
+            showSizeChanger={true}
+            onChange={(current, pageSize) => handleChange(current, pageSize)}
+            onShowSizeChange={handlePageSizeChange}
+          />
+        </div>
+      </div>
     </Fragment>
   );
 };
@@ -108,38 +127,38 @@ const getBottleneckAPIListColumns = (): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '排名',
-      dataIndex: 'rank'
+      dataIndex: 'rank',
     },
     {
       ...customColumnProps,
       title: '应用',
-      dataIndex: 'applicationName'
+      dataIndex: 'applicationName',
     },
     {
       ...customColumnProps,
       title: '接口',
-      dataIndex: 'interfaceName'
+      dataIndex: 'interfaceName',
     },
     {
       ...customColumnProps,
       title: 'TPS',
-      dataIndex: 'tps'
+      dataIndex: 'tps',
     },
     {
       ...customColumnProps,
       title: 'RT',
       dataIndex: 'rt',
-      render: text => {
+      render: (text) => {
         return <span>{text}ms</span>;
-      }
+      },
     },
     {
       ...customColumnProps,
       title: '成功率',
       dataIndex: 'successRate',
-      render: text => {
+      render: (text) => {
         return <span>{text}%</span>;
-      }
-    }
+      },
+    },
   ];
 };
