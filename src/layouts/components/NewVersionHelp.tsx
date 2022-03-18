@@ -46,7 +46,7 @@ const NewVersionHelp: React.FC = (props) => {
           right: 24,
           zIndex: 2,
         }}
-        onMouseOver={() => setIsHover(true)}
+        onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
       >
         <div
@@ -80,6 +80,7 @@ const NewVersionHelp: React.FC = (props) => {
         <Icon
           className={styles['icon-cycle']}
           type={isHover ? 'close' : 'question-circle'}
+          onClick={() => setIsHover(!isHover)}
         />
       </div>
     </>

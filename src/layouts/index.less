@@ -317,9 +317,11 @@
   opacity: 0;
   transform: translateY(20px);
   transition: transform .3s;
+  pointer-events: none;
   &.active{
     opacity: 1;
     height: auto;
+    pointer-events: initial;
     transform: translateY(0);
   }
 }
