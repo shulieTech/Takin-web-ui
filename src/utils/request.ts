@@ -9,7 +9,8 @@ import BaseResponse = Basic.BaseResponse;
 declare var window: Window;
 declare var serverUrl: string;
 
-axios.defaults.withCredentials = true;
+// 经过安全中心的请求是跨域请求，不能带cookie， withCredentials设置为false
+axios.defaults.withCredentials = false;
 window.parent.outloginFlag = false;
 // axios.interceptors.request.use(
 //   req => {
