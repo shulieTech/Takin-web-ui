@@ -101,7 +101,7 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
         node: <Input placeholder="TraceId" />,
       },
       {
-        key: 'applicationName',
+        key: 'appName',
         label: '',
         node: (
           <CommonSelect
