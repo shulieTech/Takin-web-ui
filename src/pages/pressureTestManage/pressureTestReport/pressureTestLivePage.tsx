@@ -229,6 +229,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     const newValue = {
       ...state.requestListQueryParams,
       ...value,
+      timeRange: [state.detailData.startTime, moment().valueOf()],
     };
     setState({
       requestListQueryParams: newValue,
@@ -444,6 +445,10 @@ const PressureTestLive: React.FC<Props> = (props) => {
         <>
           <CommonHeader title="请求流量明细" />
           <RequestFlowQueryForm
+            disabledKeys={['timeRange']}
+            defaultQuery={{
+              timeRange: state.requestListQueryParams.timeRange,
+            }}
             onSubmit={(values) => {
               queryRequestList({
                 ...values,

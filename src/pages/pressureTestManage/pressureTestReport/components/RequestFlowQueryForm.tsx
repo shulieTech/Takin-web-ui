@@ -9,6 +9,7 @@ import moment from 'moment';
 interface Props {
   defaultQuery?: any;
   onSubmit: (params: any) => void;
+  disabledKeys?: string[];
 }
 
 const CostRange = (props) => {
@@ -48,7 +49,7 @@ const CostRange = (props) => {
 };
 
 const RequestFlowQueryForm: React.FC<Props> = (props) => {
-  const { defaultQuery, onSubmit, ...rest } = props;
+  const { defaultQuery, onSubmit, disabledKeys = [], ...rest } = props;
   const [applicationList, setApplicationList] = useState([]);
   const [middlewareList, setMiddlewareList] = useState([]);
   const [form, setForm] = useState<WrappedFormUtils>();
@@ -88,6 +89,7 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
           <DatePick
             type="range"
             rangePickerProps={{
+              disabled: disabledKeys.includes('timeRange'),
               placeholder: ['开始时间', '结束时间'],
               showTime: true,
               style: { width: '100%' },
@@ -98,7 +100,12 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
       {
         key: 'traceId',
         label: '',
-        node: <Input placeholder="TraceId" />,
+        node: (
+          <Input
+            placeholder="TraceId"
+            disabled={disabledKeys.includes('traceId')}
+          />
+        ),
       },
       {
         key: 'appName',
@@ -109,6 +116,7 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
             showSearch
             optionFilterProp="children"
             dataSource={applicationList}
+            disabled={disabledKeys.includes('appName')}
           />
         ),
       },
@@ -117,6 +125,7 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
         label: '',
         node: (
           <Cascader
+            disabled={disabledKeys.includes('middlewareName')}
             placeholder="调用类型"
             options={middlewareList}
             showSearch={{
@@ -135,13 +144,19 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
       {
         key: 'interfaceName',
         label: '',
-        node: <Input placeholder="按接口名模糊查询" />,
+        node: (
+          <Input
+            placeholder="按接口名模糊查询"
+            disabled={disabledKeys.includes('interfaceName')}
+          />
+        ),
       },
       {
         key: 'resultType',
         label: '',
         node: (
           <CommonSelect
+            disabled={disabledKeys.includes('resultType')}
             placeholder="调用结果"
             dataSource={[
               { label: '响应成功', value: 1 },
@@ -153,7 +168,12 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
       {
         key: 'request',
         label: '',
-        node: <Input placeholder="调用参数模糊查询" />,
+        node: (
+          <Input
+            placeholder="调用参数模糊查询"
+            disabled={disabledKeys.includes('request')}
+          />
+        ),
       },
       {
         key: 'costRange',
@@ -200,6 +220,9 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
       getForm={(f) => setForm(f)}
       formData={getFormData()}
       {...rest}
+      btnProps={{
+        place: 'start'
+      }}
       onSubmit={handleSubmit}
       onReset={() => {
         form?.resetFields();
