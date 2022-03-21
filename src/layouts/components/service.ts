@@ -13,6 +13,14 @@ const tenantCodeService = {
     const url = '/tenant/env/switch';
     return httpPut(url, data);
   },
+  async checkNewVersion(data = {}) {
+    const url = '/sys/version';
+    return httpGet(url, data);
+  },
+  async confirmNewVersion(data = {}) {
+    const url = '/sys/version/confirm';
+    return httpPut(url, data);
+  },
 };
 
 export default tenantCodeService;

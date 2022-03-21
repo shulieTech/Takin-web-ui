@@ -245,6 +245,11 @@ const RequestList: React.FC<Props> = (props) => {
               : undefined,
         }}
         onSubmit={(values) => {
+          if (values.startTime && values.endTime && props.detailData?.startTime && props.detailData?.endTime && (moment(values.startTime).valueOf() < moment(props.detailData?.startTime).valueOf() ||
+          moment(values.endTime).valueOf() > moment(props.detailData?.endTime).valueOf())) {
+            message.warn('只能选择在测试报告时间范围内的时间');
+            return;
+          }
           queryRequestList({
             ...values,
             current: 0,

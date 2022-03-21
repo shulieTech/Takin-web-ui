@@ -183,8 +183,8 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
             placeholder="调用结果"
             dataSource={[
               { label: '响应成功', value: 1 },
-              { label: '响应失败', value: 2 },
-              { label: '断言失败', value: 3 },
+              { label: '响应失败', value: 0 },
+              { label: '断言失败', value: 2 },
             ]}
           />
         ),
