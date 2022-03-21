@@ -445,6 +445,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
         <>
           <CommonHeader title="请求流量明细" />
           <RequestFlowQueryForm
+            reportId={state.detailData?.id}
             disabledKeys={['timeRange']}
             defaultQuery={{
               timeRange: state.requestListQueryParams.timeRange,

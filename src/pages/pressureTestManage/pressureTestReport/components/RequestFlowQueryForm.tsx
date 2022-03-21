@@ -7,6 +7,7 @@ import service from '../service';
 import moment from 'moment';
 
 interface Props {
+  reportId: string | number;
   defaultQuery?: any;
   onSubmit: (params: any) => void;
   disabledKeys?: string[];
@@ -57,7 +58,9 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
   const getApplicationList = async () => {
     const {
       data: { success, data },
-    } = await service.listDictionary();
+    } = await service.queryWaterLevelList({
+      reportId: props.reportId,
+    });
     if (success) {
       setApplicationList(
         data.map((x) => ({
@@ -108,8 +111,28 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
         ),
       },
       {
+        key: '占位行',
+        label: '',
+        node: (
+          <div
+            style={{
+              height: 32,
+              lineHeight: 1.5,
+              display: 'inline-block',
+              width: '100%',
+            }}
+          />
+        ),
+      },
+      {
         key: 'appName',
         label: '',
+        // colProps: {
+        //   xl: {
+        //     span: 8,
+        //     offset: 8,
+        //   }
+        // },
         node: (
           <CommonSelect
             placeholder="入口应用"
@@ -161,6 +184,7 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
             dataSource={[
               { label: '响应成功', value: 1 },
               { label: '响应失败', value: 2 },
+              { label: '断言失败', value: 3 },
             ]}
           />
         ),
@@ -219,9 +243,10 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
     <CommonForm
       getForm={(f) => setForm(f)}
       formData={getFormData()}
+      rowNum={3}
       {...rest}
       btnProps={{
-        place: 'start'
+        place: 'start',
       }}
       onSubmit={handleSubmit}
       onReset={() => {

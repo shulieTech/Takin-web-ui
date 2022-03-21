@@ -230,6 +230,7 @@ const RequestList: React.FC<Props> = (props) => {
   return (
     <div className={styles.tabsBg}>
       <RequestFlowQueryForm
+        reportId={id}
         defaultQuery={{
           timeRange:
             props.detailData?.startTime && props.detailData?.endTime
