@@ -229,7 +229,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     const newValue = {
       ...state.requestListQueryParams,
       ...value,
-      timeRange: [state.detailData.startTime, moment().valueOf()],
+      timeRange: [moment().subtract(5, 'second').valueOf(), moment().valueOf()],
     };
     setState({
       requestListQueryParams: newValue,
