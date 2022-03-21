@@ -98,18 +98,6 @@ const SiderMenu: React.FC<Props> = (props) => {
       <div>
         <EditPasswordModal onSuccess={handleLogout} />
       </div>
-      <div>
-        <a
-          // href="https://docs.shulie.io/docs/forcecop/Takin-about"
-          href={DOC_HELP_URL}
-          rel="noreferrer"
-          target="_blank"
-        >
-          <Button type="link" style={{ padding: '0 15px' }}>
-            帮助文档
-          </Button>
-        </a>
-      </div>
       <Button type="link" style={{ padding: '0 15px' }} onClick={handleLogout}>
         登出
       </Button>
