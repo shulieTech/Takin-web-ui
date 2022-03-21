@@ -11,10 +11,12 @@ import AssertModal from 'src/pages/scriptManage/modals/AssertModal';
 import copy from 'copy-to-clipboard';
 import RequestFlowQueryForm from './RequestFlowQueryForm';
 import moment from 'moment';
+import BusinessActivityTree from './BusinessActivityTree';
 
 interface Props {
   id?: string;
   detailData?: any;
+  tabList?: any;
 }
 interface State {
   searchParams: {
@@ -24,6 +26,7 @@ interface State {
     sortType?: 'desc' | 'asc';
     startTime?: number;
     endTime?: number;
+    xpathMd5?: string;
   };
   data: any;
   total: number;
@@ -229,81 +232,115 @@ const RequestList: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.tabsBg}>
-      <RequestFlowQueryForm
-        reportId={id}
-        defaultQuery={{
-          timeRange:
-            props.detailData?.startTime && props.detailData?.endTime
-              ? [
-                moment(props.detailData?.startTime).format(
-                    'YYYY-MM-DD HH:mm:ss'
-                  ),
-                moment(props.detailData?.endTime).format(
-                    'YYYY-MM-DD HH:mm:ss'
-                  ),
-              ]
-              : undefined,
+      <div
+        style={{
+          display: 'flex',
+          marginTop: 16,
         }}
-        onSubmit={(values) => {
-          if (values.startTime && values.endTime && props.detailData?.startTime && props.detailData?.endTime && (moment(values.startTime).valueOf() < moment(props.detailData?.startTime).valueOf() ||
-          moment(values.endTime).valueOf() > moment(props.detailData?.endTime).valueOf())) {
-            message.warn('只能选择在测试报告时间范围内的时间');
-            return;
-          }
-          queryRequestList({
-            ...values,
-            current: 0,
-          });
-        }}
-      />
-      <CustomTable
-        loading={state.loading}
-        size="small"
-        style={{ marginTop: 8 }}
-        columns={getRequestListColumns()}
-        dataSource={state.data ? state.data : []}
-        onChange={(pagination, filters, sorter) => {
-          const sortKeyMap = {
-            totalRt: 'cost',
-            startTime: 'startDate',
-          };
-          const sortOrderMap = {
-            ascend: 'asc',
-            descend: 'desc',
-          };
-          queryRequestList({
-            current: 0,
-            sortField:
-              sorter.columnKey && sorter.order
-                ? sortKeyMap[sorter.columnKey]
-                : undefined,
-            sortType:
-              sorter.columnKey && sorter.order
-                ? sortOrderMap[sorter.order]
-                : undefined,
-          });
-        }}
-      />
-      <Pagination
-        style={{ marginTop: 20, textAlign: 'right' }}
-        total={state.total}
-        current={state.searchParams.current + 1}
-        pageSize={state.searchParams.pageSize}
-        showTotal={(t, range) =>
-          `共 ${state.total} 条数据 第${
-            state.searchParams.current + 1
-          }页 / 共 ${Math.ceil(
-            state.total / (state.searchParams.pageSize || 10)
-          )}页`
-        }
-        showSizeChanger={true}
-        onChange={(current, pageSize) =>
-          queryRequestList({ pageSize, current: current - 1 })
-        }
-        onShowSizeChange={(current, pageSize) =>
-          queryRequestList({ pageSize, current: 0 })
-        }
-      />
+      >
+        <div className={styles.leftSelected}>
+          <BusinessActivityTree
+            tabList={props.tabList}
+            // defaultSelectedKey={state.tabKey}
+            onChange={(key) => {
+              setState({
+                searchParams: {
+                  ...state.searchParams,
+                  xpathMd5: key,
+                },
+              });
+            }}
+          />
+        </div>
+        <div
+          className={styles.riskMachineList}
+          style={{ position: 'relative', paddingLeft: 16 }}
+        >
+          <RequestFlowQueryForm
+            reportId={id}
+            defaultQuery={{
+              timeRange:
+                props.detailData?.startTime && props.detailData?.endTime
+                  ? [
+                    moment(props.detailData?.startTime).format(
+                        'YYYY-MM-DD HH:mm:ss'
+                      ),
+                    moment(props.detailData?.endTime).format(
+                        'YYYY-MM-DD HH:mm:ss'
+                      ),
+                  ]
+                  : undefined,
+            }}
+            onSubmit={(values) => {
+              if (
+                values.startTime &&
+                values.endTime &&
+                props.detailData?.startTime &&
+                props.detailData?.endTime &&
+                (moment(values.startTime).valueOf() <
+                  moment(props.detailData?.startTime).valueOf() ||
+                  moment(values.endTime).valueOf() >
+                    moment(props.detailData?.endTime).valueOf())
+              ) {
+                message.warn('只能选择在测试报告时间范围内的时间');
+                return;
+              }
+              queryRequestList({
+                ...values,
+                current: 0,
+              });
+            }}
+          />
+          <CustomTable
+            loading={state.loading}
+            size="small"
+            style={{ marginTop: 8 }}
+            columns={getRequestListColumns()}
+            dataSource={state.data ? state.data : []}
+            onChange={(pagination, filters, sorter) => {
+              const sortKeyMap = {
+                totalRt: 'cost',
+                startTime: 'startDate',
+              };
+              const sortOrderMap = {
+                ascend: 'asc',
+                descend: 'desc',
+              };
+              queryRequestList({
+                current: 0,
+                sortField:
+                  sorter.columnKey && sorter.order
+                    ? sortKeyMap[sorter.columnKey]
+                    : undefined,
+                sortType:
+                  sorter.columnKey && sorter.order
+                    ? sortOrderMap[sorter.order]
+                    : undefined,
+              });
+            }}
+          />
+          <Pagination
+            style={{ marginTop: 20, textAlign: 'right' }}
+            total={state.total}
+            current={state.searchParams.current + 1}
+            pageSize={state.searchParams.pageSize}
+            showTotal={(t, range) =>
+              `共 ${state.total} 条数据 第${
+                state.searchParams.current + 1
+              }页 / 共 ${Math.ceil(
+                state.total / (state.searchParams.pageSize || 10)
+              )}页`
+            }
+            showSizeChanger={true}
+            onChange={(current, pageSize) =>
+              queryRequestList({ pageSize, current: current - 1 })
+            }
+            onShowSizeChange={(current, pageSize) =>
+              queryRequestList({ pageSize, current: 0 })
+            }
+          />
+        </div>
+      </div>
       {/* <Tabs animated={false} defaultActiveKey="all" onChange={handleChangeTab}>
         <TabPane tab="全部" key="all">
           <CustomTable

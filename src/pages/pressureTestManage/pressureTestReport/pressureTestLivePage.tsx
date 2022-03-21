@@ -31,6 +31,7 @@ import { GraphData } from '@antv/g6';
 import CommonHeader from 'src/common/header/Header';
 import RequestFlowQueryForm from './components/RequestFlowQueryForm';
 import moment from 'moment';
+import BusinessActivityTree from './components/BusinessActivityTree';
 
 interface State {
   isReload?: boolean;
@@ -47,12 +48,13 @@ interface State {
   graphData?: GraphData;
   tenantList: any;
   requestListQueryParams: {
-    current: number;
-    pageSize: number;
+    current?: number;
+    pageSize?: number;
     startTime?: number;
     endTime?: number;
     sortField?: string;
     sortType?: 'desc' | 'asc';
+    xpathMd5?: string;
   };
 }
 
@@ -444,27 +446,52 @@ const PressureTestLive: React.FC<Props> = (props) => {
       component: (
         <>
           <CommonHeader title="请求流量明细" />
-          <RequestFlowQueryForm
-            reportId={state.detailData?.id}
-            disabledKeys={['timeRange']}
-            defaultQuery={{
-              timeRange: state.requestListQueryParams.timeRange,
+          <div
+            style={{
+              display: 'flex',
+              marginTop: 16,
             }}
-            onSubmit={(values) => {
-              queryRequestList({
-                ...values,
-                current: 0,
-              });
-            }}
-          />
-          <RequestDetailList
-            requestListQueryParams={state.requestListQueryParams}
-            dataSource={state.requestList ? state.requestList : []}
-            reportId={detailData.id}
-            requestSearch={(params) => {
-              queryRequestList(params);
-            }}
-          />
+          >
+            <div className={styles.leftSelected}>
+              <BusinessActivityTree
+                tabList={state.tabList}
+                onChange={(xpathMd5) =>
+                  setState({
+                    requestListQueryParams: {
+                      ...state.requestListQueryParams,
+                      xpathMd5,
+                    },
+                  })
+                }
+              />
+            </div>
+            <div
+              className={styles.riskMachineList}
+              style={{ position: 'relative', paddingLeft: 16 }}
+            >
+              <RequestFlowQueryForm
+                reportId={state.detailData?.id}
+                disabledKeys={['timeRange']}
+                defaultQuery={{
+                  timeRange: state.requestListQueryParams.timeRange,
+                }}
+                onSubmit={(values) => {
+                  queryRequestList({
+                    ...values,
+                    current: 0,
+                  });
+                }}
+              />
+              <RequestDetailList
+                requestListQueryParams={state.requestListQueryParams}
+                dataSource={state.requestList ? state.requestList : []}
+                reportId={detailData.id}
+                requestSearch={(params) => {
+                  queryRequestList(params);
+                }}
+              />
+            </div>
+          </div>
         </>
       ),
     },
