@@ -465,7 +465,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
                       e?.node?.props?.dataRef?.identification?.split('|') || [];
                     result = {
                       methodName,
-                      serviceName,
+                      serviceName: encodeURIComponent(serviceName),
                     };
                   }
                   queryRequestList(result);
