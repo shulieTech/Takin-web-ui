@@ -27,6 +27,7 @@ interface State {
     startTime?: number;
     endTime?: number;
     xpathMd5?: string;
+    identification?: string;
   };
   data: any;
   total: number;
@@ -242,11 +243,13 @@ const RequestList: React.FC<Props> = (props) => {
           <BusinessActivityTree
             tabList={props.tabList}
             // defaultSelectedKey={state.tabKey}
-            onChange={(key) => {
+            checkNodeDisabled={node => !node.identification}
+            onChange={(key, e) => {
               setState({
                 searchParams: {
                   ...state.searchParams,
-                  xpathMd5: key,
+                  xpathMd5: e.selected ? key : undefined,
+                  identification: e.selected ? e?.node?.props?.dataRef?.identification : undefined,
                 },
               });
             }}

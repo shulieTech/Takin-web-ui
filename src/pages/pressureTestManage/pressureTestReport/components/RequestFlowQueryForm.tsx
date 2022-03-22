@@ -165,12 +165,12 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
         ),
       },
       {
-        key: 'interfaceName',
+        key: 'serviceName',
         label: '',
         node: (
           <Input
             placeholder="按接口名模糊查询"
-            disabled={disabledKeys.includes('interfaceName')}
+            disabled={disabledKeys.includes('serviceName')}
           />
         ),
       },

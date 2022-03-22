@@ -55,6 +55,7 @@ interface State {
     sortField?: string;
     sortType?: 'desc' | 'asc';
     xpathMd5?: string;
+    identification?: string;
   };
 }
 
@@ -455,14 +456,16 @@ const PressureTestLive: React.FC<Props> = (props) => {
             <div className={styles.leftSelected}>
               <BusinessActivityTree
                 tabList={state.tabList}
-                onChange={(xpathMd5) =>
+                checkNodeDisabled={node => !node.identification}
+                onChange={(key, e) => {
                   setState({
                     requestListQueryParams: {
                       ...state.requestListQueryParams,
-                      xpathMd5,
+                      xpathMd5: e.selected ? key : undefined,
+                      identification: e.selected ? e?.node?.props?.dataRef?.identification : undefined,
                     },
-                  })
-                }
+                  });
+                }}
               />
             </div>
             <div

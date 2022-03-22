@@ -5,6 +5,7 @@ interface Props {
   defaultSelectedKey?: string;
   tabList: any[];
   onChange?: (key, e) => void;
+  checkNodeDisabled?: (node) => boolean;
 }
 
 const BusinessActivityTree: React.FC<Props> = (props) => {
@@ -24,6 +25,7 @@ const BusinessActivityTree: React.FC<Props> = (props) => {
               dataRef={item}
               treeDefaultExpandAll={true}
               style={{ color: '#fff', width: 100 }}
+              disabled={props.checkNodeDisabled && props.checkNodeDisabled(item)}
             >
               {renderTreeNodes(item.children)}
             </Tree.TreeNode>
