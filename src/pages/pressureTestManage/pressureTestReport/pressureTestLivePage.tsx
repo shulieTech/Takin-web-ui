@@ -54,8 +54,6 @@ interface State {
     endTime?: number;
     sortField?: string;
     sortType?: 'desc' | 'asc';
-    xpathMd5?: string;
-    identification?: string;
   };
 }
 
@@ -458,13 +456,25 @@ const PressureTestLive: React.FC<Props> = (props) => {
                 tabList={state.tabList}
                 checkNodeDisabled={node => !node.identification}
                 onChange={(key, e) => {
-                  setState({
-                    requestListQueryParams: {
-                      ...state.requestListQueryParams,
-                      xpathMd5: e.selected ? key : undefined,
-                      identification: e.selected ? e?.node?.props?.dataRef?.identification : undefined,
-                    },
-                  });
+                  let result = {
+                    serviceName: undefined,
+                    methodName: undefined,
+                  };
+                  if (e.selected) {
+                    const [methodName, serviceName] =
+                      e?.node?.props?.dataRef?.identification?.split('|') || [];
+                    result = {
+                      methodName,
+                      serviceName,
+                    };
+                  }
+                  queryRequestList(result);
+                  // setState({
+                  //   requestListQueryParams: {
+                  //     ...state.requestListQueryParams,
+                  //     ...result,
+                  //   },
+                  // });
                 }}
               />
             </div>

@@ -3,7 +3,7 @@ import { CommonForm, CommonSelect, DatePick } from 'racc';
 import { Input, Cascader, InputNumber } from 'antd';
 import { FormDataType } from 'racc/dist/common-form/type';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
-import service from '../service';
+// import service from '../service';
 import moment from 'moment';
 
 interface Props {
@@ -51,34 +51,34 @@ const CostRange = (props) => {
 
 const RequestFlowQueryForm: React.FC<Props> = (props) => {
   const { defaultQuery, onSubmit, disabledKeys = [], ...rest } = props;
-  const [applicationList, setApplicationList] = useState([]);
-  const [middlewareList, setMiddlewareList] = useState([]);
+  // const [applicationList, setApplicationList] = useState([]);
+  // const [middlewareList, setMiddlewareList] = useState([]);
   const [form, setForm] = useState<WrappedFormUtils>();
 
-  const getApplicationList = async () => {
-    const {
-      data: { success, data },
-    } = await service.queryWaterLevelList({
-      reportId: props.reportId,
-    });
-    if (success) {
-      setApplicationList(
-        data.map((x) => ({
-          label: x.applicationName,
-          value: x.applicationName,
-        }))
-      );
-    }
-  };
+  // const getApplicationList = async () => {
+  //   const {
+  //     data: { success, data },
+  //   } = await service.queryWaterLevelList({
+  //     reportId: props.reportId,
+  //   });
+  //   if (success) {
+  //     setApplicationList(
+  //       data.map((x) => ({
+  //         label: x.applicationName,
+  //         value: x.applicationName,
+  //       }))
+  //     );
+  //   }
+  // };
 
-  const getMiddlewareList = async () => {
-    const {
-      data: { success, data },
-    } = await service.middlewareList();
-    if (success) {
-      setMiddlewareList(data);
-    }
-  };
+  // const getMiddlewareList = async () => {
+  //   const {
+  //     data: { success, data },
+  //   } = await service.middlewareList();
+  //   if (success) {
+  //     setMiddlewareList(data);
+  //   }
+  // };
 
   const getFormData = (): FormDataType[] => {
     return [
@@ -124,56 +124,56 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
           />
         ),
       },
-      {
-        key: 'appName',
-        label: '',
-        // colProps: {
-        //   xl: {
-        //     span: 8,
-        //     offset: 8,
-        //   }
-        // },
-        node: (
-          <CommonSelect
-            placeholder="入口应用"
-            showSearch
-            optionFilterProp="children"
-            dataSource={applicationList}
-            disabled={disabledKeys.includes('appName')}
-          />
-        ),
-      },
-      {
-        key: 'middlewareName',
-        label: '',
-        node: (
-          <Cascader
-            disabled={disabledKeys.includes('middlewareName')}
-            placeholder="调用类型"
-            options={middlewareList}
-            showSearch={{
-              filter: (inputValue, path) => {
-                return path.some(
-                  (option) =>
-                    option.label
-                      .toLowerCase()
-                      .indexOf(inputValue.toLowerCase()) > -1
-                );
-              },
-            }}
-          />
-        ),
-      },
-      {
-        key: 'serviceName',
-        label: '',
-        node: (
-          <Input
-            placeholder="按接口名模糊查询"
-            disabled={disabledKeys.includes('serviceName')}
-          />
-        ),
-      },
+      // {
+      //   key: 'appName',
+      //   label: '',
+      //   // colProps: {
+      //   //   xl: {
+      //   //     span: 8,
+      //   //     offset: 8,
+      //   //   }
+      //   // },
+      //   node: (
+      //     <CommonSelect
+      //       placeholder="入口应用"
+      //       showSearch
+      //       optionFilterProp="children"
+      //       dataSource={applicationList}
+      //       disabled={disabledKeys.includes('appName')}
+      //     />
+      //   ),
+      // },
+      // {
+      //   key: 'middlewareName',
+      //   label: '',
+      //   node: (
+      //     <Cascader
+      //       disabled={disabledKeys.includes('middlewareName')}
+      //       placeholder="调用类型"
+      //       options={middlewareList}
+      //       showSearch={{
+      //         filter: (inputValue, path) => {
+      //           return path.some(
+      //             (option) =>
+      //               option.label
+      //                 .toLowerCase()
+      //                 .indexOf(inputValue.toLowerCase()) > -1
+      //           );
+      //         },
+      //       }}
+      //     />
+      //   ),
+      // },
+      // {
+      //   key: 'serviceName',
+      //   label: '',
+      //   node: (
+      //     <Input
+      //       placeholder="按接口名模糊查询"
+      //       disabled={disabledKeys.includes('serviceName')}
+      //     />
+      //   ),
+      // },
       {
         key: 'resultType',
         label: '',
@@ -234,10 +234,10 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
     });
   };
 
-  useEffect(() => {
-    getApplicationList();
-    getMiddlewareList();
-  }, []);
+  // useEffect(() => {
+  //   getApplicationList();
+  //   getMiddlewareList();
+  // }, []);
 
   return (
     <CommonForm

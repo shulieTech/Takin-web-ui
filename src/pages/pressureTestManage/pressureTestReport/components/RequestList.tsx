@@ -26,8 +26,6 @@ interface State {
     sortType?: 'desc' | 'asc';
     startTime?: number;
     endTime?: number;
-    xpathMd5?: string;
-    identification?: string;
   };
   data: any;
   total: number;
@@ -243,15 +241,27 @@ const RequestList: React.FC<Props> = (props) => {
           <BusinessActivityTree
             tabList={props.tabList}
             // defaultSelectedKey={state.tabKey}
-            checkNodeDisabled={node => !node.identification}
+            checkNodeDisabled={(node) => !node.identification}
             onChange={(key, e) => {
-              setState({
-                searchParams: {
-                  ...state.searchParams,
-                  xpathMd5: e.selected ? key : undefined,
-                  identification: e.selected ? e?.node?.props?.dataRef?.identification : undefined,
-                },
-              });
+              let result = {
+                serviceName: undefined,
+                methodName: undefined,
+              };
+              if (e.selected) {
+                const [methodName, serviceName] =
+                  e?.node?.props?.dataRef?.identification?.split('|') || [];
+                result = {
+                  methodName,
+                  serviceName,
+                };
+              }
+              queryRequestList(result);
+              // setState({
+              //   searchParams: {
+              //     ...state.searchParams,
+              //     ...result,
+              //   },
+              // });
             }}
           />
         </div>
