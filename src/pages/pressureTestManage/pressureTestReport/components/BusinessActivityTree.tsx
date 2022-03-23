@@ -41,6 +41,7 @@ const BusinessActivityTree: React.FC<Props> = (props) => {
                 <span>{item.testName}</span>
               </Tooltip>}
             children={item.children}
+            disabled={props.checkNodeDisabled && props.checkNodeDisabled(item)}
           />
         );
       })
