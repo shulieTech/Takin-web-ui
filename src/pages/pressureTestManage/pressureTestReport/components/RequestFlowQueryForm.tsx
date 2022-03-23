@@ -214,12 +214,12 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
         onSubmit({
           ...values,
           middlewareName,
+          minCost,
+          maxCost,
           startTime: startTime ? moment(startTime).valueOf() : undefined,
           endTime: endTime ? moment(endTime).valueOf() : undefined,
           timeRange: undefined,
           costRange: undefined,
-          minCost: minCost || undefined,
-          maxCost: maxCost || undefined,
         });
       }
     });
