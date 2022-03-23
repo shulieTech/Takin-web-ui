@@ -24,8 +24,8 @@ interface State {
     pageSize: number;
     sortField?: string;
     sortType?: 'desc' | 'asc';
-    startTime?: number;
-    endTime?: number;
+    // startTime?: number;
+    // endTime?: number;
   };
   data: any;
   total: number;
@@ -41,8 +41,8 @@ const RequestList: React.FC<Props> = (props) => {
       pageSize: 10,
       sortField: undefined,
       sortType: undefined,
-      startTime: moment(props.detailData?.startTime).valueOf(),
-      endTime: moment(props.detailData?.endTime).valueOf(),
+      // startTime: moment(props.detailData?.startTime).valueOf(),
+      // endTime: moment(props.detailData?.endTime).valueOf(),
     },
     data: null,
     total: 0,
@@ -246,6 +246,7 @@ const RequestList: React.FC<Props> = (props) => {
               let result = {
                 serviceName: undefined,
                 methodName: undefined,
+                current: 0,
               };
               if (e.selected) {
                 const [methodName, serviceName] =
@@ -253,6 +254,7 @@ const RequestList: React.FC<Props> = (props) => {
                 result = {
                   methodName,
                   serviceName,
+                  current: 0,
                 };
               }
               queryRequestList(result);
@@ -271,33 +273,33 @@ const RequestList: React.FC<Props> = (props) => {
         >
           <RequestFlowQueryForm
             reportId={id}
-            defaultQuery={{
-              timeRange:
-                props.detailData?.startTime && props.detailData?.endTime
-                  ? [
-                    moment(props.detailData?.startTime).format(
-                        'YYYY-MM-DD HH:mm:ss'
-                      ),
-                    moment(props.detailData?.endTime).format(
-                        'YYYY-MM-DD HH:mm:ss'
-                      ),
-                  ]
-                  : undefined,
-            }}
+            // defaultQuery={{
+            //   timeRange:
+            //     props.detailData?.startTime && props.detailData?.endTime
+            //       ? [
+            //         moment(props.detailData?.startTime).format(
+            //             'YYYY-MM-DD HH:mm:ss'
+            //           ),
+            //         moment(props.detailData?.endTime).format(
+            //             'YYYY-MM-DD HH:mm:ss'
+            //           ),
+            //       ]
+            //       : undefined,
+            // }}
             onSubmit={(values) => {
-              if (
-                values.startTime &&
-                values.endTime &&
-                props.detailData?.startTime &&
-                props.detailData?.endTime &&
-                (moment(values.startTime).valueOf() <
-                  moment(props.detailData?.startTime).valueOf() ||
-                  moment(values.endTime).valueOf() >
-                    moment(props.detailData?.endTime).valueOf())
-              ) {
-                message.warn('只能选择在测试报告时间范围内的时间');
-                return;
-              }
+              // if (
+              //   values.startTime &&
+              //   values.endTime &&
+              //   props.detailData?.startTime &&
+              //   props.detailData?.endTime &&
+              //   (moment(values.startTime).valueOf() <
+              //     moment(props.detailData?.startTime).valueOf() ||
+              //     moment(values.endTime).valueOf() >
+              //       moment(props.detailData?.endTime).valueOf())
+              // ) {
+              //   message.warn('只能选择在测试报告时间范围内的时间');
+              //   return;
+              // }
               queryRequestList({
                 ...values,
                 current: 0,

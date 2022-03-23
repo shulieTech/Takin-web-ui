@@ -82,29 +82,29 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
 
   const getFormData = (): FormDataType[] => {
     return [
-      {
-        key: 'timeRange',
-        label: '',
-        options: {
-          initialValue: defaultQuery?.timeRange,
-        },
-        node: (
-          <DatePick
-            type="range"
-            rangePickerProps={{
-              disabled: disabledKeys.includes('timeRange'),
-              placeholder: ['开始时间', '结束时间'],
-              showTime: true,
-              style: { width: '100%' },
-            }}
-          />
-        ),
-        colProps: {
-          xl: {
-            span: 16,
-          }
-        },
-      },
+      // {
+      //   key: 'timeRange',
+      //   label: '',
+      //   options: {
+      //     initialValue: defaultQuery?.timeRange,
+      //   },
+      //   node: (
+      //     <DatePick
+      //       type="range"
+      //       rangePickerProps={{
+      //         disabled: disabledKeys.includes('timeRange'),
+      //         placeholder: ['开始时间', '结束时间'],
+      //         showTime: true,
+      //         style: { width: '100%' },
+      //       }}
+      //     />
+      //   ),
+      //   colProps: {
+      //     xl: {
+      //       span: 16,
+      //     }
+      //   },
+      // },
       {
         key: 'traceId',
         label: '',
@@ -201,9 +201,9 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
   const handleSubmit = () => {
     form?.validateFields((error, values) => {
       if (!error) {
-        const [startTime, endTime] = Array.isArray(values.timeRange)
-          ? values.timeRange
-          : [];
+        // const [startTime, endTime] = Array.isArray(values.timeRange)
+        //   ? values.timeRange
+        //   : [];
         const [minCost, maxCost] = Array.isArray(values.costRange)
           ? values.costRange
           : [];
@@ -216,9 +216,9 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
           middlewareName,
           minCost,
           maxCost,
-          startTime: startTime ? moment(startTime).valueOf() : undefined,
-          endTime: endTime ? moment(endTime).valueOf() : undefined,
-          timeRange: undefined,
+          // startTime: startTime ? moment(startTime).valueOf() : undefined,
+          // endTime: endTime ? moment(endTime).valueOf() : undefined,
+          // timeRange: undefined,
           costRange: undefined,
         });
       }

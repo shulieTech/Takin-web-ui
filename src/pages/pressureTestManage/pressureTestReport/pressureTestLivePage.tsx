@@ -50,8 +50,8 @@ interface State {
   requestListQueryParams: {
     current?: number;
     pageSize?: number;
-    startTime?: number;
-    endTime?: number;
+    // startTime?: number;
+    // endTime?: number;
     sortField?: string;
     sortType?: 'desc' | 'asc';
   };
@@ -230,7 +230,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     const newValue = {
       ...state.requestListQueryParams,
       ...value,
-      timeRange: [moment().subtract(5, 'second').valueOf(), moment().valueOf()],
+      // timeRange: [moment().subtract(5, 'second').valueOf(), moment().valueOf()],
     };
     setState({
       requestListQueryParams: newValue,
@@ -459,6 +459,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
                   let result = {
                     serviceName: undefined,
                     methodName: undefined,
+                    current: 0,
                   };
                   if (e.selected) {
                     const [methodName, serviceName] =
@@ -466,6 +467,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
                     result = {
                       methodName,
                       serviceName,
+                      current: 0,
                     };
                   }
                   queryRequestList(result);
@@ -484,10 +486,10 @@ const PressureTestLive: React.FC<Props> = (props) => {
             >
               <RequestFlowQueryForm
                 reportId={state.detailData?.id}
-                disabledKeys={['timeRange']}
-                defaultQuery={{
-                  timeRange: state.requestListQueryParams.timeRange,
-                }}
+                // disabledKeys={['timeRange']}
+                // defaultQuery={{
+                //   timeRange: state.requestListQueryParams.timeRange,
+                // }}
                 onSubmit={(values) => {
                   queryRequestList({
                     ...values,
