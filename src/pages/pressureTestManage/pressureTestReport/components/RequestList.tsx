@@ -24,7 +24,7 @@ interface State {
     pageSize: number;
     sortField?: string;
     sortType?: 'desc' | 'asc';
-    // startTime?: number;
+    startTime?: number;
     // endTime?: number;
   };
   data: any;
@@ -41,7 +41,7 @@ const RequestList: React.FC<Props> = (props) => {
       pageSize: 10,
       sortField: undefined,
       sortType: undefined,
-      // startTime: moment(props.detailData?.startTime).valueOf(),
+      startTime: moment(props.detailData?.startTime).valueOf(),
       // endTime: moment(props.detailData?.endTime).valueOf(),
     },
     data: null,

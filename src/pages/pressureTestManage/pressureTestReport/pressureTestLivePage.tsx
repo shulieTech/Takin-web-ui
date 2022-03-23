@@ -50,7 +50,7 @@ interface State {
   requestListQueryParams: {
     current?: number;
     pageSize?: number;
-    // startTime?: number;
+    startTime?: number;
     // endTime?: number;
     sortField?: string;
     sortType?: 'desc' | 'asc';
@@ -230,6 +230,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     const newValue = {
       ...state.requestListQueryParams,
       ...value,
+      startTime: moment(state.detailData.startTime).valueOf(),
       // timeRange: [moment().subtract(5, 'second').valueOf(), moment().valueOf()],
     };
     setState({
