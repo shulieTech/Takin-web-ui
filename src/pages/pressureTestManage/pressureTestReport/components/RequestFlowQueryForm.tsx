@@ -99,6 +99,11 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
             }}
           />
         ),
+        colProps: {
+          xl: {
+            span: 16,
+          }
+        },
       },
       {
         key: 'traceId',
@@ -107,20 +112,6 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
           <Input
             placeholder="TraceId"
             disabled={disabledKeys.includes('traceId')}
-          />
-        ),
-      },
-      {
-        key: '占位行',
-        label: '',
-        node: (
-          <div
-            style={{
-              height: 32,
-              lineHeight: 1.5,
-              display: 'inline-block',
-              width: '100%',
-            }}
           />
         ),
       },
