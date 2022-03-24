@@ -9,7 +9,11 @@ interface Props {
 }
 
 const BusinessActivityTree: React.FC<Props> = (props) => {
-  const { tabList, defaultSelectedKey = props.tabList?.[0]?.xpathMd5, onChange } = props;
+  const {
+    tabList,
+    defaultSelectedKey = props.tabList?.[0]?.xpathMd5,
+    onChange,
+  } = props;
   const renderTreeNodes = (data) => {
     return (
       data &&
@@ -25,7 +29,9 @@ const BusinessActivityTree: React.FC<Props> = (props) => {
               dataRef={item}
               treeDefaultExpandAll={true}
               style={{ color: '#fff', width: 100 }}
-              disabled={props.checkNodeDisabled && props.checkNodeDisabled(item)}
+              disabled={
+                props.checkNodeDisabled && props.checkNodeDisabled(item)
+              }
             >
               {renderTreeNodes(item.children)}
             </Tree.TreeNode>
@@ -63,3 +69,21 @@ const BusinessActivityTree: React.FC<Props> = (props) => {
   );
 };
 export default BusinessActivityTree;
+
+export const getFirstTreeNodeByFilter = (treeData, filter) => {
+  let result = null;
+  const recursiveHandler = (arr) => {
+    for (let i = 0; i < arr.length; i = i + 1) {
+      if (filter(arr[i])) {
+        return arr[i];
+      }
+      if (Array.isArray(arr[i]?.children)) {
+        result = recursiveHandler(arr[i].children);
+        if (result) {
+          return result;
+        }
+      }
+    }
+  };
+  return recursiveHandler(treeData);
+};

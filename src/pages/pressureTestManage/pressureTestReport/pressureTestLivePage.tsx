@@ -31,7 +31,7 @@ import { GraphData } from '@antv/g6';
 import CommonHeader from 'src/common/header/Header';
 import RequestFlowQueryForm from './components/RequestFlowQueryForm';
 import moment from 'moment';
-import BusinessActivityTree from './components/BusinessActivityTree';
+import BusinessActivityTree, { getFirstTreeNodeByFilter } from './components/BusinessActivityTree';
 
 interface State {
   isReload?: boolean;
@@ -54,7 +54,10 @@ interface State {
     // endTime?: number;
     sortField?: string;
     sortType?: 'desc' | 'asc';
+    methodName?: string;
+    serviceName?: string;
   };
+  defaultTreeSelectedKey?: string;
 }
 
 interface Props {
@@ -203,6 +206,23 @@ const PressureTestLive: React.FC<Props> = (props) => {
         tabKey: data && data[0].xpathMd5,
         selectedTreeNode: data?.[0],
       });
+
+      // 递归默认选中第一个节点
+      const firstTreeNode = getFirstTreeNodeByFilter(data, (node) => !!node.identification);
+
+      if (firstTreeNode) {
+        const [methodName, serviceName] = firstTreeNode?.identification?.split('|') || [];
+        setState({
+          defaultTreeSelectedKey: firstTreeNode?.xpathMd5,
+          requestListQueryParams: {
+            ...state.requestListQueryParams,
+            methodName,
+            serviceName,
+          }
+        });
+
+      }
+      
     }
   };
 
@@ -455,6 +475,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
             <div className={styles.leftSelected}>
               <BusinessActivityTree
                 tabList={state.tabList}
+                defaultSelectedKey={state.defaultTreeSelectedKey}
                 checkNodeDisabled={node => !node.identification}
                 onChange={(key, e) => {
                   let result = {
