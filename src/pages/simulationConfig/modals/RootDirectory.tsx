@@ -181,6 +181,7 @@ const RootDirectory: React.FC<Props> = props => {
             <Select placeholder="请选择类型">
               <Option value="0">oss</Option>
               <Option value="1">ftp</Option>
+              <Option value="2">swift</Option>
             </Select>
           )}
         </Form.Item>
