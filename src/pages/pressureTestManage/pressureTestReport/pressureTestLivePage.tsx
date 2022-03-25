@@ -205,23 +205,24 @@ const PressureTestLive: React.FC<Props> = (props) => {
         tabList: data,
         tabKey: data && data[0].xpathMd5,
         selectedTreeNode: data?.[0],
+        defaultTreeSelectedKey: data?.[0].xpathMd5,
       });
 
       // 递归默认选中第一个节点
-      const firstTreeNode = getFirstTreeNodeByFilter(data, (node) => !!node.identification);
+      // const firstTreeNode = getFirstTreeNodeByFilter(data, (node) => !!node.identification);
 
-      if (firstTreeNode) {
-        const [methodName, serviceName] = firstTreeNode?.identification?.split('|') || [];
-        setState({
-          defaultTreeSelectedKey: firstTreeNode?.xpathMd5,
-          requestListQueryParams: {
-            ...state.requestListQueryParams,
-            methodName,
-            serviceName,
-          }
-        });
+      // if (firstTreeNode) {
+      //   const [methodName, serviceName] = firstTreeNode?.identification?.split('|') || [];
+      //   setState({
+      //     defaultTreeSelectedKey: firstTreeNode?.xpathMd5,
+      //     requestListQueryParams: {
+      //       ...state.requestListQueryParams,
+      //       methodName,
+      //       serviceName,
+      //     }
+      //   });
 
-      }
+      // }
       
     }
   };
@@ -476,19 +477,21 @@ const PressureTestLive: React.FC<Props> = (props) => {
               <BusinessActivityTree
                 tabList={state.tabList}
                 defaultSelectedKey={state.defaultTreeSelectedKey}
-                checkNodeDisabled={node => !node.identification}
+                // checkNodeDisabled={node => !node.identification}
                 onChange={(key, e) => {
                   let result = {
-                    serviceName: undefined,
-                    methodName: undefined,
+                    // serviceName: undefined,
+                    // methodName: undefined,
+                    xpathMd5: undefined,
                     current: 0,
                   };
                   if (e.selected) {
-                    const [methodName, serviceName] =
-                      e?.node?.props?.dataRef?.identification?.split('|') || [];
+                    // const [methodName, serviceName] =
+                    //   e?.node?.props?.dataRef?.identification?.split('|') || [];
                     result = {
-                      methodName,
-                      serviceName,
+                      // methodName,
+                      // serviceName,
+                      xpathMd5: key,
                       current: 0,
                     };
                   }
