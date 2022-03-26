@@ -43,11 +43,11 @@ const ImportFileModal: React.FC<Props> = props => {
         type="flex"
         align="middle"
         className={`${styles.footer} ${
-          status === 'loading'
-            ? styles.loadingFooter
-            : status === 'success'
-            ? styles.successFooter
-            : styles.failFooter
+          {
+            loading: styles.loadingFooter,
+            success: styles.successFooter,
+            fail: styles.failFooter,
+          }[status]
         }`}
       >
         <span>{footerTxt}</span>
