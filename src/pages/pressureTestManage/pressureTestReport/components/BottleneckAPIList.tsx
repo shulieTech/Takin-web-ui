@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { ColumnProps } from 'antd/lib/table';
+import { Radio } from 'antd';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import PressureTestReportService from '../service';
-import BusinessActivityTree from './BusinessActivityTree';
+import TreeTable from './TreeTable';
 import styles from '../index.less';
 import ServiceCustomTable from 'src/components/service-custom-table';
 
@@ -15,45 +16,52 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
   const { id, tabList } = props;
   const [tableQuery, setTableQuery] = useState({
     reportId: id,
-    // tabelKey: tabList?.[0]?.xpathMd5,
+    xpathMd5: tabList?.[0]?.xpathMd5,
+    current: 0,
   });
+
+  const [viewType, setViewType] = useState(1);
 
   const getBottleneckAPIListColumns = (): ColumnProps<any>[] => {
     return [
       {
         ...customColumnProps,
-        title: '排名',
-        dataIndex: 'rank',
-      },
-      {
-        ...customColumnProps,
-        title: '应用',
-        dataIndex: 'applicationName',
-      },
-      {
-        ...customColumnProps,
-        title: '接口',
-        dataIndex: 'interfaceName',
-      },
-      {
-        ...customColumnProps,
-        title: 'TPS',
-        dataIndex: 'tps',
-      },
-      {
-        ...customColumnProps,
-        title: 'RT',
-        dataIndex: 'rt',
-        render: (text) => {
-          return <span>{text}ms</span>;
+        title: '服务',
+        dataIndex: 'serviceName',
+        align: 'right',
+        ellipsis: true,
+        render: (text, record) => {
+          return (
+            <div>
+              <div>
+                /provider/conver#convertAndSend3/provider/conver#convertAndSend3/provider/conver#convertAndSend3
+              </div>
+              <div>mall-monitor-1.0-SNAPSHOT</div>
+            </div>
+          );
         },
       },
       {
         ...customColumnProps,
-        title: '成功率',
-        dataIndex: 'successRate',
+        title: '调用总次数',
+        dataIndex: 'applicationName',
+      },
+      {
+        ...customColumnProps,
+        title: '平均自耗时',
+        dataIndex: 'interfaceName',
+      },
+      {
+        ...customColumnProps,
+        title: '最大耗时',
+        dataIndex: 'tps',
+      },
+      {
+        ...customColumnProps,
+        title: '平均耗时占比',
+        dataIndex: 'rt',
         render: (text) => {
-          return <span>{text}%</span>;
+          return <span>{text}ms</span>;
         },
       },
     ];
@@ -62,22 +70,44 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
   return (
     <Fragment>
       <div style={{ display: 'flex' }}>
-        {/* TODO 业务活动树 */}
-        {/* <div className={styles.leftSelected}>
-          <BusinessActivityTree
-            tabList={props.tabList}
-            onChange={val => setTableQuery({tabelKey: val})}
+        {/* 业务活动树 */}
+        <div className={styles.leftSelected}>
+          <TreeTable
+            service={PressureTestReportService.queryBusinessActivityTree}
+            defaultQuery={{
+              reportId: id,
+            }}
+            selectedKey={tableQuery.xpathMd5}
+            onChange={(key, record) => {
+              setTableQuery({
+                ...tableQuery,
+                xpathMd5: key,
+                current: 0,
+              });
+            }}
           />
-        </div> */}
+        </div>
         <div
           className={styles.riskMachineList}
-          style={{ position: 'relative' }}
+          style={{ position: 'relative', padding: 16 }}
         >
-          <ServiceCustomTable
-            service={PressureTestReportService.queryBottleneckAPIList}
-            defaultQuery={tableQuery}
-            columns={getBottleneckAPIListColumns()}
-          />
+          <Radio.Group
+            value={viewType}
+            onChange={(e) => setViewType(e.target.value)}
+          >
+            <Radio.Button value={1}>性能详情</Radio.Button>
+            <Radio.Button value={2}>自耗时占比</Radio.Button>
+          </Radio.Group>
+
+          {viewType === 1 && (
+            <ServiceCustomTable
+              service={PressureTestReportService.queryBottleneckAPIList}
+              dataSource={[{ serviceName: 'aaaa' }]}
+              defaultQuery={tableQuery}
+              columns={getBottleneckAPIListColumns()}
+            />
+          )}
+          {viewType === 2 && <div />}
         </div>
       </div>
     </Fragment>

@@ -18,7 +18,7 @@ export function tryToParseJson(jsonString: string): any | undefined {
  */
 export function filterCascaderOptions(inputValue, path) {
   return path.some(
-    option =>
+    (option) =>
       option.label
         .toLowerCase()
         .indexOf(inputValue && inputValue.toLowerCase()) > -1
@@ -37,7 +37,7 @@ export async function downloadRequest(
     url,
     responseType: 'blob',
     withCredentials: true,
-    ...requestOption
+    ...requestOption,
   });
   const mTitle =
     decodeURIComponent(headers['content-file-original-name'] || '') ||
@@ -54,7 +54,7 @@ export async function downloadRequest(
   reader.onload = ({ target: { result } }: any) => {
     const res = tryToParseJson(result);
     message.config({
-      maxCount: 1
+      maxCount: 1,
     });
     message.error(res.message);
   };
@@ -67,7 +67,7 @@ export async function downloadRequest(
  */
 export function filterSearchParams(values) {
   delete values.total;
-  Object.keys(values).map(item => {
+  Object.keys(values).map((item) => {
     if (values[item] !== 0 && !values[item]) {
       delete values[item];
     }
@@ -93,9 +93,9 @@ export const getLoginToken = () => {
 };
 
 /** @name 下拉模糊搜索 */
-export const filter = (inputValue, path) => {
+export const filterOptions = (inputValue, path) => {
   return path.some(
-    option => option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+    (option) => option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
   );
 };
 
@@ -108,9 +108,9 @@ export const isEmpty = (obj: any) => {
 };
 
 /** @name 数组平铺 */
-export const flatten = arr => {
+export const flatten = (arr) => {
   return [].concat(
-    ...arr.map(item => {
+    ...arr.map((item) => {
       return item.children
         ? [].concat(item, ...flatten(item.children))
         : [].concat(item);
@@ -153,13 +153,13 @@ export const treeFindPath = (tree, func, path = []) => {
 /**
  * @name 去掉表单对象前后空格
  */
-export const trimObj = obj => {
+export const trimObj = (obj) => {
   let newObj = {};
   // tslint:disable-next-line:forin
   for (const i in obj) {
     newObj = {
       ...newObj,
-      [i]: typeof obj[i] === 'string' ? obj[i].trim() : obj[i]
+      [i]: typeof obj[i] === 'string' ? obj[i].trim() : obj[i],
     };
   }
   return newObj;
@@ -168,7 +168,7 @@ export const trimObj = obj => {
 /**
  * @name 判断去掉表单对象前后空格后是否为空，为空返回true，否则false
  */
-export const objEachResultIsEmpty = obj => {
+export const objEachResultIsEmpty = (obj) => {
   // tslint:disable-next-line:forin
   for (const i in obj) {
     if (!obj[i]) {
@@ -182,13 +182,13 @@ export const objEachResultIsEmpty = obj => {
  * @name 设置全局message
  */
 message.config({
-  maxCount: 1
+  maxCount: 1,
 });
 
 /**
  * 判读菜单是否存在
  * @param path 菜单对应路径
- * @returns 
+ * @returns
  */
 export const checkMenuByPath = (path: string): boolean => {
   const menus = JSON.parse(localStorage.trowebUserMenu);
@@ -196,12 +196,55 @@ export const checkMenuByPath = (path: string): boolean => {
   const flatedMenus = [];
   const flatMenu = (arr) => {
     if (arr?.length > 0) {
-      arr.forEach(x => {
+      arr.forEach((x) => {
         flatedMenus.push(x);
         flatMenu(x.children);
       });
     }
   };
   flatMenu(menus);
-  return flatedMenus.some(x => x.path === path);
+  return flatedMenus.some((x) => x.path === path);
+};
+
+/**
+ * 查找treeData中符合条件的节点
+ * @param treeData 
+ * @param filter 
+ * @param isFirst 是否只查询第一个符合条件的节点
+ */
+export const filterInTreeData = (params: {
+  treeData: any[];
+  filter: (item: any) => boolean;
+  isFirst?: boolean;
+  childrenName?: string;
+}
+  
+) => {
+  const {
+    treeData,
+    isFirst = false,
+    childrenName = 'children',
+    filter,
+  } = params;
+  const result = [];
+
+  const find  = (arr) => {
+    if (Array.isArray(arr)) {
+      arr.forEach((item) => {
+        if (filter(item)) {
+          result.push(item);
+          if (isFirst) {
+            return;
+          }
+        }
+        if (Array.isArray(item[childrenName])) {
+          find(item[childrenName]);
+        }
+      });
+    }
+  };
+
+  find(treeData);
+
+  return result;
 };

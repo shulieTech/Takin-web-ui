@@ -5,7 +5,7 @@ import { CommonTableProps } from 'racc/dist/common-table/CommonTable';
 import { Pagination } from 'antd';
 
 interface Props extends CommonTableProps {
-  service: (params: any) => Promise<any>;
+  service?: (params: any) => Promise<any>;
   defaultQuery?: any;
 }
 

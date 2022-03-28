@@ -35,8 +35,8 @@ const useListService = (props: Props) => {
     setLoading(false);
     if (success) {
       setQuery(newQuery);
-      setList(data.list || data);
-      setTotal(totalCount || data.count || 0);
+      setList(data?.list || data);
+      setTotal(totalCount || data?.count || 0);
     }
     if (typeof afterSearchCallback === 'function') {
       afterSearchCallback(res);

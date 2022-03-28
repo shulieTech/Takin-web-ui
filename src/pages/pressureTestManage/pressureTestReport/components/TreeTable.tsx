@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Table, Icon, Tooltip } from 'antd';
 import styles from '../index.less';
 import useListService from 'src/utils/useListService';
+import { filterInTreeData } from 'src/utils/utils';
 
 import { Basic } from 'src/types';
 import BaseResponse = Basic.BaseResponse;
 
 interface Props {
   rowKey?: string;
-  service?: (params: any) => Promise<BaseResponse<any>>;
+  service: (params: any) => Promise<BaseResponse<any>>;
   defaultQuery?: any;
   selectedKey?: string | number;
   onChange?: (key: string | number, record) => void;
@@ -19,6 +20,7 @@ interface Props {
 
 const TreeTable: React.FC<Props> = (props) => {
   const { getRowDisabled, rowKey = 'xpathMd5' } = props;
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const {
     selectedKey,
     onChange,
@@ -79,6 +81,15 @@ const TreeTable: React.FC<Props> = (props) => {
   });
 
   useEffect(() => {
+    setExpandedRowKeys(
+      filterInTreeData({
+        treeData: list,
+        filter: (x) => Array.isArray(x.children) && x.children.length > 0,
+      }).map((x) => x[rowKey])
+    );
+  }, [list]);
+
+  useEffect(() => {
     getList();
     if (tickerTime > 0) {
       const timer = setInterval(() => {
@@ -98,7 +109,12 @@ const TreeTable: React.FC<Props> = (props) => {
       columns={columns}
       size="small"
       pagination={false}
-      defaultExpandAllRows
+      // defaultExpandAllRows
+      // defaultExpandedRowKeys={defaultExpandedRowKeys}
+      expandedRowKeys={expandedRowKeys}
+      onExpandedRowsChange={(keys) => {
+        setExpandedRowKeys(keys);
+      }}
       expandIcon={({ expanded, expandable, record, onExpand }) =>
         expandable ? (
           <Icon
