@@ -257,17 +257,17 @@ const RootDirectoryModal: React.FC<Props> = (props) => {
             x-linkages={[
               {
                 type: 'value:visible',
-                target: '.username',
+                target: '.swiftCfg.username',
                 condition: '{{ $self.value === 1 }}',
               },
               {
                 type: 'value:visible',
-                target: '.userKey',
+                target: '.swiftCfg.userKey',
                 condition: '{{ $self.value === 1 }}',
               },
               {
                 type: 'value:visible',
-                target: '.ak',
+                target: '.swiftCfg.ak',
                 condition: '{{ $self.value === 2 }}',
               },
             ]}
