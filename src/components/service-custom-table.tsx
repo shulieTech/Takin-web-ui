@@ -40,11 +40,11 @@ const ServiceCustomTable = (props: Props, ref) => {
   return (
     <>
       <CustomTable
-        {...rest}
         loading={loading}
         dataSource={list}
         columns={columns}
         pagination={false}
+        {...rest}
       />
       <Pagination
         style={{ marginTop: 20, textAlign: 'right' }}

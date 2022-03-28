@@ -18,6 +18,8 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
     reportId: id,
     xpathMd5: tabList?.[0]?.xpathMd5,
     current: 0,
+    sorter: undefined,
+    order: undefined,
   });
 
   const [viewType, setViewType] = useState(1);
@@ -30,14 +32,19 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         dataIndex: 'serviceName',
         align: 'right',
         ellipsis: true,
+        className: styles['direction-rtl'],
         render: (text, record) => {
           return (
-            <div>
-              <div>
+            <span>
+              <span style={{ color: 'var(--Netural-900, #303336)' }}>
                 /provider/conver#convertAndSend3/provider/conver#convertAndSend3/provider/conver#convertAndSend3
+              </span>
+              <div
+                style={{ fontSize: 12, color: 'var(--Netural-700, #6F7479)' }}
+              >
+                mall-monitor-1.0-SNAPSHOT
               </div>
-              <div>mall-monitor-1.0-SNAPSHOT</div>
-            </div>
+            </span>
           );
         },
       },
@@ -45,21 +52,25 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         ...customColumnProps,
         title: '调用总次数',
         dataIndex: 'applicationName',
+        sorter: true,
       },
       {
         ...customColumnProps,
         title: '平均自耗时',
         dataIndex: 'interfaceName',
+        sorter: true,
       },
       {
         ...customColumnProps,
         title: '最大耗时',
         dataIndex: 'tps',
+        sorter: true,
       },
       {
         ...customColumnProps,
         title: '平均耗时占比',
         dataIndex: 'rt',
+        sorter: true,
         render: (text) => {
           return <span>{text}ms</span>;
         },
@@ -102,9 +113,16 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
           {viewType === 1 && (
             <ServiceCustomTable
               service={PressureTestReportService.queryBottleneckAPIList}
-              dataSource={[{ serviceName: 'aaaa' }]}
               defaultQuery={tableQuery}
               columns={getBottleneckAPIListColumns()}
+              onChange={(pagination, filters, sorter) => {
+                setTableQuery({
+                  ...tableQuery,
+                  current: 0,
+                  sorter: sorter.order ? sorter.field : undefined,
+                  order: sorter.order,
+                });
+              }}
             />
           )}
           {viewType === 2 && <div />}
