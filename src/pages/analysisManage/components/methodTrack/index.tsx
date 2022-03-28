@@ -99,11 +99,13 @@ const MethodTrack: React.FC<Props> = props => {
       traceObject: state.traceObject,
       ...params
     });
-    setState({ loading: false });
     if (data && success) {
       setState({ sampleId: data.sampleId });
+    } else {
+      setState({ loading: false });
     }
   };
+
   const renderFormNode = (): React.ReactNode => {
     if (isReport) {
       return (
