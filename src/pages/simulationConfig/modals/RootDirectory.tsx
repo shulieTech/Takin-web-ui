@@ -257,7 +257,7 @@ const RootDirectoryModal: React.FC<Props> = (props) => {
             x-linkages={[
               {
                 type: 'value:visible',
-                target: '.swiftCfg.username',
+                target: '.swiftCfg.uname',
                 condition: '{{ $self.value === 1 }}',
               },
               {
@@ -273,7 +273,7 @@ const RootDirectoryModal: React.FC<Props> = (props) => {
             ]}
           />
           <Field
-            name="username"
+            name="uname"
             title="username"
             x-component="Input"
             x-component-props={{
