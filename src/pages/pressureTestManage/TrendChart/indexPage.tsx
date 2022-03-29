@@ -150,7 +150,7 @@ const TrendChart: React.FC<Props> = (props) => {
   const yAxis = [];
   const xAxis = [];
   const series = [];
-  const selectedLegend = {};
+  // const selectedLegend = {};
 
   seriesConfig.forEach((x, i) => {
     grid.push({
@@ -215,11 +215,11 @@ const TrendChart: React.FC<Props> = (props) => {
 
   (chartData?.list || []).forEach((x) => {
     // 初始被选中legend的数目
-    if (Object.keys(selectedLegend).length < 2) {
-      selectedLegend[x.name] = true;
-    } else {
-      selectedLegend[x.name] = false;
-    }
+    // if (Object.keys(selectedLegend).length < 2) {
+    //   selectedLegend[x.name] = true;
+    // } else {
+    //   selectedLegend[x.name] = false;
+    // }
     // 插入所有数据
     seriesConfig.forEach((y, i) => {
       series.push({
@@ -395,7 +395,6 @@ const TrendChart: React.FC<Props> = (props) => {
             echartInstance={echartRef.current?.getEchartsInstance()}
             seriesShowed={seriesShowed}
             onChangeShowedSeries={setSeriesShowed}
-            // seriesSelected={Object.entries(selectedLegend).map((x,y))}
           />
         </div>
       </div>

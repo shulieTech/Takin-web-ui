@@ -1,6 +1,7 @@
 import React, { useState, useEffect, CSSProperties, ReactNode } from 'react';
-import { Dropdown, Input, Icon, Checkbox, Button } from 'antd';
+import { Dropdown, Input, Icon, Checkbox, Button, Table } from 'antd';
 import Echarts from 'echarts-for-react';
+import styles from '../../pressureTestReport/index.less';
 
 type Option = {
   name: string;
@@ -78,39 +79,58 @@ const LegendSelect: React.FC<Props> = (props) => {
     >
       <div style={{ padding: 8 }}>
         <Input
+          allowClear
           placeholder={searchPlaceholder}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
       </div>
-      <Checkbox.Group value={seriesShowed} onChange={checkboxChangeHandle}>
-        {allSeries.map((x) => {
-          const isShow = searchText ? x.name.includes(searchText) : true;
-          return (
-            <div
-              key={x.name}
-              style={{
-                lineHeight: '40px',
-                padding: '0 16px',
-                borderBottom: '1px solid #F7F8FA',
-                display: isShow ? 'block' : 'none',
-              }}
-            >
-              <Checkbox value={x.name}>
-                <span
-                  style={{
-                    width: 16,
-                    lineHeight: '16px',
-                    display: 'inline-block',
-                    verticalAlign: 'midldle',
-                  }}
-                />
-                {x.name}
-              </Checkbox>
-            </div>
-          );
-        })}
-      </Checkbox.Group>
+      <Table
+        className={styles['table-no-border']}
+        size="small"
+        pagination={false}
+        showHeader={false}
+        dataSource={allSeries}
+        rowKey="name"
+        columns={[
+          {
+            dataIndex: 'name',
+            render: (text, record) => {
+              return (
+                <>
+                  <span
+                    style={{
+                      width: 16,
+                      height: 16,
+                      display: 'inline-block',
+                      verticalAlign: 'middle',
+                      borderRadius: 2,
+                      marginRight: 4,
+                      backgroundColor: '#79D193',
+                    }}
+                  />
+                  {text}
+                </>
+              );
+            },
+          },
+        ]}
+        rowSelection={{
+          columnWidth: 20,
+          selectedRowKeys: seriesShowed,
+          onChange: checkboxChangeHandle,
+          onSelect: (record, selected, selectedRows, nativeEvent) => {
+            if (selected && !seriesSelected.includes(record.name)) {
+              setSeriesSelected([...seriesSelected, record.name]);
+            }
+          },
+        }}
+        footer={(currentPageData) => (
+          <div>
+            <Checkbox>全选</Checkbox>
+          </div>
+        )}
+      />
     </div>
   );
 
