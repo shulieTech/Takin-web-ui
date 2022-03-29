@@ -37,10 +37,24 @@ const TimeCostChart: React.FC<Props> = (props) => {
 
   return (
     <div>
+      <div
+        style={{
+          color: 'var(--Netural-600, #90959A)',
+          fontSize: 12,
+          padding: '16px 0',
+        }}
+      >
+        默认展示耗时占比前五项数据 ，可在图例中进行切换
+      </div>
       <ReactEcharts
         ref={echartRef}
         style={{ width: '100%', height: 400 }}
         option={{
+          grid: {
+            top: 80,
+            left: 50,
+            right: 50,
+          },
           color: [
             '#6CBEDC',
             '#79D193',
@@ -108,7 +122,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
           }),
           legend: {
             show: false,
-          }
+          },
         }}
       />
       <LegendSelect
@@ -117,7 +131,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
           left: 16,
           right: 0,
           height: 56,
-          top: 60,
+          top: 100,
         }}
         label="接口"
         searchPlaceholder="搜索接口"
