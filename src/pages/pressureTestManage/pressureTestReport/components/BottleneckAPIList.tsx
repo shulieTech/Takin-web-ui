@@ -6,6 +6,7 @@ import PressureTestReportService from '../service';
 import TreeTable from './TreeTable';
 import styles from '../index.less';
 import ServiceCustomTable from 'src/components/service-custom-table';
+import TimeCostChart from './TimeCostChart';
 
 interface Props {
   id?: string;
@@ -125,7 +126,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
               }}
             />
           )}
-          {viewType === 2 && <div />}
+          {viewType === 2 && <TimeCostChart />}
         </div>
       </div>
     </Fragment>

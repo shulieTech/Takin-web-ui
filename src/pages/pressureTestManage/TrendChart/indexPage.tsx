@@ -70,7 +70,7 @@ const TrendChart: React.FC<Props> = (props) => {
   });
 
   const [seriesShowed, setSeriesShowed] = useState(
-    chartData.list.slice(3).map((item) => item.name)
+    chartData.list.slice(0, 3).map((item) => item.name)
   );
 
   const commonGrid = {
@@ -166,9 +166,9 @@ const TrendChart: React.FC<Props> = (props) => {
           color: '#00BCD4',
         },
       },
-      axisTick: {
-        show: false,
-      },
+      // axisTick: {
+      //   show: false,
+      // },
       axisLabel: {
         color: '#98A1B3',
       },
