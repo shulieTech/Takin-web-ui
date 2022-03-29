@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TreeSelect } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import service from './service';
+import LegendSelect from './components/LegendSelect';
 
 interface Props {
   location: {
@@ -13,6 +14,7 @@ const TrendChart: React.FC<Props> = (props) => {
   const [query, setQuery] = useState({
     ...props.location?.query,
   });
+  const echartRef = useRef();
   const [appList, setAppList] = useState([]);
   const [chartData, setChartData] = useState({
     time: [
@@ -40,12 +42,40 @@ const TrendChart: React.FC<Props> = (props) => {
         disk: [20, 33, 41, 90, 300],
         network: [51, 41, 141, 231, 45],
       },
+      {
+        name: '192.168.1.1',
+        requestFlow: [13, 2, 1, 6, 35],
+        cpu: [30, 20, 10, 14, 25],
+        ram: [400, 200, 11, 260, 350],
+        disk: [20, 33, 41, 90, 300],
+        network: [51, 41, 141, 231, 45],
+      },
+      {
+        name: '192.168.1.2',
+        requestFlow: [24, 2, 1, 6, 35],
+        cpu: [30, 20, 10, 14, 25],
+        ram: [400, 200, 11, 260, 350],
+        disk: [20, 33, 41, 90, 300],
+        network: [51, 41, 141, 231, 45],
+      },
+      {
+        name: '192.168.1.3',
+        requestFlow: [34, 2, 1, 6, 35],
+        cpu: [30, 20, 10, 14, 25],
+        ram: [400, 200, 11, 260, 350],
+        disk: [20, 33, 41, 90, 300],
+        network: [51, 41, 141, 231, 45],
+      },
     ],
   });
 
+  const [seriesShowed, setSeriesShowed] = useState(
+    chartData.list.slice(3).map((item) => item.name)
+  );
+
   const commonGrid = {
     left: '3%',
-    height: 180,
+    height: 200,
     width: `43%`,
     show: true,
     borderColor: 'none',
@@ -56,37 +86,37 @@ const TrendChart: React.FC<Props> = (props) => {
       name: '请求流量',
       dataIndex: 'requestFlow',
       gridCfg: {
-        top: 120,
+        top: 180,
       },
     },
     {
       name: 'CPU',
       dataIndex: 'cpu',
       gridCfg: {
-        top: 380,
+        top: 460,
       },
     },
     {
       name: '内存',
       dataIndex: 'ram',
       gridCfg: {
-        top: 380,
-        left: '52%',
+        top: 460,
+        left: '53%',
       },
     },
     {
       name: '磁盘',
       dataIndex: 'disk',
       gridCfg: {
-        top: 640,
+        top: 740,
       },
     },
     {
       name: '网络',
       dataIndex: 'network',
       gridCfg: {
-        top: 640,
-        left: '52%',
+        top: 740,
+        left: '53%',
       },
     },
   ];
@@ -185,7 +215,7 @@ const TrendChart: React.FC<Props> = (props) => {
 
   (chartData?.list || []).forEach((x) => {
     // 初始被选中legend的数目
-    if (Object.keys(selectedLegend).length < 5) {
+    if (Object.keys(selectedLegend).length < 2) {
       selectedLegend[x.name] = true;
     } else {
       selectedLegend[x.name] = false;
@@ -264,73 +294,110 @@ const TrendChart: React.FC<Props> = (props) => {
             maxHeight: 200,
           }}
         />
+        <div style={{ position: 'relative' }}>
+          <ReactEcharts
+            ref={echartRef}
+            style={{ width: '100%', height: 1110 }}
+            option={{
+              grid,
+              xAxis,
+              yAxis,
+              series,
+              color: [
+                '#6CBEDC',
+                '#79D193',
+                '#66BCDB',
+                '#ECBB35',
+                '#DF7672',
+                '#5A97E0',
+                '#90CDAC',
+                '#6462B9',
+              ],
+              backgroundColor: '#fff',
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  animation: false,
+                },
+                formatter: (val) => {
+                  let str = `${val[0]?.axisValue} <br>`;
+                  let mutiSeriAdded = false;
+                  val.forEach((x) => {
+                    const isTps = x.seriesName.startsWith('series');
+                    if (!isTps) {
+                      const typeName = x.seriesId.split('-')?.[1];
+                      str += `${x.marker} ${x.seriesName} ${typeName}: ${x.value}<br>`;
+                    }
+                    if (isTps && !mutiSeriAdded) {
+                      str += `${x.marker} TPS ${x.value}<br>`;
+                      mutiSeriAdded = true;
+                    }
+                    if (isTps) {
+                      str += '<hr style="opacity: 0.4">';
+                    }
+                  });
+                  return str;
+                },
+              },
+              dataZoom: [
+                {
+                  show: true,
+                  type: 'slider',
+                  top: 20,
+                  left: 100,
+                  right: 100,
+                  realtime: true,
+                  start: 0,
+                  end: 100,
+                  xAxisIndex: [0, 1, 2, 3, 4],
 
-        <ReactEcharts
-          style={{ width: '100%', height: 1110 }}
-          option={{
-            grid,
-            xAxis,
-            yAxis,
-            series,
-            color: [
-              '#6CBEDC',
-              '#79D193',
-              '#66BCDB',
-              '#ECBB35',
-              '#DF7672',
-              '#5A97E0',
-              '#90CDAC',
-              '#6462B9',
-            ],
-            backgroundColor: '#fff',
-            tooltip: {
-              trigger: 'axis',
+                  // bottom: 1080,
+                  // backgroundColor: '#EEF0F2',
+                  // borderColor: 'transparent',
+                  // fillerColor: '#3976E8',
+                  // dataBackground: {
+                  //   lineStyle: {
+                  //     color: 'transparent',
+                  //   },
+                  //   areaStyle: {
+                  //     color: 'transparent',
+                  //   },
+                  // },
+                  // handleIcon: 'path://M25,50 a 25,25 0 1,1 50,0 a 25,25 0 1,1 -50,0',
+                  // handleStyle: {
+                  //   color: '#fff',
+                  //   borderColor: '#3976E8',
+                  // },
+                },
+              ],
               axisPointer: {
-                animation: false,
+                link: { xAxisIndex: 'all' },
               },
-              formatter: (val) => {
-                let str = `${val[0]?.axisValue} <br>`;
-                let mutiSeriAdded = false;
-                val.forEach((x) => {
-                  const isTps = x.seriesName.startsWith('series');
-                  if (!isTps) {
-                    const typeName = x.seriesId.split('-')?.[1];
-                    str += `${x.marker} ${x.seriesName} ${typeName}: ${x.value}<br>`;
-                  }
-                  if (isTps && !mutiSeriAdded) {
-                    str += `${x.marker} TPS ${x.value}<br>`;
-                    mutiSeriAdded = true;
-                  }
-                  if (isTps) {
-                    str += '<hr style="opacity: 0.4">';
-                  }
-                });
-                return str;
+              legend: {
+                show: false,
+                // type: 'scroll',
+                // top: 50,
+                // icon: 'path://M0,0 L0,10 L10,10 L10,0 z',
+                // selected: selectedLegend,
               },
-            },
-            dataZoom: [
-              {
-                show: true,
-                type: 'slider',
-                top: 10,
-                left: 100,
-                right: 100,
-                realtime: true,
-                start: 0,
-                end: 100,
-                xAxisIndex: [0, 1, 2, 3],
-              },
-            ],
-            axisPointer: {
-              link: { xAxisIndex: 'all' },
-            },
-            legend: {
-              type: 'scroll',
-              top: 50,
-              selected: selectedLegend,
-            },
-          }}
-        />
+            }}
+          />
+          <LegendSelect
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              height: 56,
+              top: 60,
+            }}
+            label="应用节点"
+            allSeries={chartData.list}
+            echartInstance={echartRef.current?.getEchartsInstance()}
+            seriesShowed={seriesShowed}
+            onChangeShowedSeries={setSeriesShowed}
+            // seriesSelected={Object.entries(selectedLegend).map((x,y))}
+          />
+        </div>
       </div>
     </div>
   );
