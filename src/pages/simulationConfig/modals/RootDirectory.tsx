@@ -267,7 +267,7 @@ const RootDirectoryModal: React.FC<Props> = (props) => {
               },
               {
                 type: 'value:visible',
-                target: '.swiftCfg.userKey',
+                target: '.swiftCfg.account',
                 condition: '{{ $self.value === 1 }}',
               },
               {
