@@ -1,7 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import AgentVersin from './modals/AgentVersin';
 import TakeEffect from './modals/takeEffect';
-import { Input, Form, Button, Row, Col, Select, Radio, Tabs, Badge, Tooltip, Popover } from 'antd';
+import {
+  Input,
+  Form,
+  Button,
+  Row,
+  Col,
+  Select,
+  Radio,
+  Tabs,
+  Badge,
+  Tooltip,
+  Popover,
+  Icon,
+} from 'antd';
 import { useStateReducer } from 'racc';
 import configService from './service';
 import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
@@ -35,7 +48,7 @@ const getInitState = () => ({
   visible: false,
   buDisabled: true,
   datas: {
-    pathType: 0
+    pathType: 0,
   },
   context: {
     endpoint: '',
@@ -45,21 +58,28 @@ const getInitState = () => ({
     ftpHost: '',
     ftpPort: '',
     username: '',
-    passwd: ''
+    passwd: '',
   },
   validStatus: 0,
-  errorMsg: null
+  errorMsg: null,
 });
 export type AdminState = ReturnType<typeof getInitState>;
 
-const Admin: React.FC<AdminProps> = props => {
+const Admin: React.FC<AdminProps> = (props) => {
   const [state, setState] = useStateReducer<AdminState>(getInitState());
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
+
+  const [syncing, setSyncing] = useState(false);
   useEffect(() => {
     queryPatrolSceneAndDashbordList();
-  }, [state.isEffect, state.effectMechanism, state.projectName, state.readProjectConfig]);
+  }, [
+    state.isEffect,
+    state.effectMechanism,
+    state.projectName,
+    state.readProjectConfig,
+  ]);
 
   useEffect(() => {
     queryPatrolSceneAndDashbordList();
@@ -67,13 +87,22 @@ const Admin: React.FC<AdminProps> = props => {
 
   useEffect(() => {
     allApplication();
-    onClick();
   }, []);
 
-  const onClick = async () => {
+  useEffect(() => {
+    getRootDictionaryConfig();
+  }, [state.visible]);
+
+  const getRootDictionaryConfig = async () => {
+    if (syncing) {
+      return;
+    }
+    setSyncing(true);
     const {
-      data: { data, success }
-    } = await configService.pathConfig({});
+      data: { data, success },
+    } = await configService.pathConfig({}).finally(() => {
+      setSyncing(false);
+    });
     if (success) {
       if (data?.editable === 1) {
         setState({
@@ -88,18 +117,18 @@ const Admin: React.FC<AdminProps> = props => {
         datas: data,
         context: data && JSON.parse(data?.context),
         validStatus: data.validStatus,
-        errorMsg: data.errorMsg
+        errorMsg: data.errorMsg,
       });
     }
   };
 
   const allApplication = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await configService.allApplication();
     if (success) {
       setState({
-        allApplicationList: data
+        allApplicationList: data,
       });
     }
   };
@@ -109,12 +138,12 @@ const Admin: React.FC<AdminProps> = props => {
    */
   const queryPatrolSceneAndDashbordList = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await configService.configList({
       isEffect: state.isEffect,
       effectMechanism: state.effectMechanism,
       projectName: state.projectName,
-      readProjectConfig: state.readProjectConfig
+      readProjectConfig: state.readProjectConfig,
     });
     if (success) {
       setState({
@@ -125,25 +154,25 @@ const Admin: React.FC<AdminProps> = props => {
 
   const takeEffect = (value) => {
     setState({
-      isEffect: value
+      isEffect: value,
     });
   };
 
   const mode = (value) => {
     setState({
-      effectMechanism: value
+      effectMechanism: value,
     });
   };
 
   const apply = (value) => {
     setState({
-      projectName: value
+      projectName: value,
     });
   };
 
   const radioChange = (e) => {
     setState({
-      readProjectConfig: e.target.checked
+      readProjectConfig: e.target.checked,
     });
   };
 
@@ -159,7 +188,7 @@ const Admin: React.FC<AdminProps> = props => {
         effectMechanism: [],
         isEffect: [],
         projectName: '',
-        readProjectConfig: false
+        readProjectConfig: false,
       });
     } else {
       setState({
@@ -167,7 +196,7 @@ const Admin: React.FC<AdminProps> = props => {
         effectMechanism: [],
         isEffect: [],
         projectName: state.allApplicationList[0],
-        readProjectConfig: false
+        readProjectConfig: false,
       });
     }
   };
@@ -178,17 +207,16 @@ const Admin: React.FC<AdminProps> = props => {
         effectMechanism: [],
         isEffect: [],
         projectName: '',
-        readProjectConfig: false
+        readProjectConfig: false,
       });
     } else {
       setState({
         effectMechanism: [],
         isEffect: [],
         projectName: state.allApplicationList[0],
-        readProjectConfig: false
+        readProjectConfig: false,
       });
     }
-
   };
 
   const resets = () => {
@@ -203,7 +231,7 @@ const Admin: React.FC<AdminProps> = props => {
 
   const useGlobal = async (id) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await configService.useGlobal(id);
     if (success) {
       queryPatrolSceneAndDashbordList();
@@ -254,9 +282,10 @@ const Admin: React.FC<AdminProps> = props => {
               style={{
                 color: 'red',
                 display: record.effectMechanism === 0 ? 'inline-block' : 'none',
-                marginLeft: 10
+                marginLeft: 10,
               }}
-            >需重启生效
+            >
+              需重启生效
             </span>
           </Row>
         );
@@ -291,27 +320,38 @@ const Admin: React.FC<AdminProps> = props => {
             />
             <a
               onClick={() => setState({ effectVisible: true, row: record })}
-              style={{ marginLeft: 10, display: text ? 'none' : 'inline-block' }}
-            >生效范围
+              style={{
+                marginLeft: 10,
+                display: text ? 'none' : 'inline-block',
+              }}
+            >
+              生效范围
             </a>
           </div>
         );
-      }
+      },
     },
     {
       title: '更新时间',
       dataIndex: 'gmtUpdate',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '操作',
       render: (text, record) => (
         <span>
-          <AuthorityBtn isShow={btnAuthority && btnAuthority.admins_simulationConfig_3_update}>
+          <AuthorityBtn
+            isShow={
+              btnAuthority && btnAuthority.admins_simulationConfig_3_update
+            }
+          >
             <a
               onClick={() => setState({ versinVisible: true, row: record })}
-              style={{ display: record.editable === 1 ? 'none' : 'inline-block' }}
-            >编辑
+              style={{
+                display: record.editable === 1 ? 'none' : 'inline-block',
+              }}
+            >
+              编辑
             </a>
           </AuthorityBtn>
         </span>
@@ -332,17 +372,19 @@ const Admin: React.FC<AdminProps> = props => {
               style={{
                 color: 'red',
                 display: record.effectMechanism === 0 ? 'inline-block' : 'none',
-                marginLeft: 10
+                marginLeft: 10,
               }}
-            >需重启生效
+            >
+              需重启生效
             </span>
             <span
               style={{
                 color: '#00D77D',
                 display: record.type === 1 ? 'inline-block' : 'none',
-                marginLeft: 10
+                marginLeft: 10,
               }}
-            >个性
+            >
+              个性
             </span>
           </Row>
         );
@@ -377,39 +419,57 @@ const Admin: React.FC<AdminProps> = props => {
             />
             <a
               onClick={() => setState({ effectVisible: true, row: record })}
-              style={{ marginLeft: 10, display: text ? 'none' : 'inline-block' }}
-            >生效范围
+              style={{
+                marginLeft: 10,
+                display: text ? 'none' : 'inline-block',
+              }}
+            >
+              生效范围
             </a>
           </div>
         );
-      }
+      },
     },
     {
       title: '更新时间',
       dataIndex: 'gmtUpdate',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '操作',
       width: 150,
       render: (text, record) => (
         <span>
-          <AuthorityBtn isShow={btnAuthority && btnAuthority.admins_simulationConfig_3_update}>
+          <AuthorityBtn
+            isShow={
+              btnAuthority && btnAuthority.admins_simulationConfig_3_update
+            }
+          >
             <a
               onClick={() => setState({ versinVisible: true, row: record })}
-              style={{ display: record.editable === 1 ? 'none' : 'inline-block' }}
-            >编辑
+              style={{
+                display: record.editable === 1 ? 'none' : 'inline-block',
+              }}
+            >
+              编辑
             </a>
           </AuthorityBtn>
-          <AuthorityBtn isShow={btnAuthority && btnAuthority.admins_simulationConfig_4_delete}>
+          <AuthorityBtn
+            isShow={
+              btnAuthority && btnAuthority.admins_simulationConfig_4_delete
+            }
+          >
             <a
               onClick={() => useGlobal(record.id)}
-              style={{ marginLeft: 10, display: record.type === 1 ? 'inline-block' : 'none' }}
+              style={{
+                marginLeft: 10,
+                display: record.type === 1 ? 'inline-block' : 'none',
+              }}
             >
               恢复全局配置
             </a>
           </AuthorityBtn>
-        </span >
+        </span>
       ),
     },
   ];
@@ -434,7 +494,13 @@ const Admin: React.FC<AdminProps> = props => {
           <TabPane tab="全局配置" key="1">
             <Row style={{ marginBottom: 20, marginLeft: 20 }}>
               <Col span={1} offset={9}>
-                <Button type="link" onClick={() => reset(1)} style={{ marginTop: 10 }}>重置</Button>
+                <Button
+                  type="link"
+                  onClick={() => reset(1)}
+                  style={{ marginTop: 10 }}
+                >
+                  重置
+                </Button>
               </Col>
               <Col span={4}>
                 <Select
@@ -461,23 +527,55 @@ const Admin: React.FC<AdminProps> = props => {
                 </Select>
               </Col>
               <Col span={3}>
-                <Button type="default" onClick={visible}>探针根目录管理</Button>
+                <Button type="default" onClick={visible}>
+                  探针根目录管理
+                </Button>
               </Col>
               <Col span={2} style={{ marginTop: 6 }}>
                 <Badge
-                  text={state.validStatus === 0 ? '未配置' : state.validStatus === 1 ? '检测中' :
-                    state.validStatus === 2 ? '异常' : '检测成功'}
-                  color={state.validStatus === 2 ? 'var(--FunctionalError-400)' :
-                    state.validStatus === 1 ? 'var(--FunctionalAlert-300)' : state.validStatus === 3 ? 'var(--BrandPrimary-500)' :
-                      '--FunctionalNetural-400'}
+                  text={
+                    <>
+                      {
+                        {
+                          0: '未配置',
+                          1: (
+                            <>
+                              检测中
+                              <Tooltip title="手动刷新">
+                                <Icon
+                                  type="sync"
+                                  spin={syncing}
+                                  style={{ cursor: 'pointer', marginLeft: 8 }}
+                                  onClick={getRootDictionaryConfig}
+                                />
+                              </Tooltip>
+                            </>
+                          ),
+                          2: '异常',
+                          3: '检测成功',
+                        }[state.validStatus]
+                      }
+                    </>
+                  }
+                  color={
+                    {
+                      0: '--FunctionalNetural-400',
+                      1: 'var(--FunctionalAlert-300)',
+                      2: 'var(--FunctionalError-400)',
+                      3: 'var(--BrandPrimary-500)',
+                    }[state.validStatus]
+                  }
                 />
-                {
-                  state.validStatus === 2 &&
+                {state.validStatus === 2 && (
                   <Popover
                     title="详情"
                     content={
                       <div
-                        style={{ width: 180, height: 280, overflowY: 'scroll' }}
+                        style={{
+                          width: 180,
+                          maxHeight: 280,
+                          overflowY: 'scroll',
+                        }}
                       >
                         <p>{state.errorMsg}</p>
                       </div>
@@ -486,22 +584,36 @@ const Admin: React.FC<AdminProps> = props => {
                   >
                     <Button type="link" style={{ marginLeft: 8 }}>
                       详情
-                  </Button>
-                  </Popover>}
+                    </Button>
+                  </Popover>
+                )}
               </Col>
               <Col span={1}>
                 <Button type="default" icon="redo" onClick={resets} />
               </Col>
             </Row>
-            <CustomTable columns={columns} dataSource={state.configList} pagination={false} />
+            <CustomTable
+              columns={columns}
+              dataSource={state.configList}
+              pagination={false}
+            />
           </TabPane>
           <TabPane tab="应用配置" key="2">
             <Row style={{ marginBottom: 20, marginLeft: 20 }}>
               <Col span={1} offset={7}>
-                <Button type="link" onClick={() => reset(2)} style={{ marginTop: 10 }}>重置</Button>
+                <Button
+                  type="link"
+                  onClick={() => reset(2)}
+                  style={{ marginTop: 10 }}
+                >
+                  重置
+                </Button>
               </Col>
               <Col span={3} style={{ marginTop: 6 }}>
-                <Radio.Group onChange={radioChange} value={state.readProjectConfig}>
+                <Radio.Group
+                  onChange={radioChange}
+                  value={state.readProjectConfig}
+                >
                   <Radio value={true}>仅看应用配置</Radio>
                 </Radio.Group>
               </Col>
@@ -538,20 +650,24 @@ const Admin: React.FC<AdminProps> = props => {
                   defaultValue={state.allApplicationList[0]}
                   value={state.projectName}
                 >
-                  {
-                    state.allApplicationList.map(ite => {
-                      return (
-                        <Option value={ite} key={ite}>{ite}</Option>
-                      );
-                    })
-                  }
+                  {state.allApplicationList.map((ite) => {
+                    return (
+                      <Option value={ite} key={ite}>
+                        {ite}
+                      </Option>
+                    );
+                  })}
                 </Select>
               </Col>
               <Col span={1}>
                 <Button type="default" icon="redo" onClick={resets} />
               </Col>
             </Row>
-            <CustomTable columns={column} dataSource={state.configList} pagination={false} />
+            <CustomTable
+              columns={column}
+              dataSource={state.configList}
+              pagination={false}
+            />
           </TabPane>
         </Tabs>
       </div>

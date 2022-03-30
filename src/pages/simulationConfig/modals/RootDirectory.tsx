@@ -25,6 +25,7 @@ const RootDirectoryModal: React.FC<Props> = (props) => {
       }
       : {};
   const actions = useMemo(() => createAsyncFormActions(), []);
+  const [saving, setSaving] = useState(false);
 
   const handleCancel = () => {
     setState({
@@ -34,12 +35,15 @@ const RootDirectoryModal: React.FC<Props> = (props) => {
 
   const handleOk = () => {
     actions.submit(async ({ pathType, ...values }) => {
+      setSaving(true);
       const {
         data: { success },
       } = await configService?.[state.datas.id ? 'pathUpdate' : 'pathCreate']({
         pathType,
         id: state.datas.id,
         context: JSON.stringify(values),
+      }).finally(() => {
+        setSaving(false);
       });
       if (success) {
         message.success('保存成功');
@@ -58,6 +62,7 @@ const RootDirectoryModal: React.FC<Props> = (props) => {
       onOk={handleOk}
       okButtonProps={{
         disabled: state.buDisabled,
+        loading: saving,
       }}
     >
       <SchemaForm
