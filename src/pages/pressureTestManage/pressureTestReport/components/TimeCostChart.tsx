@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import service from '../service';
 import LegendSelect, { getSeryColorByNameOrIndex } from '../../TrendChart/components/LegendSelect';
@@ -6,7 +6,7 @@ import LegendSelect, { getSeryColorByNameOrIndex } from '../../TrendChart/compon
 interface Props {}
 
 const TimeCostChart: React.FC<Props> = (props) => {
-  const echartRef = useRef();
+  const [echartRef, setEchartRef] = useState();
   const [chartData, setChartData] = useState({
     time: [
       '2022-03-11',
@@ -47,7 +47,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
         默认展示耗时占比前五项数据 ，可在图例中进行切换
       </div>
       <ReactEcharts
-        ref={echartRef}
+        ref={useCallback(echarts => setEchartRef(echarts), [])}
         style={{ width: '100%', height: 400 }}
         option={{
           grid: {
@@ -128,7 +128,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
         label="接口"
         searchPlaceholder="搜索接口"
         allSeries={chartData.list}
-        echartInstance={echartRef.current?.getEchartsInstance()}
+        echartRef={echartRef}
         seriesShowed={seriesShowed}
         onChangeShowedSeries={setSeriesShowed}
       />

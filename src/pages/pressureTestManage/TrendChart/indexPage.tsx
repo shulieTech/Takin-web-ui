@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TreeSelect } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import service from './service';
@@ -14,7 +14,7 @@ const TrendChart: React.FC<Props> = (props) => {
   const [query, setQuery] = useState({
     ...props.location?.query,
   });
-  const echartRef = useRef();
+  const [echartRef, setEchartRef] = useState();
   const [appList, setAppList] = useState([]);
   const [chartData, setChartData] = useState({
     time: [
@@ -298,7 +298,7 @@ const TrendChart: React.FC<Props> = (props) => {
         />
         <div style={{ position: 'relative' }}>
           <ReactEcharts
-            ref={echartRef}
+            ref={useCallback(echarts => setEchartRef(echarts), [])}
             style={{ width: '100%', height: 1110 }}
             option={{
               grid,
@@ -384,7 +384,7 @@ const TrendChart: React.FC<Props> = (props) => {
             }}
             label="应用节点"
             allSeries={chartData.list}
-            echartInstance={echartRef.current?.getEchartsInstance()}
+            echartRef={echartRef}
             seriesShowed={seriesShowed}
             onChangeShowedSeries={setSeriesShowed}
           />

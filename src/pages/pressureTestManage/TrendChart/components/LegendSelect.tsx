@@ -36,7 +36,8 @@ interface Props {
   onChangeShowedSeries?: (value: string[]) => void;
   allSeries?: Option[];
   renderOption?: (item: Option, value, echartInstance) => React.ReactNode;
-  echartInstance?: Echarts;
+  // echartInstance?: Echarts;
+  echartRef?: any;
   style?: CSSProperties;
   seriesSelected?: string[];
   onChangeSelectedSeries?: (value: string[]) => void;
@@ -49,7 +50,8 @@ const LegendSelect: React.FC<Props> = (props) => {
     seriesShowed = props.allSeries.slice(5).map((item) => item.name),
     onChangeShowedSeries,
     allSeries,
-    echartInstance,
+    echartRef,
+    // echartInstance,
     style,
   } = props;
   const [searchText, setSearchText] = useState('');
@@ -74,8 +76,9 @@ const LegendSelect: React.FC<Props> = (props) => {
     setSeriesSelected(seriesSelected.filter((x) => val.includes(x)));
   };
 
+  const echartInstance = props.echartRef?.getEchartsInstance();
+
   useEffect(() => {
-    // TODO 初始化时无法取到echartInstance， 待处理
     if (echartInstance) {
       allSeries.forEach((x) => {
         echartInstance.dispatchAction({
