@@ -89,6 +89,13 @@ const LegendSelect: React.FC<Props> = (props) => {
     }
   }, [echartInstance, seriesSelected, seriesShowed]);
 
+  useEffect(() => {
+    const hideDropdownContent = () => setDropdownVisible(false);
+    document.body.addEventListener('click', hideDropdownContent);
+    return () =>
+      document.body.removeEventListener('click', hideDropdownContent);
+  }, []);
+
   const dropdownContent = (
     <div
       style={{
@@ -97,6 +104,9 @@ const LegendSelect: React.FC<Props> = (props) => {
         boxShadow:
           '0px 4px 14px rgba(68, 68, 68, 0.1), 0px 2px 6px rgba(68, 68, 68, 0.1)',
         borderRadius: 4,
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
       }}
     >
       <div style={{ padding: 8 }}>
@@ -220,7 +230,10 @@ const LegendSelect: React.FC<Props> = (props) => {
       </div>
       <Dropdown overlay={dropdownContent} visible={dropdownVisible}>
         <Button
-          onClick={() => setDropdownVisible(!dropdownVisible)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setDropdownVisible(!dropdownVisible);
+          }}
           style={{
             width: 20,
             lineHeight: '20px',

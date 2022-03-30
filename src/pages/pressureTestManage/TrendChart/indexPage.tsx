@@ -324,7 +324,7 @@ const TrendChart: React.FC<Props> = (props) => {
                       str += `${x.marker} TPS ${x.value}<br>`;
                       mutiSeriAdded = true;
                     }
-                    if (isTps) {
+                    if (isTps && val.length > grid.length) {
                       str += '<hr style="opacity: 0.4">';
                     }
                   });
