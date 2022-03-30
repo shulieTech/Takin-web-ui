@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import service from '../service';
-import LegendSelect from '../../TrendChart/components/LegendSelect';
+import LegendSelect, { getSeryColorByNameOrIndex } from '../../TrendChart/components/LegendSelect';
 
 interface Props {}
 
@@ -55,16 +55,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
             left: 50,
             right: 50,
           },
-          color: [
-            '#6CBEDC',
-            '#79D193',
-            '#66BCDB',
-            '#ECBB35',
-            '#DF7672',
-            '#5A97E0',
-            '#90CDAC',
-            '#6462B9',
-          ],
+
           xAxis: {
             type: 'category',
             boundaryGap: false,
@@ -118,6 +109,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
               areaStyle: {
                 opacity: 0.25,
               },
+              color: getSeryColorByNameOrIndex({ index }),
             };
           }),
           legend: {

@@ -7,6 +7,28 @@ type Option = {
   name: string;
 };
 
+export const getSeryColorByNameOrIndex = (options: {
+  list?: { name: string }[];
+  name?: string;
+  index?: number;
+}) => {
+  const colors = [
+    '#6CBEDC',
+    '#79D193',
+    '#66BCDB',
+    '#ECBB35',
+    '#DF7672',
+    '#5A97E0',
+    '#90CDAC',
+    '#6462B9',
+  ];
+  const { list, name, index } = options;
+  if (typeof index === 'number') {
+    return colors[index % colors.length];
+  }
+  return colors[list.findIndex((x) => x.name === name) % colors.length];
+};
+
 interface Props {
   label?: string | ReactNode;
   searchPlaceholder?: string;
@@ -92,10 +114,16 @@ const LegendSelect: React.FC<Props> = (props) => {
         showHeader={false}
         dataSource={allSeries}
         rowKey="name"
+        rowClassName={(record) => {
+          if (!searchText) {
+            return '';
+          }
+          return record?.name.includes(searchText) ? '' : 'hidden';
+        }}
         columns={[
           {
             dataIndex: 'name',
-            render: (text, record) => {
+            render: (text, record, index) => {
               return (
                 <>
                   <span
@@ -106,7 +134,9 @@ const LegendSelect: React.FC<Props> = (props) => {
                       verticalAlign: 'middle',
                       borderRadius: 2,
                       marginRight: 4,
-                      backgroundColor: '#79D193',
+                      backgroundColor: getSeryColorByNameOrIndex({
+                        index,
+                      }),
                     }}
                   />
                   {text}
@@ -169,6 +199,20 @@ const LegendSelect: React.FC<Props> = (props) => {
                 toggleSelectSery(x);
               }}
             >
+              <span
+                style={{
+                  width: 16,
+                  height: 16,
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                  borderRadius: 2,
+                  marginRight: 4,
+                  backgroundColor: getSeryColorByNameOrIndex({
+                    list: allSeries,
+                    name: x,
+                  }),
+                }}
+              />
               {x}
             </div>
           );

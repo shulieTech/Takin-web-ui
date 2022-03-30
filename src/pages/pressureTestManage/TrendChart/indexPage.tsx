@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { TreeSelect } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import service from './service';
-import LegendSelect from './components/LegendSelect';
+import LegendSelect, { getSeryColorByNameOrIndex } from './components/LegendSelect';
 
 interface Props {
   location: {
@@ -227,13 +227,15 @@ const TrendChart: React.FC<Props> = (props) => {
         showSymbol: true,
         hoverAnimation: false,
         smooth: true,
-
         name: x.name, // 公用同一个名字的线被划分在一个legend里
         id: `${x.name}-${y.name}-${i}`,
         xAxisIndex: i,
         yAxisIndex: 2 * i,
         data: x[y.dataIndex] || [],
-        // color: undefined,
+        color: getSeryColorByNameOrIndex({
+          list: chartData.list,
+          name: x.name,
+        })
       });
     });
   });
@@ -303,16 +305,6 @@ const TrendChart: React.FC<Props> = (props) => {
               xAxis,
               yAxis,
               series,
-              color: [
-                '#6CBEDC',
-                '#79D193',
-                '#66BCDB',
-                '#ECBB35',
-                '#DF7672',
-                '#5A97E0',
-                '#90CDAC',
-                '#6462B9',
-              ],
               backgroundColor: '#fff',
               tooltip: {
                 trigger: 'axis',
