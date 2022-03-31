@@ -3,6 +3,7 @@ import { Table, Icon, Tooltip } from 'antd';
 import styles from '../index.less';
 import useListService from 'src/utils/useListService';
 import { filterInTreeData } from 'src/utils/utils';
+import { ColumnProps } from 'antd/lib/table';
 
 import { Basic } from 'src/types';
 import BaseResponse = Basic.BaseResponse;
@@ -13,66 +14,49 @@ interface Props {
   defaultQuery?: any;
   selectedKey?: string | number;
   onChange?: (key: string | number, record) => void;
-  columns?: any[];
+  extraColumns?: ColumnProps<any>[];
   tickerTime?: number;
   getRowDisabled?: (record: any) => boolean;
 }
 
 const TreeTable: React.FC<Props> = (props) => {
-  const { getRowDisabled, rowKey = 'xpathMd5' } = props;
+  const { getRowDisabled, rowKey = 'xpathMd5', extraColumns = [] } = props;
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
-  const {
-    selectedKey,
-    onChange,
-    columns = [
-      {
-        dataIndex: 'testName',
-        ellipsis: true,
-        render: (text, record) => {
-          const isSelected = selectedKey === record[rowKey];
-          const isDisbaled = getRowDisabled ? getRowDisabled(record) : false;
-          return (
-            <Tooltip title={text} placement="bottomLeft">
-              <span
-                style={{
-                  color: isSelected ? 'var(--BrandPrimary-500)' : 'inherit',
-                  cursor: isDisbaled ? 'not-allowed' : 'pointer',
-                  opacity: isDisbaled ? 0.6 : 1,
-                }}
-                onClick={() => {
-                  if (!isDisbaled) {
-                    if (isSelected) {
-                      onChange?.(null, null);
-                    } else {
-                      onChange?.(record[rowKey], record);
-                    }
-                  }
-                }}
-              >
-                {text}
-              </span>
-            </Tooltip>
-          );
-        },
-      },
-      {
-        dataIndex: 'num',
-        width: 100,
-        render: (text) => {
-          return (
+  const { selectedKey, onChange, tickerTime = 0 } = props;
+
+  const columns = [
+    {
+      dataIndex: 'testName',
+      ellipsis: true,
+      render: (text, record) => {
+        const isSelected = selectedKey === record[rowKey];
+        const isDisbaled = getRowDisabled ? getRowDisabled(record) : false;
+        return (
+          <Tooltip title={text} placement="bottomLeft">
             <span
               style={{
-                color: 'var(--Netural-700, #6F7479)',
+                color: isSelected ? 'var(--BrandPrimary-500)' : 'inherit',
+                cursor: isDisbaled ? 'not-allowed' : 'pointer',
+                opacity: isDisbaled ? 0.6 : 1,
+              }}
+              onClick={() => {
+                if (!isDisbaled) {
+                  if (isSelected) {
+                    onChange?.(null, null);
+                  } else {
+                    onChange?.(record[rowKey], record);
+                  }
+                }
               }}
             >
-              {text || '3000/1111'}
+              {text}
             </span>
-          );
-        },
+          </Tooltip>
+        );
       },
-    ],
-    tickerTime = 0,
-  } = props;
+    },
+    ...extraColumns,
+  ];
 
   const { list, getList, loading } = useListService({
     service: props.service,

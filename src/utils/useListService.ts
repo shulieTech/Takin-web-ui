@@ -36,7 +36,7 @@ const useListService = (props: Props) => {
     if (success) {
       setQuery(newQuery);
       setList(data?.list || data);
-      setTotal(parseInt(totalCount || data?.count || 0, 10));
+      setTotal(parseInt(totalCount || data?.count, 10) || 0);
     }
     if (typeof afterSearchCallback === 'function') {
       afterSearchCallback(res);

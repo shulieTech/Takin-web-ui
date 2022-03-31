@@ -55,7 +55,7 @@ const LegendSelect: React.FC<Props> = (props) => {
     allSeries,
     echartRef,
     style,
-    extraColumns,
+    extraColumns = [],
     overlayStyle,
   } = props;
   const [searchText, setSearchText] = useState('');

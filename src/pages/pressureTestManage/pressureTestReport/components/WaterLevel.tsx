@@ -338,6 +338,7 @@ const WaterLevel: React.FC<Props> = (props) => {
           defaultQuery={{ reportId: props.id }}
           onChange={(id) => {
             setDefaultQuery({
+              ...defaultQuery,
               id,
               current: 0,
             });
@@ -363,6 +364,7 @@ const WaterLevel: React.FC<Props> = (props) => {
             allowClear
             onChange={(appId) => {
               setDefaultQuery({
+                ...defaultQuery,
                 appId,
                 current: 0,
               });

@@ -97,6 +97,23 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
                 current: 0,
               });
             }}
+            extraColumns={[
+              {
+                dataIndex: 'num',
+                width: 100,
+                render: (text) => {
+                  return (
+                    <span
+                      style={{
+                        color: 'var(--Netural-700, #6F7479)',
+                      }}
+                    >
+                      {text || '3000/1112'}
+                    </span>
+                  );
+                },
+              },
+            ]}
           />
         </div>
         <div
