@@ -11,7 +11,9 @@ import AssertModal from 'src/pages/scriptManage/modals/AssertModal';
 import copy from 'copy-to-clipboard';
 import RequestFlowQueryForm from './RequestFlowQueryForm';
 import moment from 'moment';
-import BusinessActivityTree from './BusinessActivityTree';
+import BusinessActivityTree, {
+  getFirstTreeNodeByFilter,
+} from './BusinessActivityTree';
 
 interface Props {
   id?: string;
@@ -26,23 +28,43 @@ interface State {
     sortType?: 'desc' | 'asc';
     startTime?: number;
     // endTime?: number;
+    serviceName?: string;
+    methodName?: string;
+    xpathMd5?: string;
   };
   data: any;
   total: number;
   loading: boolean;
   type: string;
 }
+
 const RequestList: React.FC<Props> = (props) => {
   // const { TabPane } = Tabs;
   const { id } = props;
+
+  // const firstTreeNode = getFirstTreeNodeByFilter(
+  //   props.tabList,
+  //   (node) => !!node.identification
+  // );
+
+  // let methodName;
+  // let serviceName;
+  // let defaultTreeSelectedKey;
+  // if (firstTreeNode) {
+  //   defaultTreeSelectedKey = firstTreeNode?.xpathMd5;
+  //   [methodName, serviceName] = firstTreeNode?.identification?.split('|') || [];
+  // }
   const [state, setState] = useStateReducer<State>({
     searchParams: {
+      // serviceName,
+      // methodName,
       current: 0,
       pageSize: 10,
       sortField: undefined,
       sortType: undefined,
       startTime: moment(props.detailData?.startTime).valueOf(),
       // endTime: moment(props.detailData?.endTime).valueOf(),
+      xpathMd5: props?.tabList?.[0]?.xpathMd5,
     },
     data: null,
     total: 0,
@@ -240,20 +262,23 @@ const RequestList: React.FC<Props> = (props) => {
         <div className={styles.leftSelected}>
           <BusinessActivityTree
             tabList={props.tabList}
-            // defaultSelectedKey={state.tabKey}
-            checkNodeDisabled={(node) => !node.identification}
+            defaultSelectedKey={state.searchParams.xpathMd5}
+            // defaultSelectedKey={defaultTreeSelectedKey}
+            // checkNodeDisabled={(node) => !node.identification}
             onChange={(key, e) => {
               let result = {
-                serviceName: undefined,
-                methodName: undefined,
+                // serviceName: undefined,
+                // methodName: undefined,
+                xpathMd5: undefined,
                 current: 0,
               };
               if (e.selected) {
-                const [methodName, serviceName] =
-                  e?.node?.props?.dataRef?.identification?.split('|') || [];
+                // const [_methodName, _serviceName] =
+                //   e?.node?.props?.dataRef?.identification?.split('|') || [];
                 result = {
-                  methodName,
-                  serviceName,
+                  // methodName: _methodName,
+                  // serviceName: _serviceName,
+                  xpathMd5: key,
                   current: 0,
                 };
               }

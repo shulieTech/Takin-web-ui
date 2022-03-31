@@ -32,7 +32,7 @@ interface State {
   originData: any[];
   totalRt: number;
 }
-const RequestDetailModal: React.FC<Props> = props => {
+const RequestDetailModal: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     data: null,
@@ -43,12 +43,12 @@ const RequestDetailModal: React.FC<Props> = props => {
     clusterTest: null,
     traceId: null,
     loading: false,
-    totalRt: null
+    totalRt: null,
   });
 
   const { traceId } = props;
 
-  const timestampToTime = timestamp => {
+  const timestampToTime = (timestamp) => {
     const date = new Date(timestamp);
     const Y = `${date.getFullYear()}-`;
     const M =
@@ -66,25 +66,25 @@ const RequestDetailModal: React.FC<Props> = props => {
   const handleClick = () => {
     setState({
       traceId,
-      totalRt: props.totalRt
+      totalRt: props.totalRt,
     });
     queryRequestDetail({
-      traceId
+      traceId,
     });
   };
 
   /**
    * @name 获取请求详情列表
    */
-  const queryRequestDetail = async value => {
+  const queryRequestDetail = async (value) => {
     setState({
       data: null,
-      loading: true
+      loading: true,
     });
     const {
-      data: { success, data }
+      data: { success, data },
     } = await PressureTestReportService.queryRequestDetail({
-      ...value
+      ...value,
     });
     if (success) {
       if (data) {
@@ -95,18 +95,18 @@ const RequestDetailModal: React.FC<Props> = props => {
           startTime: data.startTime,
           entryHostIp: data.entryHostIp,
           clusterTest: data.clusterTest,
-          loading: false
+          loading: false,
         });
       } else {
         setState({
           data: null,
-          loading: false
+          loading: false,
         });
       }
     }
   };
 
-  const handleCopy = async value => {
+  const handleCopy = async (value) => {
     if (copy(value)) {
       message.success('复制成功');
     } else {
@@ -129,7 +129,11 @@ const RequestDetailModal: React.FC<Props> = props => {
                 title={
                   <div style={{ maxHeight: 300, overflow: 'scroll' }}>
                     <div style={{ textAlign: 'right' }}>
-                      <a onClick={() => handleCopy(`${row.methodName}/${text}`)}>复制</a>
+                      <a
+                        onClick={() => handleCopy(`${row.methodName}/${text}`)}
+                      >
+                        复制
+                      </a>
                     </div>
                     {row.methodName}/{text}
                   </div>}
@@ -140,7 +144,7 @@ const RequestDetailModal: React.FC<Props> = props => {
                     maxWidth: 200,
                     overflow: 'hidden',
                     whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis'
+                    textOverflow: 'ellipsis',
                   }}
                 >
                   {row.methodName}/{text}
@@ -148,25 +152,25 @@ const RequestDetailModal: React.FC<Props> = props => {
               </Tooltip>
             </span>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
         title: '调用方/被调用方',
         dataIndex: 'logTypeName',
-        width: 120
+        width: 120,
       },
       {
         ...customColumnProps,
         title: 'IP',
         dataIndex: 'nodeIp',
-        width: 140
+        width: 140,
       },
       {
         ...customColumnProps,
         title: '同步/异步',
         dataIndex: 'asyncName',
-        width: 100
+        width: 100,
       },
       {
         ...customColumnProps,
@@ -189,7 +193,7 @@ const RequestDetailModal: React.FC<Props> = props => {
               </span>
             </Tooltip>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -197,24 +201,24 @@ const RequestDetailModal: React.FC<Props> = props => {
         dataIndex: 'params',
         ellipsis: true,
         width: 200,
-        render: text => {
+        render: (text) => {
           return text ? (
             <Tooltip
               placement="bottomLeft"
               title={
                 <div style={{ maxHeight: 300, overflow: 'scroll' }}>
-                <div style={{ textAlign: 'right' }}>
-                  <a onClick={() => handleCopy(text)}>复制</a>
-                </div>
-                {text}
-              </div>}
+                  <div style={{ textAlign: 'right' }}>
+                    <a onClick={() => handleCopy(text)}>复制</a>
+                  </div>
+                  {text}
+                </div>}
             >
               <span>{text}</span>
             </Tooltip>
           ) : (
             <span>-</span>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -240,7 +244,7 @@ const RequestDetailModal: React.FC<Props> = props => {
               </Row>
             </Fragment>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -248,24 +252,24 @@ const RequestDetailModal: React.FC<Props> = props => {
         dataIndex: 'response',
         ellipsis: true,
         width: 200,
-        render: text => {
+        render: (text) => {
           return text ? (
             <Tooltip
               placement="bottomLeft"
               title={
                 <div style={{ maxHeight: 300, overflow: 'scroll' }}>
-                <div style={{ textAlign: 'right' }}>
-                  <a onClick={() => handleCopy(text)}>复制</a>
-                </div>
-                {text}
-              </div>}
+                  <div style={{ textAlign: 'right' }}>
+                    <a onClick={() => handleCopy(text)}>复制</a>
+                  </div>
+                  {text}
+                </div>}
             >
               <span>{text}</span>
             </Tooltip>
           ) : (
             <span>-</span>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -280,14 +284,17 @@ const RequestDetailModal: React.FC<Props> = props => {
                 <div
                   className={styles.timeLineWrap}
                   style={{
-                    left: Math.min(150, (150 / state.totalCost) * row.offsetStartTime)
+                    left: Math.min(
+                      150,
+                      (150 / state.totalCost) * row.offsetStartTime
+                    ),
                   }}
                 >
                   <span
                     className={styles.timeLine}
                     style={{
                       width: Math.min(150, (150 / state.totalCost) * text),
-                      marginRight: 2
+                      marginRight: 2,
                     }}
                   />
                   <span>{text === 0 ? '<1' : text}ms</span>
@@ -295,20 +302,33 @@ const RequestDetailModal: React.FC<Props> = props => {
               )}
             </div>
           );
-        }
-      }
+        },
+      },
     ];
     const actions = {
       title: '操作',
       dataIndex: 'actions',
       width: 100,
       render: (text, row) => {
-        if (row.entryHostIp && row.agentId && row.trackMethod) {
+        if (
+          row.entryHostIp &&
+          row.agentId
+          // && row.trackMethod
+        ) {
           return (
             <Button
               onClick={() =>
+                // router.push(
+                //   `/analysisManage?tab=method&appName=${
+                //     row.applicationName
+                //   }&processName=${row.entryHostIp}|${row.agentId}&reportId=${
+                //     props.reportId
+                //   }&type=actually&traceObject=${encodeURIComponent(
+                //     row.trackMethod
+                //   )}`
+                // )
                 router.push(
-                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually&traceObject=${encodeURIComponent(row.trackMethod)}`
+                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually`
                 )
               }
               style={{ marginLeft: 16 }}
@@ -319,7 +339,7 @@ const RequestDetailModal: React.FC<Props> = props => {
             </Button>
           );
         }
-      }
+      },
     };
     if (props.isLive) {
       columns.push(actions);
@@ -330,20 +350,20 @@ const RequestDetailModal: React.FC<Props> = props => {
   const handleExpand = async (expanded, record) => {
     if (expanded === false) {
       setState({
-        data: changeNodes(state.data, record.id, [])
+        data: changeNodes(state.data, record.id, []),
       });
       return;
     }
     const {
-      data: { success, data }
+      data: { success, data },
     } = await PressureTestReportService.queryRequestDetail({
       traceId,
-      id: record.id
+      id: record.id,
     });
     if (success) {
       if (data) {
         setState({
-          data: changeNodes(state.data, record.id, data.traces)
+          data: changeNodes(state.data, record.id, data.traces),
         });
       }
     }
@@ -353,7 +373,7 @@ const RequestDetailModal: React.FC<Props> = props => {
    * @name 替换子节点
    */
   function changeNodes(data, id, node) {
-    data.map(item => {
+    data.map((item) => {
       if (item.id === id) {
         item.nextNodes = node;
       }
@@ -368,24 +388,24 @@ const RequestDetailModal: React.FC<Props> = props => {
   const requestHeadList = [
     {
       label: '调用链路入口',
-      value: state.entryHostIp
+      value: state.entryHostIp,
     },
     {
       label: '开始时间',
-      value: state.startTime && timestampToTime(state.startTime)
+      value: state.startTime && timestampToTime(state.startTime),
     },
     {
       label: '总耗时',
-      value: state.totalRt ? `${state.totalRt}ms` : null
+      value: state.totalRt ? `${state.totalRt}ms` : null,
     },
     {
       label: '网络耗时',
-      value: `${state.totalRt - state.totalCost}ms`
+      value: `${state.totalRt - state.totalCost}ms`,
     },
     {
       label: '接口耗时',
-      value: state.totalCost ? `${state.totalCost}ms` : null
-    }
+      value: state.totalCost ? `${state.totalCost}ms` : null,
+    },
   ];
 
   return (
@@ -402,7 +422,7 @@ const RequestDetailModal: React.FC<Props> = props => {
               (请求日志数据仅保留3天，3天后将无法查看，请知晓。)
             </span>
           </p>
-        )
+        ),
       }}
       btnProps={{ type: 'link' }}
       btnText={props.btnText}
@@ -432,7 +452,7 @@ const RequestDetailModal: React.FC<Props> = props => {
               dataSource={state.data}
               defaultExpandAllRows={false}
               defaultExpandedRowKeys={[
-                state.data && state.data[0] && state.data[0].id
+                state.data && state.data[0] && state.data[0].id,
               ]}
               childrenColumnName="nextNodes"
               onExpand={(expanded, record) => {
@@ -459,5 +479,5 @@ const RequestDetailModal: React.FC<Props> = props => {
 export default RequestDetailModal;
 
 RequestDetailModal.defaultProps = {
-  isLive: false
+  isLive: false,
 };

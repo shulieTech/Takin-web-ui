@@ -105,6 +105,7 @@ const MethodTrack: React.FC<Props> = props => {
       setState({ loading: false });
     }
   };
+
   const renderFormNode = (): React.ReactNode => {
     if (isReport) {
       return (
@@ -135,8 +136,8 @@ const MethodTrack: React.FC<Props> = props => {
     }
     return (
       <Fragment>
-        {/* TODO 自动带入默认值 */}
         <Input
+          defaultValue={state.traceObject}
           onChange={e => setState({ traceObject: e.target.value })}
           style={{ width: 300 }}
           placeholder="类名#方法名"

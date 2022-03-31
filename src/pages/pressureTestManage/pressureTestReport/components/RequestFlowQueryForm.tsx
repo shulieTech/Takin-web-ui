@@ -21,6 +21,12 @@ const CostRange = (props) => {
     // borderColor: '#57575a',
     // color: '#d1d3dd',
   };
+  const blurSortValue = () => {
+    const _value = JSON.parse(JSON.stringify(value));
+    if (Array.isArray(_value) && _value.length === 2 && _value.every(item => typeof item === 'number')) {
+      onChange(_value.sort((x, y) => x - y));
+    }
+  };
   return (
     <Input.Group compact>
       <InputNumber
@@ -32,6 +38,7 @@ const CostRange = (props) => {
           _value[0] = val;
           onChange(_value);
         }}
+        onBlur={blurSortValue}
         min={0}
       />
       <InputNumber
@@ -43,6 +50,7 @@ const CostRange = (props) => {
           _value[1] = val;
           onChange(_value);
         }}
+        onBlur={blurSortValue}
         min={0}
       />
     </Input.Group>
