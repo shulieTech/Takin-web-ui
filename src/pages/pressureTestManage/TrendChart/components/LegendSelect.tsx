@@ -176,9 +176,42 @@ const LegendSelect: React.FC<Props> = (props) => {
             }
           },
         }}
+        onRow={(record) => {
+          return {
+            onClick: (e) => {
+              const selectedIndex = seriesSelected.indexOf(record.name);
+              const _seriesSelected = seriesSelected.concat();
+              if (selectedIndex > -1) {
+                _seriesSelected.splice(selectedIndex, 1);
+              } else {
+                _seriesSelected.push(record.name);
+              }
+              checkboxChangeHandle(_seriesSelected);
+              setSeriesSelected(_seriesSelected);
+            },
+          };
+        }}
         footer={(currentPageData) => (
           <div>
-            <Checkbox>全选</Checkbox>
+            <Checkbox
+              checked={seriesSelected.length === allSeries.length}
+              style={{
+                padding: '0 8px',
+              }}
+              indeterminate={
+                seriesSelected.length > 0 &&
+                seriesSelected.length < allSeries.length
+              }
+              onChange={(e) => {
+                const resultNames = e.target.checked
+                  ? allSeries.map((x) => x.name)
+                  : [];
+                checkboxChangeHandle(resultNames);
+                setSeriesSelected(resultNames);
+              }}
+            >
+              全选
+            </Checkbox>
           </div>
         )}
       />

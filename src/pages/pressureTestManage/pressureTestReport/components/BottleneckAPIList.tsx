@@ -101,6 +101,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
               {
                 dataIndex: 'num',
                 width: 100,
+                align: 'right',
                 render: (text) => {
                   return (
                     <span
