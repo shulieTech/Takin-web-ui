@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { TreeSelect } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import service from './service';
-import LegendSelect, { getSeryColorByNameOrIndex } from './components/LegendSelect';
+import LegendSelect, {
+  getSeryColorByNameOrIndex,
+} from './components/LegendSelect';
 
 interface Props {
   location: {
@@ -86,21 +88,21 @@ const TrendChart: React.FC<Props> = (props) => {
       name: '请求流量',
       dataIndex: 'requestFlow',
       gridCfg: {
-        top: 180,
+        top: 120,
       },
     },
     {
       name: 'CPU',
       dataIndex: 'cpu',
       gridCfg: {
-        top: 460,
+        top: 400,
       },
     },
     {
       name: '内存',
       dataIndex: 'ram',
       gridCfg: {
-        top: 460,
+        top: 400,
         left: '53%',
       },
     },
@@ -108,14 +110,14 @@ const TrendChart: React.FC<Props> = (props) => {
       name: '磁盘',
       dataIndex: 'disk',
       gridCfg: {
-        top: 740,
+        top: 680,
       },
     },
     {
       name: '网络',
       dataIndex: 'network',
       gridCfg: {
-        top: 740,
+        top: 680,
         left: '53%',
       },
     },
@@ -235,7 +237,7 @@ const TrendChart: React.FC<Props> = (props) => {
         color: getSeryColorByNameOrIndex({
           list: chartData.list,
           name: x.name,
-        })
+        }),
       });
     });
   });
@@ -297,8 +299,18 @@ const TrendChart: React.FC<Props> = (props) => {
           }}
         />
         <div style={{ position: 'relative' }}>
+          <LegendSelect
+            style={{
+              marginTop: 16,
+            }}
+            label="应用节点"
+            allSeries={chartData.list}
+            echartRef={echartRef}
+            seriesShowed={seriesShowed}
+            onChangeShowedSeries={setSeriesShowed}
+          />
           <ReactEcharts
-            ref={useCallback(echarts => setEchartRef(echarts), [])}
+            ref={useCallback((echarts) => setEchartRef(echarts), [])}
             style={{ width: '100%', height: 1110 }}
             option={{
               grid,
@@ -373,20 +385,6 @@ const TrendChart: React.FC<Props> = (props) => {
                 // selected: selectedLegend,
               },
             }}
-          />
-          <LegendSelect
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              height: 56,
-              top: 60,
-            }}
-            label="应用节点"
-            allSeries={chartData.list}
-            echartRef={echartRef}
-            seriesShowed={seriesShowed}
-            onChangeShowedSeries={setSeriesShowed}
           />
         </div>
       </div>

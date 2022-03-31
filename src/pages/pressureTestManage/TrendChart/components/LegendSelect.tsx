@@ -1,7 +1,8 @@
 import React, { useState, useEffect, CSSProperties, ReactNode } from 'react';
-import { Dropdown, Input, Icon, Checkbox, Button, Table } from 'antd';
-import Echarts from 'echarts-for-react';
+import { Dropdown, Input, Icon, Checkbox, Button, Table, Tooltip } from 'antd';
+// import Echarts from 'echarts-for-react';
 import styles from '../../pressureTestReport/index.less';
+import { ColumnProps } from 'antd/lib/table';
 
 type Option = {
   name: string;
@@ -41,6 +42,8 @@ interface Props {
   style?: CSSProperties;
   seriesSelected?: string[];
   onChangeSelectedSeries?: (value: string[]) => void;
+  extraColumns?: ColumnProps<any>[];
+  overlayStyle?: CSSProperties;
 }
 
 const LegendSelect: React.FC<Props> = (props) => {
@@ -51,8 +54,9 @@ const LegendSelect: React.FC<Props> = (props) => {
     onChangeShowedSeries,
     allSeries,
     echartRef,
-    // echartInstance,
     style,
+    extraColumns,
+    overlayStyle,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -76,7 +80,7 @@ const LegendSelect: React.FC<Props> = (props) => {
     setSeriesSelected(seriesSelected.filter((x) => val.includes(x)));
   };
 
-  const echartInstance = props.echartRef?.getEchartsInstance();
+  const echartInstance = echartRef?.getEchartsInstance();
 
   useEffect(() => {
     if (echartInstance) {
@@ -107,6 +111,7 @@ const LegendSelect: React.FC<Props> = (props) => {
         boxShadow:
           '0px 4px 14px rgba(68, 68, 68, 0.1), 0px 2px 6px rgba(68, 68, 68, 0.1)',
         borderRadius: 4,
+        ...overlayStyle,
       }}
       onClick={(e) => {
         e.stopPropagation();
@@ -136,6 +141,7 @@ const LegendSelect: React.FC<Props> = (props) => {
         columns={[
           {
             dataIndex: 'name',
+            ellipsis: true,
             render: (text, record, index) => {
               return (
                 <>
@@ -144,9 +150,10 @@ const LegendSelect: React.FC<Props> = (props) => {
                       width: 16,
                       height: 16,
                       display: 'inline-block',
-                      verticalAlign: 'middle',
+                      verticalAlign: -3,
                       borderRadius: 2,
-                      marginRight: 4,
+                      marginLeft: 6,
+                      marginRight: 8,
                       backgroundColor: getSeryColorByNameOrIndex({
                         index,
                       }),
@@ -157,6 +164,7 @@ const LegendSelect: React.FC<Props> = (props) => {
               );
             },
           },
+          ...extraColumns,
         ]}
         rowSelection={{
           columnWidth: 20,
@@ -197,37 +205,47 @@ const LegendSelect: React.FC<Props> = (props) => {
           gap: 16,
           flex: 1,
           padding: '0 16px',
+          flexWrap: 'wrap',
+          overflow: 'hidden',
         }}
       >
+        {!(seriesShowed.length > 0) && (
+          <span style={{ color: '#ddd' }}>请选择{label}</span>
+        )}
         {seriesShowed.map((x) => {
           const selected = (seriesSelected || []).includes(x);
           return (
-            <div
-              key={x}
-              style={{
-                opacity: selected ? 1 : 0.5,
-                cursor: 'pointer',
-              }}
-              onClick={(e) => {
-                toggleSelectSery(x);
-              }}
-            >
-              <span
+            <Tooltip key={x} title={x} placement="bottomLeft">
+              <div
                 style={{
-                  width: 16,
-                  height: 16,
-                  display: 'inline-block',
-                  verticalAlign: 'middle',
-                  borderRadius: 2,
-                  marginRight: 4,
-                  backgroundColor: getSeryColorByNameOrIndex({
-                    list: allSeries,
-                    name: x,
-                  }),
+                  opacity: selected ? 1 : 0.5,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  // maxWidth: 200,
                 }}
-              />
-              {x}
-            </div>
+                onClick={(e) => {
+                  toggleSelectSery(x);
+                }}
+              >
+                <span
+                  style={{
+                    width: 16,
+                    height: 16,
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                    borderRadius: 2,
+                    marginRight: 4,
+                    backgroundColor: getSeryColorByNameOrIndex({
+                      list: allSeries,
+                      name: x,
+                    }),
+                  }}
+                />
+                {x}
+              </div>
+            </Tooltip>
           );
         })}
       </div>

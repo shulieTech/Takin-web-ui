@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import service from '../service';
-import LegendSelect, { getSeryColorByNameOrIndex } from '../../TrendChart/components/LegendSelect';
+import LegendSelect, {
+  getSeryColorByNameOrIndex,
+} from '../../TrendChart/components/LegendSelect';
 
 interface Props {}
 
@@ -25,7 +27,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
         data: [3, 2, 1, 7, 5],
       },
       {
-        name: '/provider/bo',
+        name: '/prov1ider/bo',
         data: [2, 4, 6, 3, 2],
       },
     ],
@@ -46,12 +48,49 @@ const TimeCostChart: React.FC<Props> = (props) => {
       >
         默认展示耗时占比前五项数据 ，可在图例中进行切换
       </div>
+      <LegendSelect
+        style={
+        {
+            // position: 'absolute',
+            // left: 16,
+            // right: 0,
+            // height: 56,
+            // top: 100,
+        }
+        }
+        label="接口"
+        searchPlaceholder="搜索接口"
+        allSeries={chartData.list}
+        echartRef={echartRef}
+        seriesShowed={seriesShowed}
+        onChangeShowedSeries={setSeriesShowed}
+        overlayStyle={{
+          width: 400,
+        }}
+        extraColumns={[
+          {
+            title: '耗时',
+            align: 'right',
+            render: (text, record) => {
+              return (
+                <span
+                  style={{
+                    color: 'var(--Netural-500, #AEB2B7)',
+                  }}
+                >
+                  3000/100
+                </span>
+              );
+            },
+          },
+        ]}
+      />
       <ReactEcharts
-        ref={useCallback(echarts => setEchartRef(echarts), [])}
+        ref={useCallback((echarts) => setEchartRef(echarts), [])}
         style={{ width: '100%', height: 400 }}
         option={{
           grid: {
-            top: 80,
+            top: 40,
             left: 50,
             right: 50,
           },
@@ -116,21 +155,6 @@ const TimeCostChart: React.FC<Props> = (props) => {
             show: false,
           },
         }}
-      />
-      <LegendSelect
-        style={{
-          position: 'absolute',
-          left: 16,
-          right: 0,
-          height: 56,
-          top: 100,
-        }}
-        label="接口"
-        searchPlaceholder="搜索接口"
-        allSeries={chartData.list}
-        echartRef={echartRef}
-        seriesShowed={seriesShowed}
-        onChangeShowedSeries={setSeriesShowed}
       />
     </div>
   );
