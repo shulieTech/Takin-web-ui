@@ -39,15 +39,6 @@ const TreeTable: React.FC<Props> = (props) => {
                 cursor: isDisbaled ? 'not-allowed' : 'pointer',
                 opacity: isDisbaled ? 0.6 : 1,
               }}
-              onClick={() => {
-                if (!isDisbaled) {
-                  if (isSelected) {
-                    onChange?.(null, null);
-                  } else {
-                    onChange?.(record[rowKey], record);
-                  }
-                }
-              }}
             >
               {text}
             </span>
@@ -98,6 +89,21 @@ const TreeTable: React.FC<Props> = (props) => {
       expandedRowKeys={expandedRowKeys}
       onExpandedRowsChange={(keys) => {
         setExpandedRowKeys(keys);
+      }}
+      onRow={record => {
+        const isSelected = selectedKey === record[rowKey];
+        const isDisbaled = getRowDisabled ? getRowDisabled(record) : false;
+        return {
+          onClick: () => {
+            if (!isDisbaled) {
+              if (isSelected) {
+                onChange?.(null, null);
+              } else {
+                onChange?.(record[rowKey], record);
+              }
+            }
+          },
+        };
       }}
       expandIcon={({ expanded, expandable, record, onExpand }) =>
         expandable ? (
