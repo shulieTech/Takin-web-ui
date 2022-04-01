@@ -1,12 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { ColumnProps } from 'antd/lib/table';
-import { Radio } from 'antd';
+import { Radio, Tooltip } from 'antd';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import PressureTestReportService from '../service';
 import TreeTable from './TreeTable';
 import styles from '../index.less';
 import ServiceCustomTable from 'src/components/service-custom-table';
 import TimeCostChart from './TimeCostChart';
+import CopyableTooltip from 'src/components/copyble-tooltip';
 
 interface Props {
   id?: string;
@@ -36,16 +37,27 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         className: styles['direction-rtl'],
         render: (text, record) => {
           return (
-            <span>
-              <span style={{ color: 'var(--Netural-900, #303336)' }}>
-                /provider/conver#convertAndSend3/provider/conver#convertAndSend3/provider/conver#convertAndSend3
+            <CopyableTooltip
+              title={
+                <div style={{ maxWidth: 240, wordBreak: 'break-all' }}>
+                  <div>
+                    服务：/provider/conver#convertAndSend3/provider/conver#convertAndSend3/provider/conver#convertAndSend3
+                  </div>
+                  <div>应用：mall-monitor-1.0-SNAPSHOT</div>
+                </div>}
+              placement="bottomRight"
+            >
+              <span>
+                <span style={{ color: 'var(--Netural-900, #303336)' }}>
+                  /provider/conver#convertAndSend3/provider/conver#convertAndSend3/provider/conver#convertAndSend3
+                </span>
+                <div
+                  style={{ fontSize: 12, color: 'var(--Netural-700, #6F7479)' }}
+                >
+                  mall-monitor-1.0-SNAPSHOT
+                </div>
               </span>
-              <div
-                style={{ fontSize: 12, color: 'var(--Netural-700, #6F7479)' }}
-              >
-                mall-monitor-1.0-SNAPSHOT
-              </div>
-            </span>
+            </CopyableTooltip>
           );
         },
       },
