@@ -154,6 +154,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
                   order: sorter.order,
                 });
               }}
+              pagination={false}
             />
           )}
           {viewType === 2 && <TimeCostChart />}

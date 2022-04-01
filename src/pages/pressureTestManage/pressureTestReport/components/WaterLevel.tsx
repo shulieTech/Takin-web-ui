@@ -402,6 +402,7 @@ const WaterLevel: React.FC<Props> = (props) => {
               }[sorter.order],
             });
           }}
+          pagination={false}
         />
       </div>
     </div>

@@ -16,7 +16,7 @@ interface Props extends CommonTableProps {
  * @returns
  */
 const ServiceCustomTable = (props: Props, ref) => {
-  const { service, defaultQuery, columns, ...rest } = props;
+  const { service, defaultQuery, columns, pagination, ...rest } = props;
 
   const serviceOptions = useListService({
     service,
@@ -46,24 +46,26 @@ const ServiceCustomTable = (props: Props, ref) => {
         pagination={false}
         {...rest}
       />
-      <Pagination
-        style={{ marginTop: 20, textAlign: 'right' }}
-        total={total}
-        current={query.current + 1}
-        pageSize={query.pageSize}
-        showTotal={(t, range) =>
-          `共 ${total} 条数据 第${query.current + 1}页 / 共 ${Math.ceil(
-            total / (query.pageSize || 10)
-          )}页`
-        }
-        showSizeChanger={true}
-        onChange={(current, pageSize) =>
-          getList({ pageSize, current: current - 1 })
-        }
-        onShowSizeChange={(current, pageSize) =>
-          getList({ pageSize, current: 0 })
-        }
-      />
+      {pagination !== false && (
+        <Pagination
+          style={{ marginTop: 20, textAlign: 'right' }}
+          total={total}
+          current={query.current + 1}
+          pageSize={query.pageSize}
+          showTotal={(t, range) =>
+            `共 ${total} 条数据 第${query.current + 1}页 / 共 ${Math.ceil(
+              total / (query.pageSize || 10)
+            )}页`
+          }
+          showSizeChanger={true}
+          onChange={(current, pageSize) =>
+            getList({ pageSize, current: current - 1 })
+          }
+          onShowSizeChange={(current, pageSize) =>
+            getList({ pageSize, current: 0 })
+          }
+        />
+      )}
     </>
   );
 };
