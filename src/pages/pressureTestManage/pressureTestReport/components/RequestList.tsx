@@ -11,9 +11,10 @@ import AssertModal from 'src/pages/scriptManage/modals/AssertModal';
 import copy from 'copy-to-clipboard';
 import RequestFlowQueryForm from './RequestFlowQueryForm';
 import moment from 'moment';
-import BusinessActivityTree, {
-  getFirstTreeNodeByFilter,
-} from './BusinessActivityTree';
+import TreeTable from './TreeTable';
+// import BusinessActivityTree, {
+//   getFirstTreeNodeByFilter,
+// } from './BusinessActivityTree';
 
 interface Props {
   id?: string;
@@ -260,36 +261,43 @@ const RequestList: React.FC<Props> = (props) => {
         }}
       >
         <div className={styles.leftSelected}>
-          <BusinessActivityTree
-            tabList={props.tabList}
-            defaultSelectedKey={state.searchParams.xpathMd5}
-            // defaultSelectedKey={defaultTreeSelectedKey}
-            // checkNodeDisabled={(node) => !node.identification}
-            onChange={(key, e) => {
-              let result = {
-                // serviceName: undefined,
-                // methodName: undefined,
-                xpathMd5: undefined,
+          <TreeTable
+            tableTreeData={props.tabList}
+            selectedKey={state.searchParams.xpathMd5}
+            onChange={(key, record) => {
+              queryRequestList({
+                xpathMd5: key,
                 current: 0,
-              };
-              if (e.selected) {
-                // const [_methodName, _serviceName] =
-                //   e?.node?.props?.dataRef?.identification?.split('|') || [];
-                result = {
-                  // methodName: _methodName,
-                  // serviceName: _serviceName,
-                  xpathMd5: key,
-                  current: 0,
-                };
-              }
-              queryRequestList(result);
-              // setState({
-              //   searchParams: {
-              //     ...state.searchParams,
-              //     ...result,
-              //   },
-              // });
+              });
             }}
+            // extraColumns={[
+            //   {
+            //     width: 120,
+            //     align: 'right',
+            //     render: (text, record) => {
+            //       return (
+            //         <Tooltip
+            //           placement="bottomLeft"
+            //           title={
+            //             <div>
+            //               调用总次数：{record.totalRequest || 0} <br />
+            //               平均RT：{record.avgRt?.result || 0}ms
+            //             </div>
+            //           }
+            //         >
+            //           <span
+            //             style={{
+            //               color: 'var(--Netural-700, #6F7479)',
+            //               whiteSpace: 'nowrap',
+            //             }}
+            //           >
+            //             {record.totalRequest || 0} / {record.avgRt?.result || 0}ms
+            //           </span>
+            //         </Tooltip>
+            //       );
+            //     },
+            //   },
+            // ]}
           />
         </div>
         <div

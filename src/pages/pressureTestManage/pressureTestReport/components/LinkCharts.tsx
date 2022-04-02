@@ -1,4 +1,4 @@
-import { InputNumber, message } from 'antd';
+import { InputNumber, message, Tooltip } from 'antd';
 import { CommonModal } from 'racc';
 import React, { useState, useEffect, ReactNode } from 'react';
 import { TestMode } from '../../pressureTestScene/enum';
@@ -6,7 +6,7 @@ import PressureTestReportService from '../service';
 import styles from './../index.less';
 import LineCharts from './LineCharts';
 // import GraphNode from 'src/components/g6-graph/GraphNode';
-import BusinessActivityTree from './BusinessActivityTree';
+import TreeTable from './TreeTable';
 
 interface Props {
   tabList?: any[];
@@ -36,11 +36,11 @@ const LinkCharts: React.FC<Props> = (props) => {
     state.selectedTreeNode?.pressureType === TestMode.TPS模式;
   const xpathMd5ForOldTpsTest = 'all';
 
-  const handleChangeTab = (value, e) => {
+  const handleTreeSelect = (value, record) => {
     if (value) {
       setState({
         tabKey: value,
-        selectedTreeNode: e?.node?.props?.dataRef,
+        selectedTreeNode: record,
       });
     }
   };
@@ -96,10 +96,38 @@ const LinkCharts: React.FC<Props> = (props) => {
       }}
     >
       <div className={styles.leftSelected}>
-        <BusinessActivityTree
-          tabList={state.tabList}
-          defaultSelectedKey={state.tabKey}
-          onChange={handleChangeTab}
+        <TreeTable
+          tableTreeData={tabList}
+          selectedKey={state.tabKey}
+          onChange={handleTreeSelect}
+          // extraColumns={[
+          //   {
+          //     width: 120,
+          //     align: 'right',
+          //     render: (text, record) => {
+          //       return (
+          //         <Tooltip
+          //           placement="bottomLeft"
+          //           title={
+          //             <div>
+          //               调用总次数：{record.totalRequest || 0} <br />
+          //               平均RT：{record.avgRt?.result || 0}ms
+          //             </div>
+          //           }
+          //         >
+          //           <span
+          //             style={{
+          //               color: 'var(--Netural-700, #6F7479)',
+          //               whiteSpace: 'nowrap',
+          //             }}
+          //           >
+          //             {record.totalRequest || 0} / {record.avgRt?.result || 0}ms
+          //           </span>
+          //         </Tooltip>
+          //       );
+          //     },
+          //   },
+          // ]}
         />
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
