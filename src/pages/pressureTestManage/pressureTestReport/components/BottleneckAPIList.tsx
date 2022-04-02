@@ -97,7 +97,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         {/* 业务活动树 */}
         <div className={styles.leftSelected}>
           <TreeTable
-            service={PressureTestReportService.queryBusinessActivityTree}
+            service={PressureTestReportService.queryPressureTestDetailList}
             defaultQuery={{
               reportId: id,
             }}
@@ -111,18 +111,27 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
             }}
             extraColumns={[
               {
-                dataIndex: 'num',
                 width: 100,
                 align: 'right',
-                render: (text) => {
+                render: (text, record) => {
                   return (
-                    <span
-                      style={{
-                        color: 'var(--Netural-700, #6F7479)',
-                      }}
+                    <Tooltip
+                      placement="bottomLeft"
+                      title={
+                        <div>
+                          调用总次数：{record.totalRequest || 0} <br />
+                          平均RT：{record.avgRt?.result || 0}
+                        </div>
+                      }
                     >
-                      {text || '3000/1112'}
-                    </span>
+                      <span
+                        style={{
+                          color: 'var(--Netural-700, #6F7479)',
+                        }}
+                      >
+                        {record.totalRequest || 0} / {record.avgRt?.result || 0}
+                      </span>
+                    </Tooltip>
                   );
                 },
               },
@@ -154,7 +163,6 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
                   order: sorter.order,
                 });
               }}
-              pagination={false}
             />
           )}
           {viewType === 2 && <TimeCostChart />}

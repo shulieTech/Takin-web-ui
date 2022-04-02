@@ -7,6 +7,7 @@ import { Pagination } from 'antd';
 interface Props extends CommonTableProps {
   service?: (params: any) => Promise<any>;
   defaultQuery?: any;
+  dataListPath?: string;
 }
 
 /**
@@ -16,10 +17,11 @@ interface Props extends CommonTableProps {
  * @returns
  */
 const ServiceCustomTable = (props: Props, ref) => {
-  const { service, defaultQuery, columns, pagination, ...rest } = props;
+  const { service, defaultQuery, dataListPath , columns, pagination, ...rest } = props;
 
   const serviceOptions = useListService({
     service,
+    dataListPath,
     defaultQuery: {
       current: 0,
       pageSize: 10,

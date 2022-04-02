@@ -269,7 +269,7 @@
 
 import React, { useState, useEffect } from 'react';
 import TreeTable from './TreeTable';
-import { Select } from 'antd';
+import { Select, Tooltip } from 'antd';
 import ServiceCustomTable from 'src/components/service-custom-table';
 import service from '../service';
 import { Link } from 'umi';
@@ -278,10 +278,16 @@ const { Option } = Select;
 
 interface Props {
   id: string | number;
+  tabList?: any[];
 }
 
 const WaterLevel: React.FC<Props> = (props) => {
-  const [defaultQuery, setDefaultQuery] = useState({});
+  const [defaultQuery, setDefaultQuery] = useState({
+    sortKey: 'cpu',
+    sortOrder: 'desc',
+    current: 0,
+    xpathMd5: props.tabList[0]?.xpathMd5,
+  });
 
   const columns = [
     {
@@ -307,6 +313,10 @@ const WaterLevel: React.FC<Props> = (props) => {
       title: 'CPU',
       dataIndex: 'cpu',
       sorter: true,
+      sortOrder:
+        defaultQuery.sortKey === 'cpu' && defaultQuery.sortOrder
+          ? { desc: 'descend', asc: 'ascend' }[defaultQuery.sortOrder]
+          : '',
     },
     {
       title: '内存',
@@ -332,17 +342,45 @@ const WaterLevel: React.FC<Props> = (props) => {
     >
       <div style={{ width: 320, borderRadius: 4, border: '1px solid #F8F8F8' }}>
         <TreeTable
-          selectedKey={defaultQuery?.id}
-          getRowDisabled={(record) => record.id === '1'}
-          service={service.queryBusinessActivityTree}
-          defaultQuery={{ reportId: props.id }}
-          onChange={(id) => {
+          service={service.queryPressureTestDetailList}
+          defaultQuery={{
+            reportId: props.id,
+          }}
+          selectedKey={defaultQuery.xpathMd5}
+          onChange={(key, record) => {
             setDefaultQuery({
               ...defaultQuery,
-              id,
+              xpathMd5: key,
               current: 0,
             });
           }}
+          extraColumns={[
+            {
+              width: 100,
+              align: 'right',
+              render: (text, record) => {
+                return (
+                  <Tooltip
+                    placement="bottomLeft"
+                    title={
+                      <div>
+                        调用总次数：{record.totalRequest || 0} <br />
+                        平均RT：{record.avgRt?.result || 0}
+                      </div>
+                    }
+                  >
+                    <span
+                      style={{
+                        color: 'var(--Netural-700, #6F7479)',
+                      }}
+                    >
+                      {record.totalRequest || 0} / {record.avgRt?.result || 0}
+                    </span>
+                  </Tooltip>
+                );
+              },
+            },
+          ]}
         />
       </div>
       <div style={{ flex: 1, padding: 16 }}>
@@ -395,6 +433,7 @@ const WaterLevel: React.FC<Props> = (props) => {
           columns={columns}
           onChange={(pagination, filters, sorter) => {
             setDefaultQuery({
+              ...defaultQuery,
               sortKey: sorter.order ? sorter.columnKey : undefined,
               sortOrder: {
                 ascend: 'asc',

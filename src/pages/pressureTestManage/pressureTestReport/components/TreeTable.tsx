@@ -53,6 +53,7 @@ const TreeTable: React.FC<Props> = (props) => {
     service: props.service,
     defaultQuery: props.defaultQuery,
     isQueryOnQueryChange: false,
+    dataListPath: 'scriptNodeSummaryBeans'
   });
 
   useEffect(() => {

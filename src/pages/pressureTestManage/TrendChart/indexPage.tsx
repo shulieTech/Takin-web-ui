@@ -85,14 +85,14 @@ const TrendChart: React.FC<Props> = (props) => {
 
   const seriesConfig = [
     {
-      name: '请求流量',
+      name: '请求数',
       dataIndex: 'requestFlow',
       gridCfg: {
         top: 120,
       },
     },
     {
-      name: 'CPU',
+      name: 'CPU利用率',
       dataIndex: 'cpu',
       gridCfg: {
         top: 400,
@@ -107,18 +107,25 @@ const TrendChart: React.FC<Props> = (props) => {
       },
     },
     {
+      name: '负载',
+      dataIndex: 'cost',
+      gridCfg: {
+        top: 680,
+      },
+    },
+    {
       name: '磁盘',
       dataIndex: 'disk',
       gridCfg: {
         top: 680,
+        left: '53%',
       },
     },
     {
       name: '网络',
       dataIndex: 'network',
       gridCfg: {
-        top: 680,
-        left: '53%',
+        top: 960,
       },
     },
   ];
@@ -311,7 +318,7 @@ const TrendChart: React.FC<Props> = (props) => {
           />
           <ReactEcharts
             ref={useCallback((echarts) => setEchartRef(echarts), [])}
-            style={{ width: '100%', height: 1110 }}
+            style={{ width: '100%', height: 1210 }}
             option={{
               grid,
               xAxis,
@@ -353,7 +360,7 @@ const TrendChart: React.FC<Props> = (props) => {
                   realtime: true,
                   start: 0,
                   end: 100,
-                  xAxisIndex: [0, 1, 2, 3, 4],
+                  xAxisIndex: grid.map((x, i) => i),
 
                   // bottom: 1080,
                   // backgroundColor: '#EEF0F2',

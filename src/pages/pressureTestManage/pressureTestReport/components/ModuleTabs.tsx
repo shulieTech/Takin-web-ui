@@ -107,7 +107,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
         value: reportCountData?.machineCount || 0,
         color: '#354153',
       },
-      renderTabNode: <WaterLevel id={id} />,
+      renderTabNode: <WaterLevel id={id} tabList={state.tabList}/>,
     },
     {
       title: '告警明细',
