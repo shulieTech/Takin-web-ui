@@ -152,6 +152,7 @@ const WaterLevel: React.FC<Props> = (props) => {
             allowClear
             onChange={(tag) => {
               setDefaultQuery({
+                ...defaultQuery,
                 tag,
                 current: 0,
               });
