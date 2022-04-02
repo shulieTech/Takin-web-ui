@@ -31,7 +31,7 @@ import { GraphData } from '@antv/g6';
 import CommonHeader from 'src/common/header/Header';
 import RequestFlowQueryForm from './components/RequestFlowQueryForm';
 import moment from 'moment';
-import BusinessActivityTree, { getFirstTreeNodeByFilter } from './components/BusinessActivityTree';
+import TreeTable from './components/TreeTable';
 
 interface State {
   isReload?: boolean;
@@ -40,7 +40,6 @@ interface State {
   tabList: any;
   chartsInfo: any;
   tabKey: 0;
-  selectedTreeNode?: any;
   flag: boolean;
   requestList: any;
   startTime: any;
@@ -56,6 +55,7 @@ interface State {
     sortType?: 'desc' | 'asc';
     methodName?: string;
     serviceName?: string;
+    xpathMd5?: string;
   };
   defaultTreeSelectedKey?: string;
 }
@@ -80,7 +80,6 @@ const PressureTestLive: React.FC<Props> = (props) => {
     tabList: [{ label: '全局趋势', value: 0 }],
     chartsInfo: {},
     tabKey: 0,
-    selectedTreeNode: undefined,
     flag: false,
     requestList: null,
     startTime: null,
@@ -98,9 +97,9 @@ const PressureTestLive: React.FC<Props> = (props) => {
   const { id } = query;
   const { detailData, chartsInfo } = state;
 
-  useEffect(() => {
-    queryLiveBusinessActivity(id);
-  }, []);
+  // useEffect(() => {
+  //   queryLiveBusinessActivity(id);
+  // }, []);
   useEffect(() => {
     setTicker(ticker + 1);
     reFresh();
@@ -181,6 +180,10 @@ const PressureTestLive: React.FC<Props> = (props) => {
         detailData: data,
         startTime: data.startTime,
         stopReasons: data.stopReasons,
+        requestListQueryParams: {
+          ...state.requestListQueryParams,
+          xpathMd5: data?.nodeDetail?.[0]?.xpathMd5,
+        },
       });
       if (data.taskStatus !== 0) {
         setState({
@@ -188,42 +191,6 @@ const PressureTestLive: React.FC<Props> = (props) => {
           visible: true,
         });
       }
-    }
-  };
-
-  /**
-   * @name 获取压测报告业务活动列表
-   */
-  const queryLiveBusinessActivity = async (value) => {
-    const {
-      data: { data, success },
-    } = await PressureTestReportService.queryBusinessActivityTree({
-      sceneId: value,
-    });
-    if (success) {
-      setState({
-        tabList: data,
-        tabKey: data && data[0].xpathMd5,
-        selectedTreeNode: data?.[0],
-        defaultTreeSelectedKey: data?.[0].xpathMd5,
-      });
-
-      // 递归默认选中第一个节点
-      // const firstTreeNode = getFirstTreeNodeByFilter(data, (node) => !!node.identification);
-
-      // if (firstTreeNode) {
-      //   const [methodName, serviceName] = firstTreeNode?.identification?.split('|') || [];
-      //   setState({
-      //     defaultTreeSelectedKey: firstTreeNode?.xpathMd5,
-      //     requestListQueryParams: {
-      //       ...state.requestListQueryParams,
-      //       methodName,
-      //       serviceName,
-      //     }
-      //   });
-
-      // }
-      
     }
   };
 
@@ -459,7 +426,10 @@ const PressureTestLive: React.FC<Props> = (props) => {
     {
       title: '容量水位',
       component: (
-        <WaterLevel id={detailData.id} tabList={state.tabList}/>
+        <WaterLevel
+          id={detailData.id}
+          tabList={state.detailData?.nodeDetail || []}
+        />
       ),
     },
     {
@@ -474,34 +444,14 @@ const PressureTestLive: React.FC<Props> = (props) => {
             }}
           >
             <div className={styles.leftSelected}>
-              <BusinessActivityTree
-                tabList={state.tabList}
-                defaultSelectedKey={state.defaultTreeSelectedKey}
-                // checkNodeDisabled={node => !node.identification}
-                onChange={(key, e) => {
-                  let result = {
-                    // serviceName: undefined,
-                    // methodName: undefined,
-                    xpathMd5: undefined,
+              <TreeTable
+                tableTreeData={state.detailData?.nodeDetail || []}
+                selectedKey={state.requestListQueryParams.xpathMd5}
+                onChange={(xpathMd5, record) => {
+                  queryRequestList({
+                    xpathMd5,
                     current: 0,
-                  };
-                  if (e.selected) {
-                    // const [methodName, serviceName] =
-                    //   e?.node?.props?.dataRef?.identification?.split('|') || [];
-                    result = {
-                      // methodName,
-                      // serviceName,
-                      xpathMd5: key,
-                      current: 0,
-                    };
-                  }
-                  queryRequestList(result);
-                  // setState({
-                  //   requestListQueryParams: {
-                  //     ...state.requestListQueryParams,
-                  //     ...result,
-                  //   },
-                  // });
+                  });
                 }}
               />
             </div>
