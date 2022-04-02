@@ -372,6 +372,7 @@ const WaterLevel: React.FC<Props> = (props) => {
                     <span
                       style={{
                         color: 'var(--Netural-700, #6F7479)',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {record.totalRequest || 0} / {record.avgRt?.result || 0}
