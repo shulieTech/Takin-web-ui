@@ -23,7 +23,7 @@ import LinkCharts from './components/LinkCharts';
 import LinkOverview from './components/LinkOverview';
 import RequestDetailList from './components/RequestDetailList';
 import Summary from './components/Summary';
-import WaterLevelLive from './components/WaterLevelLive';
+import WaterLevel from './components/WaterLevel';
 import styles from './index.less';
 import PressureTestReportService from './service';
 import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
@@ -459,7 +459,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     {
       title: '容量水位',
       component: (
-        <WaterLevelLive isReload={state.isReload} id={detailData.id} />
+        <WaterLevel id={detailData.id} tabList={state.tabList}/>
       ),
     },
     {

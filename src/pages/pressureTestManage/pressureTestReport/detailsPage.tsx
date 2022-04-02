@@ -149,13 +149,14 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   const queryReportBusinessActivity = async value => {
     const {
       data: { data, success }
-    } = await PressureTestReportService.queryBusinessActivityTree({
+    } = await PressureTestReportService.queryPressureTestDetailList({
       reportId: value
     });
     if (success) {
+      const list = data?.scriptNodeSummaryBeans || [];
       setState({
-        tabList: data,
-        tabKey: data && data[0].xpathMd5
+        tabList: list,
+        tabKey: list[0]?.xpathMd5
       });
     }
   };

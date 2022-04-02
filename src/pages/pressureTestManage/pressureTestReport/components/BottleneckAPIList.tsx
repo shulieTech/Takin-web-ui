@@ -97,10 +97,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         {/* 业务活动树 */}
         <div className={styles.leftSelected}>
           <TreeTable
-            service={PressureTestReportService.queryPressureTestDetailList}
-            defaultQuery={{
-              reportId: id,
-            }}
+            tableTreeData={tabList}
             selectedKey={tableQuery.xpathMd5}
             onChange={(key, record) => {
               setTableQuery({
@@ -111,7 +108,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
             }}
             extraColumns={[
               {
-                width: 100,
+                width: 120,
                 align: 'right',
                 render: (text, record) => {
                   return (
@@ -120,7 +117,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
                       title={
                         <div>
                           调用总次数：{record.totalRequest || 0} <br />
-                          平均RT：{record.avgRt?.result || 0}
+                          平均RT：{record.avgRt?.result || 0}ms
                         </div>
                       }
                     >
@@ -130,7 +127,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
                           whiteSpace: 'nowrap',
                         }}
                       >
-                        {record.totalRequest || 0} / {record.avgRt?.result || 0}
+                        {record.totalRequest || 0} / {record.avgRt?.result || 0}ms
                       </span>
                     </Tooltip>
                   );
