@@ -37,7 +37,7 @@ const ServiceCustomTable = (props: Props, ref) => {
 
   useEffect(() => {
     getList(defaultQuery);
-  }, [defaultQuery]);
+  }, [JSON.stringify(defaultQuery)]);
 
   return (
     <>

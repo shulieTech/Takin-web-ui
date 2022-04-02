@@ -57,7 +57,13 @@ const WaterLevel: React.FC<Props> = (props) => {
     {
       title: '操作',
       render: (text, record) => {
-        return <Link to={`/pressureTestManage/trendChart?`}>趋势图</Link>;
+        return (
+          <Link
+            to={`/pressureTestManage/trendChart?id=${props.id}&xpathMd5=${defaultQuery.xpathMd5}`}
+          >
+            趋势图
+          </Link>
+        );
       },
     },
   ];

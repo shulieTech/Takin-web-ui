@@ -66,11 +66,12 @@ const TreeTable: React.FC<Props> = (props) => {
         return {
           onClick: () => {
             if (!isDisbaled) {
-              if (isSelected) {
-                onChange?.(null, null);
-              } else {
-                onChange?.(record[rowKey], record);
-              }
+              onChange?.(record[rowKey], record);
+              // if (isSelected) {
+              //   onChange?.(null, null);
+              // } else {
+              //   onChange?.(record[rowKey], record);
+              // }
             }
           },
         };
