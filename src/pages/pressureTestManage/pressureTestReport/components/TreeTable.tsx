@@ -21,7 +21,7 @@ const TreeTable: React.FC<Props> = (props) => {
     rowKey = 'xpathMd5',
     extraColumns = [],
   } = props;
-  
+
   const { selectedKey, onChange } = props;
 
   const columns = [
@@ -79,7 +79,10 @@ const TreeTable: React.FC<Props> = (props) => {
       expandIcon={({ expanded, expandable, record, onExpand }) =>
         expandable ? (
           <Icon
-            onClick={() => onExpand(record)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onExpand(record);
+            }}
             type="caret-right"
             rotate={expanded ? 90 : 0}
             style={{
