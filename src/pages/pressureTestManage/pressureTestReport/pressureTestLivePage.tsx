@@ -376,7 +376,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
           />
           <LinkCharts
             isLive
-            tabList={state.tabList}
+            tabList={detailData?.nodeDetail || []}
             chartsInfo={chartsInfo}
             setState={setState}
             state={state}
