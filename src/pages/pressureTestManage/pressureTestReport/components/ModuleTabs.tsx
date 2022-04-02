@@ -31,7 +31,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
       title: '压测概览',
       firstLineTxt: '个业务活动',
       firstLineNum: {
-        value: reportCountData && reportCountData.businessActivityCount,
+        value: reportCountData?.businessActivityCount || 0,
         color: '#354153',
       },
       renderTabNode: (
@@ -67,12 +67,12 @@ const ModuleTabs: React.FC<Props> = (props) => {
       title: '问题分析',
       firstLineTxt: '个瓶颈接口',
       firstLineNum: {
-        value: reportCountData && reportCountData.bottleneckInterfaceCount,
+        value: reportCountData?.bottleneckInterfaceCount || 0,
         color: '#FE7D61',
       },
       secondLineTxt: '台风险机器',
       secondLineNum: {
-        value: reportCountData && reportCountData.riskMachineCount,
+        value: reportCountData?.riskMachineCount || 0,
         color: '#FE7D61',
       },
       renderTabNode: (
@@ -83,12 +83,12 @@ const ModuleTabs: React.FC<Props> = (props) => {
       title: '压测明细',
       firstLineTxt: '个业务活动',
       firstLineNum: {
-        value: reportCountData && reportCountData.businessActivityCount,
+        value: reportCountData?.businessActivityCount || 0,
         color: '#354153',
       },
       secondLineTxt: '个业务活动不达标',
       secondLineNum: {
-        value: reportCountData && reportCountData.notpassBusinessActivityCount,
+        value: reportCountData?.notpassBusinessActivityCount || 0,
         color: '#FE7D61',
       },
       renderTabNode: (
@@ -99,12 +99,12 @@ const ModuleTabs: React.FC<Props> = (props) => {
       title: '容量水位',
       firstLineTxt: '个应用',
       firstLineNum: {
-        value: reportCountData && reportCountData.applicationCount,
+        value: reportCountData?.applicationCount || 0,
         color: '#354153',
       },
       secondLineTxt: '台机器',
       secondLineNum: {
-        value: reportCountData && reportCountData.machineCount,
+        value: reportCountData?.machineCount || 0,
         color: '#354153',
       },
       renderTabNode: <WaterLevel id={id} />,
@@ -113,7 +113,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
       title: '告警明细',
       firstLineTxt: '次警告',
       firstLineNum: {
-        value: reportCountData && reportCountData.warnCount,
+        value: reportCountData?.warnCount || 0,
         color: '#FE7D61',
       },
       renderTabNode: <WarningDetailList id={id} />,
@@ -149,7 +149,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
           return (
             <Col
               key={key}
-              style={{ width: '16.6%', position: 'relative' }}
+              style={{ flex: 1, position: 'relative' }}
               onClick={() => handleChangeTab(key)}
             >
               <div
