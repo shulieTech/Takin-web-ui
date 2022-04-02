@@ -194,13 +194,13 @@ const LegendSelect: React.FC<Props> = (props) => {
         footer={(currentPageData) => (
           <div>
             <Checkbox
-              checked={seriesSelected.length === allSeries.length}
+              checked={seriesShowed.length === allSeries.length}
               style={{
                 padding: '0 8px',
               }}
               indeterminate={
-                seriesSelected.length > 0 &&
-                seriesSelected.length < allSeries.length
+                seriesShowed.length > 0 &&
+                seriesShowed.length < allSeries.length
               }
               onChange={(e) => {
                 const resultNames = e.target.checked
