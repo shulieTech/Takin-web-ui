@@ -145,6 +145,7 @@ const WaterLevel: React.FC<Props> = (props) => {
               ...tableQuery,
               xpathMd5: key,
               current: 0,
+              applicationName: undefined,
             });
           }}
           extraColumns={[
@@ -194,6 +195,7 @@ const WaterLevel: React.FC<Props> = (props) => {
             optionFilterProp="children"
             style={{ width: 240 }}
             allowClear
+            value={tableQuery.applicationName}
             onChange={(applicationName) => {
               setTableQuery({
                 ...tableQuery,
@@ -212,6 +214,7 @@ const WaterLevel: React.FC<Props> = (props) => {
             placeholder="选择标签"
             style={{ float: 'right', width: 150 }}
             allowClear
+            value={tableQuery.tagName}
             onChange={(tagName) => {
               setTableQuery({
                 ...tableQuery,
