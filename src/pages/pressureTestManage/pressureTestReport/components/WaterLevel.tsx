@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import TreeTable from './TreeTable';
-import { Select, Tooltip } from 'antd';
+import { Select, Tooltip, Tag, Dropdown, Button, Icon } from 'antd';
 import ServiceCustomTable from 'src/components/service-custom-table';
 import service from '../service';
 import { Link } from 'umi';
@@ -55,11 +55,66 @@ const WaterLevel: React.FC<Props> = (props) => {
       title: '标签',
       dataIndex: 'tags',
       render: (text) => {
-        return Array.isArray(text)
-          ? text.map((item, index) => {
-            return <span key={index}>{item}</span>;
-          })
-          : '-';
+        return Array.isArray(text) && text.length > 0 ? (
+          <>
+            <Tooltip title={text[0]}>
+              <Tag
+                style={{
+                  maxWidth: 60,
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  verticalAlign: 'middle',
+                }}
+              >
+                {text[0]}
+              </Tag>
+            </Tooltip>
+            {text.length > 1 && (
+              <Dropdown
+                overlay={
+                  <div
+                    style={{
+                      background: '#fff',
+                      padding: 8,
+                      width: 200,
+                      boxShadow: '0 0 8px rgba(0,0,0,.15)',
+                    }}
+                  >
+                    {text.slice(1).map((item, i, arr) => (
+                      <div
+                        key={item}
+                        style={{
+                          lineHeight: '32px',
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          borderBottom:
+                            i < arr.length - 1 ? '1px solid #eee' : 'none',
+                        }}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <Button
+                  size="small"
+                  style={{
+                    lineHeight: '20px',
+                    height: 22,
+                    verticalAlign: 'middle',
+                  }}
+                >
+                  <Icon type="caret-down" />
+                </Button>
+              </Dropdown>
+            )}
+          </>
+        ) : (
+          '-'
+        );
       },
     },
     {
@@ -95,7 +150,13 @@ const WaterLevel: React.FC<Props> = (props) => {
         return (
           <Link
             target="_blank"
-            to={`/pressureTestManage/trendChart?sceneId=${sceneId}&reportId=${reportId}&xpathMd5=${tableQuery.xpathMd5}&applicationName=${record.applicationName}&startTime=${detailData.startTime}&endTime=${moment(detailData.endTime).format('YYYY-MM-DD HH:mm:ss')}`}
+            to={`/pressureTestManage/trendChart?sceneId=${sceneId}&reportId=${reportId}&xpathMd5=${
+              tableQuery.xpathMd5
+            }&applicationName=${record.applicationName}&startTime=${
+              detailData.startTime
+            }&endTime=${moment(detailData.endTime).format(
+              'YYYY-MM-DD HH:mm:ss'
+            )}`}
           >
             趋势图
           </Link>
