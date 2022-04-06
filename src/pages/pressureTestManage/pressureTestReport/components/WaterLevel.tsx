@@ -147,17 +147,14 @@ const WaterLevel: React.FC<Props> = (props) => {
     {
       title: '操作',
       render: (text, record) => {
+        let trendLinkUrl = `/pressureTestManage/trendChart?sceneId=${sceneId}&reportId=${reportId}&xpathMd5=${tableQuery.xpathMd5}&applicationName=${record.applicationName}&startTime=${detailData.startTime}`;
+        if (detailData.endTime) {
+          trendLinkUrl += `&endTime=${moment(detailData.endTime || '').format(
+            'YYYY-MM-DD HH:mm:ss'
+          )}`;
+        }
         return (
-          <Link
-            target="_blank"
-            to={`/pressureTestManage/trendChart?sceneId=${sceneId}&reportId=${reportId}&xpathMd5=${
-              tableQuery.xpathMd5
-            }&applicationName=${record.applicationName}&startTime=${
-              detailData.startTime
-            }&endTime=${moment(detailData.endTime).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )}`}
-          >
+          <Link target="_blank" to={trendLinkUrl}>
             趋势图
           </Link>
         );

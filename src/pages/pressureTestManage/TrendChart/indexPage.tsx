@@ -6,6 +6,7 @@ import LegendSelect, {
   getSeryColorByNameOrIndex,
 } from './components/LegendSelect';
 import useListService from 'src/utils/useListService';
+import moment from 'moment';
 
 interface Props {
   location: {
@@ -303,7 +304,23 @@ const TrendChart: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
+    if (props.location.query?.endTime) {
+      const timer = setInterval;
+    }
+  }, []);
+
+  useEffect(() => {
     if (query?.nodes?.length > 0) {
+      if (!props.location.query?.endTime) {
+        // 实况
+        const timer = setInterval(() => {
+          getChartData({
+            endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }, 5000);
+        return () => clearInterval(timer);
+      }
+      // 报告
       getChartData();
     }
   }, [JSON.stringify(query)]);

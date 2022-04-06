@@ -427,7 +427,8 @@ const PressureTestLive: React.FC<Props> = (props) => {
       title: '容量水位',
       component: (
         <WaterLevel
-          id={detailData.id}
+          reportId={detailData.id}
+          detailData={state.detailData}
           tabList={state.detailData?.nodeDetail || []}
         />
       ),
