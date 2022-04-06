@@ -211,6 +211,21 @@ const PressureTestReportService = {
     const url = '/application/interface/configs/middleware/list';
     return httpGet(url, data);
   },
+  // 压测场景下应用列表
+  async getAllApplicationsWithSceneId(data = {}) {
+    const url = '/waterline/getAllApplicationsWithSceneId';
+    return httpGet(url, data);
+  },
+  // 压测场景下标签列表
+  async getApplicationTags(data = {}) {
+    const url = '/waterline/getApplicationTags';
+    return httpGet(url, data);
+  },
+  // 压测报告容量水位列表
+  async getAllApplicationWithMetrics(data = {}) {
+    const url = '/waterline/getAllApplicationWithMetrics';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

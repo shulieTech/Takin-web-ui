@@ -4,7 +4,7 @@ import { get } from 'lodash';
 interface Props {
   service: (params: any) => Promise<any>;
   defaultQuery?: any;
-  isQueryOnQueryChange?: boolean;
+  isQueryOnMount?: boolean;
   afterSearchCallback?: (res: any) => void;
   dataListPath?: string;
 }
@@ -13,7 +13,7 @@ const useListService = (props: Props) => {
   const {
     service,
     defaultQuery = {},
-    isQueryOnQueryChange = true,
+    isQueryOnMount = true,
     afterSearchCallback,
     dataListPath = '.',
   } = props;
@@ -52,7 +52,7 @@ const useListService = (props: Props) => {
   };
 
   useEffect(() => {
-    if (isQueryOnQueryChange) {
+    if (isQueryOnMount) {
       getList(query);
     }
   }, []);

@@ -1,23 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TreeTable from './TreeTable';
 import { Select, Tooltip } from 'antd';
 import ServiceCustomTable from 'src/components/service-custom-table';
 import service from '../service';
 import { Link } from 'umi';
+import useListService from 'src/utils/useListService';
 
 const { Option } = Select;
 
 interface Props {
-  id: string | number;
+  detailData: any;
+  reportId: string | number;
   tabList?: any[];
 }
 
 const WaterLevel: React.FC<Props> = (props) => {
-  const [defaultQuery, setDefaultQuery] = useState({
+  const { detailData, reportId, tabList } = props;
+  const { sceneId } = detailData || {};
+  const tableRef = useRef();
+
+  const [tableQuery, setTableQuery] = useState({
+    sceneId,
+    reportId,
+    startTime: detailData.startTime,
     sortKey: 'cpu',
     sortOrder: 'desc',
     current: 0,
     xpathMd5: props.tabList[0]?.xpathMd5,
+    tagName: undefined,
+    applicationName: undefined,
+  });
+
+  const { list: appList, getList: getAppList } = useListService({
+    service: service.getAllApplicationsWithSceneId,
+    isQueryOnMount: false,
+  });
+
+  const { list: tagList, getList: getTagList } = useListService({
+    service: service.getApplicationTags,
+    defaultQuery: {
+      sceneId,
+    },
+    isQueryOnMount: false,
   });
 
   const columns = [
@@ -37,29 +61,37 @@ const WaterLevel: React.FC<Props> = (props) => {
     },
     {
       title: '节点数',
-      dataIndex: 'nodeCount',
+      dataIndex: 'nodesNumber',
       sorter: true,
+      sortOrder:
+        tableQuery.sortKey === 'nodesNumber' && tableQuery.sortOrder
+          ? { desc: 'descend', asc: 'ascend' }[tableQuery.sortOrder]
+          : '',
     },
     {
       title: 'CPU',
-      dataIndex: 'cpu',
+      dataIndex: 'cpuRate',
       sorter: true,
       sortOrder:
-        defaultQuery.sortKey === 'cpu' && defaultQuery.sortOrder
-          ? { desc: 'descend', asc: 'ascend' }[defaultQuery.sortOrder]
+        tableQuery.sortKey === 'cpuRate' && tableQuery.sortOrder
+          ? { desc: 'descend', asc: 'ascend' }[tableQuery.sortOrder]
           : '',
     },
     {
       title: '内存',
-      dataIndex: 'ram',
+      dataIndex: 'memory',
       sorter: true,
+      sortOrder:
+        tableQuery.sortKey === 'memory' && tableQuery.sortOrder
+          ? { desc: 'descend', asc: 'ascend' }[tableQuery.sortOrder]
+          : '',
     },
     {
       title: '操作',
       render: (text, record) => {
         return (
           <Link
-            to={`/pressureTestManage/trendChart?id=${props.id}&xpathMd5=${defaultQuery.xpathMd5}`}
+            to={`/pressureTestManage/trendChart?id=${reportId}&xpathMd5=${tableQuery.xpathMd5}`}
           >
             趋势图
           </Link>
@@ -67,6 +99,33 @@ const WaterLevel: React.FC<Props> = (props) => {
       },
     },
   ];
+
+  useEffect(() => {
+    // 获取应用列表
+    if (sceneId) {
+      getAppList({
+        reportId,
+        sceneId,
+        xpathMd5: tableQuery.xpathMd5,
+      });
+    }
+  }, [sceneId, tableQuery.xpathMd5]);
+
+  useEffect(() => {
+    // 获取标签列表
+    if (sceneId) {
+      getTagList({
+        sceneId,
+      });
+    }
+  }, [sceneId]);
+
+  useEffect(() => {
+    // 获取表格数据
+    if (tableRef.current && tableQuery.sceneId) {
+      tableRef.current?.getList(tableQuery);
+    }
+  }, [JSON.stringify(tableQuery)]);
 
   return (
     <div
@@ -79,11 +138,11 @@ const WaterLevel: React.FC<Props> = (props) => {
     >
       <div style={{ width: 320, borderRadius: 4, border: '1px solid #F8F8F8' }}>
         <TreeTable
-          tableTreeData={props.tabList}
-          selectedKey={defaultQuery.xpathMd5}
+          tableTreeData={tabList}
+          selectedKey={tableQuery.xpathMd5}
           onChange={(key, record) => {
-            setDefaultQuery({
-              ...defaultQuery,
+            setTableQuery({
+              ...tableQuery,
               xpathMd5: key,
               current: 0,
             });
@@ -135,41 +194,49 @@ const WaterLevel: React.FC<Props> = (props) => {
             optionFilterProp="children"
             style={{ width: 240 }}
             allowClear
-            onChange={(appId) => {
-              setDefaultQuery({
-                ...defaultQuery,
-                appId,
+            onChange={(applicationName) => {
+              setTableQuery({
+                ...tableQuery,
+                applicationName,
                 current: 0,
               });
             }}
           >
-            <Option value={1}>1</Option>
-            <Option value={2}>2</Option>
+            {appList.map((x) => (
+              <Option key={x} value={x}>
+                {x}
+              </Option>
+            ))}
           </Select>
           <Select
             placeholder="选择标签"
             style={{ float: 'right', width: 150 }}
             allowClear
-            onChange={(tag) => {
-              setDefaultQuery({
-                ...defaultQuery,
-                tag,
+            onChange={(tagName) => {
+              setTableQuery({
+                ...tableQuery,
+                tagName,
                 current: 0,
               });
             }}
           >
-            <Option value={1}>1</Option>
-            <Option value={2}>2</Option>
+            {tagList.map((x) => (
+              <Option key={x} value={x}>
+                {x}
+              </Option>
+            ))}
           </Select>
         </div>
         <ServiceCustomTable
+          ref={tableRef}
+          isQueryOnMount={false}
           size="small"
-          service={service.queryWaterLevelList}
-          defaultQuery={defaultQuery}
+          service={service.getAllApplicationWithMetrics}
+          tableQuery={tableQuery}
           columns={columns}
           onChange={(pagination, filters, sorter) => {
-            setDefaultQuery({
-              ...defaultQuery,
+            setTableQuery({
+              ...tableQuery,
               sortKey: sorter.order ? sorter.columnKey : undefined,
               sortOrder: {
                 ascend: 'asc',

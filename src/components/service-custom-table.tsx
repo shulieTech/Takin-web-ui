@@ -8,6 +8,7 @@ interface Props extends CommonTableProps {
   service?: (params: any) => Promise<any>;
   defaultQuery?: any;
   dataListPath?: string;
+  isQueryOnMount?: boolean;
 }
 
 /**
@@ -17,17 +18,18 @@ interface Props extends CommonTableProps {
  * @returns
  */
 const ServiceCustomTable = (props: Props, ref) => {
-  const { service, defaultQuery, dataListPath , columns, pagination, ...rest } = props;
+  const { service, defaultQuery, dataListPath, isQueryOnMount = true,  columns, pagination, ...rest } =
+    props;
 
   const serviceOptions = useListService({
     service,
     dataListPath,
+    isQueryOnMount,
     defaultQuery: {
       current: 0,
       pageSize: 10,
       ...defaultQuery,
     },
-    isQueryOnQueryChange: false,
   });
 
   const { list, loading, total, query, getList } = serviceOptions;
@@ -35,9 +37,9 @@ const ServiceCustomTable = (props: Props, ref) => {
   // 转发内部的一些属性及方法
   useImperativeHandle(ref, () => serviceOptions, []);
 
-  useEffect(() => {
-    getList(defaultQuery);
-  }, [JSON.stringify(defaultQuery)]);
+  // useEffect(() => {
+  //   getList(defaultQuery);
+  // }, [JSON.stringify(defaultQuery)]);
 
   return (
     <>
