@@ -5,6 +5,7 @@ import ServiceCustomTable from 'src/components/service-custom-table';
 import service from '../service';
 import { Link } from 'umi';
 import useListService from 'src/utils/useListService';
+import moment from 'moment';
 
 const { Option } = Select;
 
@@ -22,7 +23,7 @@ const WaterLevel: React.FC<Props> = (props) => {
   const [tableQuery, setTableQuery] = useState({
     sceneId,
     reportId,
-    startTime: detailData.startTime,
+    startTime: detailData?.startTime,
     sortKey: 'cpuRate',
     sortOrder: 'desc',
     current: 0,
@@ -94,7 +95,7 @@ const WaterLevel: React.FC<Props> = (props) => {
         return (
           <Link
             target="_blank"
-            to={`/pressureTestManage/trendChart?sceneId=${sceneId}&reportId=${reportId}&xpathMd5=${tableQuery.xpathMd5}&applicationName=${record.applicationName}`}
+            to={`/pressureTestManage/trendChart?sceneId=${sceneId}&reportId=${reportId}&xpathMd5=${tableQuery.xpathMd5}&applicationName=${record.applicationName}&startTime=${detailData.startTime}&endTime=${moment(detailData.endTime).format('YYYY-MM-DD HH:mm:ss')}`}
           >
             趋势图
           </Link>

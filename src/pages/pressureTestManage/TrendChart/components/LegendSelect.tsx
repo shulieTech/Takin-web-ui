@@ -50,7 +50,7 @@ const LegendSelect: React.FC<Props> = (props) => {
   const {
     label,
     searchPlaceholder = '搜索应用',
-    seriesShowed = props.allSeries.slice(5).map((item) => item.name),
+    seriesShowed = props.allSeries.slice(0, 5).map((item) => item.name),
     onChangeShowedSeries,
     allSeries,
     echartRef,
@@ -81,6 +81,10 @@ const LegendSelect: React.FC<Props> = (props) => {
   };
 
   const echartInstance = echartRef?.getEchartsInstance();
+
+  useEffect(() => {
+    setSeriesSelected(allSeries.slice(0, 5).map((x) => x.name));
+  }, [JSON.stringify(allSeries)]);
 
   useEffect(() => {
     if (echartInstance) {

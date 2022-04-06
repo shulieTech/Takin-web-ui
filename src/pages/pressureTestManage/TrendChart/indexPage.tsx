@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TreeSelect } from 'antd';
+import { TreeSelect, Spin } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import service from '../pressureTestReport/service';
 import LegendSelect, {
@@ -14,66 +14,102 @@ interface Props {
 }
 
 const TrendChart: React.FC<Props> = (props) => {
+  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState({
     ...props.location?.query,
   });
   const [echartRef, setEchartRef] = useState();
   const [chartData, setChartData] = useState({
-    time: [
-      '2022-03-11',
-      '2022-03-12',
-      '2022-03-13',
-      '2022-03-14',
-      '2022-03-15',
-    ],
-    tps: [100, 120, 130, 140, 150],
-    list: [
-      {
-        name: '192.168.1.11',
-        requestFlow: [1, 2, 3, 4, 5],
-        cpu: [20, 40, 30, 24, 15],
-        ram: [200, 400, 100, 400, 250],
-        disk: [30, 20, 25, 58, 100],
-        network: [40, 400, 200, 300, 550],
-      },
-      {
-        name: '192.168.1.33',
-        requestFlow: [4, 2, 1, 6, 35],
-        cpu: [30, 20, 10, 14, 25],
-        ram: [400, 200, 11, 260, 350],
-        disk: [20, 33, 41, 90, 300],
-        network: [51, 41, 141, 231, 45],
-      },
-      {
-        name: '192.168.1.1',
-        requestFlow: [13, 2, 1, 6, 35],
-        cpu: [30, 20, 10, 14, 25],
-        ram: [400, 200, 11, 260, 350],
-        disk: [20, 33, 41, 90, 300],
-        network: [51, 41, 141, 231, 45],
-      },
-      {
-        name: '192.168.1.2',
-        requestFlow: [24, 2, 1, 6, 35],
-        cpu: [30, 20, 10, 14, 25],
-        ram: [400, 200, 11, 260, 350],
-        disk: [20, 33, 41, 90, 300],
-        network: [51, 41, 141, 231, 45],
-      },
-      {
-        name: '192.168.1.3',
-        requestFlow: [34, 2, 1, 6, 35],
-        cpu: [30, 20, 10, 14, 25],
-        ram: [400, 200, 11, 260, 350],
-        disk: [20, 33, 41, 90, 300],
-        network: [51, 41, 141, 231, 45],
-      },
-    ],
+    time: [],
+    tps: [],
+    list: [],
+    // time: [
+    //   '2022-03-11',
+    //   '2022-03-12',
+    //   '2022-03-13',
+    //   '2022-03-14',
+    //   '2022-03-15',
+    // ],
+    // tps: [100, 120, 130, 140, 150],
+    // list: [
+    //   {
+    //     name: '192.168.1.11',
+    //     requestFlow: [1, 2, 3, 4, 5],
+    //     cpu: [20, 40, 30, 24, 15],
+    //     ram: [200, 400, 100, 400, 250],
+    //     disk: [30, 20, 25, 58, 100],
+    //     network: [40, 400, 200, 300, 550],
+    //   },
+    //   {
+    //     name: '192.168.1.33',
+    //     requestFlow: [4, 2, 1, 6, 35],
+    //     cpu: [30, 20, 10, 14, 25],
+    //     ram: [400, 200, 11, 260, 350],
+    //     disk: [20, 33, 41, 90, 300],
+    //     network: [51, 41, 141, 231, 45],
+    //   },
+    //   {
+    //     name: '192.168.1.1',
+    //     requestFlow: [13, 2, 1, 6, 35],
+    //     cpu: [30, 20, 10, 14, 25],
+    //     ram: [400, 200, 11, 260, 350],
+    //     disk: [20, 33, 41, 90, 300],
+    //     network: [51, 41, 141, 231, 45],
+    //   },
+    //   {
+    //     name: '192.168.1.2',
+    //     requestFlow: [24, 2, 1, 6, 35],
+    //     cpu: [30, 20, 10, 14, 25],
+    //     ram: [400, 200, 11, 260, 350],
+    //     disk: [20, 33, 41, 90, 300],
+    //     network: [51, 41, 141, 231, 45],
+    //   },
+    //   {
+    //     name: '192.168.1.3',
+    //     requestFlow: [34, 2, 1, 6, 35],
+    //     cpu: [30, 20, 10, 14, 25],
+    //     ram: [400, 200, 11, 260, 350],
+    //     disk: [20, 33, 41, 90, 300],
+    //     network: [51, 41, 141, 231, 45],
+    //   },
+    // ],
   });
 
-  const [seriesShowed, setSeriesShowed] = useState(
-    chartData.list.slice(0, 3).map((item) => item.name)
-  );
+  const [seriesShowed, setSeriesShowed] = useState([]);
+
+  // 应用列表
+  const { list: appList } = useListService({
+    service: service.getAllApplicationsWithSceneId,
+    defaultQuery: {
+      reportId: query.reportId,
+      sceneId: query.sceneId,
+      xpathMd5: query.xpathMd5,
+    },
+  });
+
+  // 应用节点列表
+  const { list: nodeList, getList: getNodeList } = useListService({
+    service: service.getApplicationNodes,
+    defaultQuery: {
+      applicationName: query.applicationName,
+    },
+    isQueryOnMount: false,
+    afterSearchCallback: (res) => {
+      const nodes = res?.data?.data;
+      setSeriesShowed(nodes);
+      setQuery({
+        ...query,
+        nodes,
+      });
+    },
+  });
+
+  // 变更应用时重新获取节点列表
+  useEffect(() => {
+    getNodeList({
+      applicationName: query.applicationName,
+    });
+  }, [query.applicationName]);
 
   const commonGrid = {
     left: '3%',
@@ -249,152 +285,152 @@ const TrendChart: React.FC<Props> = (props) => {
     });
   });
 
-  const { list: appList } = useListService({
-    service: service.getAllApplicationsWithSceneId,
-    defaultQuery: {
-      reportId: query.reportId,
-      sceneId: query.sceneId,
-      xpathMd5: query.xpathMd5,
-    },
-  });
-
-  const getChartData = async () => {
+  const getChartData = async (params = {}) => {
+    setLoading(true);
     const {
       data: { success, data },
-    } = await service.queryLinkChartsInfo({
-      reportId: 2495,
-      xpathMd5: '0f1a197a2040e645dcdb4dfff8a3f960',
-    });
+    } = await service
+      .getTendencyChart({
+        ...query,
+        ...params,
+      })
+      .finally(() => {
+        setLoading(false);
+      });
     if (success) {
       setChartData(data);
     }
   };
 
   useEffect(() => {
-    // getChartData();
-  }, []);
+    if (query?.nodes?.length > 0) {
+      getChartData();
+    }
+  }, [JSON.stringify(query)]);
 
   return (
-    <div style={{ background: 'var(--Netural-100, #EEF0F2)', padding: 40 }}>
-      <div
-        style={{
-          background: '#fff',
-          padding: 40,
-          borderRadius: 8,
-          boxShadow:
-            '0px 2px 10px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <TreeSelect
-          showSearch
-          style={{ width: 200 }}
-          searchPlaceholder="搜索应用"
-          value={query?.applicationName}
-          treeData={appList.map((x) => ({
-            title: x,
-            value: x,
-          }))}
-          onChange={(val) =>
-            setQuery({
-              ...query,
-              applicationName: val,
-            })
-          }
-          dropdownStyle={{
-            maxHeight: 200,
+    <Spin spinning={loading}>
+      <div style={{ background: 'var(--Netural-100, #EEF0F2)', padding: 40 }}>
+        <div
+          style={{
+            background: '#fff',
+            padding: 40,
+            borderRadius: 8,
+            boxShadow:
+              '0px 2px 10px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0, 0, 0, 0.1)',
           }}
-        />
-        <div style={{ position: 'relative' }}>
-          <LegendSelect
-            style={{
-              marginTop: 16,
+        >
+          <TreeSelect
+            showSearch
+            style={{ width: 200 }}
+            searchPlaceholder="搜索应用"
+            value={query?.applicationName}
+            treeData={appList.map((x) => ({
+              title: x,
+              value: x,
+            }))}
+            onChange={(val) =>
+              setQuery({
+                ...query,
+                applicationName: val,
+              })
+            }
+            dropdownStyle={{
+              maxHeight: 200,
             }}
-            label="应用节点"
-            allSeries={chartData.list}
-            echartRef={echartRef}
-            seriesShowed={seriesShowed}
-            onChangeShowedSeries={setSeriesShowed}
           />
-          <ReactEcharts
-            ref={useCallback((echarts) => setEchartRef(echarts), [])}
-            style={{ width: '100%', height: 1210 }}
-            option={{
-              grid,
-              xAxis,
-              yAxis,
-              series,
-              backgroundColor: '#fff',
-              tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                  animation: false,
+          <div style={{ position: 'relative' }}>
+            <LegendSelect
+              style={{
+                marginTop: 16,
+              }}
+              label="应用节点"
+              allSeries={nodeList.map((x) => ({ name: x }))}
+              echartRef={echartRef}
+              seriesShowed={seriesShowed}
+              onChangeShowedSeries={setSeriesShowed}
+            />
+            <ReactEcharts
+              ref={useCallback((echarts) => setEchartRef(echarts), [])}
+              style={{ width: '100%', height: 1210 }}
+              option={{
+                grid,
+                xAxis,
+                yAxis,
+                series,
+                backgroundColor: '#fff',
+                tooltip: {
+                  trigger: 'axis',
+                  axisPointer: {
+                    animation: false,
+                  },
+                  formatter: (val) => {
+                    let str = `${val[0]?.axisValue} <br>`;
+                    let mutiSeriAdded = false;
+                    val.forEach((x) => {
+                      const isTps = x.seriesName.startsWith('series');
+                      if (!isTps) {
+                        const typeName = x.seriesId.split('-')?.[1];
+                        str += `${x.marker} ${x.seriesName} ${typeName}: ${x.value}<br>`;
+                      }
+                      if (isTps && !mutiSeriAdded) {
+                        str += `${x.marker} TPS ${x.value}<br>`;
+                        mutiSeriAdded = true;
+                      }
+                      if (isTps && val.length > grid.length) {
+                        str += '<hr style="opacity: 0.4">';
+                      }
+                    });
+                    return str;
+                  },
                 },
-                formatter: (val) => {
-                  let str = `${val[0]?.axisValue} <br>`;
-                  let mutiSeriAdded = false;
-                  val.forEach((x) => {
-                    const isTps = x.seriesName.startsWith('series');
-                    if (!isTps) {
-                      const typeName = x.seriesId.split('-')?.[1];
-                      str += `${x.marker} ${x.seriesName} ${typeName}: ${x.value}<br>`;
-                    }
-                    if (isTps && !mutiSeriAdded) {
-                      str += `${x.marker} TPS ${x.value}<br>`;
-                      mutiSeriAdded = true;
-                    }
-                    if (isTps && val.length > grid.length) {
-                      str += '<hr style="opacity: 0.4">';
-                    }
-                  });
-                  return str;
-                },
-              },
-              dataZoom: [
-                {
-                  show: true,
-                  type: 'slider',
-                  top: 20,
-                  left: 100,
-                  right: 100,
-                  realtime: true,
-                  start: 0,
-                  end: 100,
-                  xAxisIndex: grid.map((x, i) => i),
+                dataZoom: [
+                  {
+                    show: true,
+                    type: 'slider',
+                    top: 20,
+                    left: 100,
+                    right: 100,
+                    realtime: true,
+                    start: 0,
+                    end: 100,
+                    xAxisIndex: grid.map((x, i) => i),
 
-                  // bottom: 1080,
-                  // backgroundColor: '#EEF0F2',
-                  // borderColor: 'transparent',
-                  // fillerColor: '#3976E8',
-                  // dataBackground: {
-                  //   lineStyle: {
-                  //     color: 'transparent',
-                  //   },
-                  //   areaStyle: {
-                  //     color: 'transparent',
-                  //   },
-                  // },
-                  // handleIcon: 'path://M25,50 a 25,25 0 1,1 50,0 a 25,25 0 1,1 -50,0',
-                  // handleStyle: {
-                  //   color: '#fff',
-                  //   borderColor: '#3976E8',
-                  // },
+                    // bottom: 1080,
+                    // backgroundColor: '#EEF0F2',
+                    // borderColor: 'transparent',
+                    // fillerColor: '#3976E8',
+                    // dataBackground: {
+                    //   lineStyle: {
+                    //     color: 'transparent',
+                    //   },
+                    //   areaStyle: {
+                    //     color: 'transparent',
+                    //   },
+                    // },
+                    // handleIcon: 'path://M25,50 a 25,25 0 1,1 50,0 a 25,25 0 1,1 -50,0',
+                    // handleStyle: {
+                    //   color: '#fff',
+                    //   borderColor: '#3976E8',
+                    // },
+                  },
+                ],
+                axisPointer: {
+                  link: { xAxisIndex: 'all' },
                 },
-              ],
-              axisPointer: {
-                link: { xAxisIndex: 'all' },
-              },
-              legend: {
-                show: false,
-                // type: 'scroll',
-                // top: 50,
-                // icon: 'path://M0,0 L0,10 L10,10 L10,0 z',
-                // selected: selectedLegend,
-              },
-            }}
-          />
+                legend: {
+                  show: false,
+                  // type: 'scroll',
+                  // top: 50,
+                  // icon: 'path://M0,0 L0,10 L10,10 L10,0 z',
+                  // selected: selectedLegend,
+                },
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </Spin>
   );
 };
 
