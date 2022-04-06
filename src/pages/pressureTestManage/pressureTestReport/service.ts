@@ -226,6 +226,13 @@ const PressureTestReportService = {
     const url = '/waterline/getAllApplicationWithMetrics';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取报告链路趋势图信息
+   */
+  async getTendencyChart(data = {}) {
+    const url = '/waterline/getTendencyChart';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

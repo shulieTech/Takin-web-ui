@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { TreeSelect } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-import service from './service';
+import service from '../pressureTestReport/service';
 import LegendSelect, {
   getSeryColorByNameOrIndex,
 } from './components/LegendSelect';
+import useListService from 'src/utils/useListService';
 
 interface Props {
   location: {
@@ -17,7 +18,6 @@ const TrendChart: React.FC<Props> = (props) => {
     ...props.location?.query,
   });
   const [echartRef, setEchartRef] = useState();
-  const [appList, setAppList] = useState([]);
   const [chartData, setChartData] = useState({
     time: [
       '2022-03-11',
@@ -249,17 +249,14 @@ const TrendChart: React.FC<Props> = (props) => {
     });
   });
 
-  const getAppList = async () => {
-    const {
-      data: { success, data },
-    } = await service.queryLinkChartsInfo({
-      reportId: 2495,
-      xpathMd5: '0f1a197a2040e645dcdb4dfff8a3f960',
-    });
-    if (success) {
-      setAppList(data);
-    }
-  };
+  const { list: appList } = useListService({
+    service: service.getAllApplicationsWithSceneId,
+    defaultQuery: {
+      reportId: query.reportId,
+      sceneId: query.sceneId,
+      xpathMd5: query.xpathMd5,
+    },
+  });
 
   const getChartData = async () => {
     const {
@@ -274,7 +271,6 @@ const TrendChart: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    // getAppList();
     // getChartData();
   }, []);
 
@@ -293,12 +289,15 @@ const TrendChart: React.FC<Props> = (props) => {
           showSearch
           style={{ width: 200 }}
           searchPlaceholder="搜索应用"
-          value={query?.appId}
-          treeData={appList}
+          value={query?.applicationName}
+          treeData={appList.map((x) => ({
+            title: x,
+            value: x,
+          }))}
           onChange={(val) =>
             setQuery({
               ...query,
-              appId: val,
+              applicationName: val,
             })
           }
           dropdownStyle={{

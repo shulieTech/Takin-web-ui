@@ -23,7 +23,7 @@ const WaterLevel: React.FC<Props> = (props) => {
     sceneId,
     reportId,
     startTime: detailData.startTime,
-    sortKey: 'cpu',
+    sortKey: 'cpuRate',
     sortOrder: 'desc',
     current: 0,
     xpathMd5: props.tabList[0]?.xpathMd5,
@@ -54,9 +54,11 @@ const WaterLevel: React.FC<Props> = (props) => {
       title: '标签',
       dataIndex: 'tags',
       render: (text) => {
-        return text.map((item, index) => {
-          return <span key={index}>{item}</span>;
-        });
+        return Array.isArray(text)
+          ? text.map((item, index) => {
+            return <span key={index}>{item}</span>;
+          })
+          : '-';
       },
     },
     {
@@ -91,7 +93,8 @@ const WaterLevel: React.FC<Props> = (props) => {
       render: (text, record) => {
         return (
           <Link
-            to={`/pressureTestManage/trendChart?id=${reportId}&xpathMd5=${tableQuery.xpathMd5}`}
+            target="_blank"
+            to={`/pressureTestManage/trendChart?sceneId=${sceneId}&reportId=${reportId}&xpathMd5=${tableQuery.xpathMd5}&applicationName=${record.applicationName}`}
           >
             趋势图
           </Link>
