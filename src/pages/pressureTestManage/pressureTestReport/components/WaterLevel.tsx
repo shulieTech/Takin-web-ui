@@ -107,7 +107,7 @@ const WaterLevel: React.FC<Props> = (props) => {
                     verticalAlign: 'middle',
                   }}
                 >
-                  <Icon type="caret-down" />
+                  <Icon type="down" />
                 </Button>
               </Dropdown>
             )}
