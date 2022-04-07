@@ -96,21 +96,14 @@ const TrendChart: React.FC<Props> = (props) => {
     },
     isQueryOnMount: false,
     afterSearchCallback: (res) => {
-      const nodes = res?.data?.data;
+      const nodes = res?.data?.data || '';
       setSeriesShowed(nodes);
-      setQuery({
-        ...query,
+      // 获取图表数据
+      getChartData({
         nodes,
       });
     },
   });
-
-  // 变更应用时重新获取节点列表
-  useEffect(() => {
-    getNodeList({
-      applicationName: query.applicationName,
-    });
-  }, [query.applicationName]);
 
   const commonGrid = {
     left: '3%',
@@ -123,21 +116,21 @@ const TrendChart: React.FC<Props> = (props) => {
   const seriesConfig = [
     {
       name: '请求数',
-      dataIndex: 'requestFlow',
+      dataIndex: 'totalCount',
       gridCfg: {
         top: 120,
       },
     },
     {
       name: 'CPU利用率',
-      dataIndex: 'cpu',
+      dataIndex: 'cpuRate',
       gridCfg: {
         top: 400,
       },
     },
     {
       name: '内存',
-      dataIndex: 'ram',
+      dataIndex: 'memory',
       gridCfg: {
         top: 400,
         left: '53%',
@@ -145,7 +138,7 @@ const TrendChart: React.FC<Props> = (props) => {
     },
     {
       name: '负载',
-      dataIndex: 'cost',
+      dataIndex: 'cpuLoad',
       gridCfg: {
         top: 680,
       },
@@ -160,7 +153,7 @@ const TrendChart: React.FC<Props> = (props) => {
     },
     {
       name: '网络',
-      dataIndex: 'network',
+      dataIndex: 'net',
       gridCfg: {
         top: 960,
       },
@@ -196,7 +189,6 @@ const TrendChart: React.FC<Props> = (props) => {
   const yAxis = [];
   const xAxis = [];
   const series = [];
-  // const selectedLegend = {};
 
   seriesConfig.forEach((x, i) => {
     grid.push({
@@ -260,27 +252,22 @@ const TrendChart: React.FC<Props> = (props) => {
   });
 
   (chartData?.list || []).forEach((x) => {
-    // 初始被选中legend的数目
-    // if (Object.keys(selectedLegend).length < 2) {
-    //   selectedLegend[x.name] = true;
-    // } else {
-    //   selectedLegend[x.name] = false;
-    // }
     // 插入所有数据
     seriesConfig.forEach((y, i) => {
+      const lengedName = x.name || x.agentId;
       series.push({
         type: 'line',
         showSymbol: true,
         hoverAnimation: false,
         smooth: true,
-        name: x.name, // 公用同一个名字的线被划分在一个legend里
-        id: `${x.name}-${y.name}-${i}`,
+        name: lengedName, // 公用同一个名字的线被划分在一个legend里
+        id: `${lengedName}@${y.name}@${i}`,
         xAxisIndex: i,
         yAxisIndex: 2 * i,
         data: x[y.dataIndex] || [],
         color: getSeryColorByNameOrIndex({
           list: chartData.list,
-          name: x.name,
+          name: lengedName,
         }),
       });
     });
@@ -288,6 +275,10 @@ const TrendChart: React.FC<Props> = (props) => {
 
   const getChartData = async (params = {}) => {
     setLoading(true);
+    setQuery({
+      ...query,
+      ...params,
+    });
     const {
       data: { success, data },
     } = await service
@@ -303,27 +294,27 @@ const TrendChart: React.FC<Props> = (props) => {
     }
   };
 
+  // 变更应用时重新获取节点列表
   useEffect(() => {
-    if (props.location.query?.endTime) {
-      const timer = setInterval;
-    }
-  }, []);
+    getNodeList({
+      applicationName: query.applicationName,
+    });
+  }, [query.applicationName]);
 
-  useEffect(() => {
-    if (query?.nodes?.length > 0) {
-      if (!props.location.query?.endTime) {
-        // 实况
-        const timer = setInterval(() => {
-          getChartData({
-            endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          });
-        }, 5000);
-        return () => clearInterval(timer);
-      }
-      // 报告
-      getChartData();
-    }
-  }, [JSON.stringify(query)]);
+  // useEffect(() => {
+  //   if (!props.location.query?.endTime) {
+  //     // 实况
+  //     const timer = setInterval(() => {
+  //       getChartData({
+  //         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+  //       });
+  //     }, 5000);
+  //     return () => clearInterval(timer);
+  //   } else {
+  //     // 报告
+  //     getChartData();
+  //   }
+  // }, []);
 
   return (
     <Spin spinning={loading}>
@@ -342,13 +333,12 @@ const TrendChart: React.FC<Props> = (props) => {
             style={{ width: 200 }}
             searchPlaceholder="搜索应用"
             value={query?.applicationName}
-            treeData={appList.map((x) => ({
+            treeData={(appList || []).map((x) => ({
               title: x,
               value: x,
             }))}
             onChange={(val) =>
-              setQuery({
-                ...query,
+              getChartData({
                 applicationName: val,
               })
             }
@@ -362,10 +352,16 @@ const TrendChart: React.FC<Props> = (props) => {
                 marginTop: 16,
               }}
               label="应用节点"
-              allSeries={nodeList.map((x) => ({ name: x }))}
+              allSeries={(nodeList || []).map((x) => ({ name: x }))}
               echartRef={echartRef}
-              seriesShowed={seriesShowed}
-              onChangeShowedSeries={setSeriesShowed}
+              seriesShowed={seriesShowed || []}
+              onChangeShowedSeries={nodes => {
+                setSeriesShowed(nodes);
+                // 获取图表数据
+                getChartData({
+                  nodes,
+                });
+              }}
             />
             <ReactEcharts
               ref={useCallback((echarts) => setEchartRef(echarts), [])}
@@ -387,7 +383,7 @@ const TrendChart: React.FC<Props> = (props) => {
                     val.forEach((x) => {
                       const isTps = x.seriesName.startsWith('series');
                       if (!isTps) {
-                        const typeName = x.seriesId.split('-')?.[1];
+                        const typeName = x.seriesId.split('@')?.[1];
                         str += `${x.marker} ${x.seriesName} ${typeName}: ${x.value}<br>`;
                       }
                       if (isTps && !mutiSeriAdded) {
