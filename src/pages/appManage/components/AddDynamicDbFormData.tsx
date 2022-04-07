@@ -223,7 +223,7 @@ const getAddDynamicDbFormData = (
           dataSource={state.middleWareNameData || []}
           onChange={handleChangeMiddleWareName}
           onRender={item => (
-            <CommonSelect.Option key={item.value} value={item.value}>
+            <CommonSelect.Option key={item.value} value={item.value} disabled={item.disable}>
               {item.label}
             </CommonSelect.Option>
           )}
