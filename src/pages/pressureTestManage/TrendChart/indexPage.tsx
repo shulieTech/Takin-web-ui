@@ -290,7 +290,7 @@ const TrendChart: React.FC<Props> = (props) => {
         setLoading(false);
       });
     if (success) {
-      data.list = data?.list.map(x => ({ ...x, name: x.agentId }));
+      data.list = data?.list?.map(x => ({ ...x, name: x.agentId }));
       setChartData(data);
     }
   };
@@ -410,7 +410,7 @@ const TrendChart: React.FC<Props> = (props) => {
                     end: 100,
                     xAxisIndex: grid.map((x, i) => i),
 
-                    // bottom: 1080,
+                    // bottom: 1180,
                     // backgroundColor: '#EEF0F2',
                     // borderColor: 'transparent',
                     // fillerColor: '#3976E8',
