@@ -290,6 +290,7 @@ const TrendChart: React.FC<Props> = (props) => {
         setLoading(false);
       });
     if (success) {
+      data.list = data?.list.map(x => ({ ...x, name: x.agentId }));
       setChartData(data);
     }
   };
