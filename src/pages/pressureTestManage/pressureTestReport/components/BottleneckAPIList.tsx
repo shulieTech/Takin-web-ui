@@ -13,10 +13,11 @@ import { getSortConfig, getTableSortQuery } from 'src/utils/utils';
 interface Props {
   id?: string;
   tabList?: any[];
+  detailData?: any;
 }
 
 const BottleneckAPIList: React.FC<Props> = (props) => {
-  const { id, tabList } = props;
+  const { id, tabList, detailData } = props;
   const tableRef = useRef();
   const [tableQuery, setTableQuery] = useState({
     reportId: id,
@@ -24,6 +25,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
     current: 0,
     sortField: undefined,
     sortType: undefined,
+    sceneId: detailData?.sceneId,
   });
 
   const [viewType, setViewType] = useState(1);
@@ -91,6 +93,10 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
     ];
   };
 
+  useEffect(() => {
+    tableRef.current?.getList(tableQuery);
+  }, [JSON.stringify(tableQuery)]);
+
   return (
     <Fragment>
       <div style={{ display: 'flex' }}>
@@ -156,12 +162,10 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
               defaultQuery={tableQuery}
               columns={getBottleneckAPIListColumns()}
               onChange={(pagination, filters, sorter) => {
-                const newQuery = {
+                setTableQuery({
                   ...tableQuery,
                   ...getTableSortQuery(sorter),
-                };
-                setTableQuery(newQuery);
-                tableRef.current?.getList(newQuery);
+                });
               }}
             />
           )}

@@ -36,7 +36,7 @@ const ProblemAnalysis: React.FC<Props> = props => {
           </Tooltip>
         </span>
       ),
-      tabNode: <BottleneckAPIList id={id} tabList={state.tabList}/>
+      tabNode: <BottleneckAPIList id={id} tabList={state.tabList} detailData={state.detailData} />
     },
     {
       title: (
