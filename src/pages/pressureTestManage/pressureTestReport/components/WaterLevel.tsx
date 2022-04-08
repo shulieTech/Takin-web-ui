@@ -13,10 +13,11 @@ interface Props {
   detailData: any;
   reportId: string | number;
   tabList?: any[];
+  ticker?: string | number; // 触发刷新的ticker
 }
 
 const WaterLevel: React.FC<Props> = (props) => {
-  const { detailData, reportId, tabList } = props;
+  const { detailData, reportId, tabList, ticker } = props;
   const { sceneId } = detailData || {};
   const tableRef = useRef();
 
@@ -187,7 +188,7 @@ const WaterLevel: React.FC<Props> = (props) => {
     if (tableRef.current && tableQuery.sceneId) {
       tableRef.current?.getList(tableQuery);
     }
-  }, [JSON.stringify(tableQuery)]);
+  }, [JSON.stringify(tableQuery), ticker]);
 
   return (
     <div
