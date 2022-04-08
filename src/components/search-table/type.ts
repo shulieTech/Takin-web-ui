@@ -24,6 +24,7 @@ export interface SearchTableProps {
   }[];
   tabKey?: string;
   onCheck?: (checkedKeys: any[], checkedRows?: any[]) => void;
+  beforeSearch?: (searchParams: any) => any;
   onSearch?: (searchParams: any, dataSource: any[]) => void;
   toggleRoload?: boolean;
   onTabSearch?: (searchParams?: any) => boolean;

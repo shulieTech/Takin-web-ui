@@ -29,7 +29,7 @@ const MethodTrack: React.FC<Props> = props => {
   const [state, setState] = useStateReducer({
     dataSource: [],
     id: null,
-    traceObject: null,
+    traceObject: props.query.traceObject ? decodeURIComponent(props.query.traceObject) : null,
     loading: false,
     sampleId: null
   });
@@ -105,6 +105,7 @@ const MethodTrack: React.FC<Props> = props => {
       setState({ loading: false });
     }
   };
+
   const renderFormNode = (): React.ReactNode => {
     if (isReport) {
       return (
@@ -136,6 +137,7 @@ const MethodTrack: React.FC<Props> = props => {
     return (
       <Fragment>
         <Input
+          defaultValue={state.traceObject}
           onChange={e => setState({ traceObject: e.target.value })}
           style={{ width: 300 }}
           placeholder="类名#方法名"

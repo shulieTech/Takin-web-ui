@@ -201,6 +201,16 @@ const PressureTestReportService = {
     const url = '/scene/monitor/list';
     return httpGet(url, data);
   },
+  // 入口应用列表
+  async listDictionary(data = {}) {
+    const url = '/application/center/list/dictionary';
+    return httpGet(url, data);
+  },
+  // 请求类型列表
+  async middlewareList(data = {}) {
+    const url = '/application/interface/configs/middleware/list';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

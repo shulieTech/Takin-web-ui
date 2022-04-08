@@ -28,6 +28,7 @@ import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
 import { getTakinAuthority, treeFindPath } from 'src/utils/utils';
+import { DOC_HELP_URL } from 'src/constants';
 
 const { Sider } = Layout;
 
@@ -96,17 +97,6 @@ const SiderMenu: React.FC<Props> = (props) => {
     <div onClick={dismissPopover} style={{ lineHeight: '32px' }}>
       <div>
         <EditPasswordModal onSuccess={handleLogout} />
-      </div>
-      <div>
-        <a
-          href="https://docs.shulie.io/docs/forcecop/Takin-about"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <Button type="link" style={{ padding: '0 15px' }}>
-            帮助文档
-          </Button>
-        </a>
       </div>
       <Button type="link" style={{ padding: '0 15px' }} onClick={handleLogout}>
         登出
