@@ -24,56 +24,6 @@ const TrendChart: React.FC<Props> = (props) => {
     time: [],
     tps: [],
     list: [],
-    // time: [
-    //   '2022-03-11',
-    //   '2022-03-12',
-    //   '2022-03-13',
-    //   '2022-03-14',
-    //   '2022-03-15',
-    // ],
-    // tps: [100, 120, 130, 140, 150],
-    // list: [
-    //   {
-    //     name: '192.168.1.11',
-    //     requestFlow: [1, 2, 3, 4, 5],
-    //     cpu: [20, 40, 30, 24, 15],
-    //     ram: [200, 400, 100, 400, 250],
-    //     disk: [30, 20, 25, 58, 100],
-    //     network: [40, 400, 200, 300, 550],
-    //   },
-    //   {
-    //     name: '192.168.1.33',
-    //     requestFlow: [4, 2, 1, 6, 35],
-    //     cpu: [30, 20, 10, 14, 25],
-    //     ram: [400, 200, 11, 260, 350],
-    //     disk: [20, 33, 41, 90, 300],
-    //     network: [51, 41, 141, 231, 45],
-    //   },
-    //   {
-    //     name: '192.168.1.1',
-    //     requestFlow: [13, 2, 1, 6, 35],
-    //     cpu: [30, 20, 10, 14, 25],
-    //     ram: [400, 200, 11, 260, 350],
-    //     disk: [20, 33, 41, 90, 300],
-    //     network: [51, 41, 141, 231, 45],
-    //   },
-    //   {
-    //     name: '192.168.1.2',
-    //     requestFlow: [24, 2, 1, 6, 35],
-    //     cpu: [30, 20, 10, 14, 25],
-    //     ram: [400, 200, 11, 260, 350],
-    //     disk: [20, 33, 41, 90, 300],
-    //     network: [51, 41, 141, 231, 45],
-    //   },
-    //   {
-    //     name: '192.168.1.3',
-    //     requestFlow: [34, 2, 1, 6, 35],
-    //     cpu: [30, 20, 10, 14, 25],
-    //     ram: [400, 200, 11, 260, 350],
-    //     disk: [20, 33, 41, 90, 300],
-    //     network: [51, 41, 141, 231, 45],
-    //   },
-    // ],
   });
 
   const [seriesShowed, setSeriesShowed] = useState([]);
@@ -106,7 +56,7 @@ const TrendChart: React.FC<Props> = (props) => {
   });
 
   const commonGrid = {
-    left: '3%',
+    left: '4%',
     height: 200,
     width: `43%`,
     show: true,
@@ -145,7 +95,7 @@ const TrendChart: React.FC<Props> = (props) => {
     },
     {
       name: '磁盘',
-      dataIndex: 'disk',
+      dataIndex: 'disks',
       gridCfg: {
         top: 680,
         left: '53%',
@@ -290,7 +240,7 @@ const TrendChart: React.FC<Props> = (props) => {
         setLoading(false);
       });
     if (success) {
-      data.list = data?.list?.map(x => ({ ...x, name: x.agentId }));
+      data.list = data?.list?.map((x) => ({ ...x, name: x.agentId }));
       setChartData(data);
     }
   };
@@ -356,7 +306,7 @@ const TrendChart: React.FC<Props> = (props) => {
               allSeries={(nodeList || []).map((x) => ({ name: x }))}
               echartRef={echartRef}
               seriesShowed={seriesShowed || []}
-              onChangeShowedSeries={nodes => {
+              onChangeShowedSeries={(nodes) => {
                 setSeriesShowed(nodes);
                 // 获取图表数据
                 getChartData({
