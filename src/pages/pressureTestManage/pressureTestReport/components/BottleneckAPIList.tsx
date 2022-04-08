@@ -158,6 +158,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
           {viewType === 1 && (
             <ServiceCustomTable
               ref={tableRef}
+              isQueryOnMount={false}
               service={PressureTestReportService.performanceInterfaceList}
               defaultQuery={tableQuery}
               columns={getBottleneckAPIListColumns()}
@@ -169,7 +170,7 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
               }}
             />
           )}
-          {viewType === 2 && <TimeCostChart />}
+          {viewType === 2 && <TimeCostChart defaultQuery={tableQuery}/>}
         </div>
       </div>
     </Fragment>

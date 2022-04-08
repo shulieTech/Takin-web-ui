@@ -1,14 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Spin } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import service from '../service';
 import LegendSelect, {
   getSeryColorByNameOrIndex,
 } from '../../TrendChart/components/LegendSelect';
 
-interface Props {}
+interface Props {
+  defaultQuery: any;
+}
 
 const TimeCostChart: React.FC<Props> = (props) => {
   const [echartRef, setEchartRef] = useState();
+  const [loading, setLoading] = useState(false);
+  const [allSeries, setAllSeries] = useState([]);
+  const [seriesShowed, setSeriesShowed] = useState([]);
+
   const [chartData, setChartData] = useState({
     time: [
       '2022-03-11',
@@ -33,12 +40,41 @@ const TimeCostChart: React.FC<Props> = (props) => {
     ],
   });
 
-  const [seriesShowed, setSeriesShowed] = useState(
-    chartData.list.slice(0, 5).map((item) => item.name)
-  );
+  const getNodes = async () => {
+    const {
+      data: { success, data = [] },
+      // TODO:更换接口
+    } = await service.getApplicationNodes(props.defaultQuery);
+    if (success) {
+      setAllSeries((data || []).slice(0, 5).map((item) => item.name));
+    }
+  };
+
+  const getChartData = async () => {
+    setLoading(true);
+    // TODO:更换接口
+    const {
+      data: { success, data = [] },
+    } = await service.getTendencyChart({
+      ...props.defaultQuery,
+      nodes: seriesShowed,
+    });
+    setLoading(false);
+    if (success) {
+      setChartData(data);
+    }
+  };
+
+  useEffect(() => {
+    getNodes();
+  }, []);
+
+  useEffect(() => {
+    getChartData();
+  }, [JSON.stringify(seriesShowed)]);
 
   return (
-    <div>
+    <Spin spinning={loading}>
       <div
         style={{
           color: 'var(--Netural-600, #90959A)',
@@ -49,15 +85,6 @@ const TimeCostChart: React.FC<Props> = (props) => {
         默认展示耗时占比前五项数据 ，可在图例中进行切换
       </div>
       <LegendSelect
-        style={
-        {
-            // position: 'absolute',
-            // left: 16,
-            // right: 0,
-            // height: 56,
-            // top: 100,
-        }
-        }
         label="接口"
         searchPlaceholder="搜索接口"
         allSeries={chartData.list}
@@ -136,7 +163,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
               },
             },
           },
-          series: chartData.list.map((item, index) => {
+          series: (chartData?.list || []).map((item, index) => {
             return {
               type: 'line',
               stack: true, // 堆叠效果
@@ -154,9 +181,15 @@ const TimeCostChart: React.FC<Props> = (props) => {
           legend: {
             show: false,
           },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              animation: false,
+            },
+          }
         }}
       />
-    </div>
+    </Spin>
   );
 };
 
