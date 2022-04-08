@@ -6,6 +6,7 @@ import service from '../service';
 import { Link } from 'umi';
 import useListService from 'src/utils/useListService';
 import moment from 'moment';
+import { getSortConfig, getTableSortQuery } from 'src/utils/utils';
 
 const { Option } = Select;
 
@@ -25,8 +26,8 @@ const WaterLevel: React.FC<Props> = (props) => {
     sceneId,
     reportId,
     startTime: detailData?.startTime,
-    sortKey: 'cpuRate',
-    sortOrder: 'desc',
+    sortField: 'cpuRate',
+    sortType: 'desc',
     current: 0,
     xpathMd5: props.tabList[0]?.xpathMd5,
     tagName: undefined,
@@ -121,29 +122,17 @@ const WaterLevel: React.FC<Props> = (props) => {
     {
       title: '节点数',
       dataIndex: 'nodesNumber',
-      sorter: true,
-      sortOrder:
-        tableQuery.sortKey === 'nodesNumber' && tableQuery.sortOrder
-          ? { desc: 'descend', asc: 'ascend' }[tableQuery.sortOrder]
-          : '',
+      ...getSortConfig(tableQuery, 'nodesNumber'),
     },
     {
       title: 'CPU',
       dataIndex: 'cpuRate',
-      sorter: true,
-      sortOrder:
-        tableQuery.sortKey === 'cpuRate' && tableQuery.sortOrder
-          ? { desc: 'descend', asc: 'ascend' }[tableQuery.sortOrder]
-          : '',
+      ...getSortConfig(tableQuery, 'cpuRate'),
     },
     {
       title: '内存',
       dataIndex: 'memory',
-      sorter: true,
-      sortOrder:
-        tableQuery.sortKey === 'memory' && tableQuery.sortOrder
-          ? { desc: 'descend', asc: 'ascend' }[tableQuery.sortOrder]
-          : '',
+      ...getSortConfig(tableQuery, 'memory'),
     },
     {
       title: '操作',
@@ -303,11 +292,7 @@ const WaterLevel: React.FC<Props> = (props) => {
           onChange={(pagination, filters, sorter) => {
             setTableQuery({
               ...tableQuery,
-              sortKey: sorter.order ? sorter.columnKey : undefined,
-              sortOrder: {
-                ascend: 'asc',
-                descend: 'desc',
-              }[sorter.order],
+              ...getTableSortQuery(sorter),
             });
           }}
           pagination={false}

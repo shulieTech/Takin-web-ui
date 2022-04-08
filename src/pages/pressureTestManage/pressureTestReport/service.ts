@@ -240,6 +240,13 @@ const PressureTestReportService = {
     const url = '/waterline/getApplicationNodes';
     return httpGet(url, data);
   },
+  /**
+   * @name 问题分析性能详情列表
+   */
+  async performanceInterfaceList(data = {}) {
+    const url = '/report/performanceInterface/list';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import { Radio, Tooltip } from 'antd';
 import { customColumnProps } from 'src/components/custom-table/utils';
@@ -8,6 +8,7 @@ import styles from '../index.less';
 import ServiceCustomTable from 'src/components/service-custom-table';
 import TimeCostChart from './TimeCostChart';
 import CopyableTooltip from 'src/components/copyble-tooltip';
+import { getSortConfig, getTableSortQuery } from 'src/utils/utils';
 
 interface Props {
   id?: string;
@@ -16,12 +17,13 @@ interface Props {
 
 const BottleneckAPIList: React.FC<Props> = (props) => {
   const { id, tabList } = props;
+  const tableRef = useRef();
   const [tableQuery, setTableQuery] = useState({
     reportId: id,
     xpathMd5: tabList?.[0]?.xpathMd5,
     current: 0,
-    sorter: undefined,
-    order: undefined,
+    sortField: undefined,
+    sortType: undefined,
   });
 
   const [viewType, setViewType] = useState(1);
@@ -40,21 +42,19 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
             <CopyableTooltip
               title={
                 <div style={{ maxWidth: 240, wordBreak: 'break-all' }}>
-                  <div>
-                    服务：/provider/conver#convertAndSend3/provider/conver#convertAndSend3/provider/conver#convertAndSend3
-                  </div>
-                  <div>应用：mall-monitor-1.0-SNAPSHOT</div>
+                  <div>服务：{text}</div>
+                  <div>应用：{record.appName}</div>
                 </div>}
               placement="bottomRight"
             >
               <span>
                 <span style={{ color: 'var(--Netural-900, #303336)' }}>
-                  /provider/conver#convertAndSend3/provider/conver#convertAndSend3/provider/conver#convertAndSend3
+                  {text}
                 </span>
                 <div
                   style={{ fontSize: 12, color: 'var(--Netural-700, #6F7479)' }}
                 >
-                  mall-monitor-1.0-SNAPSHOT
+                  {record.appName}
                 </div>
               </span>
             </CopyableTooltip>
@@ -64,26 +64,26 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
       {
         ...customColumnProps,
         title: '调用总次数',
-        dataIndex: 'applicationName',
-        sorter: true,
+        dataIndex: 'reqCnt',
+        ...getSortConfig(tableQuery, 'reqCnt'),
       },
       {
         ...customColumnProps,
         title: '平均自耗时',
-        dataIndex: 'interfaceName',
-        sorter: true,
+        dataIndex: 'avgCost',
+        ...getSortConfig(tableQuery, 'avgCost'),
       },
       {
         ...customColumnProps,
         title: '最大耗时',
-        dataIndex: 'tps',
-        sorter: true,
+        dataIndex: 'maxCost',
+        ...getSortConfig(tableQuery, 'maxCost'),
       },
       {
         ...customColumnProps,
         title: '平均耗时占比',
-        dataIndex: 'rt',
-        sorter: true,
+        dataIndex: 'costPercent',
+        ...getSortConfig(tableQuery, 'costPercent'),
         render: (text) => {
           return <span>{text}ms</span>;
         },
@@ -127,7 +127,8 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
                           whiteSpace: 'nowrap',
                         }}
                       >
-                        {record.totalRequest || 0} / {record.avgRt?.result || 0}ms
+                        {record.totalRequest || 0} / {record.avgRt?.result || 0}
+                        ms
                       </span>
                     </Tooltip>
                   );
@@ -150,16 +151,17 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
 
           {viewType === 1 && (
             <ServiceCustomTable
-              service={PressureTestReportService.queryBottleneckAPIList}
+              ref={tableRef}
+              service={PressureTestReportService.performanceInterfaceList}
               defaultQuery={tableQuery}
               columns={getBottleneckAPIListColumns()}
               onChange={(pagination, filters, sorter) => {
-                setTableQuery({
+                const newQuery = {
                   ...tableQuery,
-                  current: 0,
-                  sorter: sorter.order ? sorter.field : undefined,
-                  order: sorter.order,
-                });
+                  ...getTableSortQuery(sorter),
+                };
+                setTableQuery(newQuery);
+                tableRef.current?.getList(newQuery);
               }}
             />
           )}

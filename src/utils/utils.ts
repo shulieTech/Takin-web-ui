@@ -208,8 +208,8 @@ export const checkMenuByPath = (path: string): boolean => {
 
 /**
  * 查找treeData中符合条件的节点
- * @param treeData 
- * @param filter 
+ * @param treeData
+ * @param filter
  * @param isFirst 是否只查询第一个符合条件的节点
  */
 export const filterInTreeData = (params: {
@@ -217,9 +217,7 @@ export const filterInTreeData = (params: {
   filter: (item: any) => boolean;
   isFirst?: boolean;
   childrenName?: string;
-}
-  
-) => {
+}) => {
   const {
     treeData,
     isFirst = false,
@@ -228,7 +226,7 @@ export const filterInTreeData = (params: {
   } = params;
   const result = [];
 
-  const find  = (arr) => {
+  const find = (arr) => {
     if (Array.isArray(arr)) {
       arr.forEach((item) => {
         if (filter(item)) {
@@ -247,4 +245,30 @@ export const filterInTreeData = (params: {
   find(treeData);
 
   return result;
+};
+
+export const getSortConfig = (
+  query: Object = {},
+  sortKey: string,
+  sortFieldName = 'sortField',
+  sortOrderName = 'sortType'
+) => {
+  return {
+    sorter: true,
+    sortOrder:
+      query[sortFieldName] === sortKey && query[sortOrderName]
+        ? { desc: 'descend', asc: 'ascend' }[query[sortOrderName]]
+        : '',
+  };
+};
+
+export const getTableSortQuery = (sorter) => {
+  return {
+    current: 0,
+    sortField: sorter.order ? sorter.field : undefined,
+    sortType: {
+      ascend: 'asc',
+      descend: 'desc',
+    }[sorter.order],
+  };
 };
