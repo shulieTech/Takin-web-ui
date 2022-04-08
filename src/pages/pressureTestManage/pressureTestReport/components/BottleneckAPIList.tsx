@@ -134,7 +134,6 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
                         }}
                       >
                         {record.totalRequest || 0} / {record.avgRt?.result || 0}
-                        ms
                       </span>
                     </Tooltip>
                   );

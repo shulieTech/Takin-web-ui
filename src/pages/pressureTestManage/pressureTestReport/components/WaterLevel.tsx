@@ -221,7 +221,7 @@ const WaterLevel: React.FC<Props> = (props) => {
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {record.totalRequest || 0} / {record.avgRt?.result || 0}ms
+                      {record.totalRequest || 0} / {record.avgRt?.result || 0}
                     </span>
                   </Tooltip>
                 );
