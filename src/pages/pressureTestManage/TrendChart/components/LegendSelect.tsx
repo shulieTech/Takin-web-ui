@@ -34,7 +34,7 @@ interface Props {
   label?: string | ReactNode;
   searchPlaceholder?: string;
   seriesShowed?: string[];
-  onChangeShowedSeries?: (value: string[]) => void;
+  onChangeShowedSeries?: (value: string[], values: Option[]) => void;
   allSeries?: Option[];
   renderOption?: (item: Option, value, echartInstance) => React.ReactNode;
   // echartInstance?: Echarts;
@@ -75,7 +75,7 @@ const LegendSelect: React.FC<Props> = (props) => {
 
   const checkboxChangeHandle = (val = []) => {
     if (onChangeShowedSeries) {
-      onChangeShowedSeries(val);
+      onChangeShowedSeries(val, allSeries.filter(x => val.includes(x.name)));
     }
     setSeriesSelected(seriesSelected.filter((x) => val.includes(x)));
   };

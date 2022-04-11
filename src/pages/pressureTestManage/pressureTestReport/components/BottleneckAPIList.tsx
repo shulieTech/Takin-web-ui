@@ -74,6 +74,9 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         title: '平均自耗时',
         dataIndex: 'avgCost',
         ...getSortConfig(tableQuery, 'avgCost'),
+        render: (text) => {
+          return <span>{text}</span>;
+        },
       },
       {
         ...customColumnProps,
@@ -87,15 +90,17 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
         dataIndex: 'costPercent',
         ...getSortConfig(tableQuery, 'costPercent'),
         render: (text) => {
-          return <span>{text}ms</span>;
+          return <span>{text}%</span>;
         },
       },
     ];
   };
 
   useEffect(() => {
-    tableRef.current?.getList(tableQuery);
-  }, [JSON.stringify(tableQuery)]);
+    if (viewType === 1) {
+      tableRef.current?.getList(tableQuery);
+    }
+  }, [JSON.stringify(tableQuery), viewType]);
 
   return (
     <Fragment>
@@ -169,7 +174,17 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
               }}
             />
           )}
-          {viewType === 2 && <TimeCostChart defaultQuery={tableQuery}/>}
+          {viewType === 2 && (
+            <TimeCostChart
+              defaultQuery={{
+                ...tableQuery,
+                sortField: 'costPercent',
+                sortType: 'desc',
+                current: 0,
+                pageSize: 100,
+              }}
+            />
+          )}
         </div>
       </div>
     </Fragment>

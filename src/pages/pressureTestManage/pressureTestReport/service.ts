@@ -247,6 +247,13 @@ const PressureTestReportService = {
     const url = '/report/performanceInterface/list';
     return httpGet(url, data);
   },
+  /**
+   * @name 问题分析性能自耗时占比
+   */
+  async performanceInterfaceCostTrend(data = {}) {
+    const url = '/report/performanceInterface/costTrend';
+    return httpPost(url, data);
+  },
 };
 
 export default PressureTestReportService;

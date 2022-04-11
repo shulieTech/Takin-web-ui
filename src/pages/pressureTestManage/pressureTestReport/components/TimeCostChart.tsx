@@ -17,61 +17,46 @@ const TimeCostChart: React.FC<Props> = (props) => {
   const [seriesShowed, setSeriesShowed] = useState([]);
 
   const [chartData, setChartData] = useState({
-    time: [
-      '2022-03-11',
-      '2022-03-12',
-      '2022-03-13',
-      '2022-03-14',
-      '2022-03-15',
-    ],
-    list: [
-      {
-        name: '/provider/co',
-        data: [1, 2, 3, 4, 5],
-      },
-      {
-        name: '/provider/ao',
-        data: [3, 2, 1, 7, 5],
-      },
-      {
-        name: '/prov1ider/bo',
-        data: [2, 4, 6, 3, 2],
-      },
-    ],
+    time: [],
+    list: [],
   });
 
   const getNodes = async () => {
     const {
       data: { success, data = [] },
-      // TODO:更换接口
-    } = await service.getApplicationNodes(props.defaultQuery);
+    } = await service.performanceInterfaceList(props.defaultQuery);
     if (success) {
-      setAllSeries((data || []).slice(0, 5).map((item) => item.name));
+      setAllSeries((data || []).map((item) => ({ ...item, name: item.serviceName })));
+      const _seriesShowed = (data || [])
+        .slice(0, 5);
+      setSeriesShowed(_seriesShowed.map(x => x.serviceName));
+      getChartData({
+        services: _seriesShowed,
+      });
     }
   };
 
-  const getChartData = async () => {
+  const getChartData = async (params = {}) => {
     setLoading(true);
-    // TODO:更换接口
     const {
       data: { success, data = [] },
-    } = await service.getTendencyChart({
+    } = await service.performanceInterfaceCostTrend({
       ...props.defaultQuery,
-      nodes: seriesShowed,
+      ...params,
     });
     setLoading(false);
     if (success) {
+      data.list = (data.list || []).map((item) => ({
+        ...item,
+        name: item.serviceName,
+      }));
       setChartData(data);
     }
   };
 
   useEffect(() => {
     getNodes();
-  }, []);
-
-  useEffect(() => {
-    getChartData();
-  }, [JSON.stringify(seriesShowed)]);
+  }, [props.defaultQuery?.xpathMd5]);
 
   return (
     <Spin spinning={loading}>
@@ -87,10 +72,13 @@ const TimeCostChart: React.FC<Props> = (props) => {
       <LegendSelect
         label="接口"
         searchPlaceholder="搜索接口"
-        allSeries={chartData.list}
+        allSeries={allSeries}
         echartRef={echartRef}
         seriesShowed={seriesShowed}
-        onChangeShowedSeries={setSeriesShowed}
+        onChangeShowedSeries={(nodeNames, nodes) => {
+          setSeriesShowed(nodeNames);
+          getChartData({ services: nodes });
+        }}
         overlayStyle={{
           width: 400,
         }}
@@ -105,7 +93,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
                     color: 'var(--Netural-500, #AEB2B7)',
                   }}
                 >
-                  3000/100
+                  {record.reqCnt || 0}/{record.avgCost || 0}
                 </span>
               );
             },
@@ -175,7 +163,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
               areaStyle: {
                 opacity: 0.25,
               },
-              color: getSeryColorByNameOrIndex({ index }),
+              color: getSeryColorByNameOrIndex({ list: allSeries, name: item.name }),
             };
           }),
           legend: {
@@ -186,7 +174,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
             axisPointer: {
               animation: false,
             },
-          }
+          },
         }}
       />
     </Spin>
