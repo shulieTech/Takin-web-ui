@@ -14,6 +14,7 @@ export const getSeryColorByNameOrIndex = (options: {
   index?: number;
 }) => {
   const colors = [
+    '#79D193',
     '#6CBEDC',
     '#79D193',
     '#66BCDB',
@@ -22,6 +23,7 @@ export const getSeryColorByNameOrIndex = (options: {
     '#5A97E0',
     '#90CDAC',
     '#6462B9',
+    '#DCE7FD',
   ];
   const { list, name, index } = options;
   if (typeof index === 'number') {
