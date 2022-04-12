@@ -409,7 +409,9 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                     detailData={detailData}
                     id={detailData.id}
                     onSuccess={() => {
-                      window.location.reload();
+                      setTimeout(() => {
+                        window.location.reload();
+                      }, 1500);
                       setState({
                         isReload: !state.isReload,
                         threadValue: undefined
