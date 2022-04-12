@@ -216,7 +216,7 @@ const TrendChart: React.FC<Props> = (props) => {
         yAxisIndex: 2 * i,
         data: x[y.dataIndex] || [],
         color: getSeryColorByNameOrIndex({
-          list: chartData.list,
+          list: (nodeList || []).map((z) => ({ name: z })),
           name: lengedName,
         }),
       });
