@@ -177,7 +177,8 @@ const EditDynamicDbDrawer: React.FC<Props> = props => {
           props.middlewareType,
           props.agentSourceType,
           isNewData,
-          cacheType
+          cacheType,
+          props.applicationId,
         )}
         btnProps={{
           isResetBtn: false,

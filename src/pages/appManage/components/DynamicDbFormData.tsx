@@ -18,7 +18,8 @@ const DynamicDbFormData = (
   middlewareType,
   agentSourceType,
   isNewData,
-  cacheType
+  cacheType,
+  applicationId,
 ): FormDataType[] => {
   const { dbTableDetail } = state;
   useEffect(() => {
@@ -47,7 +48,8 @@ const DynamicDbFormData = (
       isNewData,
       cacheType,
       agentSourceType,
-      dsType: state.dsType
+      applicationId,
+      dsType: state.dsType,
     });
     if (success) {
       setState({
