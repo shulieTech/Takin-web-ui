@@ -16,6 +16,7 @@ interface Props {
 
 const TrendChart: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
+  const [enableTicker, setEnableTicker] = useState(true);
   const [query, setQuery] = useState({
     ...props.location?.query,
   });
@@ -49,9 +50,9 @@ const TrendChart: React.FC<Props> = (props) => {
       const nodes = res?.data?.data || '';
       setSeriesShowed(nodes);
       // 获取图表数据
-      getChartData({
-        nodes,
-      });
+      // getChartData({
+
+      // });
     },
   });
 
@@ -252,20 +253,27 @@ const TrendChart: React.FC<Props> = (props) => {
     });
   }, [query.applicationName]);
 
-  // useEffect(() => {
-  //   if (!props.location.query?.endTime) {
-  //     // 实况
-  //     const timer = setInterval(() => {
-  //       getChartData({
-  //         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-  //       });
-  //     }, 5000);
-  //     return () => clearInterval(timer);
-  //   } else {
-  //     // 报告
-  //     getChartData();
-  //   }
-  // }, []);
+  useEffect(() => {
+    getChartData({
+      endTime: query.endTime || moment().format('YYYY-MM-DD HH:mm:ss'),
+      nodes: nodeList || '',
+    });
+
+    if (!props.location.query?.endTime) {
+      // 实况
+      const timer = setInterval(() => {
+        if (!enableTicker) {
+          clearInterval(timer);
+        } else {
+          getChartData({
+            endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            nodes: nodeList || '',
+          });
+        }
+      }, 5000);
+      return () => clearInterval(timer);
+    }
+  }, [JSON.stringify(nodeList)]);
 
   return (
     <Spin spinning={loading}>
