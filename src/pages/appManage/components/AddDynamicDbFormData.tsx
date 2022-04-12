@@ -411,7 +411,7 @@ const getAddDynamicDbFormData = (
             type:
               item.nodeType === 4
                 ? 'array'
-                : item.nodeType === 3
+                : [3, 7].includes(item.nodeType)
                 ? 'object'
                 : 'string'
           }
