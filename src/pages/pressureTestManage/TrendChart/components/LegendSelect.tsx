@@ -15,8 +15,6 @@ export const getSeryColorByNameOrIndex = (options: {
 }) => {
   const colors = [
     '#79D193',
-    '#6CBEDC',
-    '#79D193',
     '#66BCDB',
     '#ECBB35',
     '#DF7672',

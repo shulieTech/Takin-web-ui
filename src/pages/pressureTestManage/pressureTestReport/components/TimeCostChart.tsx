@@ -22,35 +22,47 @@ const TimeCostChart: React.FC<Props> = (props) => {
   });
 
   const getNodes = async () => {
+    setLoading(true);
+    setChartData({
+      time: [],
+      list: [],
+    });
     const {
       data: { success, data = [] },
     } = await service.performanceInterfaceList(props.defaultQuery);
     if (success) {
-      setAllSeries((data || []).map((item) => ({ ...item, name: item.serviceName })));
-      const _seriesShowed = (data || [])
-        .slice(0, 5);
-      setSeriesShowed(_seriesShowed.map(x => x.serviceName));
+      setAllSeries(
+        (data || []).map((item) => ({ ...item, name: item.serviceName }))
+      );
+      const _seriesShowed = (data || []).slice(0, 5);
+      setSeriesShowed(_seriesShowed.map((x) => x.serviceName));
       getChartData({
         services: _seriesShowed,
       });
     }
+    setLoading(false);
   };
 
   const getChartData = async (params = {}) => {
-    setLoading(true);
-    const {
-      data: { success, data = [] },
-    } = await service.performanceInterfaceCostTrend({
-      ...props.defaultQuery,
-      ...params,
-    });
-    setLoading(false);
-    if (success) {
-      data.list = (data.list || []).map((item) => ({
-        ...item,
-        name: item.serviceName,
-      }));
-      setChartData(data);
+    if (params?.services?.length > 0) {
+      const {
+        data: { success, data = [] },
+      } = await service.performanceInterfaceCostTrend({
+        ...props.defaultQuery,
+        ...params,
+      });
+      if (success) {
+        data.list = (data.list || []).map((item) => ({
+          ...item,
+          name: item.serviceName,
+        }));
+        setChartData(data);
+      }
+    } else {
+      setChartData({
+        time: [],
+        list: [],
+      });
     }
   };
 
@@ -102,6 +114,7 @@ const TimeCostChart: React.FC<Props> = (props) => {
       />
       <ReactEcharts
         ref={useCallback((echarts) => setEchartRef(echarts), [])}
+        key={JSON.stringify(chartData)}
         style={{ width: '100%', height: 400 }}
         option={{
           grid: {
@@ -163,7 +176,10 @@ const TimeCostChart: React.FC<Props> = (props) => {
               areaStyle: {
                 opacity: 0.25,
               },
-              color: getSeryColorByNameOrIndex({ list: allSeries, name: item.name }),
+              color: getSeryColorByNameOrIndex({
+                list: allSeries,
+                name: item.name,
+              }),
             };
           }),
           legend: {
