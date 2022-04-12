@@ -316,6 +316,7 @@ const TrendChart: React.FC<Props> = (props) => {
             />
             <ReactEcharts
               ref={useCallback((echarts) => setEchartRef(echarts), [])}
+              key={JSON.stringify(chartData)}
               style={{ width: '100%', height: 1210 }}
               option={{
                 grid,
