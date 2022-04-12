@@ -23,8 +23,8 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
     reportId: id,
     xpathMd5: tabList?.[0]?.xpathMd5,
     current: 0,
-    sortField: undefined,
-    sortType: undefined,
+    sortField: 'costPercent',
+    sortType: 'desc',
     sceneId: detailData?.sceneId,
   });
 
