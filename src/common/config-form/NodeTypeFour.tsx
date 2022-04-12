@@ -8,6 +8,7 @@ interface Props {
   keys: string[];
   dataSource: DataSourceProps[];
   disabled?: boolean;
+  inputProps?: any;
 }
 const getInitState = () => ({});
 export type NodeTypeOneState = ReturnType<typeof getInitState>;
@@ -59,6 +60,7 @@ const NodeTypeFour: React.FC<Props> = props => {
         {state[keys[0]] === '2' && (
           <Col>
             <Input
+              {...props.inputProps}
               onChange={e => handleTransmit({ [keys[1]]: e.target.value })}
               value={state ? state[keys[1]] : undefined}
             />
