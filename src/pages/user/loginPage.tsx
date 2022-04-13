@@ -12,6 +12,7 @@ import queryString from 'query-string';
 import _ from 'lodash';
 import styles from './indexPage.less';
 import { getThemeByKeyName } from 'src/utils/useTheme';
+import { withRouter } from 'umi';
 
 const { TabPane } = Tabs;
 interface Props { }
@@ -233,6 +234,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
 };
 declare var serverUrl: string;
 
+@withRouter
 @connect()
 export default class Login extends DvaComponent<Props, State> {
   namespace = 'user';
@@ -408,6 +410,13 @@ export default class Login extends DvaComponent<Props, State> {
         description: '登录成功',
         duration: 1.5
       });
+
+      // 支持登录后跳转到指定页面
+      if (this.props.location.query.redirect_uri) {
+        window.location.href = `${this.props.location.query.redirect_uri}?token=${data.xToken}`;
+        return;
+      }
+
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
@@ -437,6 +446,13 @@ export default class Login extends DvaComponent<Props, State> {
         description: '登录成功',
         duration: 1.5,
       });
+      
+      // 支持登录后跳转到指定页面
+      if (this.props.location.query.redirect_uri) {
+        window.location.href = `${this.props.location.query.redirect_uri}?token=${data.xToken}`;
+        return;
+      }
+      
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
