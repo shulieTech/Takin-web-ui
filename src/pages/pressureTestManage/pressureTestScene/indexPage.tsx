@@ -12,6 +12,7 @@ import PressureTestSceneTableAction from './components/TableAction';
 import styles from './index.less';
 import PressureTestSceneService from './service';
 import { PressureStyle } from './enum';
+import StartStatusModal from './modals/StartStatusModal';
 
 interface PressureTestSceneProps {
   dictionaryMap?: any;
@@ -457,6 +458,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           </div>
         )}
       </Modal>
+      {/* <StartStatusModal visible onCancel={() => {}} scenceInfo={{}}/> */}
     </Fragment>
   );
 };
