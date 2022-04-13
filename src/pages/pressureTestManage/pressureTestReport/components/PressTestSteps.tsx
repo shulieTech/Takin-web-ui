@@ -3,7 +3,13 @@ import ServiceCustomTable from 'src/components/service-custom-table';
 import { Steps, Collapse, Tag, Modal, Button, Icon, Divider } from 'antd';
 import services from '../service';
 
-interface Props {}
+interface Props {
+  reportInfo: {
+    scenceId: string | number;
+    reportId: string | number;
+  };
+  ticker?: number;
+}
 enum StepStatus {
   WAIT,
   RUNING,
@@ -13,14 +19,77 @@ enum StepStatus {
 
 const { Step } = Steps;
 
+export const PressureMachineTable: React.FC<Props> = (props) => {
+  const columns = [
+    {
+      title: '状态',
+      dataIndex: 'status',
+      render: (text: string) => {
+        return {
+          1: <Tag color="#019E6F">Running</Tag>,
+          2: <Tag color="#019E6F">Running</Tag>,
+        }[text];
+      },
+    },
+    {
+      title: '压力机名称',
+      dataIndex: 'machineName',
+    },
+    {
+      title: 'Pod IP',
+      dataIndex: 'podIp',
+    },
+    {
+      title: 'Host IP',
+      dataIndex: 'hostIp',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+    },
+  ];
+  return (
+    <ServiceCustomTable
+      isQueryOnMount={false}
+      // TODO 换成正确的接口
+      service={services.queryLiveBusinessActivity}
+      defaultQuery={props.reportInfo}
+      columns={columns}
+    />
+  );
+};
+
 const PressTestSteps: React.FC<Props> = (props) => {
+  const { reportInfo, ticker } = props;
   const [expaned, setExpaned] = useState(false);
-  const [stepListInfo, setStepListInfo] = useState([
-    { status: StepStatus.SUCCESS },
-    { status: StepStatus.SUCCESS, message: '启动异常，正在关闭已启动压力机' },
-    { status: StepStatus.SUCCESS, message: '' },
-    { status: StepStatus.RUNING },
-  ]);
+  const [stepListInfo, setStepListInfo] = useState({
+    allMachineCount: 0,
+    startedMachineCount: 0,
+    stopedMachineCount: 0,
+    stepList: [
+      { status: StepStatus.SUCCESS },
+      { status: StepStatus.SUCCESS },
+      { status: StepStatus.SUCCESS, message: '' },
+      { status: StepStatus.SUCCESS },
+    ],
+  });
+
+  const getStepListInfo = async () => {
+    const {
+      data: { data, success },
+      // TODO 换成正确的接口
+    } = await services.queryLiveBusinessActivity({
+      scenceId: reportInfo.scenceId,
+      reportId: reportInfo.reportId,
+    });
+    if (success) {
+      setStepListInfo(data);
+    }
+  };
+
+  useEffect(() => {
+    getStepListInfo();
+  }, [ticker]);
 
   const loadingIcon = (
     <Icon
@@ -68,40 +137,13 @@ const PressTestSteps: React.FC<Props> = (props) => {
       },
     },
   ];
-  const columns = [
-    {
-      title: '状态',
-      dataIndex: 'status',
-      render: (text: string) => {
-        return {
-          1: <Tag color="#019E6F">Running</Tag>,
-          2: <Tag color="#019E6F">Running</Tag>,
-        }[text];
-      },
-    },
-    {
-      title: '压力机名称',
-      dataIndex: 'machineName',
-    },
-    {
-      title: 'Pod IP',
-      dataIndex: 'podIp',
-    },
-    {
-      title: 'Host IP',
-      dataIndex: 'hostIp',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-    },
-  ];
 
   return (
     <Collapse
       activeKey={expaned ? '1' : undefined}
       expandIcon={() => null}
       bordered={false}
+      style={{ marginBottom: 16, background: '#fff' }}
     >
       <Collapse.Panel
         key="1"
@@ -149,7 +191,7 @@ const PressTestSteps: React.FC<Props> = (props) => {
             >
               {stepList.map((item, index) => {
                 const { status = StepStatus.WAIT, message } =
-                  stepListInfo[index];
+                  stepListInfo?.stepList?.[index] || {};
 
                 const descriptionStr = message || item.descriptionMap?.[status];
                 return (
@@ -225,53 +267,53 @@ const PressTestSteps: React.FC<Props> = (props) => {
                 fontWeight: 'bold',
               }}
             >
-              23
+              {stepListInfo.allMachineCount || 0}
             </span>
           </span>
-          <span style={{ marginRight: 40 }}>
-            <span
-              style={{
-                color: 'var(--Netural-700, #6F7479)',
-                marginRight: 16,
-              }}
-            >
-              已启动
+          {stepListInfo.startedMachineCount > 0 && (
+            <span style={{ marginRight: 40 }}>
+              <span
+                style={{
+                  color: 'var(--Netural-700, #6F7479)',
+                  marginRight: 16,
+                }}
+              >
+                已启动
+              </span>
+              <span
+                style={{
+                  color: 'var(--Netural-850, #414548)',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                }}
+              >
+                {stepListInfo.startedMachineCount}
+              </span>
             </span>
-            <span
-              style={{
-                color: 'var(--Netural-850, #414548)',
-                fontSize: 20,
-                fontWeight: 'bold',
-              }}
-            >
-              20
+          )}
+          {stepListInfo.stopedMachineCount > 0 && (
+            <span style={{ marginRight: 40 }}>
+              <span
+                style={{
+                  color: 'var(--Netural-700, #6F7479)',
+                  marginRight: 16,
+                }}
+              >
+                已停止
+              </span>
+              <span
+                style={{
+                  color: 'var(--Netural-850, #414548)',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                }}
+              >
+                {stepListInfo.stopedMachineCount}
+              </span>
             </span>
-          </span>
-          <span style={{ marginRight: 40 }}>
-            <span
-              style={{
-                color: 'var(--Netural-700, #6F7479)',
-                marginRight: 16,
-              }}
-            >
-              已停止
-            </span>
-            <span
-              style={{
-                color: 'var(--Netural-850, #414548)',
-                fontSize: 20,
-                fontWeight: 'bold',
-              }}
-            >
-              3
-            </span>
-          </span>
+          )}
         </div>
-        <ServiceCustomTable
-          isQueryOnMount={false}
-          service={services.queryBussinessFlowAndScript}
-          columns={columns}
-        />
+        <PressureMachineTable reportInfo={reportInfo} />
       </Collapse.Panel>
     </Collapse>
   );

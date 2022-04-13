@@ -31,7 +31,10 @@ import { GraphData } from '@antv/g6';
 import CommonHeader from 'src/common/header/Header';
 import RequestFlowQueryForm from './components/RequestFlowQueryForm';
 import moment from 'moment';
-import BusinessActivityTree, { getFirstTreeNodeByFilter } from './components/BusinessActivityTree';
+import BusinessActivityTree, {
+  getFirstTreeNodeByFilter,
+} from './components/BusinessActivityTree';
+import PressTestSteps from './components/PressTestSteps';
 
 interface State {
   isReload?: boolean;
@@ -223,7 +226,6 @@ const PressureTestLive: React.FC<Props> = (props) => {
       //   });
 
       // }
-      
     }
   };
 
@@ -636,6 +638,15 @@ const PressureTestLive: React.FC<Props> = (props) => {
         style={{ marginTop: 24, marginBottom: 24 }}
         leftWrap={leftWrap}
       />
+
+      <PressTestSteps
+        reportInfo={{
+          reportId: detailData.id,
+          sceneId: detailData.sceneId,
+        }}
+        ticker={ticker}
+      />
+
       <CommonTabs
         dataSource={tabData}
         tabsProps={{ destroyInactiveTabPane: true }}
