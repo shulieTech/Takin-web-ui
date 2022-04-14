@@ -5,9 +5,12 @@ import React, { useLayoutEffect, useState } from 'react';
 import { Layout } from 'antd';
 import venomBasicConfig from 'src/venom.config';
 import styles from '../index.less';
+import { checkMenuByPath } from 'src/utils/utils';
+import { withRouter } from 'umi';
+
 const { Content } = Layout;
 
-const ContentNode: React.FC = props => {
+const ContentNode: React.FC = (props) => {
   // const [footerHeight, setFooterHeight] = useState(0);
   // useLayoutEffect(() => {
   //   const footerEl = document.getElementById('footer');
@@ -30,7 +33,7 @@ const ContentNode: React.FC = props => {
       <Content
         className={
           venomBasicConfig.layout === 'header' &&
-            venomBasicConfig.contentWidthMode === 'fixed'
+          venomBasicConfig.contentWidthMode === 'fixed'
             ? styles.wrap
             : 'flex'
         }
@@ -42,7 +45,7 @@ const ContentNode: React.FC = props => {
           marginRight: '8px',
           marginTop: '8px',
           borderRadius: '4px 4px 0 0',
-          overflow: 'scroll'
+          overflow: 'scroll',
         }}
       >
         {props.children}
@@ -51,4 +54,4 @@ const ContentNode: React.FC = props => {
   );
 };
 
-export default ContentNode;
+export default withRouter(ContentNode);

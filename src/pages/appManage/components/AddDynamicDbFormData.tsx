@@ -40,6 +40,7 @@ const getAddDynamicDbFormData = (
     const {
       data: { success, data }
     } = await AppManageService.queryTemplate({
+      applicationName: state.form.getFieldsValue().applicationName,
       agentSourceType: state.form.getFieldsValue().middlewareType,
       dsType: state.dsType,
       cacheType: state.cacheType,
@@ -410,7 +411,7 @@ const getAddDynamicDbFormData = (
             type:
               item.nodeType === 4
                 ? 'array'
-                : item.nodeType === 3
+                : [3, 7].includes(item.nodeType)
                 ? 'object'
                 : 'string'
           }

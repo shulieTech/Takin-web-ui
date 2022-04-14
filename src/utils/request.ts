@@ -2,11 +2,15 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { message, Modal } from 'antd';
 import { Basic } from 'src/types';
 import { getTakinAuthority } from './utils';
+import { EXCLUDED_SECURITY_APIS } from 'src/constants';
+
 import BaseResponse = Basic.BaseResponse;
+
 declare var window: Window;
 declare var serverUrl: string;
 
-axios.defaults.withCredentials = true;
+// 经过安全中心的请求是跨域请求，不能带cookie， withCredentials设置为false
+axios.defaults.withCredentials = false;
 window.parent.outloginFlag = false;
 // axios.interceptors.request.use(
 //   req => {
@@ -46,17 +50,17 @@ axios.interceptors.request.use((config) => {
 });
 
 axios.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
-  error => {
+  (error) => {
     if (axios.isCancel(error)) {
       const response = {
         config: {} as Basic.BaseResponse,
         headers: {},
         status: -999,
         statusText: '中断请求',
-        data: undefined
+        data: undefined,
       };
       return Promise.resolve(response);
     }
@@ -70,7 +74,7 @@ function parseJSON(response: BaseResponse) {
   }
   return response;
 }
-const getBackLogin = response => {
+const getBackLogin = (response) => {
   window.parent.outloginFlag = true;
   Modal.warning({
     content: '请登录',
@@ -78,9 +82,9 @@ const getBackLogin = response => {
     onOk: () => {
       window.parent.outloginFlag = false;
       window.g_app._store.dispatch({
-        type: 'user/troLogout'
+        type: 'user/troLogout',
       });
-    }
+    },
   });
 };
 function checkStatus(response: BaseResponse) {
@@ -90,7 +94,10 @@ function checkStatus(response: BaseResponse) {
 
   // 权限判断（微应用跳转主应用）
   if (response.status === 401) {
-    if (getTakinAuthority() === 'true' && window.location.href.indexOf('/pro/') === -1) {
+    if (
+      getTakinAuthority() === 'true' &&
+      window.location.href.indexOf('/pro/') === -1
+    ) {
       if (!window.parent.outloginFlag) {
         getBackLogin(response);
       }
@@ -101,7 +108,7 @@ function checkStatus(response: BaseResponse) {
     headers: response.headers,
     status: response.status,
     statusText: response.statusText,
-    data: response.data
+    data: response.data,
   };
 }
 
@@ -109,33 +116,57 @@ export enum Method {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',
-  DELETE = 'DELETE'
+  DELETE = 'DELETE',
 }
 export interface RequestParams {
   method: Method;
   url: string;
   payload?: any;
 }
+
 const getUrl = (url: string, options: any) => {
-  return `${options && options.domain ? options.domain : serverUrl}${url}`;
+  if (EXCLUDED_SECURITY_APIS.includes(url)) {
+    // 不走安全中心域名的接口
+    return `${options?.domain || serverUrl}${url}`;
+  } 
+  if (options?.domain) {
+    return `${options?.domain}${ options?.pathPrefix || '/takin-web/api'}${url}`;
+  }
+  const securityCenterDomain = localStorage.getItem('securityCenterDomain');
+  if (securityCenterDomain) {
+    // 走安全中心域名
+    return `${securityCenterDomain}${ options?.pathPrefix || '/takin-transform-core/takin-web/api'}${url}`;
+  }
+  // 兜底走当前域名
+  return `${serverUrl}${url}`;
+};
+
+const getHeaders = options => {
+  return {
+    'x-token': localStorage.getItem('full-link-token'),
+    'Auth-Cookie': localStorage.getItem('auth-cookie'),
+    'Access-Token': localStorage.getItem('Access-Token'),
+    'tenant-code': localStorage.getItem('tenant-code'),
+    'env-code': localStorage.getItem('env-code'),
+    ...(options?.headers || {}),
+  };
 };
 
 export function httpGet<T = any>(url: string, data?: any, options?: any) {
   const timestr = Date.now();
-  const myurl = `${options && options.domain ? options.domain : serverUrl
-    }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
+  // const myurl = `${options && options.domain ? options.domain : serverUrl
+  //   }${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   // const myurl = `${url}${url.indexOf('?') > -1 ? '&' : '?'}timestr=${timestr}`;
   return httpRequest<T>({
-    url: myurl,
-    payload: data,
+    // url: myurl,
+    url: getUrl(url, options),
+    payload: {
+      ...data,
+      timestr,
+    },
     method: Method.GET,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    }
+    headers: getHeaders(options),
   });
 }
 export function httpPost<T>(url, data?: any, options?: any) {
@@ -144,13 +175,7 @@ export function httpPost<T>(url, data?: any, options?: any) {
     payload: data,
     method: Method.POST,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'Access-Token': localStorage.getItem('Access-Token'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    }
+    headers: getHeaders(options),
   });
 }
 export function httpPut<T>(url, data?: any, options?: any) {
@@ -159,12 +184,7 @@ export function httpPut<T>(url, data?: any, options?: any) {
     payload: data,
     method: Method.PUT,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    }
+    headers: getHeaders(options),
   });
 }
 export function httpDelete<T>(url, data?: any, options?: any) {
@@ -173,25 +193,18 @@ export function httpDelete<T>(url, data?: any, options?: any) {
     payload: data,
     method: Method.DELETE,
     ...options,
-    headers: {
-      'x-token': localStorage.getItem('full-link-token'),
-      'Auth-Cookie': localStorage.getItem('auth-cookie'),
-      'tenant-code': localStorage.getItem('tenant-code'),
-      'env-code': localStorage.getItem('env-code'),
-    }
+    headers: getHeaders(options),
   });
 }
 
 export function httpRequest<T>(req: RequestParams): Promise<BaseResponse<T>> {
   return request({
     ...req,
-    [req.method === Method.GET ? 'params' : 'data']: req.payload
+    [req.method === Method.GET ? 'params' : 'data']: req.payload,
   }).then(errorProcess);
 }
 export default function request(options: AxiosRequestConfig) {
-  return axios(options)
-    .then(checkStatus)
-    .then(parseJSON);
+  return axios(options).then(checkStatus).then(parseJSON);
 }
 export function errorProcess(response: BaseResponse) {
   const { status, data, config, headers } = response;
@@ -205,7 +218,7 @@ export function errorProcess(response: BaseResponse) {
       case 'all':
         break;
       case 'blacklist':
-        if (!statusFilter.list.find(item => +item === +status)) {
+        if (!statusFilter.list.find((item) => +item === +status)) {
           if (data && data.error.msg) {
             message.error(data.error.msg);
             return response;
@@ -217,7 +230,7 @@ export function errorProcess(response: BaseResponse) {
         }
         break;
       case 'whitelist':
-        if (statusFilter.list.find(item => +item === +status)) {
+        if (statusFilter.list.find((item) => +item === +status)) {
           if (data && data.error.msg) {
             message.error(data.error.msg);
             return response;
@@ -263,7 +276,8 @@ function getErrorMessage(statusCode: number): string | undefined {
     502: 'Bad Gateway/错误的网关!`',
     503: 'Service Unavailable/服务无法获得!',
     504: 'Gateway Timeout/网关超时!',
-    505: 'HTTP Version Not Supported/不支持的 HTTP 版本!'
+    505: 'HTTP Version Not Supported/不支持的 HTTP 版本!',
+    451: '签名不正确',
   };
   return statusMsgMap[statusCode];
 }

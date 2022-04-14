@@ -60,20 +60,24 @@ export default () => {
     });
   };
 
-  const setTheme = ({ antVars, cssVars, ...rest }: ThemmeConfig = {}) => {
-    const oldConfig = getThemeConfig();
-    const config = {
-      ...oldConfig,
-      antVars: {
-        ...oldConfig.antVars,
-        ...(antVars || {}),
-      },
-      cssVars: {
-        ...oldConfig.cssVars,
-        ...(cssVars || {}),
-      },
-      ...rest,
-    };
+  const setTheme = (themeCfg: ThemmeConfig = {}, isOverwriteAll = false) => {
+    let config = themeCfg;
+    if (!isOverwriteAll) {
+      const { antVars, cssVars, ...rest } = themeCfg;
+      const oldConfig = getThemeConfig();
+      config = {
+        ...oldConfig,
+        antVars: {
+          ...oldConfig.antVars,
+          ...(antVars || {}),
+        },
+        cssVars: {
+          ...oldConfig.cssVars,
+          ...(cssVars || {}),
+        },
+        ...rest,
+      };
+    }
     loadThemeConfig(config);
     localStorage['takin-theme'] = JSON.stringify(config);
   };

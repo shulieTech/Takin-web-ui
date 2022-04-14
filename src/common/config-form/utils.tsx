@@ -48,6 +48,18 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
       );
       break;
     /**
+     * @name 下拉框、Input密码框
+     */
+    case 7:
+      renderNode = (
+        <NodeTypeFour
+          keys={node.nodeInfo.keys}
+          dataSource={node.nodeInfo.dataSource}
+          inputProps={{ type: 'password' }}
+        />
+      );
+      break;
+    /**
      * @name 列表（table）
      */
     case 4:

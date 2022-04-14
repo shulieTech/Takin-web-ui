@@ -1,9 +1,14 @@
-import { notification } from 'antd';
+import { notification, Modal, message } from 'antd';
 import UserService from 'src/services/user';
 import router from 'umi/router';
 import axios from 'axios';
 
 const { troLogin, troLogout } = UserService;
+
+const clearModal = () => {
+  Modal.destroyAll();
+  message.destroy();
+};
 
 export default {
   namespace: 'user',
@@ -65,6 +70,7 @@ export default {
         localStorage.removeItem('takinAuthority');
         localStorage.removeItem('Access-Token');
         localStorage.removeItem('isSuper');
+        localStorage.removeItem('securityCenterDomain');
         yield put({
           type: 'updateState',
           payload: {
@@ -85,6 +91,7 @@ export default {
           window.location.href = json.loginUrl;
           return;
         }
+        clearModal();
         router.push('/login');
       }
     }

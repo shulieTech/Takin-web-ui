@@ -38,6 +38,30 @@ export const FLOW_TYPE_ENUM = {
   BUSINESS: '业务流量',
 };
 
+/**
+ * 不走安全中心网关的接口列表
+ */
+export const EXCLUDED_SECURITY_APIS = [
+  '/sys/front/config/get',
+  '/verification/code',
+  '/login',
+  '/logout',
+  '/tenant',
+  '/tenant/env/switch',
+  '/link/dictionary',
+  '/menu/list',
+  '/menu/button',
+  '/menu/keys',
+  
+  // 涉及xlsx上传的接口暂时不走安全中心
+  '/application/center/app/config/import',
+  '/file/upload',
+  '/application/middlewareJar/compare',
+  '/application/middlewareJar/import',
+  '/file/attachment/upload',
+  
+];
+
 // 帮助文档地址
 export const DOC_HELP_URL =
 'https://shulietech.feishu.cn/docs/doccnlEBVRq7HF4ToSJ9jMIzLaf';

@@ -38,6 +38,7 @@ const EnvHeader: React.FC<Props> = props => {
       });
       if (localStorage.getItem('env-code') === null) {
         localStorage.setItem('env-code', arr[indexs]?.envCode);
+        localStorage.setItem('securityCenterDomain', arr[indexs]?.securityCenterDomain || '');
         setDesc(arr[indexs]?.desc);
       } else {
         const ind = _.findIndex(data[indexs].envs, [
@@ -45,6 +46,7 @@ const EnvHeader: React.FC<Props> = props => {
           localStorage.getItem('env-code')
         ]);
         setDesc(data[indexs].envs[ind]?.desc);
+        localStorage.setItem('securityCenterDomain', data[indexs].envs[ind]?.securityCenterDomain || '');
       }
     }
   };
@@ -79,6 +81,7 @@ const EnvHeader: React.FC<Props> = props => {
         }
       });
       localStorage.setItem('env-code', arr[0]?.envCode);
+      localStorage.setItem('securityCenterDomain', arr[0]?.securityCenterDomain || '');
       setDesc(arr[0]?.desc);
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
@@ -92,7 +95,8 @@ const EnvHeader: React.FC<Props> = props => {
     }
   };
 
-  const changeCode = async (code, descs) => {
+  const changeEnv = async (env) => {
+    const { envCode: code, descs, securityCenterDomain } = env;
     const {
       data: { success, data }
     } = await tenantCodeService.envSwitch({
@@ -101,6 +105,7 @@ const EnvHeader: React.FC<Props> = props => {
     if (success) {
       setDesc(descs);
       localStorage.setItem('env-code', code);
+      localStorage.setItem('securityCenterDomain', securityCenterDomain || '');
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
@@ -175,7 +180,7 @@ const EnvHeader: React.FC<Props> = props => {
               {envList?.map((x, ind) => (
                 <Menu.Item
                   key={ind}
-                  onClick={() => changeCode(x.envCode, x.desc)}
+                  onClick={() => changeEnv(x)}
                 >
                   {x.envName}
                 </Menu.Item>
