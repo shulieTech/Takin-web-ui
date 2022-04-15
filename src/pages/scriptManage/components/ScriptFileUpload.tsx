@@ -286,7 +286,7 @@ const ScriptFileUpload = (
             acceptExts={['jar', 'csv', 'jmx']}
             maxSize={200}
             service={ScriptManageService.uploadFiles}
-            initailFileList={state.fileList}
+            initialFileList={state.fileList}
             afterUpload={(data) => {
               const resultFileList = state.fileList
                 ? state.fileList.concat(data)
@@ -377,7 +377,7 @@ const ScriptFileUpload = (
             ]}
             maxSize={200}
             service={ScriptManageService.uploadAttachments}
-            initailFileList={state.attachmentList}
+            initialFileList={state.attachmentList}
             afterUpload={(data) => {
               const resultFileList = state.attachmentList
                 ? state.attachmentList.concat(data)

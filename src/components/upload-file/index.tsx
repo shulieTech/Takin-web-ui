@@ -7,7 +7,7 @@ interface Props extends UploadProps {
   maxSize?: number;
   fileFiledName?: string;
   acceptExts?: string[];
-  initailFileList?: any[];
+  initialFileList?: any[];
   service: (formData: FormData) => Promise<any>;
   afterUpload?: (data: any) => any;
 }
@@ -18,7 +18,7 @@ const UploadFile: React.FC<Props> = (props) => {
     acceptExts = [],
     fileFiledName = 'file',
     maxSize = 0,
-    initailFileList = [],
+    initialFileList = [],
     afterUpload,
     ...rest
   } = props;
@@ -37,7 +37,7 @@ const UploadFile: React.FC<Props> = (props) => {
         message.error(`上传的文件大小不能超过${maxSize}M`);
         return false;
       }
-      if (initailFileList.some((y) => y.fileName === x.name)) {
+      if (initialFileList.some((y) => y.fileName === x.name)) {
         message.error('不能重复上传文件');
         return false;
       }
