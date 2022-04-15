@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ServiceCustomTable from 'src/components/service-custom-table';
 import { Steps, Collapse, Tag, Modal, Button, Icon, Divider } from 'antd';
 import services from '../service';
+import styles from '../index.less';
 
 interface Props {
   reportInfo: {
@@ -143,6 +144,7 @@ const PressTestSteps: React.FC<Props> = (props) => {
       activeKey={expaned ? '1' : undefined}
       expandIcon={() => null}
       bordered={false}
+      className={styles['tight-collapse']}
       style={{ marginBottom: 16, background: '#fff' }}
     >
       <Collapse.Panel
