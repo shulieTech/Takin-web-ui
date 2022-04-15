@@ -325,7 +325,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       )}
       <CommonModal
         modalProps={{
-          width: 600,
+          width: '60vw',
           footer: null,
           bodyStyle: {
             maxHeight: '80vh',

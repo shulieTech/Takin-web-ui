@@ -1,6 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import ServiceCustomTable from 'src/components/service-custom-table';
-import { Steps, Collapse, Tag, Modal, Button, Icon, Divider } from 'antd';
+import {
+  Steps,
+  Collapse,
+  Tag,
+  Modal,
+  Button,
+  Icon,
+  Divider,
+  Tooltip,
+} from 'antd';
 import services from '../service';
 import styles from '../index.less';
 
@@ -25,11 +34,78 @@ export const PressureMachineTable: React.FC<Props> = (props) => {
     {
       title: '状态',
       dataIndex: 'status',
-      render: (text: string) => {
-        return {
-          1: <Tag color="#019E6F">Running</Tag>,
-          2: <Tag color="#019E6F">Running</Tag>,
+      render: (text, record) => {
+        const tagStyle: CSSProperties = {
+          border: 'none',
+          width: 50,
+          textAlign: 'center',
+        };
+        const tagEl = {
+          1: (
+            <Tag
+              style={{
+                color: '#019E6F',
+                backgroundColor: '#EFFFF6',
+                ...tagStyle,
+              }}
+            >
+              进行中
+            </Tag>
+          ),
+          2: (
+            <Tag
+              style={{
+                color: '#D24D40',
+                backgroundColor: '#FAF2F3',
+                ...tagStyle,
+              }}
+            >
+              异常
+            </Tag>
+          ),
+          3: (
+            <Tag
+              style={{
+                color: '#414548',
+                backgroundColor: '#E5E8EC',
+                ...tagStyle,
+              }}
+            >
+              已停止
+            </Tag>
+          ),
         }[text];
+
+        return (
+          <>
+            {tagEl}
+            {record.msg && (
+              <>
+                <Divider type="vertical" />
+                <Icon
+                  type="warning"
+                  theme="filled"
+                  style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}
+                />
+                <Tooltip title={record.msg}>
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      marginLeft: 8,
+                      verticalAlign: 'middle',
+                      maxWidth: 120,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {record.msg}
+                  </div>
+                </Tooltip>
+              </>
+            )}
+          </>
+        );
       },
     },
     {
@@ -55,6 +131,30 @@ export const PressureMachineTable: React.FC<Props> = (props) => {
       // TODO 换成正确的接口
       service={services.queryLiveBusinessActivity}
       defaultQuery={props.reportInfo}
+      dataSource={[
+        {
+          status: 1,
+          machineName: 'scene-task-896-24445-1-njnkz',
+          podIp: '10.72.0.13',
+          hostIp: '10.72.0.13',
+          createTime: '2020-05-20 15:00:00',
+        },
+        {
+          status: 2,
+          machineName: 'scene-task-896-24445-1-njnkz',
+          podIp: '10.72.0.13',
+          hostIp: '10.72.0.13',
+          createTime: '2020-05-20 15:00:00',
+          msg: '异常描述描述描述异常描述描述描...',
+        },
+        {
+          status: 3,
+          machineName: 'scene-task-896-24445-1-njnkz',
+          podIp: '10.72.0.13',
+          hostIp: '10.72.0.13',
+          createTime: '2020-05-20 15:00:00',
+        },
+      ]}
       columns={columns}
     />
   );
@@ -99,7 +199,11 @@ const PressTestSteps: React.FC<Props> = (props) => {
     />
   );
   const errorIcon = (
-    <Icon type="warning" style={{ marginRight: 8, fontSize: 18 }} />
+    <Icon
+      type="warning"
+      theme="filled"
+      style={{ marginRight: 8, fontSize: 18 }}
+    />
   );
   const stepList = [
     {
@@ -217,16 +321,23 @@ const PressTestSteps: React.FC<Props> = (props) => {
                       }[status]
                     }
                     description={
-                      <div
-                        style={{
-                          whiteSpace: 'nowrap',
-                          width: 'max-content',
-                          transform: 'translateX(calc(-50% + 58px))',
-                        }}
-                      >
-                        {status === StepStatus.FAILED && errorIcon}
-                        {descriptionStr}
-                      </div>
+                      descriptionStr && (
+                        <div
+                          style={{
+                            whiteSpace: 'nowrap',
+                            width: 'max-content',
+                            transform: 'translateX(calc(-50% + 58px))',
+                          }}
+                        >
+                          {status === StepStatus.FAILED ? (
+                            <Tooltip title={descriptionStr}>
+                              <span>{errorIcon} 异常</span>
+                            </Tooltip>
+                          ) : (
+                            descriptionStr
+                          )}
+                        </div>
+                      )
                     }
                   />
                 );
