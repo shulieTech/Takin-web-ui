@@ -14,6 +14,7 @@ import {
 } from '../service';
 import UploadAdjunctColumn from './UploadAdjunctColumn';
 import getUploadFileColumns from './UploadFileColumn';
+import UploadFile from 'src/components/upload-file';
 
 interface Props {
   dictionaryMap?: any;
@@ -33,139 +34,173 @@ const ScriptFileUpload = (
     const { SCRIPT_TYPE } = dictionaryMap;
     const { detailData } = state;
 
-    const handleChange = (
-      info,
-      stateKeyName = 'fileList',
-      acceptFileNames = ['jar', 'csv', 'jmx']
-    ) => {
-      const uploadFileNum = state[`${stateKeyName}Num`] || 0;
+    // const beforeUpload = debounce((file, fileList) => {
+    //   const passed = fileList.every((x) => {
+    //     if (
+    //       ['jar', 'csv', 'jmx'].indexOf(
+    //         x.name.substr(x.name.lastIndexOf('.') + 1)
+    //       ) === -1
+    //     ) {
+    //       message.error('上传的文件含有不可接受类型，请检查后上传');
+    //       return false;
+    //     }
+    //     if (x.size > 1024 * 1024 * 200) {
+    //       message.error('上传的文件大小不能超过200M');
+    //       return false;
+    //     }
+    //     if (state.fileList.some((y) => y.fileName === x.name)) {
+    //       message.error('不能重复上传文件');
+    //       return false;
+    //     }
+    //     return true;
+    //   });
+    //   if (passed) {
+    //     const formData = new FormData();
+    //     fileList.forEach((z) => {
+    //       formData.append('file', z, z.name);
+    //     });
+    //     return uploadFiles(formData);
+    //   }
+    //   return false;
+    // }, 500);
 
-      /**
-       * @name 已上传的文件列表名
-       */
-      const fileListName =
-        state[stateKeyName] &&
-        state[stateKeyName].map((item) => {
-          return item.fileName;
-        });
+    // const handleChange = (
+    //   info,
+    //   stateKeyName = 'fileList',
+    //   acceptFileNames = ['jar', 'csv', 'jmx']
+    // ) => {
+    //   const uploadFileNum = state[`${stateKeyName}Num`] || 0;
 
-      /**
-       * @name 准备上传的文件列表名
-       */
-      const readyToUploadFileName =
-        info.fileList &&
-        info.fileList.slice(uploadFileNum).map((item) => {
-          return item.name;
-        });
+    //   /**
+    //    * @name 已上传的文件列表名
+    //    */
+    //   const fileListName =
+    //     state[stateKeyName] &&
+    //     state[stateKeyName].map((item) => {
+    //       return item.fileName;
+    //     });
 
-      /**
-       * @name 准备上传的文件列表
-       */
-      const readyToUploadFileList =
-        info.fileList && info.fileList.slice(uploadFileNum);
+    //   /**
+    //    * @name 准备上传的文件列表名
+    //    */
+    //   const readyToUploadFileName =
+    //     info.fileList &&
+    //     info.fileList.slice(uploadFileNum).map((item) => {
+    //       return item.name;
+    //     });
 
-      /**
-       * @name 判断是否是可接受类型
-       */
-      function isAcceptType(ext) {
-        return acceptFileNames.indexOf(ext.toLowerCase()) !== -1;
-      }
+    //   /**
+    //    * @name 准备上传的文件列表
+    //    */
+    //   const readyToUploadFileList =
+    //     info.fileList && info.fileList.slice(uploadFileNum);
 
-      setState({
-        [`${stateKeyName}Num`]: info.fileList.length
-      });
+    //   /**
+    //    * @name 判断是否是可接受类型
+    //    */
+    //   function isAcceptType(ext) {
+    //     return acceptFileNames.indexOf(ext.toLowerCase()) !== -1;
+    //   }
 
-      /**
-       * @name 待上传的元素含有不可接受类型
-       */
-      if (
-        readyToUploadFileName.find((item) => {
-          return !isAcceptType(item.substr(item.lastIndexOf('.') + 1));
-        })
-      ) {
-        message.error('上传的文件含有不可接受类型，请检查后上传');
-        return;
-      }
+    //   setState({
+    //     [`${stateKeyName}Num`]: info.fileList.length,
+    //   });
 
-      /**
-       * @name 待上传的元素超过200M大小
-       */
-      if (
-        readyToUploadFileList.find((item) => {
-          return item.size / 1024 / 1024 > 200;
-        })
-      ) {
-        message.error('上传的文件大小超过200M，请检查后上传');
-        info.fileList = [];
-        return;
-      }
+    //   /**
+    //    * @name 待上传的元素含有不可接受类型
+    //    */
+    //   if (
+    //     readyToUploadFileName.find((item) => {
+    //       return !isAcceptType(item.substr(item.lastIndexOf('.') + 1));
+    //     })
+    //   ) {
+    //     message.error('上传的文件含有不可接受类型，请检查后上传');
+    //     return;
+    //   }
 
-      /**
-       * @name 待上传的元素含有重名文件列表
-       */
-      const equalList =
-        readyToUploadFileName &&
-        readyToUploadFileName.filter((item, index) => {
-          if (
-            fileListName &&
-            fileListName
-              .filter((item2) => {
-                if (item2.isDeleted) {
-                  return item2;
-                }
-              })
-              .includes(item)
-          ) {
-            return item;
-          }
-        });
+    //   /**
+    //    * @name 待上传的元素超过200M大小
+    //    */
+    //   if (
+    //     readyToUploadFileList.find((item) => {
+    //       return item.size / 1024 / 1024 > 200;
+    //     })
+    //   ) {
+    //     message.error('上传的文件大小超过200M，请检查后上传');
+    //     info.fileList = [];
+    //     return;
+    //   }
 
-      if (equalList.length) {
-        if (info.file.uid === info.fileList.slice(-1)[0].uid) {
-          message.error('不能重复上传文件');
-        }
-        return;
-      }
-      // console.log('info.fileList', info.fileList);
-      const newUploadFileList = info.fileList.slice(uploadFileNum);
-      // console.log('newUploadFileList', newUploadFileList);
+    //   /**
+    //    * @name 待上传的元素含有重名文件列表
+    //    */
+    //   const equalList =
+    //     readyToUploadFileName &&
+    //     readyToUploadFileName.filter((item, index) => {
+    //       if (
+    //         fileListName &&
+    //         fileListName
+    //           .filter((item2) => {
+    //             if (item2.isDeleted) {
+    //               return item2;
+    //             }
+    //           })
+    //           .includes(item)
+    //       ) {
+    //         return item;
+    //       }
+    //     });
 
-      const formData = new FormData();
-      info.fileList.slice(uploadFileNum).map((item) => {
-        formData.append('file', item.originFileObj);
-      });
+    //   if (equalList.length) {
+    //     if (info.file.uid === info.fileList.slice(-1)[0].uid) {
+    //       message.error('不能重复上传文件');
+    //     }
+    //     return;
+    //   }
+    //   // console.log('info.fileList', info.fileList);
+    //   const newUploadFileList = info.fileList.slice(uploadFileNum);
+    //   // console.log('newUploadFileList', newUploadFileList);
 
-      setState({
-        [stateKeyName]:
-          state[stateKeyName] && state[stateKeyName].concat(newUploadFileList),
-      });
+    //   const formData = new FormData();
+    //   info.fileList.slice(uploadFileNum).map((item) => {
+    //     formData.append('file', item.originFileObj);
+    //   });
 
-      if (info.file.uid === info.fileList.slice(-1)[0].uid && formData) {
-        uploadFiles(formData, stateKeyName);
-      }
-    };
+    //   setState({
+    //     [stateKeyName]:
+    //       state[stateKeyName] && state[stateKeyName].concat(newUploadFileList),
+    //   });
 
-    /**
-     * @name 上传文件
-     */
-    const uploadFiles = async (files, stateKeyName = 'fileList') => {
-      const msg = message.loading('文件上传中...', 0);
-      const {
-        data: { data, success },
-      } = await {
-        fileList: PressureTestSceneService.uploadFiles,
-        attachmentList: ScriptManageService.uploadAttachments,
-      }[stateKeyName](files).finally(() => {
-        msg();
-      });
-      if (success) {
-        setState({
-          [stateKeyName]: state[stateKeyName]
-            ? state[stateKeyName].concat(data)
-            : data,
-        });
-      }
-    };
+    //   if (info.file.uid === info.fileList.slice(-1)[0].uid && formData) {
+    //     uploadFiles(formData, stateKeyName);
+    //   }
+    // };
+
+    // /**
+    //  * @name 上传文件
+    //  */
+    // const uploadFiles = async (files, stateKeyName = 'fileList') => {
+    //   const msg = message.loading('文件上传中...', 0);
+    //   const {
+    //     data: { data, success },
+    //   } = await {
+    //     fileList: PressureTestSceneService.uploadFiles,
+    //     attachmentList: ScriptManageService.uploadAttachments,
+    //   }
+    //     [stateKeyName](files)
+    //     .finally(() => {
+    //       msg();
+    //     });
+    //   if (success) {
+    //     const resultFileList = state.fileList
+    //       ? state.fileList.concat(data)
+    //       : data;
+    //     setState({
+    //       [stateKeyName]: resultFileList,
+    //       uploadFileNum: resultFileList.length,
+    //     });
+    //   }
+    // };
 
     /**
      * @name 删除新上传文件
@@ -245,15 +280,21 @@ const ScriptFileUpload = (
           rules: [{ required: false, message: '请上传文件' }],
         },
         node: (
-          <ImportFile
-            style={{ marginLeft: 100 }}
-            UploadProps={{
-              type: 'drag',
-              multiple: true,
-              onChange: (info) => handleChange(info),
+          <UploadFile
+            type="drag"
+            multiple
+            acceptExts={['jar', 'csv', 'jmx']}
+            maxSize={200}
+            service={ScriptManageService.uploadFiles}
+            initailFileList={state.fileList}
+            afterUpload={(data) => {
+              const resultFileList = state.fileList
+                ? state.fileList.concat(data)
+                : data;
+              setState({
+                fileList: resultFileList,
+              });
             }}
-            fileName="file"
-            onImport={(file) => true}
           >
             <Icon type="inbox" />
             <p
@@ -294,7 +335,7 @@ const ScriptFileUpload = (
                 </span> */}
               </span>
             </p>
-          </ImportFile>
+          </UploadFile>
         ),
         extra: (
           <div style={{ marginTop: 8, width: '200%' }}>
@@ -320,26 +361,31 @@ const ScriptFileUpload = (
           rules: [{ required: false, message: '请上传附件' }],
         },
         node: (
-          <ImportFile
-            style={{ marginLeft: 100 }}
-            UploadProps={{
-              type: 'drag',
-              multiple: true,
-              onChange: (info) =>
-                handleChange(info, 'attachmentList', [
-                  'jar',
-                  'csv',
-                  'bmp',
-                  'png',
-                  'jpg',
-                  'jpeg',
-                  'gif',
-                  'xls',
-                  'xlsx',
-                ]),
+          <UploadFile
+            type="drag"
+            multiple
+            acceptExts={[
+              'jar',
+              'csv',
+              'bmp',
+              'png',
+              'jpg',
+              'jpeg',
+              'gif',
+              'xls',
+              'xlsx',
+            ]}
+            maxSize={200}
+            service={ScriptManageService.uploadAttachments}
+            initailFileList={state.attachmentList}
+            afterUpload={(data) => {
+              const resultFileList = state.attachmentList
+                ? state.attachmentList.concat(data)
+                : data;
+              setState({
+                attachmentList: resultFileList,
+              });
             }}
-            fileName="file"
-            onImport={(file) => true}
           >
             <Icon type="inbox" />
             <p
@@ -366,7 +412,7 @@ const ScriptFileUpload = (
               支持jar格式：.jar <br />
               支持其他附件格式：图片、Excel等
             </p>
-          </ImportFile>
+          </UploadFile>
         ),
         extra: (
           <div style={{ marginTop: 8, width: '200%' }}>

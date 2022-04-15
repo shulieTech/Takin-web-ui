@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { CommonForm, CommonModal, ImportFile, useStateReducer } from 'racc';
+import { CommonForm, CommonModal, useStateReducer } from 'racc';
 import { Col, Collapse, Divider, Icon, Input, message, Row, Spin } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormDataType } from 'racc/dist/common-form/type';
@@ -12,6 +12,7 @@ import styles from './../index.less';
 import EditJmeterModal from './EditJmeterModal';
 import { fileTypeMap } from '../enum';
 import RelatePlugin from '../components/RelatePlugin';
+import UploadFile from 'src/components/upload-file';
 
 interface Props {
   btnText?: string | React.ReactNode;
@@ -152,12 +153,14 @@ const AddJmeterModal: React.FC<Props> = (props) => {
         key: 'appName',
         label: '上传文件',
         node: (
-          <ImportFile
-            accept={['jmx']}
-            onImport={handleImport}
-            UploadProps={{
-              type: 'drag',
-              multiple: false,
+          <UploadFile
+            acceptExts={['jmx']}
+            type="drag"
+            service={BusinessFlowService.uploadJmeter}
+            afterUpload={(data) => {
+              setState({
+                fileList: data,
+              });
             }}
           >
             <p>
@@ -165,7 +168,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
             </p>
             <p className="ant-upload-text">点击或者拖拽到此上传文件</p>
             <p>支持格式：.jmx</p>
-          </ImportFile>
+          </UploadFile>
         ),
         extra: (
           <div style={{ marginTop: 20 }}>
