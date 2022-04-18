@@ -1,5 +1,5 @@
 import { Alert, Button, Col, Dropdown, Icon, Menu, Row, Statistic } from 'antd';
-import { useStateReducer, CommonModal } from 'racc';
+import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useState } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
@@ -15,7 +15,7 @@ import MissingDataListModal from './modals/MissingDataListModal';
 import PressureTestReportService from './service';
 import { GraphData } from '@antv/g6';
 import downloadFile from 'src/utils/downloadFile';
-import { PressureMachineTable } from './components/PressTestSteps';
+import PressTestMachines from './components/PressTestMachines';
 
 interface State {
   isReload?: boolean;
@@ -323,30 +323,15 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           下载Jtl文件
         </Button>
       )}
-      <CommonModal
-        modalProps={{
-          width: '60vw',
-          footer: null,
-          bodyStyle: {
-            maxHeight: '80vh',
-            overflow: 'auto',
-          },
+      
+      <PressTestMachines
+        reportInfo={{
+          sceneId: detailData.sceneId,
+          reportId: detailData.id,
         }}
-        btnText="查看压力机明细"
-        btnProps={{
-          type: 'default',
-          style: {
-            marginRight: 8,
-          },
-        }}
-      >
-        <PressureMachineTable
-          reportInfo={{
-            scenceId: detailData.scenceId,
-            reportId: detailData.id,
-          }}
-        />
-      </CommonModal>
+        isLive={false}
+      />
+
       <Button
         type="primary"
         onClick={() =>

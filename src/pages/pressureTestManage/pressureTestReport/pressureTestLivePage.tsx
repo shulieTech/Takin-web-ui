@@ -34,7 +34,7 @@ import moment from 'moment';
 import BusinessActivityTree, {
   getFirstTreeNodeByFilter,
 } from './components/BusinessActivityTree';
-import PressTestSteps from './components/PressTestSteps';
+import PressTestMachines from './components/PressTestMachines';
 
 interface State {
   isReload?: boolean;
@@ -639,7 +639,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
         leftWrap={leftWrap}
       />
 
-      <PressTestSteps
+      <PressTestMachines
         reportInfo={{
           reportId: detailData.id,
           sceneId: detailData.sceneId,

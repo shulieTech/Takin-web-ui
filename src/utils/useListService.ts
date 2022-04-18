@@ -49,6 +49,7 @@ const useListService = (props: Props) => {
     if (typeof afterSearchCallback === 'function') {
       afterSearchCallback(res);
     }
+    return res;
   };
 
   useEffect(() => {

@@ -1,24 +1,19 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
-import ServiceCustomTable from 'src/components/service-custom-table';
-import {
-  Steps,
-  Collapse,
-  Tag,
-  Modal,
-  Button,
-  Icon,
-  Divider,
-  Tooltip,
-} from 'antd';
+import { CommonModal } from 'racc';
+import CustomTable from 'src/components/custom-table';
+import { Steps, Collapse, Tag, Icon, Divider, Tooltip, Pagination } from 'antd';
 import services from '../service';
 import styles from '../index.less';
+import { getSortConfig, getTableSortQuery } from 'src/utils/utils';
+import useListService from 'src/utils/useListService';
 
 interface Props {
   reportInfo: {
-    scenceId: string | number;
+    sceneId: string | number;
     reportId: string | number;
   };
   ticker?: number;
+  isLive?: boolean;
 }
 enum StepStatus {
   WAIT,
@@ -29,7 +24,39 @@ enum StepStatus {
 
 const { Step } = Steps;
 
-export const PressureMachineTable: React.FC<Props> = (props) => {
+const PressTestMachines: React.FC<Props> = (props) => {
+  const { reportInfo, ticker, isLive = true } = props;
+
+  const [expaned, setExpaned] = useState(false);
+  const [stepListInfo, setStepListInfo] = useState({
+    allMachineCount: 0,
+    startedMachineCount: 0,
+    stopedMachineCount: 0,
+    stepList: [
+      { status: StepStatus.SUCCESS },
+      { status: StepStatus.SUCCESS },
+      { status: StepStatus.SUCCESS, message: '' },
+      { status: StepStatus.SUCCESS },
+    ],
+  });
+
+  const {
+    query,
+    getList,
+    list,
+    total,
+    loading: tableLoading,
+  } = useListService({
+    service: services.queryLiveBusinessActivity,
+    dataListPath: 'data',
+    isQueryOnMount: false,
+    defaultQuery: {
+      ...reportInfo,
+      current: 0,
+      pageSize: 10,
+    },
+  });
+
   const columns = [
     {
       title: '状态',
@@ -113,6 +140,11 @@ export const PressureMachineTable: React.FC<Props> = (props) => {
       dataIndex: 'machineName',
     },
     {
+      title: '重启次数',
+      dataIndex: 'restartCount',
+      hide: isLive,
+    },
+    {
       title: 'Pod IP',
       dataIndex: 'podIp',
     },
@@ -123,66 +155,20 @@ export const PressureMachineTable: React.FC<Props> = (props) => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
+      ...(isLive ? {} : getSortConfig(query, 'createTime')),
     },
-  ];
-  return (
-    <ServiceCustomTable
-      isQueryOnMount={false}
-      // TODO 换成正确的接口
-      service={services.queryLiveBusinessActivity}
-      defaultQuery={props.reportInfo}
-      dataSource={[
-        {
-          status: 1,
-          machineName: 'scene-task-896-24445-1-njnkz',
-          podIp: '10.72.0.13',
-          hostIp: '10.72.0.13',
-          createTime: '2020-05-20 15:00:00',
-        },
-        {
-          status: 2,
-          machineName: 'scene-task-896-24445-1-njnkz',
-          podIp: '10.72.0.13',
-          hostIp: '10.72.0.13',
-          createTime: '2020-05-20 15:00:00',
-          msg: '异常描述描述描述异常描述描述描...',
-        },
-        {
-          status: 3,
-          machineName: 'scene-task-896-24445-1-njnkz',
-          podIp: '10.72.0.13',
-          hostIp: '10.72.0.13',
-          createTime: '2020-05-20 15:00:00',
-        },
-      ]}
-      columns={columns}
-    />
-  );
-};
-
-const PressTestSteps: React.FC<Props> = (props) => {
-  const { reportInfo, ticker } = props;
-  const [expaned, setExpaned] = useState(false);
-  const [stepListInfo, setStepListInfo] = useState({
-    allMachineCount: 0,
-    startedMachineCount: 0,
-    stopedMachineCount: 0,
-    stepList: [
-      { status: StepStatus.SUCCESS },
-      { status: StepStatus.SUCCESS },
-      { status: StepStatus.SUCCESS, message: '' },
-      { status: StepStatus.SUCCESS },
-    ],
-  });
+    {
+      title: '停止时间',
+      dataIndex: 'stopTime',
+      hide: isLive,
+      ...(isLive ? {} : getSortConfig(query, 'stopTime')),
+    },
+  ].filter((x) => !x.hide);
 
   const getStepListInfo = async () => {
     const {
-      data: { data, success },
-      // TODO 换成正确的接口
-    } = await services.queryLiveBusinessActivity({
-      scenceId: reportInfo.scenceId,
-      reportId: reportInfo.reportId,
-    });
+      data: { success, data },
+    } = await getList();
     if (success) {
       setStepListInfo(data);
     }
@@ -243,7 +229,122 @@ const PressTestSteps: React.FC<Props> = (props) => {
     },
   ];
 
-  return (
+  // 表格内容
+  const tableEl = (
+    <>
+      <div>
+        <span style={{ marginRight: 40 }}>
+          <span
+            style={{
+              color: 'var(--Netural-700, #6F7479)',
+              marginRight: 16,
+            }}
+          >
+            指定压力机数
+          </span>
+          <span
+            style={{
+              color: 'var(--Netural-850, #414548)',
+              fontSize: 20,
+              fontWeight: 'bold',
+            }}
+          >
+            {stepListInfo.allMachineCount || 0}
+          </span>
+        </span>
+        {stepListInfo.startedMachineCount > 0 && (
+          <span style={{ marginRight: 40 }}>
+            <span
+              style={{
+                color: 'var(--Netural-700, #6F7479)',
+                marginRight: 16,
+              }}
+            >
+              已启动
+            </span>
+            <span
+              style={{
+                color: 'var(--Netural-850, #414548)',
+                fontSize: 20,
+                fontWeight: 'bold',
+              }}
+            >
+              {stepListInfo.startedMachineCount}
+            </span>
+          </span>
+        )}
+        {stepListInfo.stopedMachineCount > 0 && (
+          <span style={{ marginRight: 40 }}>
+            <span
+              style={{
+                color: 'var(--Netural-700, #6F7479)',
+                marginRight: 16,
+              }}
+            >
+              已停止
+            </span>
+            <span
+              style={{
+                color: 'var(--Netural-850, #414548)',
+                fontSize: 20,
+                fontWeight: 'bold',
+              }}
+            >
+              {stepListInfo.stopedMachineCount}
+            </span>
+          </span>
+        )}
+      </div>
+      <CustomTable
+        dataSource={list}
+        loading={tableLoading}
+        onChange={(pagination, filters, sorter) => {
+          getList(getTableSortQuery(sorter));
+        }}
+        columns={columns}
+      />
+      <Pagination
+        style={{ marginTop: 20, textAlign: 'right' }}
+        total={total}
+        current={query.current + 1}
+        pageSize={query.pageSize}
+        showTotal={(t, range) =>
+          `共 ${total} 条数据 第${query.current + 1}页 / 共 ${Math.ceil(
+            total / (query.pageSize || 10)
+          )}页`
+        }
+        showSizeChanger={true}
+        onChange={(current, pageSize) =>
+          getList({ pageSize, current: current - 1 })
+        }
+        onShowSizeChange={(current, pageSize) =>
+          getList({ pageSize, current: 0 })
+        }
+      />
+    </>
+  );
+
+  return !isLive ? (
+    <CommonModal
+      modalProps={{
+        width: '60vw',
+        footer: null,
+        bodyStyle: {
+          maxHeight: '80vh',
+          overflow: 'auto',
+        },
+      }}
+      btnText="查看压力机明细"
+      btnProps={{
+        type: 'default',
+        style: {
+          marginRight: 8,
+        },
+      }}
+    >
+      {tableEl}
+    </CommonModal>
+  ) : (
     <Collapse
       activeKey={expaned ? '1' : undefined}
       expandIcon={() => null}
@@ -351,9 +452,9 @@ const PressTestSteps: React.FC<Props> = (props) => {
                 setExpaned(!expaned);
               }}
             >
-              展开明细
+              {expaned ? '收起明细' : '展开明细'}
               <Icon
-                type={'down'}
+                type={expaned ? 'down' : 'right'}
                 style={{
                   marginLeft: 8,
                 }}
@@ -363,72 +464,9 @@ const PressTestSteps: React.FC<Props> = (props) => {
         }
       >
         <Divider />
-        <div>
-          <span style={{ marginRight: 40 }}>
-            <span
-              style={{
-                color: 'var(--Netural-700, #6F7479)',
-                marginRight: 16,
-              }}
-            >
-              指定压力机数
-            </span>
-            <span
-              style={{
-                color: 'var(--Netural-850, #414548)',
-                fontSize: 20,
-                fontWeight: 'bold',
-              }}
-            >
-              {stepListInfo.allMachineCount || 0}
-            </span>
-          </span>
-          {stepListInfo.startedMachineCount > 0 && (
-            <span style={{ marginRight: 40 }}>
-              <span
-                style={{
-                  color: 'var(--Netural-700, #6F7479)',
-                  marginRight: 16,
-                }}
-              >
-                已启动
-              </span>
-              <span
-                style={{
-                  color: 'var(--Netural-850, #414548)',
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                }}
-              >
-                {stepListInfo.startedMachineCount}
-              </span>
-            </span>
-          )}
-          {stepListInfo.stopedMachineCount > 0 && (
-            <span style={{ marginRight: 40 }}>
-              <span
-                style={{
-                  color: 'var(--Netural-700, #6F7479)',
-                  marginRight: 16,
-                }}
-              >
-                已停止
-              </span>
-              <span
-                style={{
-                  color: 'var(--Netural-850, #414548)',
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                }}
-              >
-                {stepListInfo.stopedMachineCount}
-              </span>
-            </span>
-          )}
-        </div>
-        <PressureMachineTable reportInfo={reportInfo} />
+        {tableEl}
       </Collapse.Panel>
     </Collapse>
   );
 };
-export default PressTestSteps;
+export default PressTestMachines;
