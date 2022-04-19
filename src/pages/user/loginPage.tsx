@@ -411,12 +411,6 @@ export default class Login extends DvaComponent<Props, State> {
         duration: 1.5
       });
 
-      // 支持登录后跳转到指定页面
-      if (this.props.location.query.redirect_uri) {
-        window.location.href = `${this.props.location.query.redirect_uri}?token=${data.xToken}`;
-        return;
-      }
-
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
@@ -427,6 +421,13 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
+
+      // 支持登录后跳转到指定页面
+      if (this.props.location.query.redirect_uri && data.xCode) {
+        window.location.href = `${this.props.location.query.redirect_uri}?code=${data.xCode}`;
+        return;
+      }
+      
       router.push('/');
       return;
     }
@@ -447,12 +448,6 @@ export default class Login extends DvaComponent<Props, State> {
         duration: 1.5,
       });
       
-      // 支持登录后跳转到指定页面
-      if (this.props.location.query.redirect_uri) {
-        window.location.href = `${this.props.location.query.redirect_uri}?token=${data.xToken}`;
-        return;
-      }
-      
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
@@ -463,6 +458,13 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
+
+      // 支持登录后跳转到指定页面
+      if (this.props.location.query.redirect_uri && data.xCode) {
+        window.location.href = `${this.props.location.query.redirect_uri}?code=${data.xCode}`;
+        return;
+      }
+
       router.push('/');
       return;
     }

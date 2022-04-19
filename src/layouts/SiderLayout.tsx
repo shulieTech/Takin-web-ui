@@ -22,12 +22,12 @@ import NewVersionHelp from './components/NewVersionHelp';
 
 declare var window: any;
 let path = '';
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
 
 const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const [state, setState] = useStateReducer({
     collapsedStatus: false,
-    request: false
+    request: false,
   });
 
   const pathname: string | any = props.location.pathname;
@@ -42,9 +42,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   const thirdPartylogin = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await UserService.thirdPartylogin({
-      flag: queryString.parse(location.search).flag
+      flag: queryString.parse(location.search).flag,
     });
     if (success) {
       if (!data.errorMessage) {
@@ -52,7 +52,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           notification.success({
             message: '通知',
             description: '登录成功',
-            duration: 1.5
+            duration: 1.5,
           });
           localStorage.setItem('troweb-userName', data.name);
           localStorage.setItem('troweb-userId', data.id);
@@ -64,6 +64,14 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           localStorage.setItem('full-link-token', data.xToken);
           localStorage.setItem('troweb-expire', data.expire);
           localStorage.removeItem('Access-Token');
+
+          // 支持登录后跳转到指定页面
+          const { redirect_uri } = queryString.parse(location.search) || {};
+          if (redirect_uri && data.xCode) {
+            window.location.href = `${redirect_uri}?code=${data.xCode}`;
+            return;
+          }
+
           setState({ request: true });
         }
       } else {
@@ -89,7 +97,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     //   });
     // }
     window.g_app._store.dispatch({
-      type: 'user/troLogout'
+      type: 'user/troLogout',
     });
   };
 
@@ -211,7 +219,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   };
 
   const disableTenant = getThemeByKeyName('disableTenant');
-  
+
   return (
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
@@ -227,28 +235,29 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           backgroundColor: '#1D2530',
         }}
       >
-        <NewVersionHelp/>
+        <NewVersionHelp />
         {/* <HeaderNode
            onCollapse={handlerCollapsed}
            collapsedStatus={state.collapsedStatus}
          /> */}
-        {
-          state.request && <ConfigProvider getPopupContainer={() => popupDom.current}>
-          <div
-            className="h-100p"
-            style={{
-              backgroundColor: '#1D2530',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-            ref={popupDom}
-          >
-            {/* 人寿没有租户 */}
-            {!disableTenant && <EnvHeader />}
-            <ContentNode children={children} />
-            {/* <FooterNode /> */}
-          </div>
-        </ConfigProvider>}
+        {state.request && (
+          <ConfigProvider getPopupContainer={() => popupDom.current}>
+            <div
+              className="h-100p"
+              style={{
+                backgroundColor: '#1D2530',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+              ref={popupDom}
+            >
+              {/* 人寿没有租户 */}
+              {!disableTenant && <EnvHeader />}
+              <ContentNode children={children} />
+              {/* <FooterNode /> */}
+            </div>
+          </ConfigProvider>
+        )}
       </Layout>
     </Layout>
   );
