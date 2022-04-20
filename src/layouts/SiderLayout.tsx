@@ -33,7 +33,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const pathname: string | any = props.location.pathname;
   const popupDom = useRef(null);
 
-  const thirdPartyLoginFlag = props.location.query.flag || queryString.parse(window.location.search).flag;
+  const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl } =
+    props.location.query || queryString.parse(window.location.search) || {};
 
   useEffect(() => {
     if (thirdPartyLoginFlag) {
@@ -69,9 +70,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           localStorage.removeItem('Access-Token');
 
           // 支持登录后跳转到指定页面
-          const { redirect_uri } = queryString.parse(location.search) || {};
-          if (redirect_uri && data.xCode) {
-            window.location.href = `${redirect_uri}?code=${data.xCode}`;
+          if (redirectUrl && data.xCode) {
+            window.location.href = `${redirectUrl}?code=${data.xCode}`;
             return;
           }
 

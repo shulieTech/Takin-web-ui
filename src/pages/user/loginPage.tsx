@@ -1,4 +1,15 @@
-import { Col, Icon, Input, Tabs, notification, Popover, Row, Tooltip, Button, message } from 'antd';
+import {
+  Col,
+  Icon,
+  Input,
+  Tabs,
+  notification,
+  Popover,
+  Row,
+  Tooltip,
+  Button,
+  message,
+} from 'antd';
 import { connect } from 'dva';
 import { CommonForm } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
@@ -15,7 +26,7 @@ import { getThemeByKeyName } from 'src/utils/useTheme';
 import { withRouter } from 'umi';
 
 const { TabPane } = Tabs;
-interface Props { }
+interface Props {}
 
 const state = {
   nums: null,
@@ -29,14 +40,16 @@ const state = {
   text: '获取短信验证码',
   settimer: 61,
   config: {
-    loginType: null
+    loginType: null,
   },
-  keyType: 1
+  keyType: 1,
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
   const disableTenant = getThemeByKeyName('disableTenant');
-  const usernamePlaceholder = disableTenant ? '请输入账号' : '<用户名>@<企业别名>，例如： username@shulie';
+  const usernamePlaceholder = disableTenant
+    ? '请输入账号'
+    : '<用户名>@<企业别名>，例如： username@shulie';
   return [
     {
       key: 'username',
@@ -124,9 +137,9 @@ const getFormDatatre = (that: Login): FormDataType[] => {
         rules: [
           {
             required: true,
-            message: '请输入用户名'
-          }
-        ]
+            message: '请输入用户名',
+          },
+        ],
       },
       node: (
         <Input
@@ -134,7 +147,7 @@ const getFormDatatre = (that: Login): FormDataType[] => {
           onChange={that.onBlurs}
           placeholder="用户名"
         />
-      )
+      ),
     },
     {
       key: 'code',
@@ -143,9 +156,9 @@ const getFormDatatre = (that: Login): FormDataType[] => {
         rules: [
           {
             required: true,
-            message: '请输入手机验证码'
-          }
-        ]
+            message: '请输入手机验证码',
+          },
+        ],
       },
       node: (
         <Input
@@ -169,8 +182,8 @@ const getFormDatatre = (that: Login): FormDataType[] => {
             <Icon type="question-circle" style={{ marginLeft: 6 }} />
           </Tooltip>
         </div>
-      )
-    }
+      ),
+    },
   ];
 };
 const getFormDatas = (that: Login): FormDataType[] => {
@@ -182,9 +195,9 @@ const getFormDatas = (that: Login): FormDataType[] => {
         rules: [
           {
             required: true,
-            message: '请输入手机号'
-          }
-        ]
+            message: '请输入手机号',
+          },
+        ],
       },
       node: (
         <Input
@@ -193,7 +206,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
           placeholder="手机号"
           onChange={that.onBlurs}
         />
-      )
+      ),
     },
     {
       key: 'code',
@@ -202,9 +215,9 @@ const getFormDatas = (that: Login): FormDataType[] => {
         rules: [
           {
             required: true,
-            message: '请输入手机验证码'
-          }
-        ]
+            message: '请输入手机验证码',
+          },
+        ],
       },
       node: (
         <Input
@@ -228,8 +241,8 @@ const getFormDatas = (that: Login): FormDataType[] => {
             <Icon type="question-circle" style={{ marginLeft: 6 }} />
           </Tooltip>
         </div>
-      )
-    }
+      ),
+    },
   ];
 };
 declare var serverUrl: string;
@@ -252,9 +265,9 @@ export default class Login extends DvaComponent<Props, State> {
 
   thirdParty = async (tenantCode) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await UserService.thirdParty({
-      tenantCode: tenantCode || undefined
+      tenantCode: tenantCode || undefined,
     });
     if (success) {
       this.setState({
@@ -265,7 +278,7 @@ export default class Login extends DvaComponent<Props, State> {
 
   serverConfig = async () => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await UserService.serverConfig({});
     if (success) {
       // if (data.domain) {
@@ -283,7 +296,7 @@ export default class Login extends DvaComponent<Props, State> {
       // }
       this.setState({
         config: data,
-        keyType: data.loginType === 3 ? 1 : data.loginType
+        keyType: data.loginType === 3 ? 1 : data.loginType,
       });
     }
   };
@@ -300,39 +313,41 @@ export default class Login extends DvaComponent<Props, State> {
       obj.loginType = this.state.keyType;
     }
     const {
-      data: { success, data }
+      data: { success, data },
     } = await UserService.sms(obj);
     if (success) {
       const timer = setInterval(() => {
-        this.setState({
-          disabled: true,
-          settimer: this.state.settimer - 1,
-        }, () => {
-          this.setState({
-            text: `${this.state.settimer}秒后可重发`
-          });
-          if (this.state.settimer === 0) {
-            clearInterval(timer);
+        this.setState(
+          {
+            disabled: true,
+            settimer: this.state.settimer - 1,
+          },
+          () => {
             this.setState({
-              disabled: false,
-              text: '获取短信验证码',
-              settimer: 61,
+              text: `${this.state.settimer}秒后可重发`,
             });
+            if (this.state.settimer === 0) {
+              clearInterval(timer);
+              this.setState({
+                disabled: false,
+                text: '获取短信验证码',
+                settimer: 61,
+              });
+            }
           }
-        });
-
+        );
       }, 1000);
     }
-  }
+  };
 
   onBlur = async (e) => {
     if (e.target.value) {
       const code = _.split(e.target.value, '@');
       if (code.length > 1) {
         const {
-          data: { data, success }
+          data: { data, success },
         } = await UserService.thirdParty({
-          tenantCode: code[code.length - 1]
+          tenantCode: code[code.length - 1],
         });
         if (success) {
           this.setState({
@@ -351,9 +366,9 @@ export default class Login extends DvaComponent<Props, State> {
       const code = _.split(e.target.value, '@');
       if (code.length > 1) {
         const {
-          data: { data, success }
+          data: { data, success },
         } = await UserService.thirdParty({
-          tenantCode: code[code.length - 1]
+          tenantCode: code[code.length - 1],
         });
         if (success) {
           this.setState({
@@ -402,13 +417,13 @@ export default class Login extends DvaComponent<Props, State> {
       return;
     }
     const {
-      data: { success, data }
+      data: { success, data },
     } = await UserService.troLogin({ ...value, loginType: this.state.keyType });
     if (success) {
       notification.success({
         message: '通知',
         description: '登录成功',
-        duration: 1.5
+        duration: 1.5,
       });
 
       localStorage.setItem('troweb-userName', data.name);
@@ -427,7 +442,7 @@ export default class Login extends DvaComponent<Props, State> {
         window.location.href = `${this.props.location.query.redirect_uri}?code=${data.xCode}`;
         return;
       }
-      
+
       router.push('/');
       return;
     }
@@ -439,15 +454,18 @@ export default class Login extends DvaComponent<Props, State> {
       return;
     }
     const {
-      data: { success, data }
-    } = await UserService.trov2Login({ ...value, loginType: this.state.keyType });
+      data: { success, data },
+    } = await UserService.trov2Login({
+      ...value,
+      loginType: this.state.keyType,
+    });
     if (success) {
       notification.success({
         message: '通知',
         description: '登录成功',
         duration: 1.5,
       });
-      
+
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
@@ -470,7 +488,7 @@ export default class Login extends DvaComponent<Props, State> {
     }
     this.refresh();
   };
-  
+
   content = () => {
     const wechatQRcode = getThemeByKeyName('wechatQRcode');
     return (
@@ -486,8 +504,11 @@ export default class Login extends DvaComponent<Props, State> {
 
   onClick = async (id) => {
     const {
-      data: { success, data }
-    } = await UserService.redirect({ thirdPartyId: id });
+      data: { success, data },
+    } = await UserService.redirect({
+      thirdPartyId: id,
+      sourceUrl: this.props.location.query.redirect_uri,
+    });
     if (success) {
       window.location.href = data;
     }
@@ -495,9 +516,9 @@ export default class Login extends DvaComponent<Props, State> {
 
   callback = (key) => {
     this.setState({
-      keyType: key
+      keyType: key,
     });
-  }
+  };
 
   render() {
     // 权限判断
@@ -510,15 +531,12 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          tabBarExtraContent={
+            <Popover content={this.content()} trigger="click" placement="top">
+              <a>申请账号</a>
+            </Popover>}
         >
-          <TabPane tab="SSO登录" key="1" >
+          <TabPane tab="SSO登录" key="1">
             <CommonForm
               formData={getFormData(this)}
               rowNum={1}
@@ -529,8 +547,8 @@ export default class Login extends DvaComponent<Props, State> {
                 submitText: '登录',
                 submitBtnProps: {
                   style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
+                  type: 'primary',
+                },
               }}
             />
           </TabPane>
@@ -541,28 +559,25 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          tabBarExtraContent={
+            <Popover content={this.content()} trigger="click" placement="top">
+              <a>申请账号</a>
+            </Popover>}
         >
           <TabPane tab="短信登录" key="2">
             <CommonForm
               formData={getFormDatas(this)}
               rowNum={1}
               onSubmit={this.handleSubmits}
-              getForm={f => this.setState({ form: f })}
+              getForm={(f) => this.setState({ form: f })}
               btnProps={{
                 isResetBtn: false,
                 isSubmitBtn: true,
                 submitText: '登录',
                 submitBtnProps: {
                   style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
+                  type: 'primary',
+                },
               }}
             />
           </TabPane>
@@ -573,15 +588,12 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          tabBarExtraContent={
+            <Popover content={this.content()} trigger="click" placement="top">
+              <a>申请账号</a>
+            </Popover>}
         >
-          <TabPane tab="SSO登录" key="1" >
+          <TabPane tab="SSO登录" key="1">
             <CommonForm
               formData={getFormData(this)}
               rowNum={1}
@@ -592,8 +604,8 @@ export default class Login extends DvaComponent<Props, State> {
                 submitText: '登录',
                 submitBtnProps: {
                   style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
+                  type: 'primary',
+                },
               }}
             />
           </TabPane>
@@ -602,15 +614,15 @@ export default class Login extends DvaComponent<Props, State> {
               formData={getFormDatas(this)}
               rowNum={1}
               onSubmit={this.handleSubmits}
-              getForm={f => this.setState({ form: f })}
+              getForm={(f) => this.setState({ form: f })}
               btnProps={{
                 isResetBtn: false,
                 isSubmitBtn: true,
                 submitText: '登录',
                 submitBtnProps: {
                   style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
+                  type: 'primary',
+                },
               }}
             />
           </TabPane>
@@ -621,28 +633,25 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          tabBarExtraContent={
+            <Popover content={this.content()} trigger="click" placement="top">
+              <a>申请账号</a>
+            </Popover>}
         >
           <TabPane tab="短信登录" key="2">
             <CommonForm
               formData={getFormDatatre(this)}
               rowNum={1}
               onSubmit={this.handleSubmit}
-              getForm={f => this.setState({ form: f })}
+              getForm={(f) => this.setState({ form: f })}
               btnProps={{
                 isResetBtn: false,
                 isSubmitBtn: true,
                 submitText: '登录',
                 submitBtnProps: {
                   style: { width: 329, marginTop: 20 },
-                  type: 'primary'
-                }
+                  type: 'primary',
+                },
               }}
             />
           </TabPane>
@@ -655,10 +664,7 @@ export default class Login extends DvaComponent<Props, State> {
     return (
       <div className={styles.mainWrap}>
         {loginPic ? (
-          <img
-            className={styles.bg1}
-            src={loginPic}
-          />
+          <img className={styles.bg1} src={loginPic} />
         ) : (
           <>
             <img
@@ -686,17 +692,15 @@ export default class Login extends DvaComponent<Props, State> {
             {dom}
             <center className={styles.other}>其他登录方式</center>
             <Row className={styles.otherimg} type="flex" justify="center">
-              {
-                this.state.arr.map(ite => {
-                  return (
-                    <Col key={ite.id} span={3}>
-                      <a onClick={() => this.onClick(ite.id)}>
-                        <img className={styles.img} src={ite.logo} />
-                      </a>
-                    </Col>
-                  );
-                })
-              }
+              {this.state.arr.map((ite) => {
+                return (
+                  <Col key={ite.id} span={3}>
+                    <a onClick={() => this.onClick(ite.id)}>
+                      <img className={styles.img} src={ite.logo} />
+                    </a>
+                  </Col>
+                );
+              })}
             </Row>
           </div>
         </div>
