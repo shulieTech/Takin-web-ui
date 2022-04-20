@@ -32,8 +32,11 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   const pathname: string | any = props.location.pathname;
   const popupDom = useRef(null);
+
+  const thirdPartyLoginFlag = props.location.query.flag || queryString.parse(window.location.search).flag;
+
   useEffect(() => {
-    if (queryString.parse(location.search).flag) {
+    if (thirdPartyLoginFlag) {
       thirdPartylogin();
     } else {
       setState({ request: true });
@@ -44,7 +47,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     const {
       data: { success, data },
     } = await UserService.thirdPartylogin({
-      flag: queryString.parse(location.search).flag,
+      flag: thirdPartyLoginFlag,
     });
     if (success) {
       if (!data.errorMessage) {
