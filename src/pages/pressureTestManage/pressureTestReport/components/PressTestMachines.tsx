@@ -17,9 +17,9 @@ interface Props {
 }
 enum StepStatus {
   WAIT,
-  RUNING,
-  SUCCESS,
-  FAILED,
+  RUNING = 'Running',
+  SUCCESS = 'Success',
+  FAILED = 'Failed',
 }
 
 const { Step } = Steps;
@@ -29,9 +29,11 @@ const PressTestMachines: React.FC<Props> = (props) => {
 
   const [expaned, setExpaned] = useState(false);
   const [stepListInfo, setStepListInfo] = useState({
-    allMachineCount: 0,
-    startedMachineCount: 0,
-    stopedMachineCount: 0,
+    resourcesAmount: 0,
+    aliveAmount: 0,
+    inactiveAmount: 0,
+    unusualAmount: 0,
+    errorMessage: '',
     stepList: [
       { status: StepStatus.SUCCESS },
       { status: StepStatus.SUCCESS },
@@ -47,11 +49,13 @@ const PressTestMachines: React.FC<Props> = (props) => {
     total,
     loading: tableLoading,
   } = useListService({
-    service: services.queryLiveBusinessActivity,
-    dataListPath: 'data',
+    service: services.machineSummary,
+    dataListPath: 'resources',
     isQueryOnMount: false,
     defaultQuery: {
-      ...reportInfo,
+      // ...reportInfo,
+      resourceId: reportInfo.sceneId,
+      taskId: reportInfo.reportId,
       current: 0,
       pageSize: 10,
     },
@@ -68,7 +72,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           textAlign: 'center',
         };
         const tagEl = {
-          1: (
+          Running: (
             <Tag
               style={{
                 color: '#019E6F',
@@ -79,7 +83,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
               进行中
             </Tag>
           ),
-          2: (
+          Failed: (
             <Tag
               style={{
                 color: '#D24D40',
@@ -90,7 +94,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
               异常
             </Tag>
           ),
-          3: (
+          Steped: (
             <Tag
               style={{
                 color: '#414548',
@@ -106,7 +110,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
         return (
           <>
             {tagEl}
-            {record.msg && (
+            {record.status === 'Failed' && stepListInfo.errorMessage && (
               <>
                 <Divider type="vertical" />
                 <Icon
@@ -114,7 +118,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                   theme="filled"
                   style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}
                 />
-                <Tooltip title={record.msg}>
+                <Tooltip title={stepListInfo.errorMessage}>
                   <div
                     style={{
                       display: 'inline-block',
@@ -126,7 +130,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                       textOverflow: 'ellipsis',
                     }}
                   >
-                    {record.msg}
+                    {stepListInfo.errorMessage}
                   </div>
                 </Tooltip>
               </>
@@ -137,11 +141,11 @@ const PressTestMachines: React.FC<Props> = (props) => {
     },
     {
       title: '压力机名称',
-      dataIndex: 'machineName',
+      dataIndex: 'name',
     },
     {
       title: '重启次数',
-      dataIndex: 'restartCount',
+      dataIndex: 'restart',
       hide: isLive,
     },
     {
@@ -154,8 +158,8 @@ const PressTestMachines: React.FC<Props> = (props) => {
     },
     {
       title: '创建时间',
-      dataIndex: 'createTime',
-      ...(isLive ? {} : getSortConfig(query, 'createTime')),
+      dataIndex: 'startTime',
+      ...(isLive ? {} : getSortConfig(query, 'startTime')),
     },
     {
       title: '停止时间',
@@ -249,10 +253,10 @@ const PressTestMachines: React.FC<Props> = (props) => {
               fontWeight: 'bold',
             }}
           >
-            {stepListInfo.allMachineCount || 0}
+            {stepListInfo.resourcesAmount || 0}
           </span>
         </span>
-        {stepListInfo.startedMachineCount > 0 && (
+        {stepListInfo.aliveAmount > 0 && (
           <span style={{ marginRight: 40 }}>
             <span
               style={{
@@ -260,7 +264,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                 marginRight: 16,
               }}
             >
-              已启动
+              运行中
             </span>
             <span
               style={{
@@ -269,11 +273,32 @@ const PressTestMachines: React.FC<Props> = (props) => {
                 fontWeight: 'bold',
               }}
             >
-              {stepListInfo.startedMachineCount}
+              {stepListInfo.aliveAmount}
             </span>
           </span>
         )}
-        {stepListInfo.stopedMachineCount > 0 && (
+        {stepListInfo.unusualAmount > 0 && (
+          <span style={{ marginRight: 40 }}>
+            <span
+              style={{
+                color: 'var(--Netural-700, #6F7479)',
+                marginRight: 16,
+              }}
+            >
+              异常
+            </span>
+            <span
+              style={{
+                color: 'var(--Netural-850, #414548)',
+                fontSize: 20,
+                fontWeight: 'bold',
+              }}
+            >
+              {stepListInfo.unusualAmount}
+            </span>
+          </span>
+        )}
+        {stepListInfo.inactiveAmount > 0 && (
           <span style={{ marginRight: 40 }}>
             <span
               style={{
@@ -290,7 +315,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                 fontWeight: 'bold',
               }}
             >
-              {stepListInfo.stopedMachineCount}
+              {stepListInfo.inactiveAmount}
             </span>
           </span>
         )}
@@ -415,10 +440,10 @@ const PressTestMachines: React.FC<Props> = (props) => {
                     }
                     status={
                       {
-                        0: 'wait',
-                        1: 'process',
-                        2: 'finish',
-                        3: 'error',
+                        [StepStatus.WAIT]: 'wait',
+                        [StepStatus.RUNING]: 'process',
+                        [StepStatus.SUCCESS]: 'finish',
+                        [StepStatus.FAILED]: 'error',
                       }[status]
                     }
                     description={
