@@ -50,7 +50,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
     const {
       data: { success, data },
     } = await services.addPressureTestScene({
-      scenceId: scenceInfo.id,
+      scenceId: scenceInfo.sceneId,
     });
     if (success) {
       setCurrentStepInfo(data);

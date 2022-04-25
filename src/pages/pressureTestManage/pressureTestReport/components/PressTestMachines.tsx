@@ -6,6 +6,7 @@ import services from '../service';
 import styles from '../index.less';
 import { getSortConfig, getTableSortQuery } from 'src/utils/utils';
 import useListService from 'src/utils/useListService';
+import { StepProps } from 'antd/lib/steps';
 
 interface Props {
   reportInfo: {
@@ -16,10 +17,21 @@ interface Props {
   isLive?: boolean;
 }
 enum StepStatus {
+  INITIALIZED = 'INITIALIZED', // 初始化
+  STARTING = 'STARTING', // 启动中
+  ALIVE = 'ALIVE', // 启动完成
+  PRESSURING = 'PRESSURING', // 压测中
+  UNUSUAL = 'UNUSUAL', // 异常
+  STOPPING = 'STOPPING', // 停止中
+  INACTIVE = 'INACTIVE', // 停止
+}
+
+enum MachineStatus {
   WAIT,
   RUNING = 'Running',
   SUCCESS = 'Success',
   FAILED = 'Failed',
+  STOPED = 'Stoped',
 }
 
 const { Step } = Steps;
@@ -34,13 +46,49 @@ const PressTestMachines: React.FC<Props> = (props) => {
     inactiveAmount: 0,
     unusualAmount: 0,
     errorMessage: '',
-    stepList: [
-      { status: StepStatus.SUCCESS },
-      { status: StepStatus.SUCCESS },
-      { status: StepStatus.SUCCESS, message: '' },
-      { status: StepStatus.SUCCESS },
-    ],
   });
+
+  const getStepList = (
+    stepInfo
+  ): { status: StepProps['status']; message?: string }[] => {
+    return [
+      {
+        [StepStatus.INITIALIZED]: 'process',
+        [StepStatus.STARTING]: 'finish',
+        [StepStatus.ALIVE]: 'finish',
+        [StepStatus.PRESSURING]: 'finish',
+        [StepStatus.UNUSUAL]: 'finish',
+        [StepStatus.STOPPING]: 'finish',
+        [StepStatus.INACTIVE]: 'finish',
+      }[stepInfo.status], // 检测
+      {
+        [StepStatus.STARTING]: 'process',
+        [StepStatus.ALIVE]: 'finish',
+        [StepStatus.PRESSURING]: 'finish',
+        [StepStatus.UNUSUAL]: 'finish',
+        [StepStatus.STOPPING]: 'finish',
+        [StepStatus.INACTIVE]: 'finish',
+      }[stepInfo.status], // 启动
+      {
+        status: {
+          [StepStatus.PRESSURING]: 'process',
+          [StepStatus.UNUSUAL]: 'error',
+          [StepStatus.STOPPING]: stepInfo.errorMessage ? 'error' : 'finish',
+          [StepStatus.INACTIVE]: stepInfo.errorMessage ? 'error' : 'finish',
+        }[stepInfo.status],
+        message: stepInfo.errorMessage,
+      }, // 压测
+      {
+        status: {
+          [StepStatus.STOPPING]: 'process',
+          [StepStatus.INACTIVE]: 'finish',
+        }[stepInfo.status],
+      }, // 停止
+      {
+        [StepStatus.INACTIVE]: stepInfo.errorMessage ? 'wait' : 'process',
+      }[stepInfo.status], // 报告
+    ];
+  };
 
   const {
     query,
@@ -72,7 +120,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           textAlign: 'center',
         };
         const tagEl = {
-          Running: (
+          [MachineStatus.RUNING]: (
             <Tag
               style={{
                 color: '#019E6F',
@@ -83,7 +131,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
               进行中
             </Tag>
           ),
-          Failed: (
+          [MachineStatus.FAILED]: (
             <Tag
               style={{
                 color: '#D24D40',
@@ -94,7 +142,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
               异常
             </Tag>
           ),
-          Steped: (
+          [MachineStatus.STOPED]: (
             <Tag
               style={{
                 color: '#414548',
@@ -110,31 +158,32 @@ const PressTestMachines: React.FC<Props> = (props) => {
         return (
           <>
             {tagEl}
-            {record.status === 'Failed' && stepListInfo.errorMessage && (
-              <>
-                <Divider type="vertical" />
-                <Icon
-                  type="warning"
-                  theme="filled"
-                  style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}
-                />
-                <Tooltip title={stepListInfo.errorMessage}>
-                  <div
-                    style={{
-                      display: 'inline-block',
-                      marginLeft: 8,
-                      verticalAlign: 'middle',
-                      maxWidth: 120,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {stepListInfo.errorMessage}
-                  </div>
-                </Tooltip>
-              </>
-            )}
+            {record.status === MachineStatus.FAILED &&
+              stepListInfo.errorMessage && (
+                <>
+                  <Divider type="vertical" />
+                  <Icon
+                    type="warning"
+                    theme="filled"
+                    style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}
+                  />
+                  <Tooltip title={stepListInfo.errorMessage}>
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        marginLeft: 8,
+                        verticalAlign: 'middle',
+                        maxWidth: 120,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {stepListInfo.errorMessage}
+                    </div>
+                  </Tooltip>
+                </>
+              )}
           </>
         );
       },
@@ -143,11 +192,11 @@ const PressTestMachines: React.FC<Props> = (props) => {
       title: '压力机名称',
       dataIndex: 'name',
     },
-    {
-      title: '重启次数',
-      dataIndex: 'restart',
-      hide: isLive,
-    },
+    // {
+    //   title: '重启次数',
+    //   dataIndex: 'restart',
+    //   hide: isLive,
+    // },
     {
       title: 'Pod IP',
       dataIndex: 'podIp',
@@ -163,9 +212,9 @@ const PressTestMachines: React.FC<Props> = (props) => {
     },
     {
       title: '停止时间',
-      dataIndex: 'stopTime',
+      dataIndex: 'endTime',
       hide: isLive,
-      ...(isLive ? {} : getSortConfig(query, 'stopTime')),
+      ...(isLive ? {} : getSortConfig(query, 'endTime')),
     },
   ].filter((x) => !x.hide);
 
@@ -198,37 +247,37 @@ const PressTestMachines: React.FC<Props> = (props) => {
   const stepList = [
     {
       titleMap: {
-        0: '检测',
-        1: <>{loadingIcon}检测中...</>,
-        2: '检测完成',
-        3: '检测失败',
+        wait: '检测',
+        process: <>{loadingIcon}检测中...</>,
+        finish: '检测完成',
+        error: '检测失败',
       },
     },
     {
       titleMap: {
-        0: '压测',
-        1: <>{loadingIcon}压测启动中...</>,
-        2: '压测完成',
-        3: '压测失败',
+        wait: '压测',
+        process: <>{loadingIcon}压测启动中...</>,
+        finish: '压测完成',
+        error: '压测失败',
       },
     },
     {
       titleMap: {
-        0: '压测停止',
-        1: <>{loadingIcon}压测停止中...</>,
-        2: '压测停止完成',
-        3: '压测停止失败',
+        wait: '压测停止',
+        process: <>{loadingIcon}压测停止中...</>,
+        finish: '压测停止完成',
+        error: '压测停止失败',
       },
     },
     {
       titleMap: {
-        0: '输出压测报告',
-        1: <>{loadingIcon}输出压测报告...</>,
-        2: '输出压测报告完成',
-        3: '输出压测报告失败',
+        wait: '输出压测报告',
+        process: <>{loadingIcon}输出压测报告...</>,
+        finish: '输出压测报告完成',
+        error: '输出压测报告失败',
       },
       descriptionMap: {
-        1: '过程大概耗时2min，请耐心等待',
+        process: '过程大概耗时2min，请耐心等待',
       },
     },
   ];
@@ -422,8 +471,8 @@ const PressTestMachines: React.FC<Props> = (props) => {
               style={{ flex: 1, padding: '0 100px' }}
             >
               {stepList.map((item, index) => {
-                const { status = StepStatus.WAIT, message } =
-                  stepListInfo?.stepList?.[index] || {};
+                const { status = 'wait', message } =
+                  getStepList(stepListInfo)?.[index] || {};
 
                 const descriptionStr = message || item.descriptionMap?.[status];
                 return (
@@ -438,14 +487,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                         {item.titleMap[status]}
                       </div>
                     }
-                    status={
-                      {
-                        [StepStatus.WAIT]: 'wait',
-                        [StepStatus.RUNING]: 'process',
-                        [StepStatus.SUCCESS]: 'finish',
-                        [StepStatus.FAILED]: 'error',
-                      }[status]
-                    }
+                    status={status}
                     description={
                       descriptionStr && (
                         <div
@@ -455,7 +497,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                             transform: 'translateX(calc(-50% + 58px))',
                           }}
                         >
-                          {status === StepStatus.FAILED ? (
+                          {status === 'fail' ? (
                             <Tooltip title={descriptionStr}>
                               <span>{errorIcon} 异常</span>
                             </Tooltip>
