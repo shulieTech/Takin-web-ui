@@ -4,71 +4,100 @@ import services from '../service';
 import { router } from 'umi';
 
 interface Props {
-  scenceInfo: any;
+  startedScence: any;
   visible: boolean;
   onCancel: () => void;
 }
 
-enum STEP_STATUS {
-  WAITING,
-  RUNNING,
-  SUCCESS,
-  FAILED,
-}
-
 const StartStatusModal: React.FC<Props> = (props) => {
-  const { scenceInfo, visible, onCancel, ...restProps } = props;
+  const STATUS_MAP = {
+    0: 'error',
+    1: 'finish',
+    2: 'wait',
+  };
+  const { startedScence, visible, onCancel, ...restProps } = props;
+  const {
+    triggerTime,
+    scenceInfo = {},
+    ...restStartScenceInfo
+  } = startedScence;
   const [cancelStarting, setCancelStarting] = useState(false);
   const [currentStepInfo, setCurrentStepInfo] = useState({
-    index: 2,
-    status: STEP_STATUS.FAILED,
-    message: '你的流量余额 689 VUM，流量余额不足，请充值后继续压测',
+    resourceId: undefined,
+    status: 2,
+    podNumber: 0,
+    checkList: [],
   });
 
   const stepList = [
     {
+      type: 'switch',
+      title: '检测压测开关',
+    },
+    {
+      type: 'file',
       title: '检测脚本是否完整',
     },
     {
+      type: 'flow',
       title: '检测流量是否充足',
     },
     {
-      title: '检测应用环境是否正常',
+      type: 'application',
+      title: '检测应用状态',
     },
     {
+      type: 'resource',
+      title: '检测压力机资源是否充足',
+    },
+    {
+      type: 'env',
       title: '检测压力机环境',
     },
     {
-      title: '检测压力机资源是否充足',
+      type: 'status',
+      title: '检测场景状态',
     },
   ];
+
+  const startScenceAfterChcek = async () => {
+    const {
+      data: { success, data },
+    } = await services.startPressureTestScene({
+      sceneId: scenceInfo.id,
+      ...restStartScenceInfo,
+    });
+    if (success) {
+      message.success('开启压测场景成功！');
+      onCancel();
+      router.push(
+        `/pressureTestManage/pressureTestReport/pressureTestLive?id=${scenceInfo.id}`
+      );
+    }
+  };
 
   let timer;
 
   const getCurrentStepInfo = async () => {
-    // TODO 更换为正常的接口
     const {
       data: { success, data },
-    } = await services.addPressureTestScene({
-      scenceId: scenceInfo.sceneId,
+    } = await services.scenceStartPreCheck({
+      sceneId: scenceInfo.id,
+      resourceId: currentStepInfo.resourceId,
     });
     if (success) {
       setCurrentStepInfo(data);
 
       const isAllSuccess =
-        data.index === stepList.length - 1 &&
-        data.status !== STEP_STATUS.SUCCESS;
+        data.checkList.length === stepList.length && data.status === 1;
 
       if (isAllSuccess) {
-        message.success('开启压测场景成功！');
-        onCancel();
-        router.push(
-          `/pressureTestManage/pressureTestReport/pressureTestLive?id=${scenceInfo.id}`
-        );
+        startScenceAfterChcek();
+        return;
       }
 
       // 没有失败或者全部成功的情况下，轮询
-      if (!(data.status === STEP_STATUS.FAILED || isAllSuccess)) {
+      if (!(data.status === 0 || isAllSuccess)) {
         if (timer) {
           clearTimeout(timer);
         }
@@ -78,7 +107,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
   };
 
   const cancelStart = async () => {
-    if ([STEP_STATUS.FAILED].includes(currentStepInfo.status)) {
+    if ([0].includes(currentStepInfo.status)) {
       onCancel();
     } else {
       setCancelStarting(true);
@@ -87,7 +116,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
         data: { success },
       } = await services
         .scencePreStop({
-          scenceId: scenceInfo.id,
+          sceneId: scenceInfo.id,
         })
         .finally(() => {
           setCancelStarting(false);
@@ -109,6 +138,8 @@ const StartStatusModal: React.FC<Props> = (props) => {
       };
     }
   }, [visible]);
+
+  let currentStepIndex = 0;
 
   return (
     <Modal
@@ -156,7 +187,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
             {scenceInfo.sceneName || '-'}
           </div>
           <div style={{ color: 'var(--Netural-700, #6F7479)', marginTop: 8 }}>
-            压测启动开始时间：2019-02-09 09:23:22
+            压测启动开始时间：{triggerTime}
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
@@ -170,7 +201,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
               fontWeight: 'bold',
             }}
           >
-            {scenceInfo.threadNum || '-'}
+            {currentStepInfo.podNumber || '-'}
           </div>
         </div>
       </div>
@@ -183,9 +214,10 @@ const StartStatusModal: React.FC<Props> = (props) => {
           let icon = (
             <span
               style={{
-                width: 24,
-                lineHeight: '22px',
-                fontSize: 14,
+                width: 20,
+                height: 20,
+                lineHeight: '18px',
+                fontSize: 12,
                 textAlign: 'center',
                 borderRadius: '100%',
                 color: 'var(--Netural-850, #414548)',
@@ -196,8 +228,8 @@ const StartStatusModal: React.FC<Props> = (props) => {
             </span>
           );
           switch (true) {
-            case currentStepInfo.index === index &&
-              currentStepInfo.status === STEP_STATUS.FAILED:
+            // 失败
+            case currentStepInfo.checkList[index]?.status === 0:
               icon = (
                 <Icon
                   type="close"
@@ -208,7 +240,9 @@ const StartStatusModal: React.FC<Props> = (props) => {
                 />
               );
               break;
-            case currentStepInfo.index === index:
+            // running
+            case currentStepInfo.checkList[index]?.status === 2 &&
+              currentStepIndex === index:
               icon = (
                 <Icon
                   type="loading"
@@ -216,17 +250,17 @@ const StartStatusModal: React.FC<Props> = (props) => {
                 />
               );
               break;
-            case currentStepInfo.index > index:
+            // 成功
+            case currentStepInfo.checkList[index]?.status === 1:
               icon = (
                 <Icon type="check" style={{ fontSize: 20, color: '#11BBD5' }} />
               );
+              currentStepIndex = index + 1;
               break;
             default:
               break;
           }
-          const isErrorStep =
-            currentStepInfo.index === index &&
-            currentStepInfo.status === STEP_STATUS.FAILED;
+          const isErrorStep = currentStepInfo.checkList[index]?.status === 0;
           return (
             <div
               key={item.title}
@@ -255,7 +289,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
                 >
                   {item.title}
                 </div>
-                {isErrorStep && currentStepInfo.message && (
+                {isErrorStep && currentStepInfo.checkList[index]?.message && (
                   <div
                     style={{
                       fontSize: 13,
@@ -263,7 +297,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
                       marginTop: 16,
                     }}
                   >
-                    {currentStepInfo.message}
+                    {currentStepInfo.checkList[index]?.message}
                   </div>
                 )}
               </div>

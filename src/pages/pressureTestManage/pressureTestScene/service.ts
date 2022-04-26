@@ -151,6 +151,11 @@ const PressureTestSceneService = {
     const url = '/activities/application/list';
     return httpGet(url, data);
   },
+  // 启动压测场景检测
+  async scenceStartPreCheck(data) {
+    const url = '/scene/task/preCheck';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestSceneService;

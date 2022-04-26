@@ -25,6 +25,7 @@ import styles from '../../../scriptManage/index.less';
 import { PressureTestSceneEnum } from '../enum';
 import AddTagsModal from '../modals/AddTagsModal';
 import PressureTestSceneService from '../service';
+import moment from 'moment';
 
 const getPressureTestSceneColumns = (
   state,
@@ -111,15 +112,19 @@ const getPressureTestSceneColumns = (
   /**
    * @name 是否有数据验证
    */
-  const queryHasMissingDataScript = async (sceneId) => {
+  const queryHasMissingDataScript = async (row) => {
     const {
       data: { data, success },
-    } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId });
+    } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId: row.id });
     if (success) {
       setState({
-        sceneId,
+        sceneId: row.id,
         missingDataStatus: true,
         hasMissingData: data,
+        startedScence: {
+          scenceInfo: row,
+          triggerTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }
       });
     }
   };
@@ -138,8 +143,9 @@ const getPressureTestSceneColumns = (
     }
   };
 
-  const handleClickStart = async (sceneId) => {
-    queryHasMissingDataScript(sceneId);
+  const handleClickStart = async (row) => {
+    const { id: sceneId } = row;
+    queryHasMissingDataScript(row);
     queryDataScriptNum(sceneId);
   };
 
@@ -328,7 +334,7 @@ const getPressureTestSceneColumns = (
               >
                 <Button
                   onClick={() => {
-                    handleClickStart(row.id);
+                    handleClickStart(row);
                   }}
                   type="link"
                   style={{ marginRight: 8 }}
