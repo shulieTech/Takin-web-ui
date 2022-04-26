@@ -15,6 +15,8 @@ import MissingDataListModal from './modals/MissingDataListModal';
 import PressureTestReportService from './service';
 import { GraphData } from '@antv/g6';
 import downloadFile from 'src/utils/downloadFile';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface State {
   isReload?: boolean;
@@ -291,6 +293,28 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     }
   };
 
+  const downloadReportPdf = () => {
+    const doc = new jsPDF();
+    doc.setLanguage('zh-CN');
+    const dom = document.querySelector('[class^=index__baseLayConent]');
+    html2canvas(dom, {
+      allowTaint: true,
+      windowWidth: window.innerWidth,
+      windowHeight: dom.scrollHeight,
+    }).then(canvas => {
+      const imgData = canvas.toDataURL('image/jpeg', 1);
+      doc.addImage(imgData, 'JPEG', 0, 0, 208, dom.scrollHeight * 208 / window.innerWidth);
+      doc.save('report.pdf');
+    });
+    // doc.html(dom, {
+    //   callback: () => doc.save('aaa.pdf'),
+    //   x: 10,
+    //   y: 10,
+    //   width: doc.internal.pageSize.getWidth() - 20,
+    //   windowWidth: dom.getBoundingClientRect().width,
+    // })
+  };
+
   const extra = (
     <>
       {
@@ -315,6 +339,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
           </Button>
         </Dropdown>
       }
+      {detailData?.hasJtl && (
+        <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }}>
+          下载报告
+        </Button>
+      )}
       {detailData?.hasJtl && (
         <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloading}>
           下载Jtl文件
