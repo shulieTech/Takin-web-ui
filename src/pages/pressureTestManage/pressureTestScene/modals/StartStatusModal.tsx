@@ -26,14 +26,14 @@ const StartStatusModal: React.FC<Props> = (props) => {
     resourceId: undefined,
     status: 2,
     podNumber: 0,
-    checkList: [],
+    checkList: [
+      {
+        status: 2,
+      }
+    ],
   });
 
   const stepList = [
-    // {
-    //   type: 'switch',
-    //   title: '检测压测开关',
-    // },
     {
       type: 'file',
       title: '检测脚本是否完整',
@@ -47,16 +47,12 @@ const StartStatusModal: React.FC<Props> = (props) => {
       title: '检测应用状态',
     },
     {
-      type: 'resource',
-      title: '检测压力机资源是否充足',
-    },
-    {
       type: 'env',
       title: '检测压力机环境',
     },
     {
-      type: 'status',
-      title: '检测场景状态',
+      type: 'resource',
+      title: '检测压力机资源是否充足',
     },
     {
       type: 'start',
