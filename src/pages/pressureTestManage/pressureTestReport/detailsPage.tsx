@@ -293,40 +293,62 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     }
   };
 
-  const downloadReportPdf = () => {
+  const downloadReportPdf = async () => {
     const doc = new jsPDF();
     doc.setLanguage('zh-CN');
     const dom = document.querySelector('[class^=index__baseLayConent]');
-    
+
     // 图片
-    // html2canvas(dom, {
-    //   allowTaint: true,
-    //   windowWidth: window.innerWidth,
-    //   windowHeight: dom.scrollHeight,
-    // }).then(canvas => {
-    //   const imgData = canvas.toDataURL('image/jpeg', 1);
-    //   doc.addImage(imgData, 'JPEG', 0, 0, 208, dom.scrollHeight * 208 / window.innerWidth);
-    //   doc.save('report.pdf');
-    // });
+    // 展开压测不通过信息
+    document.querySelector('.ant-collapse-item:not(.ant-collapse-item-active) .ant-collapse-header')?.click();
+    // 显示压测明细
+    document.querySelectorAll('[class^=index__moduleTabsWrap]')[2]?.click();
+    setTimeout(() => {
+      html2canvas(dom, {
+        ignoreElements: node => node.classList.contains('ant-btn'),
+        allowTaint: true,
+        windowWidth: window.innerWidth,
+        windowHeight: dom.scrollHeight,
+      }).then(canvas => {
+        const imgData = canvas.toDataURL('image/jpeg', 1);
+        doc.addImage(imgData, 'JPEG', 0, 0, 208, dom.scrollHeight * 208 / window.innerWidth);
+        doc.save(`${detailData.sceneName}-${detailData.sceneId}.pdf`);
+      });
+    }, 1500);
 
     // html
-    const allDom = document.createElement('div');
-    document.querySelectorAll('[id^=pdf-]').forEach(x => allDom.append(x));
-    // document.querySelectorAll('[class^=index__moduleTabsWrap]').forEach((x, i) => {
-    //   x.click();
-    //   setTimeout(() => {
-    //     allDom.append(document.querySelector('[class^=index__tabsWrap]>div:last-child'));
-    //   }, i * 1000);
-      
+    // const getAllDom = () => {
+    //   return new Promise((resolve, reject) => {
+    //     const allDom = document.createElement('div');
+    //     document.querySelectorAll('[class^=index__moduleTabsWrap]')[2].click();
+    //     document.querySelectorAll('[id^=pdf-]').forEach(x => allDom.append(x.cloneNode(true)));
+    //     // document.querySelectorAll('[class^=index__moduleTabsWrap]').forEach((x, i, arr) => {
+    //     //   if (i === 0) {
+    //     //     x.click();
+    //     //   }
+    //     //   setTimeout(() => {
+    //     //     allDom.append(document.querySelector('[class^=index__tabsWrap]>div:last-child').cloneNode(true));
+    //     //     arr[i + 1] && arr[i + 1].click();
+    //     //     if (i === arr.length -1) {
+    //     //       resolve(allDom);
+    //     //     }
+    //     //   }, (i + 1) * 2000);
+    //     // });
+    //     resolve(allDom);
+    //   })
+    // }
+    // const allDom = await getAllDom();
+    // doc.html(allDom, {
+    //   callback: () => {
+    //     doc.save(`${detailData.sceneName}-${detailData.sceneId}.pdf`);
+    //     allDom.remove();
+    //   },
+    //   x: 10,
+    //   y: 10,
+    //   width: doc.internal.pageSize.getWidth() - 20,
+    //   windowWidth: window.innerWidth,
+    //   // windowHeight: dom.scrollHeight,
     // });
-    doc.html(allDom, {
-      callback: () => doc.save(`${detailData.sceneName}-${detailData.sceneId}.pdf`),
-      x: 10,
-      y: 10,
-      width: doc.internal.pageSize.getWidth() - 20,
-      windowWidth: window.innerWidth,
-      // windowHeight: dom.scrollHeight,
-    });
   };
 
   const extra = (

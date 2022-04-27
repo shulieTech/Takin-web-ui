@@ -144,6 +144,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
           border: '1px solid rgba(239,239,239,1)',
           marginBottom: 16,
         }}
+        id="pdf-3"
       >
         {data.map((item: any, key) => {
           return (
@@ -200,7 +201,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
           );
         })}
       </Row>
-      <div>{data[tabState.tabKey].renderTabNode}</div>
+      <div id="pdf-4">{data[tabState.tabKey].renderTabNode}</div>
     </div>
   );
 };
