@@ -22,16 +22,17 @@ const StartStatusModal: React.FC<Props> = (props) => {
     ...restStartScenceInfo
   } = startedScence;
   const [cancelStarting, setCancelStarting] = useState(false);
-  const [currentStepInfo, setCurrentStepInfo] = useState({
+  const defaultStepInfo = {
     resourceId: undefined,
     status: 2,
     podNumber: 0,
     checkList: [
       {
         status: 2,
-      }
+      },
     ],
-  });
+  };
+  const [currentStepInfo, setCurrentStepInfo] = useState(defaultStepInfo);
 
   const stepList = [
     {
@@ -108,6 +109,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
   const cancelStart = async () => {
     if ([0].includes(currentStepInfo.status)) {
       onCancel();
+      setCurrentStepInfo(defaultStepInfo);
     } else {
       setCancelStarting(true);
       // 取消启动中的场景
@@ -123,6 +125,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
       if (success) {
         message.success('操作成功');
         onCancel();
+        setCurrentStepInfo(defaultStepInfo);
       }
     }
   };
@@ -145,6 +148,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
       width={640}
       visible={visible}
       onCancel={onCancel}
+      maskClosable={false}
       footer={null}
       closable={false}
       {...restProps}
