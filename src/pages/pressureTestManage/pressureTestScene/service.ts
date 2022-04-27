@@ -146,10 +146,17 @@ const PressureTestSceneService = {
     const url = '/scene/task/preStop';
     return httpPut(url, data);
   },
-
+  
   async applicationList(data) {
     const url = '/activities/application/list';
     return httpGet(url, data);
+  },
+  /**
+   * @name 恢复被删除的压测场景
+   */
+  async scenceRecovery(data) {
+    const url = '/scenemanage/recovery';
+    return httpPut(url, data);
   },
 };
 
