@@ -30,10 +30,10 @@ const StartStatusModal: React.FC<Props> = (props) => {
   });
 
   const stepList = [
-    {
-      type: 'switch',
-      title: '检测压测开关',
-    },
+    // {
+    //   type: 'switch',
+    //   title: '检测压测开关',
+    // },
     {
       type: 'file',
       title: '检测脚本是否完整',
@@ -57,6 +57,10 @@ const StartStatusModal: React.FC<Props> = (props) => {
     {
       type: 'status',
       title: '检测场景状态',
+    },
+    {
+      type: 'start',
+      title: '启动压测',
     },
   ];
 
@@ -88,8 +92,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
     if (success) {
       setCurrentStepInfo(data);
 
-      const isAllSuccess =
-        data.checkList.length === stepList.length && data.status === 1;
+      const isAllSuccess = data.status === 1;
 
       if (isAllSuccess) {
         startScenceAfterChcek();

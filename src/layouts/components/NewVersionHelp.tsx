@@ -8,7 +8,7 @@ import service from './service';
 const NewVersionHelp: React.FC = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isShowNewVersion, setIsShowNewVersion] = useState(false);
-  const [machineError, setMachineError] = useState('k8s用户名、密码有误；请检查cloud应用admin.conf文件配置是否正确');
+  const [machineError, setMachineError] = useState('');
 
   const checkShowNewVersion = async () => {
     const {
@@ -18,6 +18,7 @@ const NewVersionHelp: React.FC = (props) => {
       setIsShowNewVersion(true);
     }
   };
+
   const confirmNewVersion = async () => {
     const {
       data: { data, success },
@@ -27,8 +28,24 @@ const NewVersionHelp: React.FC = (props) => {
     }
   };
 
+  const checkMachineStatus = async () => {
+    const {
+      data: { data, success },
+    } = await service.checkMachineStatus();
+    if (success) {
+      setMachineError(data);
+      return data;
+    }
+    return '';
+  };
+
   useEffect(() => {
-    checkShowNewVersion();
+    (async () => {
+      const data = await checkMachineStatus();
+      if (!data) {
+        checkShowNewVersion();
+      }
+    })();
   }, []);
 
   return (

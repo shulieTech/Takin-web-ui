@@ -479,6 +479,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           setState({
             visible: false,
             isReload: !state.isReload,
+            startedScence: null,
           });
         }}
         startedScence={{
