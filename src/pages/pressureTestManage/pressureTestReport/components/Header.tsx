@@ -6,7 +6,7 @@ interface Props {
 }
 const Header: React.FC<Props> = props => {
   return (
-    <Row type="flex" style={{ position: 'relative' }}>
+    <Row type="flex" style={{ position: 'relative' }} id="pdf-1">
       {props.list.map((item, k) => {
         if (!item.notShow) {
           return (

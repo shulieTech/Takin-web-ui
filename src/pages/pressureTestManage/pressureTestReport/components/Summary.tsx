@@ -33,6 +33,7 @@ const Summary: React.FC<Props> = props => {
         borderRadius: 8,
         ...props.style
       }}
+      id="pdf-2"
     >
       {props.leftWrap}
       <Col span={20}>

@@ -297,22 +297,36 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     const doc = new jsPDF();
     doc.setLanguage('zh-CN');
     const dom = document.querySelector('[class^=index__baseLayConent]');
-    html2canvas(dom, {
-      allowTaint: true,
+    
+    // 图片
+    // html2canvas(dom, {
+    //   allowTaint: true,
+    //   windowWidth: window.innerWidth,
+    //   windowHeight: dom.scrollHeight,
+    // }).then(canvas => {
+    //   const imgData = canvas.toDataURL('image/jpeg', 1);
+    //   doc.addImage(imgData, 'JPEG', 0, 0, 208, dom.scrollHeight * 208 / window.innerWidth);
+    //   doc.save('report.pdf');
+    // });
+
+    // html
+    const allDom = document.createElement('div');
+    document.querySelectorAll('[id^=pdf-]').forEach(x => allDom.append(x));
+    // document.querySelectorAll('[class^=index__moduleTabsWrap]').forEach((x, i) => {
+    //   x.click();
+    //   setTimeout(() => {
+    //     allDom.append(document.querySelector('[class^=index__tabsWrap]>div:last-child'));
+    //   }, i * 1000);
+      
+    // });
+    doc.html(allDom, {
+      callback: () => doc.save(`${detailData.sceneName}-${detailData.sceneId}.pdf`),
+      x: 10,
+      y: 10,
+      width: doc.internal.pageSize.getWidth() - 20,
       windowWidth: window.innerWidth,
-      windowHeight: dom.scrollHeight,
-    }).then(canvas => {
-      const imgData = canvas.toDataURL('image/jpeg', 1);
-      doc.addImage(imgData, 'JPEG', 0, 0, 208, dom.scrollHeight * 208 / window.innerWidth);
-      doc.save('report.pdf');
+      // windowHeight: dom.scrollHeight,
     });
-    // doc.html(dom, {
-    //   callback: () => doc.save('aaa.pdf'),
-    //   x: 10,
-    //   y: 10,
-    //   width: doc.internal.pageSize.getWidth() - 20,
-    //   windowWidth: dom.getBoundingClientRect().width,
-    // })
   };
 
   const extra = (
@@ -339,11 +353,9 @@ const PressureTestReportDetail: React.FC<Props> = props => {
           </Button>
         </Dropdown>
       }
-      {detailData?.hasJtl && (
-        <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }}>
-          下载报告
-        </Button>
-      )}
+      <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }}>
+        下载报告
+      </Button>
       {detailData?.hasJtl && (
         <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloading}>
           下载Jtl文件
@@ -399,7 +411,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
         style={{ padding: 8 }}
         extraPosition="top"
         extra={extra}
-        title={<div style={{ position: 'relative' }}>
+        title={<div style={{ position: 'relative' }} id="pdf-0">
           <span style={{ fontSize: 20 }}>
             {detailData.sceneName ? detailData.sceneName : '-'}
           </span>
