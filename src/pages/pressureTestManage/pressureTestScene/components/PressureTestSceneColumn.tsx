@@ -253,7 +253,14 @@ const getPressureTestSceneColumns = (
       render: (text) => {
         return (
           <Badge
-            text={text === 0 ? '待启动' : text === 1 ? '启动中' : '压测中'}
+            text={
+              {
+                '-1': '已删除',
+                0: '待启动',
+                1: '启动中',
+                2: '压测中',
+              }[text] || '待启动'
+            }
             color={text === 2 ? 'var(--BrandPrimary-500)' : 'var(--Netural-06)'}
           />
         );
@@ -385,7 +392,7 @@ const getPressureTestSceneColumns = (
               >
                 <CustomPopconfirm
                   okText="确认删除"
-                  title={'是否确认删除'}
+                  title={'删除后该压测场景将被移动到回收站'}
                   okColor="var(--FunctionalError-500)"
                   onConfirm={() => handleDelete(row.id)}
                 >

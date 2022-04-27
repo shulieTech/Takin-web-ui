@@ -50,6 +50,9 @@ const RecycleManage: React.FC<Props> = (props) => {
     });
   };
 
+  // 移除标签显示栏
+  columns.splice(2, 1);
+  // 覆盖操作栏
   columns[columns.length - 1].render = (text, record) => {
     return (
       <div>
