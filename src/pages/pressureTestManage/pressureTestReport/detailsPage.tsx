@@ -376,7 +376,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
         </Dropdown>
       }
       <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }}>
-        下载报告
+        下载压测报告
       </Button>
       {detailData?.hasJtl && (
         <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloading}>

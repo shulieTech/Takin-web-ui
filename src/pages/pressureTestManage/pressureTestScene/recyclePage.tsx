@@ -57,7 +57,7 @@ const RecycleManage: React.FC<Props> = (props) => {
     return (
       <div>
         <Link
-          to={`/pressureTestManage/pressureTestSceneV2/edit?id=${record.id}`}
+          to={`/pressureTestManage/pressureTestSceneV2/edit?id=${record.id}&readOnly=1`}
         >
           查看
         </Link>
