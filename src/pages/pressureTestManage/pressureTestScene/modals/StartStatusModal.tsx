@@ -66,6 +66,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
       data: { success, data },
     } = await services.startPressureTestScene({
       sceneId: scenceInfo.id,
+      resourceId: currentStepInfo.resourceId,
       ...restStartScenceInfo,
     });
     if (success) {
@@ -107,26 +108,22 @@ const StartStatusModal: React.FC<Props> = (props) => {
   };
 
   const cancelStart = async () => {
-    if ([0].includes(currentStepInfo.status)) {
+    setCancelStarting(true);
+    // 取消启动中的场景
+    const {
+      data: { success },
+    } = await services
+      .scencePreStop({
+        sceneId: scenceInfo.id,
+        resourceId: currentStepInfo.resourceId,
+      })
+      .finally(() => {
+        setCancelStarting(false);
+      });
+    if (success) {
+      message.success('操作成功');
       onCancel();
       setCurrentStepInfo(defaultStepInfo);
-    } else {
-      setCancelStarting(true);
-      // 取消启动中的场景
-      const {
-        data: { success },
-      } = await services
-        .scencePreStop({
-          sceneId: scenceInfo.id,
-        })
-        .finally(() => {
-          setCancelStarting(false);
-        });
-      if (success) {
-        message.success('操作成功');
-        onCancel();
-        setCurrentStepInfo(defaultStepInfo);
-      }
     }
   };
 
