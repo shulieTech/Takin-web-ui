@@ -108,23 +108,30 @@ const StartStatusModal: React.FC<Props> = (props) => {
   };
 
   const cancelStart = async () => {
-    setCancelStarting(true);
-    // 取消启动中的场景
-    const {
-      data: { success },
-    } = await services
-      .scencePreStop({
-        sceneId: scenceInfo.id,
-        resourceId: currentStepInfo.resourceId,
-      })
-      .finally(() => {
-        setCancelStarting(false);
-      });
-    if (success) {
-      message.success('操作成功');
+    // 检测失败直接关闭弹窗
+    if ([0].includes(currentStepInfo.status)) {
       onCancel();
       setCurrentStepInfo(defaultStepInfo);
+    } else {
+      setCancelStarting(true);
+      // 取消启动中的场景
+      const {
+        data: { success },
+      } = await services
+        .scencePreStop({
+          sceneId: scenceInfo.id,
+          resourceId: currentStepInfo.resourceId,
+        })
+        .finally(() => {
+          setCancelStarting(false);
+        });
+      if (success) {
+        message.success('操作成功');
+        onCancel();
+        setCurrentStepInfo(defaultStepInfo);
+      }
     }
+
   };
 
   useEffect(() => {
