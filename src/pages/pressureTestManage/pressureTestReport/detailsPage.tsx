@@ -296,13 +296,13 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   const downloadReportPdf = async () => {
     const doc = new jsPDF();
     doc.setLanguage('zh-CN');
-    const dom = document.querySelector('[class^=index__baseLayConent]');
+    const dom = document.querySelector('[class*=baseLayConent___]');
 
     // 图片
     // 展开压测不通过信息
     document.querySelector('.ant-collapse-item:not(.ant-collapse-item-active) .ant-collapse-header')?.click();
     // 显示压测明细
-    document.querySelectorAll('[class^=index__moduleTabsWrap]')[2]?.click();
+    document.querySelectorAll('[class*=moduleTabsWrap___]')[2]?.click();
     setTimeout(() => {
       html2canvas(dom, {
         ignoreElements: node => node.classList.contains('ant-btn'),

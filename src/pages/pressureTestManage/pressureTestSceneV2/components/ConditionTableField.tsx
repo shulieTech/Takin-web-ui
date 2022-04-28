@@ -175,7 +175,10 @@ const ConditionTableField = (props) => {
         );
       },
     },
-    {
+  ];
+
+  if (editable) {
+    columns.push({
       title: '操作',
       width: 50,
       render: (text, record, index) => {
@@ -208,8 +211,8 @@ const ConditionTableField = (props) => {
           </span>
         );
       },
-    },
-  ];
+    });
+  }
 
   return (
     <div>
@@ -224,7 +227,7 @@ const ConditionTableField = (props) => {
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={
-                <Button onClick={() => mutators.push({})}>新增</Button>}
+                editable && <Button onClick={() => mutators.push({})}>新增</Button>}
             />
           ),
         }}
