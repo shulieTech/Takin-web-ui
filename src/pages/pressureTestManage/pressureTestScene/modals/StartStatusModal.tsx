@@ -79,12 +79,12 @@ const StartStatusModal: React.FC<Props> = (props) => {
 
   let timer;
 
-  const getCurrentStepInfo = async () => {
+  const getCurrentStepInfo = async (resourceId = currentStepInfo.resourceId) => {
     const {
       data: { success, data },
     } = await services.scenceStartPreCheck({
+      resourceId,
       sceneId: scenceInfo.id,
-      resourceId: currentStepInfo.resourceId,
     });
     if (success) {
       setCurrentStepInfo(data);
@@ -101,7 +101,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
         if (timer) {
           clearTimeout(timer);
         }
-        timer = setTimeout(getCurrentStepInfo, 2000);
+        timer = setTimeout(() => getCurrentStepInfo(data.resourceId), 2000);
       }
     }
   };
