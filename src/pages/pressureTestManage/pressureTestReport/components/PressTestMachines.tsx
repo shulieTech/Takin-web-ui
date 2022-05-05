@@ -45,7 +45,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
     aliveAmount: 0,
     inactiveAmount: 0,
     unusualAmount: 0,
-    errorMessage: '',
+    statusMessage: '',
   });
 
   const getStepList = (
@@ -159,7 +159,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           <>
             {tagEl}
             {record.status === MachineStatus.FAILED &&
-              stepListInfo.errorMessage && (
+              stepListInfo.statusMessage && (
                 <>
                   <Divider type="vertical" />
                   <Icon
@@ -167,7 +167,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                     theme="filled"
                     style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}
                   />
-                  <Tooltip title={stepListInfo.errorMessage}>
+                  <Tooltip title={stepListInfo.statusMessage}>
                     <div
                       style={{
                         display: 'inline-block',
@@ -179,7 +179,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                         textOverflow: 'ellipsis',
                       }}
                     >
-                      {stepListInfo.errorMessage}
+                      {stepListInfo.statusMessage}
                     </div>
                   </Tooltip>
                 </>
@@ -199,7 +199,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
     // },
     {
       title: 'Pod IP',
-      dataIndex: 'podIp',
+      dataIndex: 'ip',
     },
     {
       title: 'Host IP',
