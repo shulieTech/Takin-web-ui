@@ -641,8 +641,8 @@ const PressureTestLive: React.FC<Props> = (props) => {
 
       <PressTestMachines
         reportInfo={{
-          reportId: detailData.id,
-          sceneId: detailData.sceneId,
+          taskId: detailData.pressureTaskId,
+          resourceId: detailData.resourceId,
         }}
         ticker={ticker}
       />

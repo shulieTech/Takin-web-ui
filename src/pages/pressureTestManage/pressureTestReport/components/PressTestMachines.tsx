@@ -10,8 +10,8 @@ import { StepProps } from 'antd/lib/steps';
 
 interface Props {
   reportInfo: {
-    sceneId: string | number;
-    reportId: string | number;
+    taskId: string | number;
+    resourceId: string | number;
   };
   ticker?: number;
   isLive?: boolean;
@@ -101,9 +101,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
     dataListPath: 'resources',
     isQueryOnMount: false,
     defaultQuery: {
-      // ...reportInfo,
-      resourceId: reportInfo.sceneId,
-      taskId: reportInfo.reportId,
+      ...reportInfo,
       current: 0,
       pageSize: 10,
     },
