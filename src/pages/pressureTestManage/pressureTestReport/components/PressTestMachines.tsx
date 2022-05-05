@@ -226,7 +226,9 @@ const PressTestMachines: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    getStepListInfo();
+    if (isLive) {
+      getStepListInfo();
+    }
   }, [ticker]);
 
   const loadingIcon = (
@@ -413,6 +415,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           marginRight: 8,
         },
       }}
+      onClick={() => getStepListInfo()}
     >
       {tableEl}
     </CommonModal>
