@@ -549,7 +549,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                             transform: 'translateX(calc(-50% + 58px))',
                           }}
                         >
-                          {status === 'fail' ? (
+                          {status === 'error' ? (
                             <Tooltip title={descriptionStr}>
                               <span>{errorIcon} 异常</span>
                             </Tooltip>
