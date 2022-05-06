@@ -48,7 +48,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
     aliveAmount: 0,
     inactiveAmount: 0,
     unusualAmount: 0,
-    statusMessage: '',
+    errorMessage: '',
   });
 
   const getStepList = (
@@ -196,35 +196,36 @@ const PressTestMachines: React.FC<Props> = (props) => {
           ),
         }[text];
 
+        const rowErrorMsg = record.statusMessage || stepListInfo.errorMessage;
+
         return (
           <>
             {tagEl}
-            {record.status === MachineStatus.FAILED &&
-              stepListInfo.statusMessage && (
-                <>
-                  <Divider type="vertical" />
-                  <Icon
-                    type="warning"
-                    theme="filled"
-                    style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}
-                  />
-                  <Tooltip title={stepListInfo.statusMessage}>
-                    <div
-                      style={{
-                        display: 'inline-block',
-                        marginLeft: 8,
-                        verticalAlign: 'middle',
-                        maxWidth: 120,
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}
-                    >
-                      {stepListInfo.statusMessage}
-                    </div>
-                  </Tooltip>
-                </>
-              )}
+            {record.status === MachineStatus.FAILED && rowErrorMsg && (
+              <>
+                <Divider type="vertical" />
+                <Icon
+                  type="warning"
+                  theme="filled"
+                  style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}
+                />
+                <Tooltip title={rowErrorMsg}>
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      marginLeft: 8,
+                      verticalAlign: 'middle',
+                      maxWidth: 120,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {rowErrorMsg}
+                  </div>
+                </Tooltip>
+              </>
+            )}
           </>
         );
       },
@@ -284,7 +285,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
     <Icon
       type="warning"
       theme="filled"
-      style={{ marginRight: 8, fontSize: 18 }}
+      style={{ marginRight: 8, fontSize: 16 }}
     />
   );
   const stepList = [
@@ -514,7 +515,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
                   marginTop: 8,
                 }}
               >
-                正常
+                {stepListInfo.errorMessage ? '异常' : '正常'}
               </div>
             </div>
             <Steps
