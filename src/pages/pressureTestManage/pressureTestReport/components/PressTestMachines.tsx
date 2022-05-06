@@ -83,7 +83,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           status: 'process',
         };
         break;
-      case stepInfo.status === StepStatus.UNUSUAL:
+      case !!(stepInfo.status >= StepStatus.UNUSUAL && stepInfo.errorMessage):
         stepStatus[2] = {
           status: 'error',
           message: stepInfo.errorMessage,
@@ -92,7 +92,6 @@ const PressTestMachines: React.FC<Props> = (props) => {
       case stepInfo.status > StepStatus.UNUSUAL:
         stepStatus[2] = {
           status: 'finish',
-          message: stepInfo.errorMessage,
         };
         break;
       default:
