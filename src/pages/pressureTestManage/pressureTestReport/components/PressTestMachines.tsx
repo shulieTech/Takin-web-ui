@@ -17,13 +17,16 @@ interface Props {
   isLive?: boolean;
 }
 enum StepStatus {
-  INITIALIZED = 'INITIALIZED', // 初始化
-  STARTING = 'STARTING', // 启动中
-  ALIVE = 'ALIVE', // 启动完成
-  PRESSURING = 'PRESSURING', // 压测中
-  UNUSUAL = 'UNUSUAL', // 异常
-  STOPPING = 'STOPPING', // 停止中
-  INACTIVE = 'INACTIVE', // 停止
+  INITIALIZED, // 0 初始化
+  CHECKED, // 1
+  RESOURCE_LOCKING, // 2
+  RESOURCE_LOCK_FAILED, // 3
+  STARTING, // 4 启动中
+  ALIVE, // 5 启动完成
+  PRESSURING, // 6 压测中
+  UNUSUAL, // 7 异常
+  STOPPING, // 8 停止中
+  INACTIVE, // 9 停止
 }
 
 enum MachineStatus {
@@ -51,43 +54,84 @@ const PressTestMachines: React.FC<Props> = (props) => {
   const getStepList = (
     stepInfo
   ): { status: StepProps['status']; message?: string }[] => {
-    return [
-      {
-        [StepStatus.INITIALIZED]: 'process',
-        [StepStatus.STARTING]: 'finish',
-        [StepStatus.ALIVE]: 'finish',
-        [StepStatus.PRESSURING]: 'finish',
-        [StepStatus.UNUSUAL]: 'finish',
-        [StepStatus.STOPPING]: 'finish',
-        [StepStatus.INACTIVE]: 'finish',
-      }[stepInfo.status], // 检测
-      {
-        [StepStatus.STARTING]: 'process',
-        [StepStatus.ALIVE]: 'finish',
-        [StepStatus.PRESSURING]: 'finish',
-        [StepStatus.UNUSUAL]: 'finish',
-        [StepStatus.STOPPING]: 'finish',
-        [StepStatus.INACTIVE]: 'finish',
-      }[stepInfo.status], // 启动
-      {
-        status: {
-          [StepStatus.PRESSURING]: 'process',
-          [StepStatus.UNUSUAL]: 'error',
-          [StepStatus.STOPPING]: stepInfo.errorMessage ? 'error' : 'finish',
-          [StepStatus.INACTIVE]: stepInfo.errorMessage ? 'error' : 'finish',
-        }[stepInfo.status],
-        message: stepInfo.errorMessage,
-      }, // 压测
-      {
-        status: {
-          [StepStatus.STOPPING]: 'process',
-          [StepStatus.INACTIVE]: 'finish',
-        }[stepInfo.status],
-      }, // 停止
-      {
-        [StepStatus.INACTIVE]: stepInfo.errorMessage ? 'wait' : 'process',
-      }[stepInfo.status], // 报告
-    ];
+    const stepStatus = [];
+    // 检测
+    stepStatus[0] = {
+      status: stepInfo.status >= StepStatus.STARTING ? 'finish' : 'process',
+    };
+    // 启动
+    switch (true) {
+      case stepInfo.status === StepStatus.STARTING:
+        stepStatus[1] = {
+          status: 'process',
+        };
+        break;
+      case stepInfo.status > StepStatus.STARTING:
+        stepStatus[1] = {
+          status: 'finish',
+        };
+        break;
+      default:
+        stepStatus[1] = {
+          status: 'wait',
+        };
+    }
+    // 压测
+    switch (true) {
+      case stepInfo.status === StepStatus.PRESSURING:
+        stepStatus[2] = {
+          status: 'process',
+        };
+        break;
+      case stepInfo.status === StepStatus.UNUSUAL:
+        stepStatus[2] = {
+          status: 'error',
+          message: stepInfo.errorMessage,
+        };
+        break;
+      case stepInfo.status > StepStatus.UNUSUAL:
+        stepStatus[2] = {
+          status: 'finish',
+          message: stepInfo.errorMessage,
+        };
+        break;
+      default:
+        stepStatus[2] = {
+          status: 'wait',
+        };
+    }
+
+    // 停止
+    switch (true) {
+      case stepInfo.status === StepStatus.STOPPING:
+        stepStatus[3] = {
+          status: 'process',
+        };
+        break;
+      case stepInfo.status > StepStatus.STOPPING:
+        stepStatus[3] = {
+          status: 'finish',
+        };
+        break;
+      default:
+        stepStatus[3] = {
+          status: 'wait',
+        };
+    }
+
+    // 报告
+    switch (true) {
+      case stepInfo.status > StepStatus.STOPPING:
+        stepStatus[4] = {
+          status: 'process',
+        };
+        break;
+      default:
+        stepStatus[4] = {
+          status: 'wait',
+        };
+    }
+    return stepStatus;
   };
 
   const {
@@ -255,8 +299,16 @@ const PressTestMachines: React.FC<Props> = (props) => {
     },
     {
       titleMap: {
-        wait: '压测',
+        wait: '压测启动',
         process: <>{loadingIcon}压测启动中...</>,
+        finish: '压测启动完成',
+        error: '压测启动失败',
+      },
+    },
+    {
+      titleMap: {
+        wait: '压测',
+        process: <>{loadingIcon}压测中...</>,
         finish: '压测完成',
         error: '压测失败',
       },
