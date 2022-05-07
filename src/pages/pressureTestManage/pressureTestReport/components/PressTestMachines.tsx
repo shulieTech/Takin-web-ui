@@ -31,10 +31,9 @@ enum StepStatus {
 
 enum MachineStatus {
   WAIT,
-  RUNING = 'Running',
-  SUCCESS = 'Success',
-  FAILED = 'Failed',
-  STOPED = 'Stoped',
+  RUNING,
+  STOPED,
+  FAILED,
 }
 
 const { Step } = Steps;
@@ -161,6 +160,17 @@ const PressTestMachines: React.FC<Props> = (props) => {
           textAlign: 'center',
         };
         const tagEl = {
+          [MachineStatus.WAIT]: (
+            <Tag
+              style={{
+                color: '#414548',
+                backgroundColor: '#E5E8EC',
+                ...tagStyle,
+              }}
+            >
+              待启动
+            </Tag>
+          ),
           [MachineStatus.RUNING]: (
             <Tag
               style={{
@@ -242,21 +252,25 @@ const PressTestMachines: React.FC<Props> = (props) => {
     {
       title: 'Pod IP',
       dataIndex: 'ip',
+      render: text => text || '-',
     },
     {
       title: 'Host IP',
       dataIndex: 'hostIp',
+      render: text => text || '-',
     },
     {
       title: '创建时间',
       dataIndex: 'startTime',
       ...(isLive ? {} : getSortConfig(query, 'startTime')),
+      render: text => text || '-',
     },
     {
       title: '停止时间',
       dataIndex: 'endTime',
       hide: isLive,
       ...(isLive ? {} : getSortConfig(query, 'endTime')),
+      render: text => text || '-',
     },
   ].filter((x) => !x.hide);
 
