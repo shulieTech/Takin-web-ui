@@ -267,9 +267,9 @@ const PressTestMachines: React.FC<Props> = (props) => {
     },
     {
       title: '停止时间',
-      dataIndex: 'endTime',
+      dataIndex: 'stopTime',
       hide: isLive,
-      ...(isLive ? {} : getSortConfig(query, 'endTime')),
+      ...(isLive ? {} : getSortConfig(query, 'stopTime')),
       render: text => text || '-',
     },
   ].filter((x) => !x.hide);
