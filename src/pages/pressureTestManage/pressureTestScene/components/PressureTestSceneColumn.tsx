@@ -52,7 +52,7 @@ const getPressureTestSceneColumns = (
       data: { data, success },
     } = await PressureTestSceneService.deletePressureTestScene({ id });
     if (success) {
-      message.success('删除压测场景成功！');
+      message.success('操作成功！');
       setState({
         isReload: !state.isReload,
       });
@@ -255,7 +255,7 @@ const getPressureTestSceneColumns = (
           <Badge
             text={
               {
-                '-1': '已删除',
+                '-1': '已归档',
                 0: '待启动',
                 1: '启动中',
                 2: '压测中',
@@ -391,13 +391,13 @@ const getPressureTestSceneColumns = (
                 }
               >
                 <CustomPopconfirm
-                  okText="确认删除"
-                  title={'删除后该压测场景将被移动到回收站'}
+                  okText="确认归档"
+                  title={'归档后该压测场景将被移动到回收站'}
                   okColor="var(--FunctionalError-500)"
                   onConfirm={() => handleDelete(row.id)}
                 >
                   <Button type="link" style={{ marginRight: 8 }}>
-                    删除
+                    归档
                   </Button>
                 </CustomPopconfirm>
               </AuthorityBtn>
