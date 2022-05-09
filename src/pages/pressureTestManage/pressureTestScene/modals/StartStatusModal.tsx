@@ -80,7 +80,9 @@ const StartStatusModal: React.FC<Props> = (props) => {
 
   let timer;
 
-  const getCurrentStepInfo = async (resourceId = currentStepInfo.resourceId) => {
+  const getCurrentStepInfo = async (
+    resourceId = currentStepInfo.resourceId
+  ) => {
     const {
       data: { success, data },
     } = await services.scenceStartPreCheck({
@@ -131,7 +133,6 @@ const StartStatusModal: React.FC<Props> = (props) => {
         setCurrentStepInfo(defaultStepInfo);
       }
     }
-
   };
 
   useEffect(() => {
@@ -247,9 +248,10 @@ const StartStatusModal: React.FC<Props> = (props) => {
                 />
               );
               break;
-            // running
-            case currentStepInfo.checkList[index]?.status === 2 &&
-              currentStepIndex === index:
+            // running 或者 全部成功时最后一个启动节点显示running
+            case (currentStepInfo.checkList[index]?.status === 2 &&
+              currentStepIndex === index) ||
+              (currentStepInfo.status === 1 && index === arr.length - 1):
               icon = (
                 <Icon
                   type="loading"
