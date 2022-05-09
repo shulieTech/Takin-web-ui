@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Tooltip, Icon, Statistic } from 'antd';
 import FixLineCharts from '../../pressureTestScene/components/FixLineCharts';
 import StepCharts from '../../pressureTestScene/components/StepCharts';
 import service from '../service';
 import { FormPath, IForm } from '@formily/antd';
+import { debounce } from 'lodash';
 
 interface Props {
   form: IForm;
@@ -51,7 +52,7 @@ export default (props: Props) => {
   };
 
   // 获取流量预估
-  const getEstimateFlow = async (params) => {
+  const getEstimateFlow = useCallback(debounce(async (params) => {
     const {
       data: { success, data },
     } = await service.getEstimateFlow(params);
@@ -60,7 +61,7 @@ export default (props: Props) => {
       setEstimateFlow(result);
       form.setFieldValue(parentPath.concat('.estimateFlow'), result);
     }
-  };
+  }, 500), []);
 
   const { estimateFlow: aaa, ...restPressConfig } = pressConfig;
 
