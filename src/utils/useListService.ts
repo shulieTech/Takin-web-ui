@@ -44,7 +44,7 @@ const useListService = (props: Props) => {
         setList(get(data, dataListPath, []));
       }
       
-      setTotal(parseInt(totalCount || data?.count, 10) || 0);
+      setTotal(parseInt(totalCount || data?.count || data?.total, 10) || 0);
     }
     if (typeof afterSearchCallback === 'function') {
       afterSearchCallback(res);

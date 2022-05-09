@@ -10,7 +10,7 @@ import { StepProps } from 'antd/lib/steps';
 
 interface Props {
   reportInfo: {
-    taskId: string | number;
+    jobId: string | number;
     resourceId: string | number;
   };
   ticker?: number;
@@ -279,7 +279,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
       data: { success, data },
     } = await getList();
     if (success) {
-      setStepListInfo(data);
+      setStepListInfo(data || {});
     }
   };
 
