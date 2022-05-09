@@ -115,7 +115,9 @@ const getPressureTestSceneColumns = (
   const queryHasMissingDataScript = async (row) => {
     const {
       data: { data, success },
-    } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId: row.id });
+    } = await PressureTestSceneService.queryHasMissingDataScript({
+      sceneId: row.id,
+    });
     if (success) {
       setState({
         sceneId: row.id,
@@ -124,7 +126,7 @@ const getPressureTestSceneColumns = (
         startedScence: {
           scenceInfo: row,
           triggerTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-        }
+        },
       });
     }
   };
@@ -259,12 +261,14 @@ const getPressureTestSceneColumns = (
       render: (text) => {
         return (
           <Badge
-            text={{
-              0: '待启动',
-              1: '启动中',
-              2: '压测中',
-              11: '资源锁定中'
-            }[text || 0]}
+            text={
+              {
+                0: '待启动',
+                1: '启动中',
+                2: '压测中',
+                11: '资源锁定中',
+              }[text || 0]
+            }
             color={text === 2 ? 'var(--BrandPrimary-500)' : 'var(--Netural-06)'}
           />
         );
@@ -348,14 +352,22 @@ const getPressureTestSceneColumns = (
                 </Button>
               </AuthorityBtn>
             )}
-            {[1, 11].includes[row.status] && (
-              <Button
-                type="link"
-                style={{ marginRight: 8 }}
-                onClick={() => cancelLaunch(row.id)}
+            {[1, 11].includes(row.status) && (
+              <AuthorityBtn
+                isShow={
+                  btnAuthority &&
+                  btnAuthority.pressureTestManage_pressureTestScene_5_start_stop &&
+                  row.canStartStop
+                }
               >
-                启动中
-              </Button>
+                <Button
+                  type="link"
+                  style={{ marginRight: 8 }}
+                  onClick={() => cancelLaunch(row.id)}
+                >
+                  启动中
+                </Button>
+              </AuthorityBtn>
             )}
             {(getTakinAuthority() === 'false' ||
               (row.hasReport &&

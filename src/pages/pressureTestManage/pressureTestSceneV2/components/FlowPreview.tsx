@@ -2,9 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Tooltip, Icon, Statistic } from 'antd';
 import FixLineCharts from '../../pressureTestScene/components/FixLineCharts';
 import StepCharts from '../../pressureTestScene/components/StepCharts';
+import service from '../service';
+import { FormPath, IForm } from '@formily/antd';
 
-export default (props) => {
-  const { formValue, xpathMd5 } = props;
+interface Props {
+  form: IForm;
+  parentPath: FormPath;
+  formValue: any;
+  xpathMd5: string;
+}
+
+export default (props: Props) => {
+  const { formValue, xpathMd5, form, parentPath } = props;
   const [estimateFlow, setEstimateFlow] = useState();
 
   const targetConfig = formValue?.goal?.[xpathMd5] || { tps: 3 }; // 压测目标
@@ -41,6 +50,38 @@ export default (props) => {
     }
   };
 
+  // 获取流量预估
+  const getEstimateFlow = async (params) => {
+    const {
+      data: { success, data },
+    } = await service.getEstimateFlow(params);
+    if (success) {
+      const result = data?.value;
+      setEstimateFlow(result);
+      form.setFieldValue(parentPath.concat('.estimateFlow'), result);
+    }
+  };
+
+  const { estimateFlow: aaa, ...restPressConfig } = pressConfig;
+
+  useEffect(() => {
+    getEstimateFlow({
+      concurrenceNum: pressConfig.threadNum,
+      pressureTestTime: {
+        time: formValue?.config.duration,
+        unit: 'm',
+      },
+      pressureType: pressConfig.type,
+      pressureMode: pressConfig.mode,
+      increasingTime: {
+        time: pressConfig.rampUp,
+        unit: 'm',
+      },
+      step: pressConfig.steps,
+      pressureScene: 0,
+    });
+  }, [formValue?.config?.duration, ...Object.values(restPressConfig)]);
+
   return (
     <div
       style={{
@@ -65,7 +106,12 @@ export default (props) => {
         <span>预计消耗：</span>
         {estimateFlow ? (
           <span>
-            <Statistic precision={2} suffix="vum" value={estimateFlow} />
+            <Statistic
+              style={{ display: 'inline-block' }}
+              precision={2}
+              suffix="vum"
+              value={estimateFlow}
+            />
           </span>
         ) : (
           '-- vum'
