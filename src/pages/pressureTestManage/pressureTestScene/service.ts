@@ -75,7 +75,8 @@ const PressureTestSceneService = {
    * @name 获取预计消耗流量
    */
   async getEstimateFlow(data = {}) {
-    const url = '/scenemanage/flow/calc';
+    // const url = '/scenemanage/flow/calc';
+    const url = '/asset/calc/estimate';
     return httpPost(url, data);
   },
   /**
