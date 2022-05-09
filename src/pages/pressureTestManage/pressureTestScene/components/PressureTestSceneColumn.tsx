@@ -259,7 +259,12 @@ const getPressureTestSceneColumns = (
       render: (text) => {
         return (
           <Badge
-            text={text === 0 ? '待启动' : text === 1 ? '启动中' : '压测中'}
+            text={{
+              0: '待启动',
+              1: '启动中',
+              2: '压测中',
+              11: '资源锁定中'
+            }[text || 0]}
             color={text === 2 ? 'var(--BrandPrimary-500)' : 'var(--Netural-06)'}
           />
         );
@@ -343,7 +348,7 @@ const getPressureTestSceneColumns = (
                 </Button>
               </AuthorityBtn>
             )}
-            {row.status === 1 && (
+            {[1, 11].includes[row.status] && (
               <Button
                 type="link"
                 style={{ marginRight: 8 }}
