@@ -15,8 +15,6 @@ import MissingDataListModal from './modals/MissingDataListModal';
 import PressureTestReportService from './service';
 import { GraphData } from '@antv/g6';
 import downloadFile from 'src/utils/downloadFile';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 interface State {
   isReload?: boolean;
@@ -294,61 +292,12 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   };
 
   const downloadReportPdf = async () => {
-    const doc = new jsPDF();
-    doc.setLanguage('zh-CN');
-    const dom = document.querySelector('[class*=baseLayConent___]');
-
-    // 图片
-    // 展开压测不通过信息
-    document.querySelector('.ant-collapse-item:not(.ant-collapse-item-active) .ant-collapse-header')?.click();
-    // 显示压测明细
-    document.querySelectorAll('[class*=moduleTabsWrap___]')[2]?.click();
-    setTimeout(() => {
-      html2canvas(dom, {
-        ignoreElements: node => node.classList.contains('ant-btn'),
-        allowTaint: true,
-        windowWidth: window.innerWidth,
-        windowHeight: dom.scrollHeight,
-      }).then(canvas => {
-        const imgData = canvas.toDataURL('image/jpeg', 1);
-        doc.addImage(imgData, 'JPEG', 0, 0, 208, dom.scrollHeight * 208 / window.innerWidth);
-        doc.save(`${detailData.sceneName}-${detailData.sceneId}.pdf`);
-      });
-    }, 1500);
-
-    // html
-    // const getAllDom = () => {
-    //   return new Promise((resolve, reject) => {
-    //     const allDom = document.createElement('div');
-    //     document.querySelectorAll('[class^=index__moduleTabsWrap]')[2].click();
-    //     document.querySelectorAll('[id^=pdf-]').forEach(x => allDom.append(x.cloneNode(true)));
-    //     // document.querySelectorAll('[class^=index__moduleTabsWrap]').forEach((x, i, arr) => {
-    //     //   if (i === 0) {
-    //     //     x.click();
-    //     //   }
-    //     //   setTimeout(() => {
-    //     //     allDom.append(document.querySelector('[class^=index__tabsWrap]>div:last-child').cloneNode(true));
-    //     //     arr[i + 1] && arr[i + 1].click();
-    //     //     if (i === arr.length -1) {
-    //     //       resolve(allDom);
-    //     //     }
-    //     //   }, (i + 1) * 2000);
-    //     // });
-    //     resolve(allDom);
-    //   })
-    // }
-    // const allDom = await getAllDom();
-    // doc.html(allDom, {
-    //   callback: () => {
-    //     doc.save(`${detailData.sceneName}-${detailData.sceneId}.pdf`);
-    //     allDom.remove();
-    //   },
-    //   x: 10,
-    //   y: 10,
-    //   width: doc.internal.pageSize.getWidth() - 20,
-    //   windowWidth: window.innerWidth,
-    //   // windowHeight: dom.scrollHeight,
-    // });
+    const { data: { data, success } } = await PressureTestReportService.getReportPdf({
+      reportId: id,
+    });
+    if (success) {
+      window.location.href = data;
+    }
   };
 
   const extra = (
