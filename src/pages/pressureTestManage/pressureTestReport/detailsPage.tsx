@@ -58,7 +58,8 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   const { query } = location;
   const { id } = query;
   const { detailData, reportCountData, hasMissingData } = state;
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isDownloadingJtl, setIsDownloadingJtl] = useState(false);
+  const [isDownloadingReport, setIsDownloadingReport] = useState(false);
 
   useEffect(() => {
     queryReportBusinessActivity(id);
@@ -276,7 +277,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   ];
 
   const downloadJtlFile = async () => {
-    setIsDownloading(true);
+    setIsDownloadingJtl(true);
     const {
       data: { data, success },
     } = await PressureTestReportService.getJtlDownLoadUrl({
@@ -286,14 +287,17 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       const filePath: string = data.content;
       const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
       downloadFile(filePath, fileName).finally(() => {
-        setIsDownloading(false);
+        setIsDownloadingJtl(false);
       });
     }
   };
 
   const downloadReportPdf = async () => {
+    setIsDownloadingReport(true);
     const { data: { data, success } } = await PressureTestReportService.getReportPdf({
       reportId: id,
+    }).finally(() => {
+      setIsDownloadingReport(false);
     });
     if (success) {
       window.location.href = data;
@@ -324,11 +328,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
           </Button>
         </Dropdown>
       }
-      <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }}>
+      <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }} loading={isDownloadingReport}>
         下载压测报告
       </Button>
       {detailData?.hasJtl && (
-        <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloading}>
+        <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloadingJtl}>
           下载Jtl文件
         </Button>
       )}
