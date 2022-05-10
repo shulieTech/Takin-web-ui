@@ -391,6 +391,8 @@ const getPressureTestSceneColumns = (
                 }
               >
                 <CustomPopconfirm
+                  arrowPointAtCenter
+                  placement="topRight"
                   okText="确认归档"
                   title={'归档后该压测场景将被移动到回收站'}
                   okColor="var(--FunctionalError-500)"
