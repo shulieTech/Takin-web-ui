@@ -294,13 +294,16 @@ const PressureTestReportDetail: React.FC<Props> = props => {
 
   const downloadReportPdf = async () => {
     setIsDownloadingReport(true);
-    const { data: { data, success } } = await PressureTestReportService.getReportPdf({
+    const {
+      data: { data, success },
+    } = await PressureTestReportService.getReportPdf({
       reportId: id,
-    }).finally(() => {
-      setIsDownloadingReport(false);
     });
-    if (success) {
-      window.location.href = data;
+    if (success && typeof data === 'string') {
+      const fileName = data.substring(data.lastIndexOf('/') + 1);
+      downloadFile(data, fileName).finally(() => {
+        setIsDownloadingReport(false);
+      });
     }
   };
 
