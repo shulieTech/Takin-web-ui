@@ -612,14 +612,17 @@ const PressureTestLive: React.FC<Props> = (props) => {
                 okColor="var(--FunctionalError-500)"
                 okText="确认停止"
                 onConfirm={() => handleConfirm()}
+                disabled={state.flag}
               >
                 <Button
                   type="danger"
                   style={{
                     background: '#FE7D61',
+                    opacity: state.flag ? 0.5 : 1,
                     color: '#fff',
                     border: 'none',
                   }}
+                  disabled={state.flag}
                 >
                   停止压测
                 </Button>
