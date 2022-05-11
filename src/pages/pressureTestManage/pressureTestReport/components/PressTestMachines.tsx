@@ -293,6 +293,8 @@ const PressTestMachines: React.FC<Props> = (props) => {
     },
   ].filter((x) => !x.hide);
 
+  let timer;
+
   const getStepListInfo = async () => {
     const {
       data: { success, data },
@@ -302,7 +304,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
       if (isLive) {
         // 压测停止后detailData不能继续刷新，但是stepListInfo还要继续刷新直至报告生成完成
         if (data.status !== StepStatus.REPORT_DONE) {
-          setTimeout(getStepListInfo, 5000);
+          timer = setTimeout(getStepListInfo, 5000);
         } else {
           message.success('压测报告生成完成，正在跳转压测报告');
           router.push(
@@ -313,16 +315,15 @@ const PressTestMachines: React.FC<Props> = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (isLive) {
-  //     getStepListInfo();
-  //   }
-  // }, [ticker]);
-
   useEffect(() => {
     if (isLive) {
       getStepListInfo();
     }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, []);
 
   const loadingIcon = (
