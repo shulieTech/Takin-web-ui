@@ -24,6 +24,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
   const [cancelStarting, setCancelStarting] = useState(false);
   const defaultStepInfo = {
     resourceId: undefined,
+    reportId: undefined,
     status: 2,
     podNumber: 0,
     checkList: [
@@ -76,6 +77,8 @@ const StartStatusModal: React.FC<Props> = (props) => {
         `/pressureTestManage/pressureTestReport/pressureTestLive?id=${scenceInfo.id}`
       );
     }
+    // 根据后端要求，要调下这个接口，前端不关心其返回结果
+    services.checkStartStatus({ sceneId: scenceInfo.id, reportId: currentStepInfo.reportId });
   };
 
   let timer;
