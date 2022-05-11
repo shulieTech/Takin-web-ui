@@ -188,7 +188,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
       if (data.taskStatus !== 0) {
         setState({
           flag: true,
-          visible: true,
+          // visible: true,
         });
       }
     }
@@ -392,7 +392,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     if (success) {
       setState({
         flag: true,
-        visible: true,
+        // visible: true,
       });
     }
   };
@@ -644,6 +644,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
           jobId: detailData.jobId,
           resourceId: detailData.resourceId,
         }}
+        detailData={detailData}
         ticker={ticker}
       />
 

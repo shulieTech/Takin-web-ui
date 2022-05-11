@@ -418,5 +418,37 @@
     .ant-collapse-header, .ant-collapse-content-box {
       padding: 0!important;
     }
+    .ant-collapse-item {
+      border: none!important;
+    }
+  }
+}
+
+.blink-icon {
+  display: inline-block;
+  width: 16px;
+  line-height: 14px;
+  border-radius: 4px;
+  margin-right: 4px;
+  border: 1px solid var(--Netural-100, #EEF0F2);
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--BrandPrimary-500);
+    animation: blink 1s infinite;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

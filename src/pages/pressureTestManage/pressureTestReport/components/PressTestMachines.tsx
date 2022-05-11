@@ -1,12 +1,22 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
 import { CommonModal } from 'racc';
 import CustomTable from 'src/components/custom-table';
-import { Steps, Collapse, Tag, Icon, Divider, Tooltip, Pagination } from 'antd';
+import {
+  Steps,
+  Collapse,
+  Tag,
+  Icon,
+  Divider,
+  Tooltip,
+  Pagination,
+  message,
+} from 'antd';
 import services from '../service';
 import styles from '../index.less';
 import { getSortConfig, getTableSortQuery } from 'src/utils/utils';
 import useListService from 'src/utils/useListService';
 import { StepProps } from 'antd/lib/steps';
+import { router } from 'umi';
 
 interface Props {
   reportInfo: {
@@ -15,6 +25,7 @@ interface Props {
   };
   ticker?: number;
   isLive?: boolean;
+  detailData?: any;
 }
 enum StepStatus {
   INITIALIZED, // 0 初始化
@@ -27,6 +38,8 @@ enum StepStatus {
   UNUSUAL, // 7 异常
   STOPPING, // 8 停止中
   INACTIVE, // 9 停止
+  REPORT_GENERATING, // 10 报告生成中
+  REPORT_DONE, // 11 报告生成完成
 }
 
 enum MachineStatus {
@@ -39,7 +52,7 @@ enum MachineStatus {
 const { Step } = Steps;
 
 const PressTestMachines: React.FC<Props> = (props) => {
-  const { reportInfo, ticker, isLive = true } = props;
+  const { reportInfo, isLive = true, detailData = {} } = props;
 
   const [expaned, setExpaned] = useState(false);
   const [stepListInfo, setStepListInfo] = useState({
@@ -48,11 +61,12 @@ const PressTestMachines: React.FC<Props> = (props) => {
     inactiveAmount: 0,
     unusualAmount: 0,
     errorMessage: '',
+    status: StepStatus.INITIALIZED,
   });
 
   const getStepList = (
     stepInfo
-  ): { status: StepProps['status']; message?: string }[] => {
+  ): { status: StepProps['status']; msg?: string }[] => {
     const stepStatus = [];
     // 检测
     stepStatus[0] = {
@@ -85,7 +99,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
       case !!(stepInfo.status >= StepStatus.UNUSUAL && stepInfo.errorMessage):
         stepStatus[2] = {
           status: 'error',
-          message: stepInfo.errorMessage,
+          msg: stepInfo.errorMessage,
         };
         break;
       case stepInfo.status > StepStatus.UNUSUAL:
@@ -119,9 +133,14 @@ const PressTestMachines: React.FC<Props> = (props) => {
 
     // 报告
     switch (true) {
-      case stepInfo.status > StepStatus.STOPPING:
+      case stepInfo.status === StepStatus.REPORT_GENERATING:
         stepStatus[4] = {
           status: 'process',
+        };
+        break;
+      case stepInfo.status === StepStatus.REPORT_DONE:
+        stepStatus[4] = {
+          status: 'finish',
         };
         break;
       default:
@@ -252,25 +271,25 @@ const PressTestMachines: React.FC<Props> = (props) => {
     {
       title: 'Pod IP',
       dataIndex: 'ip',
-      render: text => text || '-',
+      render: (text) => text || '-',
     },
     {
       title: 'Host IP',
       dataIndex: 'hostIp',
-      render: text => text || '-',
+      render: (text) => text || '-',
     },
     {
       title: '创建时间',
       dataIndex: 'startTime',
       ...(isLive ? {} : getSortConfig(query, 'startTime')),
-      render: text => text || '-',
+      render: (text) => text || '-',
     },
     {
       title: '停止时间',
       dataIndex: 'stopTime',
       hide: isLive,
       ...(isLive ? {} : getSortConfig(query, 'stopTime')),
-      render: text => text || '-',
+      render: (text) => text || '-',
     },
   ].filter((x) => !x.hide);
 
@@ -280,20 +299,40 @@ const PressTestMachines: React.FC<Props> = (props) => {
     } = await getList();
     if (success) {
       setStepListInfo(data || {});
+      if (isLive) {
+        // 压测停止后detailData不能继续刷新，但是stepListInfo还要继续刷新直至报告生成完成
+        if (data.status !== StepStatus.REPORT_DONE) {
+          setTimeout(getStepListInfo, 5000);
+        } else {
+          message.success('压测报告生成完成，正在跳转压测报告');
+          router.push(
+            `/pressureTestManage/pressureTestReport/details?id=${detailData.id}&sceneId=${detailData.sceneId}`
+          );
+        }
+      }
     }
   };
+
+  // useEffect(() => {
+  //   if (isLive) {
+  //     getStepListInfo();
+  //   }
+  // }, [ticker]);
 
   useEffect(() => {
     if (isLive) {
       getStepListInfo();
     }
-  }, [ticker]);
+  }, []);
 
   const loadingIcon = (
-    <Icon
-      type="loading"
-      style={{ marginRight: 8, color: '#11BBD5', fontSize: 18 }}
-    />
+    // <Icon
+    //   type="loading"
+    //   style={{ marginRight: 8, color: '#11BBD5', fontSize: 18 }}
+    // />
+    <span className={styles['blink-icon']}>
+      <span className={styles.dot} />
+    </span>
   );
   const errorIcon = (
     <Icon
@@ -344,6 +383,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
       },
       descriptionMap: {
         process: '过程大概耗时2min，请耐心等待',
+        finish: '报告生成完成',
       },
     },
   ];
@@ -443,24 +483,26 @@ const PressTestMachines: React.FC<Props> = (props) => {
         }}
         columns={columns}
       />
-      <Pagination
-        style={{ marginTop: 20, textAlign: 'right' }}
-        total={total}
-        current={query.current + 1}
-        pageSize={query.pageSize}
-        showTotal={(t, range) =>
-          `共 ${total} 条数据 第${query.current + 1}页 / 共 ${Math.ceil(
-            total / (query.pageSize || 10)
-          )}页`
-        }
-        showSizeChanger={true}
-        onChange={(current, pageSize) =>
-          getList({ pageSize, current: current - 1 })
-        }
-        onShowSizeChange={(current, pageSize) =>
-          getList({ pageSize, current: 0 })
-        }
-      />
+      {total > 10 && (
+        <Pagination
+          style={{ marginTop: 20, textAlign: 'right' }}
+          total={total}
+          current={query.current + 1}
+          pageSize={query.pageSize}
+          showTotal={(t, range) =>
+            `共 ${total} 条数据 第${query.current + 1}页 / 共 ${Math.ceil(
+              total / (query.pageSize || 10)
+            )}页`
+          }
+          showSizeChanger={true}
+          onChange={(current, pageSize) =>
+            getList({ pageSize, current: current - 1 })
+          }
+          onShowSizeChange={(current, pageSize) =>
+            getList({ pageSize, current: 0 })
+          }
+        />
+      )}
     </>
   );
 
@@ -472,6 +514,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
         bodyStyle: {
           maxHeight: '80vh',
           overflow: 'auto',
+          minHeight: 300,
         },
       }}
       btnText="查看压力机明细"
@@ -538,10 +581,10 @@ const PressTestMachines: React.FC<Props> = (props) => {
               style={{ flex: 1, padding: '0 100px' }}
             >
               {stepList.map((item, index) => {
-                const { status = 'wait', message } =
+                const { status = 'wait', msg } =
                   getStepList(stepListInfo)?.[index] || {};
 
-                const descriptionStr = message || item.descriptionMap?.[status];
+                const descriptionStr = msg || item.descriptionMap?.[status];
                 return (
                   <Step
                     key={index}
