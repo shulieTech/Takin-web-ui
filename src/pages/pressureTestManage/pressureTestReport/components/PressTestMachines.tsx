@@ -115,14 +115,14 @@ const PressTestMachines: React.FC<Props> = (props) => {
 
     // 停止
     switch (true) {
-      case stepInfo.status === StepStatus.STOPPING:
-        stepStatus[3] = {
-          status: 'process',
-        };
-        break;
       case stepInfo.status >= StepStatus.INACTIVE:
         stepStatus[3] = {
           status: 'finish',
+        };
+        break;
+      case stepInfo.status === StepStatus.STOPPING:
+        stepStatus[3] = {
+          status: 'process',
         };
         break;
       default:
@@ -133,14 +133,14 @@ const PressTestMachines: React.FC<Props> = (props) => {
 
     // 报告
     switch (true) {
-      case stepInfo.status === StepStatus.REPORT_GENERATING:
-        stepStatus[4] = {
-          status: 'process',
-        };
-        break;
-      case stepInfo.status >= StepStatus.REPORT_DONE:
+      case stepInfo.status === StepStatus.REPORT_DONE:
         stepStatus[4] = {
           status: 'finish',
+        };
+        break;
+      case stepInfo.status >= StepStatus.INACTIVE:
+        stepStatus[4] = {
+          status: 'process',
         };
         break;
       default:
