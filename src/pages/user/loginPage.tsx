@@ -99,6 +99,7 @@ const getFormData = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="验证码"
+          autoComplete="off"
         />
       ),
       extra: (
@@ -153,6 +154,7 @@ const getFormDatatre = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="手机验证码"
+          autoComplete="off"
         />
       ),
       extra: (
@@ -212,6 +214,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="手机验证码"
+          autoComplete="off"
         />
       ),
       extra: (
