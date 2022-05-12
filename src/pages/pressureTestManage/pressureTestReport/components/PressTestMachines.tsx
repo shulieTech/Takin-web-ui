@@ -79,7 +79,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           status: 'process',
         };
         break;
-      case stepInfo.status > StepStatus.STARTING:
+      case stepInfo.status >= StepStatus.ALIVE:
         stepStatus[1] = {
           status: 'finish',
         };
@@ -120,7 +120,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           status: 'process',
         };
         break;
-      case stepInfo.status > StepStatus.STOPPING:
+      case stepInfo.status >= StepStatus.INACTIVE:
         stepStatus[3] = {
           status: 'finish',
         };
@@ -138,7 +138,7 @@ const PressTestMachines: React.FC<Props> = (props) => {
           status: 'process',
         };
         break;
-      case stepInfo.status === StepStatus.REPORT_DONE:
+      case stepInfo.status >= StepStatus.REPORT_DONE:
         stepStatus[4] = {
           status: 'finish',
         };
