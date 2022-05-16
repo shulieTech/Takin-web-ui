@@ -19,7 +19,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
 
   const [canCancel, setCanCancel] = useState(false);
   const [cancelStarting, setCancelStarting] = useState(false);
-  
+
   const defaultStepInfo = {
     resourceId: undefined,
     reportId: undefined,
@@ -143,7 +143,11 @@ const StartStatusModal: React.FC<Props> = (props) => {
           clearTimeout(timer);
         }
       };
-    }
+    } 
+    
+    setCurrentStepInfo(defaultStepInfo);
+    setCanCancel(false);
+    
   }, [visible]);
 
   let currentStepIndex = 0;
@@ -156,6 +160,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
       maskClosable={false}
       footer={null}
       closable={false}
+      destroyOnClose
       {...restProps}
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
