@@ -473,8 +473,8 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           </div>
         )}
       </Modal> */}
-      <StartStatusModal
-        visible={state.visible}
+      {state.visible && <StartStatusModal
+        visible
         onCancel={() => {
           setState({
             visible: false,
@@ -487,7 +487,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           leakSqlEnable: state.missingDataSwitch,
           continueRead: state.pressureStyle,
         }}
-      />
+      />}
     </Fragment>
   );
 };
