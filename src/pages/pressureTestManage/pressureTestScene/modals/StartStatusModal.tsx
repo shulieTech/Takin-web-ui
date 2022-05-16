@@ -10,18 +10,16 @@ interface Props {
 }
 
 const StartStatusModal: React.FC<Props> = (props) => {
-  const STATUS_MAP = {
-    0: 'error',
-    1: 'finish',
-    2: 'wait',
-  };
   const { startedScence, visible, onCancel, ...restProps } = props;
   const {
     triggerTime,
     scenceInfo = {},
     ...restStartScenceInfo
   } = startedScence;
+
+  const [canCancel, setCanCancel] = useState(false);
   const [cancelStarting, setCancelStarting] = useState(false);
+  
   const defaultStepInfo = {
     resourceId: undefined,
     reportId: undefined,
@@ -91,6 +89,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
       sceneId: scenceInfo.id,
     });
     if (success) {
+      setCanCancel(true);
       setCurrentStepInfo(data);
 
       const isAllSuccess = data.status === 1;
@@ -169,7 +168,12 @@ const StartStatusModal: React.FC<Props> = (props) => {
             }}
           />
         </div>
-        <Button type="danger" loading={cancelStarting} onClick={cancelStart}>
+        <Button
+          type="danger"
+          loading={cancelStarting}
+          disabled={!canCancel}
+          onClick={cancelStart}
+        >
           取消压测
         </Button>
       </div>
