@@ -27,19 +27,23 @@ const useListService = (props: Props) => {
   const getList = async (params = {}) => {
     setLoading(true);
     const newQuery = { ...query, ...params };
-    const res = await service(newQuery);
-    const {
-      data: { success, data },
-      headers: { 'x-total-count': totalCount },
-    } = res;
-    setLoading(false);
-    if (success) {
-      setQuery(newQuery);
-      setList(data.list);
-      setTotal(totalCount || data.count);
-    }
-    if (typeof afterSearchCallback === 'function') {
-      afterSearchCallback(res);
+    try {
+      const res = await service(newQuery);
+      const {
+        data: { success, data },
+        headers: { 'x-total-count': totalCount },
+      } = res;
+
+      if (success) {
+        setQuery(newQuery);
+        setList(data.list);
+        setTotal(totalCount || data.count);
+      }
+      if (typeof afterSearchCallback === 'function') {
+        afterSearchCallback(res);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
