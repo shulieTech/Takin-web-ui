@@ -348,7 +348,7 @@ const MockList: React.FC<Props> = props => {
           loading={state.loading}
           columns={getMockListColumns(state, setState, props.id)}
           dataSource={state.mockList || []}
-          rowKey="id"
+          rowKey="md5"
           rowSelection={rowSelection}
         />
       </div>
