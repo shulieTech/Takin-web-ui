@@ -26,7 +26,7 @@ const IntroduceSence: React.FC<Props> = (props) => {
     },
   ];
   return (
-    <div>
+    <div style={{ margin: 32 }}>
       <div
         style={{
           backgroundImage: `url(${bg}), linear-gradient(90deg, #F3F6F7 0%, #FAFCFC 102.75%)`,

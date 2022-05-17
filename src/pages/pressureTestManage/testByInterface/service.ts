@@ -22,4 +22,18 @@ export default {
     const url = '/copySence';
     return httpGet(url, data);
   },
+  /**
+   * @name 调试场景
+   */
+  async debugSence(data = {}) {
+    const url = '/debugSence';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 启动场景
+   */
+  async startSence(data = {}) {
+    const url = '/startSence';
+    return httpPost(url, data);
+  },
 };

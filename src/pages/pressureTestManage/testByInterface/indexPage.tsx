@@ -7,7 +7,7 @@ import IntroduceSence from './components/introduce';
 interface Props {}
 
 const TestByInterface: React.FC<Props> = (props) => {
-  const [currentSence, setCurrentSence] = useState();
+  const [currentSence, setCurrentSence] = useState({});
 
   return (
     <Layout>
@@ -26,7 +26,6 @@ const TestByInterface: React.FC<Props> = (props) => {
       <Layout.Content
         style={{
           background: '#fff',
-          padding: 32,
         }}
       >
         {currentSence ? (

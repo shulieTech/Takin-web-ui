@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Input, Icon, Spin, Menu, Modal, message } from 'antd';
 import useListService from 'src/utils/useListService';
-import service from '../sevice';
+import service from '../service';
 import styles from '../index.less';
 import classNames from 'classnames';
 
