@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
-import SenceList from './components/list';
-import EditSence from './components/edit';
-import IntroduceSence from './components/introduce';
+import SenceList from './components/List';
+import EditSence from './components/Edit';
+import IntroduceSence from './components/Introduce';
 
 interface Props {}
 

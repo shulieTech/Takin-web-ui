@@ -36,4 +36,11 @@ export default {
     const url = '/startSence';
     return httpPost(url, data);
   },
+  /**
+   * @name 查询关联应用
+   */
+  async searchEntrance(data = {}) {
+    const url = '/startSence';
+    return httpPost(url, data);
+  },
 };
