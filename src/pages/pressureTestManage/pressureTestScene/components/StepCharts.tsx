@@ -1,15 +1,16 @@
-import React, { Fragment } from 'react';
+import React, { CSSProperties, Fragment } from 'react';
 import ReactEcharts from 'echarts-for-react';
 interface Props {
   chartsInfo: any;
+  style?: CSSProperties;
 }
 const StepCharts: React.FC<Props> = props => {
-  const { chartsInfo } = props;
+  const { chartsInfo, style = {} } = props;
 
   return (
     <Fragment>
       <ReactEcharts
-        style={{ width: 500, height: 190 }}
+        style={{ height: 190, ...style }}
         option={{
           color: ['#FFB64A'],
           tooltip: {

@@ -23,6 +23,7 @@ import { Button, message, Spin, Icon } from 'antd';
 import NumberPicker from '../../pressureTestSceneV2/components/NumberPicker';
 import service from '../service';
 import BaseTab from './BaseTab';
+import PressConfigTab from './PressConfigTab';
 
 interface Props {
   currentSence: any;
@@ -93,9 +94,7 @@ const EditSence: React.FC<Props> = (props) => {
         </FormMegaLayout>
         <FormTab name="tabs-1" defaultActiveKey={'tab-1'} type="card">
           <BaseTab actions={actions} />
-          <FormTab.TabPane name="tab-2" tab="施压配置">
-            122
-          </FormTab.TabPane>
+          <PressConfigTab actions={actions} />
         </FormTab>
       </SchemaForm>
     </Spin>

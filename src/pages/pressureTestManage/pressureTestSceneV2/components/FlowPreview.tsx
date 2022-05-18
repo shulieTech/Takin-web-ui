@@ -3,12 +3,21 @@ import { Tooltip, Icon, Statistic } from 'antd';
 import FixLineCharts from '../../pressureTestScene/components/FixLineCharts';
 import StepCharts from '../../pressureTestScene/components/StepCharts';
 
-export default (props) => {
-  const { formValue, xpathMd5 } = props;
-  const [estimateFlow, setEstimateFlow] = useState();
+interface Props {
+  targetTps: number; // 目标TPS
+  duration: number; // 压测时长
+  pressConfig: {
+    rampUp?: number; // 递增时长
+    steps?: number; // 递增层数
+    type?: number; // 压力模式 并发或TPS模式
+    threadNum?: number; // 最大并发
+    mode?: number; //  施压模式: 固定压力值/线性递增/阶梯递增
+  };
+}
 
-  const targetConfig = formValue?.goal?.[xpathMd5] || { tps: 3 }; // 压测目标
-  const pressConfig = formValue?.config?.threadGroupConfigMap?.[xpathMd5] || {}; // 施压配置
+const FlowPreview: React.FC<Props> = (props) => {
+  const [estimateFlow, setEstimateFlow] = useState();
+  const { duration, targetTps = 3, pressConfig = {} } = props;
 
   /**
    * 计算阶梯递增数据
@@ -23,7 +32,7 @@ export default (props) => {
     ) {
       midData.push([
         (pressConfig.rampUp / pressConfig.steps) * (i + 1),
-        ((pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps) /
+        ((pressConfig.type === 0 ? pressConfig.threadNum : targetTps) /
           pressConfig.steps) *
           (i + 1),
       ]);
@@ -34,8 +43,8 @@ export default (props) => {
         .concat(midData)
         .concat([
           [
-            formValue?.config.duration,
-            pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+            duration,
+            pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
           ],
         ]);
     }
@@ -78,11 +87,11 @@ export default (props) => {
             [
               0,
               // 并发模式下取并发数，否则取tps
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
             [
-              formValue?.config.duration,
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              duration,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
           ]}
         />
@@ -94,11 +103,11 @@ export default (props) => {
             [0, 0],
             [
               pressConfig.rampUp,
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
             [
-              formValue?.config.duration,
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              duration,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
           ]}
         />
@@ -110,3 +119,5 @@ export default (props) => {
     </div>
   );
 };
+
+export default FlowPreview;

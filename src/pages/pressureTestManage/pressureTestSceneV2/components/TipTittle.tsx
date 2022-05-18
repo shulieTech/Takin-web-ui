@@ -3,7 +3,7 @@ import { Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 export default (props: {
-  tips: string;
+  tips: string | ReactNode;
   children: ReactNode
 }) => {
   const { children, tips } = props;
