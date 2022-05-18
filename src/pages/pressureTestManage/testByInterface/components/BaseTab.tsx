@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  SchemaMarkupField as Field,
-  createVirtualBox,
-  IFormAsyncActions,
-} from '@formily/antd';
-import { FormTab, FormMegaLayout } from '@formily/antd-components';
+import { SchemaMarkupField as Field, IFormAsyncActions } from '@formily/antd';
+import { FormTab, FormMegaLayout, FormSlot } from '@formily/antd-components';
 import { Button } from 'antd';
 import TipTittle from '../../pressureTestSceneV2/components/TipTittle';
 import DebugModal from '../modals/Debug';
@@ -40,44 +36,6 @@ const BaseTab: React.FC<Props> = (props) => {
     }
   }, 500);
 
-  const DebugResult = createVirtualBox('debugReslut', () => {
-    return (
-      <div>
-        <div
-          style={{
-            padding: '8px 0',
-            borderTop: '1px solid #EEF0F2',
-            color: 'var(--Netural-500, #AEB2B7)',
-          }}
-        >
-          响应结果
-        </div>
-        {!debugOutput ? (
-          <div
-            style={{
-              color: 'var(--Netural-800, #5A5E62)',
-              lineHeight: '20px',
-              textAlign: 'center',
-              padding: '40px 0',
-            }}
-          >
-            您可以输入一个URL，点击调
-            <br />
-            试后，可在此查看响应结果
-          </div>
-        ) : (
-          <div
-            style={{
-              borderTop: '1px solid #EEF0F2',
-            }}
-          >
-            结果
-          </div>
-        )}
-      </div>
-    );
-  });
-
   const startDebug = async () => {
     const { values } = await actions.submit();
     setDebugInput(values);
@@ -86,50 +44,9 @@ const BaseTab: React.FC<Props> = (props) => {
   return (
     <>
       <FormTab.TabPane name="tab-1" tab="场景">
-        <FormTab
-          name="tabs-1-1"
-          defaultActiveKey={'tab-1-1'}
-          tabBarExtraContent={
-            <Button type="primary" ghost size="small" onClick={startDebug}>
-              调试
-            </Button>}
-        >
+        <FormTab name="tabs-1-1" defaultActiveKey={'tab-1-1'}>
           <FormTab.TabPane name="tab-1-1" tab="基本信息">
-            <Field
-              name="url"
-              type="string"
-              x-component="TextArea"
-              x-component-props={{
-                placeholder: '请输入',
-                maxLength: 100,
-                rows: 10,
-              }}
-              title="压测URL"
-              x-rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: '请输入压测URL',
-                },
-              ]}
-              required
-            />
-            <Field
-              name="entrance"
-              type="string"
-              x-component="Select"
-              x-component-props={{
-                style: {
-                  width: 300,
-                },
-                placeholder: '请选择',
-                allowClear: true,
-                showSearch: true,
-                onSearch: searchEntrance,
-              }}
-              title={<TipTittle tips="1111">关联应用入口</TipTittle>}
-            />
-            <FormMegaLayout labelAlign="top" inline autoRow>
+            <FormMegaLayout inline>
               <Field
                 name="method"
                 type="string"
@@ -137,10 +54,10 @@ const BaseTab: React.FC<Props> = (props) => {
                 x-component-props={{
                   placeholder: '请选择',
                   style: {
-                    width: 300,
+                    width: 140,
                   },
                 }}
-                title="请求类型"
+                // title="请求类型"
                 enum={[
                   { label: 'GET', value: 'GET' },
                   { label: 'POST', value: 'POST' },
@@ -164,6 +81,47 @@ const BaseTab: React.FC<Props> = (props) => {
                   },
                 ]}
               />
+              <Field
+                name="url"
+                type="string"
+                x-component="Input"
+                x-component-props={{
+                  placeholder: '请输入URL',
+                  maxLength: 100,
+                  rows: 10,
+                }}
+                // title="压测URL"
+                x-rules={[
+                  {
+                    required: true,
+                    whitespace: true,
+                    message: '请输入压测URL',
+                  },
+                ]}
+                required
+              />
+              <FormSlot>
+                <Button type="primary" ghost onClick={startDebug}>
+                  调试
+                </Button>
+              </FormSlot>
+            </FormMegaLayout>
+            <Field
+              name="entrance"
+              type="string"
+              x-component="Select"
+              x-component-props={{
+                style: {
+                  width: 300,
+                },
+                placeholder: '请选择',
+                allowClear: true,
+                showSearch: true,
+                onSearch: searchEntrance,
+              }}
+              title={<TipTittle tips="1111">关联应用入口</TipTittle>}
+            />
+            <FormMegaLayout labelAlign="top" inline autoRow>
               <Field
                 name="timeout"
                 type="number"
@@ -261,7 +219,41 @@ const BaseTab: React.FC<Props> = (props) => {
             />
           </FormTab.TabPane>
         </FormTab>
-        <DebugResult />
+        <FormSlot>
+          <div>
+            <div
+              style={{
+                padding: '8px 0',
+                borderTop: '1px solid #EEF0F2',
+                color: 'var(--Netural-500, #AEB2B7)',
+              }}
+            >
+              响应结果
+            </div>
+            {!debugOutput ? (
+              <div
+                style={{
+                  color: 'var(--Netural-800, #5A5E62)',
+                  lineHeight: '20px',
+                  textAlign: 'center',
+                  padding: '40px 0',
+                }}
+              >
+                您可以输入一个URL，点击调
+                <br />
+                试后，可在此查看响应结果
+              </div>
+            ) : (
+              <div
+                style={{
+                  borderTop: '1px solid #EEF0F2',
+                }}
+              >
+                结果
+              </div>
+            )}
+          </div>
+        </FormSlot>
       </FormTab.TabPane>
       {debugInput && (
         <DebugModal

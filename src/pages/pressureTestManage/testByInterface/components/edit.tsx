@@ -5,7 +5,6 @@ import {
   createAsyncFormActions,
   FormEffectHooks,
   FormPath,
-  createVirtualBox,
 } from '@formily/antd';
 import {
   Input,
@@ -18,6 +17,7 @@ import {
   DatePicker,
   FormTab,
   FormMegaLayout,
+  FormSlot,
 } from '@formily/antd-components';
 import { Button, message, Spin, Icon } from 'antd';
 import NumberPicker from '../../pressureTestSceneV2/components/NumberPicker';
@@ -33,15 +33,6 @@ const EditSence: React.FC<Props> = (props) => {
   const { currentSence } = props;
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [detailLoading, setDetailLoading] = useState(false);
-
-  const HeaderBtn = createVirtualBox('headerBtn', () => {
-    return (
-      <Button type="primary" onClick={startTest} style={{ float: 'right' }}>
-        <Icon type="play-circle" theme="filled" />
-        启动压测
-      </Button>
-    );
-  });
 
   const startTest = async () => {
     const { values } = await actions.submit();
@@ -90,7 +81,16 @@ const EditSence: React.FC<Props> = (props) => {
             ]}
             required
           />
-          <HeaderBtn />
+          <FormSlot>
+            <Button
+              type="primary"
+              onClick={startTest}
+              style={{ float: 'right' }}
+            >
+              <Icon type="play-circle" theme="filled" />
+              启动压测
+            </Button>
+          </FormSlot>
         </FormMegaLayout>
         <FormTab name="tabs-1" defaultActiveKey={'tab-1'} type="card">
           <BaseTab actions={actions} />

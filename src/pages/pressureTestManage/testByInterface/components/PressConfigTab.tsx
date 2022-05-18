@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   SchemaMarkupField as Field,
-  createVirtualBox,
   FormSpy,
   IFormAsyncActions,
 } from '@formily/antd';
-import { FormTab, FormMegaLayout, FormCard } from '@formily/antd-components';
+import {
+  FormTab,
+  FormMegaLayout,
+  FormCard,
+  FormSlot,
+} from '@formily/antd-components';
 import { Button, Icon } from 'antd';
 import TipTittle from '../../pressureTestSceneV2/components/TipTittle';
 import service from '../service';
@@ -18,28 +22,6 @@ interface Props {
 
 const PressConfigTab: React.FC<Props> = (props) => {
   const { actions } = props;
-  const PreviewChart = createVirtualBox('previewChart', () => {
-    return (
-      <FormSpy>
-        {({ state, form }) => {
-          const formValues = form?.getFormState()?.values || {};
-          return (
-            <FlowPreview
-              targetTps={formValues.tps}
-              duration={formValues.duration}
-              pressConfig={{
-                rampUp: formValues.rampUp, // 递增时长
-                steps: formValues.steps, // 递增层数
-                type: formValues.type, // 压力模式 并发或TPS模式
-                threadNum: formValues.threadNum, // 最大并发
-                mode: formValues.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
-              }}
-            />
-          );
-        }}
-      </FormSpy>
-    );
-  });
   return (
     <FormTab.TabPane name="tab-2" tab="施压配置">
       <FormCard
@@ -104,6 +86,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             x-component-props={{
               placeholder: '请输入',
               min: 0,
+              max: 100,
               style: {
                 width: '100%',
               },
@@ -127,6 +110,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             x-component-props={{
               placeholder: '请输入',
               min: 0,
+              max: 100,
               style: {
                 width: '100%',
               },
@@ -175,7 +159,26 @@ const PressConfigTab: React.FC<Props> = (props) => {
           ]}
           required
         />
-        <PreviewChart />
+        <FormSlot>
+          <FormSpy>
+            {({ state, form }) => {
+              const formValues = form?.getFormState()?.values || {};
+              return (
+                <FlowPreview
+                  targetTps={formValues.tps}
+                  duration={formValues.duration}
+                  pressConfig={{
+                    rampUp: formValues.rampUp, // 递增时长
+                    steps: formValues.steps, // 递增层数
+                    type: formValues.type, // 压力模式 并发或TPS模式
+                    threadNum: formValues.threadNum, // 最大并发
+                    mode: formValues.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
+                  }}
+                />
+              );
+            }}
+          </FormSpy>
+        </FormSlot>
         <Field
           title={
             <TipTittle tips="并发模式：指定最大并发量，按照对应的施压模式进行施压；TPS模式：以目标TPS为限，系统逐步增压，摸高到目标TPS，过程中也可动态调整TPS">
@@ -313,6 +316,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
           x-component-props={{
             placeholder: '请输入',
             min: 1,
+            addonAfter: 'min',
             style: {
               width: 240,
             },
