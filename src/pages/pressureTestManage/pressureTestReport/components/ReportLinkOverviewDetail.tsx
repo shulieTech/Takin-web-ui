@@ -17,6 +17,8 @@ interface State {
 const ReportLinkOverviewDetail: React.FC<Props> = props => {
   const { id, detailData } = props;
 
+  const dataCheckingText = detailData?.calibration === 1 ? <span style={{ fontSize: 12, color: '#999' }}>校准中</span> : '';
+
   const [state, setState] = useStateReducer<State>({
     data: null,
     loading: false
@@ -59,7 +61,10 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '请求数',
-        dataIndex: 'totalRequest'
+        dataIndex: 'totalRequest',
+        render: (text, record) => {
+          return dataCheckingText || text;
+        }
       },
       {
         ...customColumnProps,
@@ -71,16 +76,18 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
           }
           return (
             <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text && text.result) < Number(text && text.value)
-                      ? '#FE7D61'
-                      : ''
-                }}
-              >
-                {text.result}
-              </span>
+              {
+                dataCheckingText || <span
+                  style={{
+                    color:
+                      Number(text && text.result) < Number(text && text.value)
+                        ? '#FE7D61'
+                        : ''
+                  }}
+                >
+                  {text.result}
+                </span>
+              }
               <span style={{ margin: '0 8px' }}>/</span>
               <span>{text.value === -1 ? '-' : text.value}</span>
             </Fragment>
@@ -99,7 +106,8 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
             <Fragment>
               <div style={{ display: 'flex', alignItems: 'center', }}>
                 <span style={{ flex: 1, }}>
-                  <span
+                  {
+                  dataCheckingText || <span
                     style={{
                       color:
                         Number(text && text.result) >
@@ -110,6 +118,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                   >
                     {text.result}ms
                   </span>
+                  }
                   <span style={{ margin: '0 8px' }}>/</span>
                   <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>
                 </span>
@@ -157,7 +166,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
           }
           return (
             <Fragment>
-              <span
+              {dataCheckingText || <span
                 style={{
                   color:
                     Number(text && text.result) < Number(text && text.value)
@@ -166,7 +175,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                 }}
               >
                 {text.result}%
-              </span>
+              </span>}
               <span style={{ margin: '0 8px' }}>/</span>
               <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
@@ -183,7 +192,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
           }
           return (
             <Fragment>
-              <span
+              {dataCheckingText || <span
                 style={{
                   color:
                     Number(text && text.result) < Number(text && text.value)
@@ -192,7 +201,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
                 }}
               >
                 {text.result}%
-              </span>
+              </span>}
               <span style={{ margin: '0 8px' }}>/</span>
               <span>{text.value === -1 ? '-' : `${text.value}%`}</span>
             </Fragment>
@@ -206,15 +215,18 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         children: [
           {
             title: '最大TPS',
-            dataIndex: 'maxTps'
+            dataIndex: 'maxTps',
+            render: text => dataCheckingText || text,
           },
           {
             title: '最大RT',
-            dataIndex: 'maxRt'
+            dataIndex: 'maxRt',
+            render: text => dataCheckingText || text,
           },
           {
             title: '最小RT',
-            dataIndex: 'minRt'
+            dataIndex: 'minRt',
+            render: text => dataCheckingText || text,
           }
         ]
       }

@@ -220,7 +220,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     },
   ];
 
-  const summaryList = [
+  let summaryList = [
     {
       label: '请求总数',
       value: detailData.totalRequest,
@@ -275,6 +275,30 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       suffix: '%',
     },
   ];
+
+  // 数据校准中不显示统计数据
+  if (detailData?.calibration === 1) {
+    const checkTxt = (
+      <span style={{ fontSize: 12, color: '#999', fontWeight: 'normal', lineHeight: '40px' }}>
+        校准中
+      </span>
+    );
+    summaryList = summaryList.map((x) => ({
+      ...x,
+      value: 0,
+      render: () =>
+        x.label === '实际/目标TPS' ? (
+          <>
+            {checkTxt}/
+            {detailData.tps || 0}
+          </>
+        ) : (
+          checkTxt
+        ),
+      precision: 0,
+      suffix: undefined,
+    }));
+  }
 
   const downloadJtlFile = async () => {
     setIsDownloading(true);
