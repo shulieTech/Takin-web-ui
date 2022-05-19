@@ -129,7 +129,7 @@ const BaseTab: React.FC<Props> = (props) => {
                 x-component-props={{
                   placeholder: '请输入',
                   min: 0,
-                  addonAfter: 'ms',
+                  addonAfter: <Button>ms</Button>,
                   style: {
                     width: 300,
                   },

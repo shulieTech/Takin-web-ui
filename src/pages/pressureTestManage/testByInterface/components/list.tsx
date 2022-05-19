@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Dropdown, Input, Icon, Spin, Menu, Modal, message } from 'antd';
+import {
+  Dropdown,
+  Input,
+  Icon,
+  Spin,
+  Menu,
+  Modal,
+  message,
+  Pagination,
+} from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import styles from '../index.less';
@@ -63,7 +72,7 @@ const SenceList: React.FC<Props> = (props) => {
           placeholder="请输入"
           onSearch={(val) =>
             getList({
-              keyword: val,
+              keyword: val?.trim(),
             })
           }
         />
@@ -76,7 +85,7 @@ const SenceList: React.FC<Props> = (props) => {
       </div>
       <div>
         <Spin spinning={loading}>
-          {total === 0 && (
+          {total === 0 && !query.keyword && (
             <div
               style={{
                 textAlign: 'center',
@@ -142,6 +151,17 @@ const SenceList: React.FC<Props> = (props) => {
               </div>
             );
           })}
+          <Pagination
+            simple
+            hideOnSinglePage
+            size="small"
+            total={total}
+            pageSize={query.pageSize}
+            current={query.current + 1}
+            onChange={(page, pageSize) => {
+              getList({ pageSize, current: page - 1 });
+            }}
+          />
         </Spin>
       </div>
     </div>
