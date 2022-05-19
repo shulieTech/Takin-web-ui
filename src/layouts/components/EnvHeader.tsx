@@ -168,6 +168,7 @@ const EnvHeader: React.FC<Props> = (props) => {
         } = await tenantCodeService.deleteEnv({ envCode: env.envCode });
         if (success) {
           message.success('操作成功');
+          // TODO 删除当前环境时如何处理
           queryTenantList();
         }
       },
@@ -302,7 +303,6 @@ const EnvHeader: React.FC<Props> = (props) => {
                                 marginRight: 8,
                                 color: 'var(--BrandPrimary-500)',
                               }}
-                              onClick={(e) => setDefaultEnv(e, x)}
                             />
                           </Tooltip>
                         )}
