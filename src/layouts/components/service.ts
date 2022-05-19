@@ -25,6 +25,22 @@ const tenantCodeService = {
     const url = '/sys/pressure/state';
     return httpGet(url, data);
   },
+  async addEnv(data = {}) {
+    const url = '/tenant/env/add';
+    return httpPost(url, data);
+  },
+  async updateEnv(data = {}) {
+    const url = '/tenant/env/update';
+    return httpPut(url, data);
+  },
+  async deleteEnv(data = {}) {
+    const url = '/tenant/env/delete';
+    return httpDelete(url, data);
+  },
+  async setDefaultEnv(data = {}) {
+    const url = '/tenant/env/setDefault';
+    return httpGet(url, data);
+  },
 };
 
 export default tenantCodeService;

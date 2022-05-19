@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Dropdown, Menu, Icon, Button } from 'antd';
+import { Dropdown, Menu, Icon, Button, message, Tooltip, Modal } from 'antd';
 import { getTakinTenantAuthority } from 'src/utils/utils';
 import _ from 'lodash';
 import AddTenantModal from 'src/modals/AddTenantModal';
 import tenantCodeService from './service';
+import EnvEditModal from '../modals/EnvEditModal';
+
 interface Props {}
 let path = '';
-const EnvHeader: React.FC<Props> = props => {
+const EnvHeader: React.FC<Props> = (props) => {
   const userType: string = localStorage.getItem('troweb-role');
   const [envList, setEnvList] = useState([]);
   const [tenantList, setTenantList] = useState([]);
   const [desc, setDesc] = useState('');
+  const [envEdit, setEnvEdit] = useState<any>();
 
   useEffect(() => {
     if (getTakinTenantAuthority() === 'true') {
@@ -20,33 +23,39 @@ const EnvHeader: React.FC<Props> = props => {
 
   const queryTenantList = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await tenantCodeService.tenant({
-      tenantCode: localStorage.getItem('tenant-code')
+      tenantCode: localStorage.getItem('tenant-code'),
     });
     if (success) {
       setTenantList(data);
       const indexs = _.findIndex(data, [
         'tenantCode',
-        localStorage.getItem('tenant-code')
+        localStorage.getItem('tenant-code'),
       ]);
       setEnvList(data[indexs]?.envs);
-      const arr = data[indexs]?.envs.filter(item => {
+      const arr = data[indexs]?.envs.filter((item) => {
         if (item.isDefault) {
           return item;
         }
       });
       if (localStorage.getItem('env-code') === null) {
         localStorage.setItem('env-code', arr[indexs]?.envCode);
-        localStorage.setItem('securityCenterDomain', arr[indexs]?.securityCenterDomain || '');
+        localStorage.setItem(
+          'securityCenterDomain',
+          arr[indexs]?.securityCenterDomain || ''
+        );
         setDesc(arr[indexs]?.desc);
       } else {
         const ind = _.findIndex(data[indexs].envs, [
           'envCode',
-          localStorage.getItem('env-code')
+          localStorage.getItem('env-code'),
         ]);
         setDesc(data[indexs].envs[ind]?.desc);
-        localStorage.setItem('securityCenterDomain', data[indexs].envs[ind]?.securityCenterDomain || '');
+        localStorage.setItem(
+          'securityCenterDomain',
+          data[indexs].envs[ind]?.securityCenterDomain || ''
+        );
       }
     }
   };
@@ -58,7 +67,7 @@ const EnvHeader: React.FC<Props> = props => {
     if (lists[0].type === 'Item') {
       path = lists[0].path;
     }
-    [lists[0]].forEach(list => {
+    [lists[0]].forEach((list) => {
       if (list.children) {
         getPath(list.children);
       }
@@ -66,22 +75,25 @@ const EnvHeader: React.FC<Props> = props => {
     return path;
   }
 
-  const changeTenant = async code => {
+  const changeTenant = async (code) => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await tenantCodeService.tenantSwitch({
-      targetTenantCode: code
+      targetTenantCode: code,
     });
     if (success) {
       localStorage.setItem('tenant-code', code);
       setEnvList(data.envs);
-      const arr = data.envs.filter(item => {
+      const arr = data.envs.filter((item) => {
         if (item.isDefault) {
           return item;
         }
       });
       localStorage.setItem('env-code', arr[0]?.envCode);
-      localStorage.setItem('securityCenterDomain', arr[0]?.securityCenterDomain || '');
+      localStorage.setItem(
+        'securityCenterDomain',
+        arr[0]?.securityCenterDomain || ''
+      );
       setDesc(arr[0]?.desc);
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
@@ -98,9 +110,9 @@ const EnvHeader: React.FC<Props> = props => {
   const changeEnv = async (env) => {
     const { envCode: code, descs, securityCenterDomain } = env;
     const {
-      data: { success, data }
+      data: { success, data },
     } = await tenantCodeService.envSwitch({
-      targetEnvCode: code
+      targetEnvCode: code,
     });
     if (success) {
       setDesc(descs);
@@ -119,14 +131,49 @@ const EnvHeader: React.FC<Props> = props => {
   };
   const index = _.findIndex(envList, [
     'envCode',
-    localStorage.getItem('env-code')
+    localStorage.getItem('env-code'),
   ]);
   const indexcode = _.findIndex(tenantList, [
     'tenantCode',
-    localStorage.getItem('tenant-code')
+    localStorage.getItem('tenant-code'),
   ]);
 
   const isSuper: string = localStorage.getItem('isSuper');
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+  const setDefaultEnv = async (event, env) => {
+    event.stopPropagation();
+    const {
+      data: { success },
+    } = await tenantCodeService.setDefaultEnv({ envCode: env.envCode });
+    if (success) {
+      message.success('操作成功');
+      queryTenantList();
+    }
+  };
+
+  const editEnv = async (event, env) => {
+    event.stopPropagation();
+    setEnvEdit(env);
+  };
+
+  const deleteEnv = (event, env) => {
+    event.stopPropagation();
+    Modal.confirm({
+      title: '提示',
+      content: '确定要删除该环境吗？',
+      onOk: async () => {
+        const {
+          data: { success },
+        } = await tenantCodeService.deleteEnv({ envCode: env.envCode });
+        if (success) {
+          message.success('操作成功');
+          queryTenantList();
+        }
+      },
+    });
+  };
+
   return (
     <div
       style={{
@@ -134,81 +181,172 @@ const EnvHeader: React.FC<Props> = props => {
         padding: '0 8px',
         marginTop: 8,
         display: getTakinTenantAuthority() === 'false' ? 'none' : 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
       }}
     >
       <span
         style={{
           marginLeft: '35%',
           color: 'var(--FunctionalAlert-900)',
-          fontSize: '20px'
+          fontSize: '20px',
         }}
       >
         {desc}
       </span>
-
-      <Button.Group>
-        <Dropdown
-          overlay={
-            <Menu>
-              {tenantList.map(x => (
-                <Menu.Item
-                  key={x.tenantId}
-                  onClick={() => changeTenant(x.tenantCode)}
-                >
-                  {x.tenantNick}
-                </Menu.Item>
-              ))}
-            </Menu>
-          }
-        >
-          <Button
-            type="primary"
-            style={{
-              display: userType === '0' ? 'inline-block' : 'none'
-            }}
-          >
-            租户：
-            {tenantList[indexcode]?.tenantNick}
-            <Icon type="down" />
+      <span>
+        {isAdmin && (
+          <Button style={{ marginRight: 8 }} onClick={() => setEnvEdit({})}>
+            新增环境
           </Button>
-        </Dropdown>
-
-        <Dropdown
-          overlay={
-            <Menu>
-              {envList?.map((x, ind) => (
-                <Menu.Item
-                  key={ind}
-                  onClick={() => changeEnv(x)}
-                >
-                  {x.envName}
-                </Menu.Item>
-              ))}
-            </Menu>
-          }
-        >
-          <Button
-            type="primary"
-            style={{
-              borderTopLeftRadius: userType === '0' ? '0px' : '4px',
-              borderBottomLeftRadius: userType === '0' ? '0px' : '4px'
-            }}
-          >
-            环境：
-            {envList[index]?.envName}
-            <Icon type="down" />
-          </Button>
-        </Dropdown>
-        {isSuper === '1' && (
-          <AddTenantModal
-            btnText="新增租户"
-            onSuccess={() => {
-              queryTenantList();
-            }}
-          />
         )}
-      </Button.Group>
+        <Button.Group>
+          <Dropdown
+            overlay={
+              <Menu>
+                {tenantList.map((x) => (
+                  <Menu.Item
+                    key={x.tenantId}
+                    onClick={() => changeTenant(x.tenantCode)}
+                  >
+                    {x.tenantNick}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          >
+            <Button
+              type="primary"
+              style={{
+                display: userType === '0' ? 'inline-block' : 'none',
+              }}
+            >
+              租户：
+              {tenantList[indexcode]?.tenantNick}
+              <Icon type="down" />
+            </Button>
+          </Dropdown>
+
+          <Dropdown
+            overlay={
+              <Menu>
+                {envList?.map((x, ind) => (
+                  <Menu.Item
+                    key={ind}
+                    onClick={() => changeEnv(x)}
+                    className="hover-group"
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        maxWidth: 300,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <div style={{ flex: 1 }} className="truncate">
+                        {x.envName}
+                      </div>
+                      <span
+                        style={{
+                          alignSelf: 'end',
+                          marginLeft: 8,
+                        }}
+                      >
+                        <span className="hover-inline-block">
+                          {/* TODO 判断是否可编辑和删除 */}
+                          {isAdmin && (
+                            <>
+                              <Tooltip title="编辑">
+                                <Icon
+                                  type="edit"
+                                  style={{
+                                    fontSize: 12,
+                                    marginRight: 8,
+                                    cursor: 'pointer',
+                                  }}
+                                  onClick={(e) => editEnv(e, x)}
+                                />
+                              </Tooltip>
+                              <Tooltip title="删除">
+                                <Icon
+                                  type="delete"
+                                  style={{
+                                    fontSize: 12,
+                                    marginRight: 8,
+                                    cursor: 'pointer',
+                                  }}
+                                  onClick={(e) => deleteEnv(e, x)}
+                                />
+                              </Tooltip>
+                            </>
+                          )}
+                          {!x.isDefault && (
+                            <Tooltip title="设为默认">
+                              <Icon
+                                type="check-circle"
+                                style={{
+                                  fontSize: 12,
+                                  marginRight: 8,
+                                  cursor: 'pointer',
+                                }}
+                                onClick={(e) => setDefaultEnv(e, x)}
+                              />
+                            </Tooltip>
+                          )}
+                        </span>
+                        {x.isDefault && (
+                          <Tooltip title="当前默认环境">
+                            <Icon
+                              type="check-circle"
+                              style={{
+                                fontSize: 12,
+                                marginRight: 8,
+                                color: 'var(--BrandPrimary-500)',
+                              }}
+                              onClick={(e) => setDefaultEnv(e, x)}
+                            />
+                          </Tooltip>
+                        )}
+                      </span>
+                    </div>
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          >
+            <Button
+              type="primary"
+              style={{
+                borderTopLeftRadius: userType === '0' ? '0px' : '4px',
+                borderBottomLeftRadius: userType === '0' ? '0px' : '4px',
+              }}
+            >
+              环境：
+              {envList[index]?.envName}
+              <Icon type="down" />
+            </Button>
+          </Dropdown>
+          {isSuper === '1' && (
+            <AddTenantModal
+              btnText="新增租户"
+              onSuccess={() => {
+                queryTenantList();
+              }}
+            />
+          )}
+        </Button.Group>
+      </span>
+      {envEdit && (
+        <EnvEditModal
+          detail={envEdit}
+          okCallback={() => {
+            setEnvEdit(null);
+            queryTenantList();
+          }}
+          cancelCallback={() => {
+            setEnvEdit(null);
+          }}
+        />
+      )}
     </div>
   );
 };
