@@ -19,7 +19,7 @@ import {
   FormMegaLayout,
   FormSlot,
 } from '@formily/antd-components';
-import { Button, message, Spin, Icon } from 'antd';
+import { Button, message, Spin, Icon, Modal } from 'antd';
 import NumberPicker from '../../pressureTestSceneV2/components/NumberPicker';
 import service from '../service';
 import BaseTab from './BaseTab';
@@ -36,7 +36,16 @@ const EditSence: React.FC<Props> = (props) => {
 
   const startTest = async () => {
     const { values } = await actions.submit();
-    service.startSence(values);
+    if (values) {
+      Modal.confirm({
+        title: '提示',
+        content: '您的场景有内容修改，是否保存并启动压测？',
+        onOk: async () => {
+          // TODO
+          service.startSence(values);
+        },
+      });
+    }
   };
 
   return (
@@ -60,7 +69,7 @@ const EditSence: React.FC<Props> = (props) => {
           RadioGroup: Radio.Group,
         }}
       >
-        <FormMegaLayout inline>
+        <FormMegaLayout inline flex>
           <Field
             name="name"
             type="string"
@@ -82,14 +91,15 @@ const EditSence: React.FC<Props> = (props) => {
             required
           />
           <FormSlot>
-            <Button
-              type="primary"
-              onClick={startTest}
-              style={{ float: 'right' }}
-            >
-              <Icon type="play-circle" theme="filled" />
-              启动压测
-            </Button>
+            <div style={{ float: 'right' }}>
+              <Button type="link" style={{ marginRight: 16 }}>
+                保存配置
+              </Button>
+              <Button type="primary" onClick={startTest}>
+                <Icon type="play-circle" theme="filled" />
+                启动压测
+              </Button>
+            </div>
           </FormSlot>
         </FormMegaLayout>
         <FormTab name="tabs-1" defaultActiveKey={'tab-1'} type="card">

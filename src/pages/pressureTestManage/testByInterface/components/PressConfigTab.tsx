@@ -148,7 +148,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             style: {
               width: 240,
             },
-            addonAfter: 'min',
+            addonAfter: <Button>min</Button>,
           }}
           x-rules={[
             {
@@ -316,7 +316,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
           x-component-props={{
             placeholder: '请输入',
             min: 1,
-            addonAfter: 'min',
+            addonAfter: <Button>min</Button>,
             style: {
               width: 240,
             },
@@ -346,7 +346,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             style: {
               width: 240,
             },
-            addonAfter: 'min',
+            addonAfter: <Button>min</Button>,
           }}
           x-rules={[
             {
