@@ -180,14 +180,14 @@ const PressConfigTab: React.FC<Props> = (props) => {
           </FormSpy>
         </FormSlot>
         <Field
-          title={
-            <TipTittle tips="并发模式：指定最大并发量，按照对应的施压模式进行施压；TPS模式：以目标TPS为限，系统逐步增压，摸高到目标TPS，过程中也可动态调整TPS">
-              压力模式
-            </TipTittle>
-          }
+          // title={
+          //   <TipTittle tips="并发模式：指定最大并发量，按照对应的施压模式进行施压；TPS模式：以目标TPS为限，系统逐步增压，摸高到目标TPS，过程中也可动态调整TPS">
+          //     压力模式
+          //   </TipTittle>
+          // }
           name="type"
           type="number"
-          x-component="RadioGroup"
+          x-component="RadioCard"
           x-rules={[
             {
               required: true,
@@ -196,10 +196,94 @@ const PressConfigTab: React.FC<Props> = (props) => {
           ]}
           required
           enum={[
-            { label: '并发模式', value: 0 },
-            { label: 'TPS模式', value: 1 },
+            {
+              label: '并发模式',
+              value: 0,
+              description: (
+                <span>
+                  业务流程是压测配置的业务流程是
+                  <br />
+                  压测配置的
+                </span>
+              ),
+            },
+            // { label: 'TPS模式', value: 1 },
           ]}
           default={0}
+          x-component-props={{
+            style: {
+              marginTop: 24,
+            },
+            renderOption: (item, isChecked) => {
+              return (
+                <div
+                  style={{
+                    display: 'flex',
+                    position: 'relative',
+                    alignItems: 'start',
+                    padding: 16,
+                    border: '1px solid var(--Netural-300, #DBDFE3)',
+                    borderRadius: 4,
+                  }}
+                >
+                  {isChecked && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        width: 20,
+                        height: 20,
+                        lineHeight: '20px',
+                        textAlign: 'center',
+                        color: '#fff',
+                        backgroundColor: '#11BBD5',
+                        fontSize: 12,
+                        borderRadius: '0 4px 0 8px',
+                      }}
+                    >
+                      <Icon type="check" />
+                    </span>
+                  )}
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginRight: 8,
+                      lineHeight: '40px',
+                      textAlign: 'center',
+                      border: '1px solid #11BBD5',
+                      borderRadius: 4,
+                      background: '#F4FDFE',
+                      color: '#11BBD5',
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        color: 'var(--Netural-990, #25282A)',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        marginBottom: 8,
+                      }}
+                    >
+                      {item.label}
+                    </div>
+                    <div
+                      style={{
+                        color: 'var(--Netural-600, #90959A)',
+                        fontSize: 13,
+                      }}
+                    >
+                      {item.description}
+                    </div>
+                  </div>
+                </div>
+              );
+            },
+          }}
           x-linkages={[
             {
               type: 'value:schema',

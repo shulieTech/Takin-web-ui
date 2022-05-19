@@ -24,6 +24,7 @@ import NumberPicker from '../../pressureTestSceneV2/components/NumberPicker';
 import service from '../service';
 import BaseTab from './BaseTab';
 import PressConfigTab from './PressConfigTab';
+import RadioCard from './RadioCard';
 
 interface Props {
   currentSence: any;
@@ -65,6 +66,7 @@ const EditSence: React.FC<Props> = (props) => {
           Radio,
           Switch,
           DatePicker,
+          RadioCard,
           TextArea: Input.TextArea,
           RadioGroup: Radio.Group,
         }}
