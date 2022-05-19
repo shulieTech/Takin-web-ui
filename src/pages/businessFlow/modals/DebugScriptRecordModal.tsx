@@ -163,7 +163,7 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
         centered: true
       }}
       btnProps={{
-        type: 'link'
+        type: 'default',
       }}
       btnText={props.btnText}
       onClick={() => handleClick()}

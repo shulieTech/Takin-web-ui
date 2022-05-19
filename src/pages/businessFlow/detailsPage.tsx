@@ -336,14 +336,29 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         <div className={styles.borders}>
           <CustomDetailHeader
             title={
-              detailData.businessProcessName &&
-              detailData.businessProcessName.length > 30 ? (
-                <Tooltip title={detailData.businessProcessName}>
-                  {detailData.businessProcessName.substring(0, 30)}...
-                </Tooltip>
-              ) : (
-                detailData.businessProcessName
-              )
+              <>
+                {detailData.businessProcessName &&
+                detailData.businessProcessName.length > 30 ? (
+                  <Tooltip title={detailData.businessProcessName}>
+                    {detailData.businessProcessName.substring(0, 30)}...
+                  </Tooltip>
+                ) : (
+                  detailData.businessProcessName
+                )}
+                <BusicInfoModal
+                  id={id}
+                  btnText="编辑"
+                  dictionaryMap={dictionaryMap}
+                  sceneName={detailData.businessProcessName}
+                  isCore={detailData.isCore}
+                  sceneLevel={detailData.sceneLevel}
+                  onSuccess={() => {
+                    setState({
+                      isReload: !state.isReload
+                    });
+                  }}
+                />
+              </>
             }
             description={
               <p>
@@ -379,6 +394,13 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             }
             extra={
               <div style={{ float: 'right' }}>
+                <span style={{ marginRight: 8 }}>
+                  <DebugScriptRecordModal
+                    btnText="调试历史"
+                    id={id}
+                    scriptDeployId={detailData.scriptDeployId}
+                  />
+                </span>
                 <span style={{ marginRight: 8 }}>
                   <DebugScriptModal
                     btnText="调试"
@@ -419,13 +441,13 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                     }}
                   />
                 </span>
-                <Dropdown
+                {/* <Dropdown
                   trigger={['click']}
                   overlay={menu}
                   placement="bottomLeft"
                 >
                   <Icon type="more" />
-                </Dropdown>
+                </Dropdown> */}
               </div>}
           />
         </div>
