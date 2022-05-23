@@ -209,7 +209,16 @@ const EnvHeader: React.FC<Props> = (props) => {
                     key={x.tenantId}
                     onClick={() => changeTenant(x.tenantCode)}
                   >
-                    {x.tenantNick}
+                    <span
+                      style={{
+                        fontWeight:
+                          tenantList[indexcode]?.tenantCode === x.tenantCode
+                            ? 'bold'
+                            : 'normal',
+                      }}
+                    >
+                      {x.tenantNick}
+                    </span>
                   </Menu.Item>
                 ))}
               </Menu>
@@ -243,7 +252,16 @@ const EnvHeader: React.FC<Props> = (props) => {
                         overflow: 'hidden',
                       }}
                     >
-                      <div style={{ flex: 1 }} className="truncate">
+                      <div
+                        style={{
+                          flex: 1,
+                          fontWeight:
+                            envList[index]?.envCode === x.envCode
+                              ? 'bold'
+                              : 'normal',
+                        }}
+                        className="truncate"
+                      >
                         {x.envName}
                       </div>
                       <span
@@ -283,7 +301,7 @@ const EnvHeader: React.FC<Props> = (props) => {
                           {!x.isDefault && (
                             <Tooltip title="设为默认">
                               <Icon
-                                type="check-circle"
+                                type="star"
                                 style={{
                                   fontSize: 12,
                                   marginRight: 8,
@@ -297,7 +315,7 @@ const EnvHeader: React.FC<Props> = (props) => {
                         {x.isDefault && (
                           <Tooltip title="当前默认环境">
                             <Icon
-                              type="check-circle"
+                              type="star"
                               style={{
                                 fontSize: 12,
                                 marginRight: 8,
