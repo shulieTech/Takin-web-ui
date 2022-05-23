@@ -6,6 +6,7 @@ import TipTittle from '../../pressureTestSceneV2/components/TipTittle';
 import DebugModal from '../modals/Debug';
 import service from '../service';
 import { debounce } from 'lodash';
+import styles from '../index.less';
 
 interface Props {
   actions: IFormAsyncActions;
@@ -37,75 +38,86 @@ const BaseTab: React.FC<Props> = (props) => {
   }, 500);
 
   const startDebug = async () => {
-    const { values } = await actions.submit();
-    setDebugInput(values);
+    const res = await actions.validate('.url');
+    if (res?.errors.length === 0) {
+      const { values } = await actions.getFormState();
+      setDebugInput(values);
+    }
   };
 
   return (
     <>
       <FormTab.TabPane name="tab-1" tab="场景">
+        <FormMegaLayout inline gutter={0}>
+          <Field
+            name="method"
+            type="string"
+            x-component="Select"
+            x-component-props={{
+              placeholder: '请选择',
+              className: styles['custom-select'],
+              style: {
+                width: 140,
+              },
+            }}
+            // title="请求类型"
+            enum={[
+              { label: 'GET', value: 'GET' },
+              { label: 'POST', value: 'POST' },
+              { label: 'PUT', value: 'PUT' },
+              { label: 'DELETE', value: 'DELETE' },
+              { label: 'PATCH', value: 'PATCH' },
+            ]}
+            default="GET"
+            x-rules={[
+              {
+                required: true,
+                message: '请选择请求类型',
+              },
+            ]}
+            required
+            x-linkages={[
+              {
+                type: 'value:visible',
+                target: '.tabs-1.tab-1.tabs-1-1.tab-1-3',
+                condition: '{{ $self.value !== "GET" }}',
+              },
+            ]}
+          />
+          <Field
+            name="url"
+            type="string"
+            x-component="Input"
+            x-component-props={{
+              placeholder: '请输入URL',
+              maxLength: 100,
+              style: {
+                width: `calc(100vw - 740px)`,
+                marginRight: 40,
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderLeft: 'none',
+              },
+            }}
+            // title="压测URL"
+            x-rules={[
+              {
+                required: true,
+                whitespace: true,
+                format: 'url',
+                message: '请输入正确的压测URL',
+              },
+            ]}
+            required
+          />
+          <FormSlot>
+            <Button type="primary" ghost onClick={startDebug}>
+              调试
+            </Button>
+          </FormSlot>
+        </FormMegaLayout>
         <FormTab name="tabs-1-1" defaultActiveKey={'tab-1-1'}>
           <FormTab.TabPane name="tab-1-1" tab="基本信息">
-            <FormMegaLayout inline>
-              <Field
-                name="method"
-                type="string"
-                x-component="Select"
-                x-component-props={{
-                  placeholder: '请选择',
-                  style: {
-                    width: 140,
-                  },
-                }}
-                // title="请求类型"
-                enum={[
-                  { label: 'GET', value: 'GET' },
-                  { label: 'POST', value: 'POST' },
-                  { label: 'PUT', value: 'PUT' },
-                  { label: 'DELETE', value: 'DELETE' },
-                  { label: 'PATCH', value: 'PATCH' },
-                ]}
-                default="GET"
-                x-rules={[
-                  {
-                    required: true,
-                    message: '请选择请求类型',
-                  },
-                ]}
-                required
-                x-linkages={[
-                  {
-                    type: 'value:visible',
-                    target: '.tabs-1.tab-1-3',
-                    condition: '{{ $self.value !== "GET" }}',
-                  },
-                ]}
-              />
-              <Field
-                name="url"
-                type="string"
-                x-component="Input"
-                x-component-props={{
-                  placeholder: '请输入URL',
-                  maxLength: 100,
-                  rows: 10,
-                }}
-                // title="压测URL"
-                x-rules={[
-                  {
-                    required: true,
-                    whitespace: true,
-                    message: '请输入压测URL',
-                  },
-                ]}
-                required
-              />
-              <FormSlot>
-                <Button type="primary" ghost onClick={startDebug}>
-                  调试
-                </Button>
-              </FormSlot>
-            </FormMegaLayout>
             <Field
               name="entrance"
               type="string"
