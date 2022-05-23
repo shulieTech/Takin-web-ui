@@ -337,6 +337,7 @@ const EnvHeader: React.FC<Props> = (props) => {
       </span>
       {envEdit && (
         <EnvEditModal
+          envList={envList}
           detail={envEdit}
           okCallback={() => {
             setEnvEdit(null);

@@ -8,14 +8,23 @@ import {
 import { Input } from '@formily/antd-components';
 import service from '../components/service';
 
+type IEnv = {
+  envName?: string;
+  envCode?: string;
+  isDefault?: boolean;
+  desc?: string;
+  securityCenterDomain?: string;
+};
+
 interface Props {
-  detail: any;
+  envList: IEnv[];
+  detail: IEnv;
   okCallback: (data: any) => void;
   cancelCallback: () => void;
 }
 
 const EnvEditModal: React.FC<Props> = (props) => {
-  const { detail = {}, okCallback, cancelCallback } = props;
+  const { envList = [], detail = {}, okCallback, cancelCallback } = props;
   const actions = useMemo(() => createAsyncFormActions(), []);
   const isEdit = !!detail?.envCode;
 
@@ -63,6 +72,27 @@ const EnvEditModal: React.FC<Props> = (props) => {
               whitespace: true,
               message: '请输入环境名称',
             },
+            {
+              validator: (val) => {
+                if (isEdit) {
+                  // 编辑时，不能和其他环境重名
+                  if (
+                    envList
+                      .filter((x) => x.envCode !== detail.envCode)
+                      .some((x) => x.envName === val)
+                  ) {
+                    return '环境名称已存在';
+                  }
+                  return true;
+                } 
+                // 新增时，不能和所有环境重名
+                if (envList.some((x) => x.envName === val)) {
+                  return '环境名称已存在';
+                }
+                return true;
+                
+              },
+            },
           ]}
           required
         />
@@ -83,12 +113,32 @@ const EnvEditModal: React.FC<Props> = (props) => {
             {
               pattern: /^[a-zA-Z]+$/i,
               message: '只能输入英文字母',
-            }
+            },
+            {
+              validator: (val) => {
+                if (isEdit) {
+                  // 编辑时，不能和其他环境重名
+                  if (
+                    envList
+                      .filter((x) => x.envCode !== detail.envCode)
+                      .some((x) => x.envCode === val)
+                  ) {
+                    return '环境code已存在';
+                  }
+                  return true;
+                } 
+                // 新增时，不能和所有环境重名
+                if (envList.some((x) => x.envCode === val)) {
+                  return '环境code已存在';
+                }
+                return true;
+                
+              },
+            },
           ]}
           required
         />
       </SchemaForm>
-
     </Modal>
   );
 };
