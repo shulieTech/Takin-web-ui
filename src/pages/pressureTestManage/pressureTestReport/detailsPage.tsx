@@ -72,6 +72,16 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     queryRequestCount(id);
   }, [state.isReload]);
 
+  useEffect(() => {
+    // 数据校准中时5s刷新一次
+    if (detailData?.calibration === 1) {
+      const ticker = setInterval(() => {
+        queryReportDetail(id);
+      }, 5000);
+      return () => clearInterval(ticker);
+    }
+  }, [detailData?.calibration]);
+
   const tenantList = async (s) => {
     const {
       data: { data, success },
