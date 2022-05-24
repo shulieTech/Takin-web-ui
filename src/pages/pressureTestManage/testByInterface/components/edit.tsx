@@ -36,7 +36,20 @@ const EditSence: React.FC<Props> = (props) => {
   const { currentSence } = props;
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [detail, setDetail] = useState(currentSence);
   const [saving, setSaving] = useState(false);
+
+  const getDetail = async () => {
+    setDetailLoading(true);
+    const {
+      data: { success, data },
+    } = await service.getSence({ id: currentSence.id }).finally(() => {
+      setDetailLoading(false);
+    });
+    if (success) {
+      setDetail(data);
+    }
+  };
 
   const startTest = async () => {
     const { values } = await actions.submit();
@@ -48,7 +61,7 @@ const EditSence: React.FC<Props> = (props) => {
           const {
             data: { success, data },
           } = await service.saveAndStartSence({
-            ...currentSence,
+            ...detail,
             ...values,
           });
           if (success) {
@@ -66,8 +79,8 @@ const EditSence: React.FC<Props> = (props) => {
       setSaving(true);
       const {
         data: { success, data },
-      } = await service[currentSence?.id ? 'addSence' : 'updateSence']({
-        ...currentSence,
+      } = await service[detail?.id ? 'addSence' : 'updateSence']({
+        ...detail,
         ...values,
       }).finally(() => {
         setSaving(false);
@@ -79,11 +92,17 @@ const EditSence: React.FC<Props> = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (currentSence.id) {
+      getDetail();
+    }
+  }, [currentSence.id]);
+
   return (
     <Spin spinning={detailLoading}>
       <SchemaForm
         actions={actions}
-        initialValues={currentSence}
+        initialValues={detail}
         validateFirst
         components={{
           Input,

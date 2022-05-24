@@ -72,7 +72,7 @@ const SenceList: React.FC<Props> = (props) => {
           placeholder="请输入"
           onSearch={(val) =>
             getList({
-              queryName: val?.trim(),
+              keyword: val?.trim(),
             })
           }
         />
@@ -85,7 +85,7 @@ const SenceList: React.FC<Props> = (props) => {
       </div>
       <div>
         <Spin spinning={loading}>
-          {total === 0 && !query.queryName && (
+          {total === 0 && !query.keyword && (
             <div
               style={{
                 textAlign: 'center',

@@ -41,7 +41,7 @@ const DebugModal: React.FC<Props> = (props) => {
       okText="开始调试"
       width={640}
     >
-      <div
+      {/* <div
         style={{
           padding: 12,
           backgroundColor: 'var(--BrandPrimary-50, #F5FFFE)',
@@ -61,7 +61,7 @@ const DebugModal: React.FC<Props> = (props) => {
           }}
         />
         调试阶段建议选择小并发数，确保并发数在系统可承受范围内
-      </div>
+      </div> */}
       <SchemaForm
         actions={actions}
         components={{
@@ -84,11 +84,11 @@ const DebugModal: React.FC<Props> = (props) => {
               message: '请选择请求条数',
             },
           ]}
-          enum={[1, 10, 100, 1000, 10000]}
+          enum={[1, 10, 100, 1000]}
           required
           default={1}
         />
-        <Field
+        {/* <Field
           title="并发数"
           name="concurrencyNum"
           x-component="Select"
@@ -107,7 +107,7 @@ const DebugModal: React.FC<Props> = (props) => {
           enum={[1, 5, 10, 20, 50, 100]}
           required
           default={1}
-        />
+        /> */}
       </SchemaForm>
     </Modal>
   );

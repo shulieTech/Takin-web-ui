@@ -39,7 +39,7 @@ const BaseTab: React.FC<Props> = (props) => {
   }, 500);
 
   const startDebug = async () => {
-    const res = await actions.validate('.url');
+    const res = await actions.validate('.requestUrl');
     if (res?.errors.length === 0) {
       const { values } = await actions.getFormState();
       setDebugInput(values);
@@ -299,7 +299,9 @@ const BaseTab: React.FC<Props> = (props) => {
         <DebugModal
           details={debugInput}
           okCallback={setDebugOutput}
-          cancelCallback={() => setDebugInput(null)}
+          cancelCallback={() => {
+            setDebugInput(null);
+          }}
         />
       )}
     </>

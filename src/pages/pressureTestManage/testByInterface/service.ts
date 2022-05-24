@@ -12,7 +12,7 @@ export default {
    * @name 单个场景详情
    */
   async getSence(data = {}) {
-    const url = `/interfaceperformance/config/detail/${data.configId}`;
+    const url = `/interfaceperformance/config/detail/${data.id}`;
     return httpGet(url);
   },
   /**
