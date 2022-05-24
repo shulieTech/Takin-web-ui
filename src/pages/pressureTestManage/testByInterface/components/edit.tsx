@@ -184,7 +184,7 @@ const EditSence: React.FC<Props> = (props) => {
             <PressConfigTab actions={actions} />
           </FormTab>
           <FormSlot>
-            <Sider />
+            <Sider detail={detail}/>
           </FormSlot>
         </LayoutBox>
       </SchemaForm>
