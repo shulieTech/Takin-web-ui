@@ -25,6 +25,8 @@ import service from '../service';
 import BaseTab from './BaseTab';
 import PressConfigTab from './PressConfigTab';
 import RadioCard from './RadioCard';
+import LayoutBox from './LayoutBox';
+import Sider from './Sider';
 
 interface Props {
   currentSence: any;
@@ -34,6 +36,7 @@ const EditSence: React.FC<Props> = (props) => {
   const { currentSence } = props;
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const startTest = async () => {
     const { values } = await actions.submit();
@@ -42,17 +45,43 @@ const EditSence: React.FC<Props> = (props) => {
         title: '提示',
         content: '您的场景有内容修改，是否保存并启动压测？',
         onOk: async () => {
-          // TODO
-          service.startSence(values);
+          const {
+            data: { success, data },
+          } = await service.saveAndStartSence({
+            ...currentSence,
+            ...values,
+          });
+          if (success) {
+            message.success('操作成功');
+            // TODO 刷新并启动压测检测弹窗
+          }
         },
       });
+    }
+  };
+
+  const saveSence = async () => {
+    const { values } = await actions.submit();
+    if (values) {
+      setSaving(true);
+      const {
+        data: { success, data },
+      } = await service[currentSence?.id ? 'addSence' : 'updateSence']({
+        ...currentSence,
+        ...values,
+      }).finally(() => {
+        setSaving(false);
+      });
+      if (success) {
+        message.success('操作成功');
+        // TODO 刷新
+      }
     }
   };
 
   return (
     <Spin spinning={detailLoading}>
       <SchemaForm
-        style={{ padding: 16 }}
         actions={actions}
         initialValues={currentSence}
         validateFirst
@@ -71,43 +100,74 @@ const EditSence: React.FC<Props> = (props) => {
           RadioGroup: Radio.Group,
         }}
       >
-        <FormMegaLayout inline flex>
-          <Field
-            name="name"
-            type="string"
-            x-component="Input"
-            x-component-props={{
-              placeholder: '请输入压测场景名称',
-              maxLength: 30,
-              style: {
-                width: 320,
-              },
-            }}
-            x-rules={[
-              {
-                required: true,
-                whitespace: true,
-                message: '请输入压测场景名称',
-              },
-            ]}
-            required
-          />
+        <LayoutBox
+          x-component-props={{
+            style: {
+              padding: 16,
+              paddingBottom: 0,
+              borderBottom: '1px solid #EEF0F2',
+            },
+          }}
+        >
+          <FormMegaLayout inline flex>
+            <Field
+              name="name"
+              type="string"
+              x-component="Input"
+              x-component-props={{
+                placeholder: '请输入压测场景名称',
+                maxLength: 30,
+                style: {
+                  width: 320,
+                },
+              }}
+              x-rules={[
+                {
+                  required: true,
+                  whitespace: true,
+                  message: '请输入压测场景名称',
+                },
+              ]}
+              required
+            />
+            <FormSlot>
+              <div style={{ float: 'right' }}>
+                <Button
+                  style={{ marginRight: 16 }}
+                  onClick={saveSence}
+                  loading-={saving}
+                >
+                  保存场景
+                </Button>
+                <Button type="primary" onClick={startTest} disabled={saving}>
+                  <Icon type="play-circle" theme="filled" />
+                  启动压测
+                </Button>
+              </div>
+            </FormSlot>
+          </FormMegaLayout>
+        </LayoutBox>
+        <LayoutBox
+          x-component-props={{
+            style: {
+              display: 'flex',
+              // borderTop: '1px solid #EEF0F2',
+            },
+          }}
+        >
+          <FormTab
+            name="tabs-1"
+            defaultActiveKey={'tab-1'}
+            type="card"
+            style={{ flex: 1, padding: 16 }}
+          >
+            <BaseTab actions={actions} />
+            <PressConfigTab actions={actions} />
+          </FormTab>
           <FormSlot>
-            <div style={{ float: 'right' }}>
-              <Button type="link" style={{ marginRight: 16 }}>
-                保存配置
-              </Button>
-              <Button type="primary" onClick={startTest}>
-                <Icon type="play-circle" theme="filled" />
-                启动压测
-              </Button>
-            </div>
+            <Sider />
           </FormSlot>
-        </FormMegaLayout>
-        <FormTab name="tabs-1" defaultActiveKey={'tab-1'} type="card">
-          <BaseTab actions={actions} />
-          <PressConfigTab actions={actions} />
-        </FormTab>
+        </LayoutBox>
       </SchemaForm>
     </Spin>
   );

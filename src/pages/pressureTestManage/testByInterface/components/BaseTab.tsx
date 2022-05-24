@@ -7,6 +7,7 @@ import DebugModal from '../modals/Debug';
 import service from '../service';
 import { debounce } from 'lodash';
 import styles from '../index.less';
+import LayoutBox from './LayoutBox';
 
 interface Props {
   actions: IFormAsyncActions;
@@ -18,7 +19,7 @@ const BaseTab: React.FC<Props> = (props) => {
   const [debugOutput, setDebugOutput] = useState();
 
   const searchEntrance = debounce(async (val) => {
-    actions.setFieldState('.entrance', (state) => {
+    actions.setFieldState('.entranceAppName', (state) => {
       state.loading = true;
     });
     try {
@@ -26,12 +27,12 @@ const BaseTab: React.FC<Props> = (props) => {
         data: { success, data },
       } = await service.searchEntrance(val);
       if (success) {
-        actions.setFieldState('.entrance', (state) => {
+        actions.setFieldState('.entranceAppName', (state) => {
           state.props.enum = data;
         });
       }
     } finally {
-      actions.setFieldState('.entrance', (state) => {
+      actions.setFieldState('.entranceAppName', (state) => {
         state.loading = false;
       });
     }
@@ -48,90 +49,117 @@ const BaseTab: React.FC<Props> = (props) => {
   return (
     <>
       <FormTab.TabPane name="tab-1" tab="场景">
-        <FormMegaLayout inline gutter={0}>
-          <Field
-            name="method"
-            type="string"
-            x-component="Select"
-            x-component-props={{
-              placeholder: '请选择',
-              className: styles['custom-select'],
-              style: {
-                width: 140,
-              },
-            }}
-            // title="请求类型"
-            enum={[
-              { label: 'GET', value: 'GET' },
-              { label: 'POST', value: 'POST' },
-              { label: 'PUT', value: 'PUT' },
-              { label: 'DELETE', value: 'DELETE' },
-              { label: 'PATCH', value: 'PATCH' },
-            ]}
-            default="GET"
-            x-rules={[
-              {
-                required: true,
-                message: '请选择请求类型',
-              },
-            ]}
-            required
-            x-linkages={[
-              {
-                type: 'value:visible',
-                target: '.tabs-1.tab-1.tabs-1-1.tab-1-3',
-                condition: '{{ $self.value !== "GET" }}',
-              },
-            ]}
-          />
-          <Field
-            name="url"
-            type="string"
-            x-component="Input"
-            x-component-props={{
-              placeholder: '请输入URL',
-              maxLength: 100,
-              style: {
-                width: `calc(100vw - 740px)`,
-                marginRight: 40,
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-                borderLeft: 'none',
-              },
-            }}
-            // title="压测URL"
-            x-rules={[
-              {
-                required: true,
-                whitespace: true,
-                format: 'url',
-                message: '请输入正确的压测URL',
-              },
-            ]}
-            required
-          />
+        <LayoutBox
+          x-component-props={{ style: { display: 'flex', alignItems: 'top' } }}
+        >
+          <LayoutBox>
+            <Field
+              name="httpMethod"
+              type="string"
+              x-component="Select"
+              x-component-props={{
+                placeholder: '请选择',
+                className: styles['custom-select'],
+                style: {
+                  width: 140,
+                  verticalAlign: -1,
+                },
+              }}
+              // title="请求类型"
+              enum={[
+                { label: 'GET', value: 'GET' },
+                { label: 'POST', value: 'POST' },
+                { label: 'PUT', value: 'PUT' },
+                { label: 'DELETE', value: 'DELETE' },
+                { label: 'PATCH', value: 'PATCH' },
+              ]}
+              default="GET"
+              x-rules={[
+                {
+                  required: true,
+                  message: '请选择请求类型',
+                },
+              ]}
+              required
+              // x-linkages={[
+              //   {
+              //     type: 'value:visible',
+              //     target: '.tabs-1.tab-1.tabs-1-1.tab-1-3',
+              //     condition: '{{ $self.value !== "GET" }}',
+              //   },
+              // ]}
+            />
+          </LayoutBox>
+          <LayoutBox
+            x-component-props={{ style: { flex: 1, marginRight: 40 } }}
+          >
+            <Field
+              name="requestUrl"
+              type="string"
+              x-component="Input"
+              x-component-props={{
+                placeholder: '请输入URL',
+                maxLength: 200,
+                style: {
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  borderLeft: 'none',
+                },
+              }}
+              // title="压测URL"
+              x-rules={[
+                {
+                  required: true,
+                  whitespace: true,
+                  format: 'url',
+                  message: '请输入正确的压测URL',
+                },
+              ]}
+              required
+            />
+          </LayoutBox>
           <FormSlot>
-            <Button type="primary" ghost onClick={startDebug}>
-              调试
-            </Button>
+            <div style={{ lineHeight: '40px' }}>
+              <Button
+                type="primary"
+                style={{ marginRight: 16 }}
+                ghost
+                onClick={startDebug}
+              >
+                调试
+              </Button>
+            </div>
           </FormSlot>
-        </FormMegaLayout>
+        </LayoutBox>
         <FormTab name="tabs-1-1" defaultActiveKey={'tab-1-1'}>
           <FormTab.TabPane name="tab-1-1" tab="基本信息">
             <Field
-              name="entrance"
+              name="entranceAppName"
               type="string"
               x-component="Select"
               x-component-props={{
                 style: {
-                  width: 300,
+                  width: 480,
                 },
                 placeholder: '请选择',
                 allowClear: true,
                 showSearch: true,
                 onSearch: searchEntrance,
               }}
-              title={<TipTittle tips="1111">关联应用入口</TipTittle>}
+              title={
+                <TipTittle
+                  tips={
+                    <div>
+                      {' '}
+                      1.
+                      关联应用入口后，可自动填充采集到header头、请求入参数据。
+                      2. 压测过程中可追踪该入口链路的应用容量水位
+                    </div>
+                  }
+                >
+                  关联应用入口
+                </TipTittle>
+              }
             />
             <FormMegaLayout labelAlign="top" inline autoRow>
               <Field
@@ -151,7 +179,7 @@ const BaseTab: React.FC<Props> = (props) => {
                     超时时间
                   </TipTittle>
                 }
-                default={0}
+                default={5000}
                 x-rules={[
                   {
                     required: true,
@@ -162,7 +190,7 @@ const BaseTab: React.FC<Props> = (props) => {
                 required
               />
               <Field
-                name="enable302"
+                name="isRedirect"
                 type="boolean"
                 x-component="Switch"
                 title={
