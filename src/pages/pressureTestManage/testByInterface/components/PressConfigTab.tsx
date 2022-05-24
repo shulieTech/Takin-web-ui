@@ -55,6 +55,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
               },
             ]}
             required
+            default={0}
           />
           <Field
             name="RT"
@@ -78,6 +79,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
               },
             ]}
             required
+            default={0}
           />
           <Field
             name="successRate"
@@ -102,6 +104,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
               },
             ]}
             required
+            default={100}
           />
           <Field
             name="sa"
@@ -126,6 +129,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
               },
             ]}
             required
+            default={100}
           />
         </FormMegaLayout>
       </FormCard>
@@ -148,7 +152,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             style: {
               width: 240,
             },
-            addonAfter: <Button>min</Button>,
+            addonAfter: <Button>分</Button>,
           }}
           x-rules={[
             {
@@ -157,7 +161,17 @@ const PressConfigTab: React.FC<Props> = (props) => {
             },
             { format: 'integer', message: '请输入整数' },
           ]}
+          x-linkages={[
+            {
+              type: 'value:schema',
+              target: '.rampUp',
+              schema: {
+                'x-component-props.max': '{{ $self.value }}'
+              }
+            }
+          ]}
           required
+          default={1}
         />
         <FormSlot>
           <FormSpy>
@@ -344,6 +358,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             },
           ]}
           required
+          default={1}
         />
         <Field
           title={
@@ -413,6 +428,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             { format: 'integer', message: '请输入整数' },
           ]}
           required
+          default={5}
         />
         <Field
           title={
@@ -440,6 +456,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
             { format: 'integer', message: '请输入整数' },
           ]}
           required
+          default={1}
         />
         <Field
           name="podNum"
