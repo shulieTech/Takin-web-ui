@@ -99,7 +99,7 @@ const EditSence: React.FC<Props> = (props) => {
   }, [currentSence.id]);
 
   return (
-    <Spin spinning={detailLoading}>
+    <Spin spinning={detailLoading} wrapperClassName="spin-full">
       <SchemaForm
         actions={actions}
         initialValues={detail}

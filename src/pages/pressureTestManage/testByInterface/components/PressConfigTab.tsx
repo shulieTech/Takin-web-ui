@@ -27,10 +27,10 @@ const PressConfigTab: React.FC<Props> = (props) => {
       <FormCard
         title="压测目标"
         bordered={false}
-        extra={
-          <a style={{ textDecoration: 'underline' }}>
-            如何设定？ <Icon type="right" />
-          </a>}
+        // extra={
+        //   <a style={{ textDecoration: 'underline' }}>
+        //     如何设定？ <Icon type="right" />
+        //   </a>}
       >
         <FormMegaLayout labelAlign="top" grid autoRow full columns={4}>
           <Field
@@ -136,10 +136,10 @@ const PressConfigTab: React.FC<Props> = (props) => {
       <FormCard
         title="施压配置"
         bordered={false}
-        extra={
-          <a style={{ textDecoration: 'underline' }}>
-            如何设定？ <Icon type="right" />
-          </a>}
+        // extra={
+        //   <a style={{ textDecoration: 'underline' }}>
+        //     如何设定？ <Icon type="right" />
+        //   </a>}
       >
         <Field
           title="压测时间"

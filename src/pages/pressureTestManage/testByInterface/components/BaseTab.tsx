@@ -8,13 +8,18 @@ import service from '../service';
 import { debounce } from 'lodash';
 import styles from '../index.less';
 import LayoutBox from './LayoutBox';
+import { connect } from 'dva';
 
 interface Props {
   actions: IFormAsyncActions;
+  dictionaryMap: any;
 }
 
 const BaseTab: React.FC<Props> = (props) => {
-  const { actions } = props;
+  const {
+    actions,
+    dictionaryMap: { DEBUG_HTTP_TYPE },
+  } = props;
   const [debugInput, setDebugInput] = useState();
   const [debugOutput, setDebugOutput] = useState();
 
@@ -216,7 +221,11 @@ const BaseTab: React.FC<Props> = (props) => {
               <Field
                 type="string"
                 name="contentType"
-                title={<TipTittle tips="Content-Type 会根据请求 Body 里面的 Cotent-Type 来自动填写">Content-Type</TipTittle>}
+                title={
+                  <TipTittle tips="Content-Type 会根据请求 Body 里面的 Cotent-Type 来自动填写">
+                    Content-Type
+                  </TipTittle>
+                }
                 x-component="Input"
                 editable={false}
                 default="application/x-www-form-urlencoded;charset=UTF-8"
@@ -234,16 +243,47 @@ const BaseTab: React.FC<Props> = (props) => {
             />
           </FormTab.TabPane>
           <FormTab.TabPane name="tab-1-3" tab="Body">
-            <Field
-              type="number"
-              name="bodyType"
-              x-component="RadioGroup"
-              enum={[
-                { label: 'x-www-form-urlencoded', value: 0 },
-                { label: 'Raw', value: 1 },
-              ]}
-              default={0}
-            />
+            <FormMegaLayout inline>
+              <Field
+                type="number"
+                name="bodyType"
+                x-component="RadioGroup"
+                x-component-props={{
+                  style: {
+                    lineHeight: '32px',
+                  },
+                }}
+                enum={[
+                  { label: 'x-www-form-urlencoded', value: 0 },
+                  { label: 'Raw', value: 1 },
+                ]}
+                default={0}
+                x-linkages={[
+                  {
+                    type: 'value:visible',
+                    target: '.rawType',
+                    condition: '{{ $self.value === 1 }}',
+                  },
+                ]}
+              />
+              <Field
+                type="string"
+                name="rawType"
+                x-component="Select"
+                enum={DEBUG_HTTP_TYPE}
+                default="application/json"
+                x-linkages={[
+                  {
+                    type: 'value:state',
+                    target: '.contentType',
+                    state: {
+                      value:
+                        '{{ ($self.value || "application/x-www-form-urlencoded") + ";charset=UTF-8" }}',
+                    },
+                  },
+                ]}
+              />
+            </FormMegaLayout>
             <Field
               type="string"
               name="body"
@@ -305,4 +345,4 @@ const BaseTab: React.FC<Props> = (props) => {
   );
 };
 
-export default BaseTab;
+export default connect(({ common }) => ({ ...common }))(BaseTab);
