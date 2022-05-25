@@ -27,6 +27,8 @@ import PressConfigTab from './PressConfigTab';
 import RadioCard from './RadioCard';
 import LayoutBox from './LayoutBox';
 import Sider from './Sider';
+import StartStatusModal from '../../pressureTestScene/modals/StartStatusModal';
+import moment from 'moment';
 
 interface Props {
   currentSence: any;
@@ -34,10 +36,13 @@ interface Props {
 
 const EditSence: React.FC<Props> = (props) => {
   const { currentSence } = props;
+  const { onFieldInputChange$ } = FormEffectHooks;
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detail, setDetail] = useState(currentSence);
   const [saving, setSaving] = useState(false);
+  const [hasUnsaved, setHasUnsaved] = useState(false);
+  const [pressStarted, setPressStarted] = useState(false);
 
   const getDetail = async (id) => {
     setDetailLoading(true);
@@ -53,23 +58,30 @@ const EditSence: React.FC<Props> = (props) => {
 
   const startTest = async () => {
     const { values } = await actions.submit();
-    if (values) {
+    if (!values) {
+      return;
+    }
+    const start = async () => {
+      const {
+        data: { success, data },
+      } = await service.saveAndStartSence({
+        ...detail,
+        ...values,
+      });
+      if (success) {
+        message.success('操作成功');
+        // TODO 刷新并启动压测检测弹窗
+        getDetail(data.id || detail.id);
+      }
+    };
+    if (hasUnsaved) {
       Modal.confirm({
         title: '提示',
         content: '您的场景有内容修改，是否保存并启动压测？',
-        onOk: async () => {
-          const {
-            data: { success, data },
-          } = await service.saveAndStartSence({
-            ...detail,
-            ...values,
-          });
-          if (success) {
-            message.success('操作成功');
-            // TODO 刷新并启动压测检测弹窗
-          }
-        },
+        onOk: start,
       });
+    } else {
+      start();
     }
   };
 
@@ -87,7 +99,8 @@ const EditSence: React.FC<Props> = (props) => {
       });
       if (success) {
         message.success('操作成功');
-        getDetail({ id: data.id });
+        setHasUnsaved(false);
+        getDetail(data.id || detail.id);
       }
     }
   };
@@ -117,6 +130,11 @@ const EditSence: React.FC<Props> = (props) => {
           RadioCard,
           TextArea: Input.TextArea,
           RadioGroup: Radio.Group,
+        }}
+        effects={() => {
+          onFieldInputChange$().subscribe((state) => {
+            setHasUnsaved(true);
+          });
         }}
       >
         <LayoutBox
@@ -189,6 +207,20 @@ const EditSence: React.FC<Props> = (props) => {
           )}
         </LayoutBox>
       </SchemaForm>
+      {pressStarted && (
+        <StartStatusModal
+          visible
+          onCancel={() => {
+            setPressStarted(false);
+          }}
+          startedScence={{
+            scenceInfo: detail,
+            triggerTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            // leakSqlEnable: state.missingDataSwitch,
+            // continueRead: state.pressureStyle,
+          }}
+        />
+      )}
     </Spin>
   );
 };

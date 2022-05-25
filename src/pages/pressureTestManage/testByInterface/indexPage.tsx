@@ -7,7 +7,9 @@ import IntroduceSence from './components/Introduce';
 interface Props {}
 
 const TestByInterface: React.FC<Props> = (props) => {
-  const [currentSence, setCurrentSence] = useState();
+  const id = props?.location?.query?.id;
+
+  const [currentSence, setCurrentSence] = useState(id ? { id } : null);
 
   return (
     <Layout>
