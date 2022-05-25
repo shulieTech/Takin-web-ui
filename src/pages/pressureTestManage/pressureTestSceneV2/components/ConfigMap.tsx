@@ -244,6 +244,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                   {({ state, form }) => {
                     const formValues = form.getFormState().values;
                     const xpathMd5 = x.xpathMd5;
+                    const parentPath = FormPath.parse(path).concat(`${x.xpathMd5}`);
 
                     return (
                       <FlowPreview
@@ -251,6 +252,20 @@ const ConfigMap = (props: IFieldMergeState) => {
                         targetTps={formValues?.goal?.[xpathMd5]?.tps}
                         pressConfig={
                           formValues?.config?.threadGroupConfigMap?.[xpathMd5] || {}}
+                        checkValid={() => {
+                          return Promise.all([
+                            form.validate('.config.duration'),
+                            form.validate(parentPath.concat('.threadNum')),
+                            form.validate(parentPath.concat('.duration')),
+                            form.validate(parentPath.concat('.type')),
+                            form.validate(parentPath.concat('.mode')),
+                            form.validate(parentPath.concat('.rampUp')),
+                            form.validate(parentPath.concat('.steps')),
+                          ]);
+                        }}
+                        afterCalculate={(result) => {
+                          form.setFieldValue(parentPath.concat(`.estimateFlow`), result);
+                        }}
                       />
                     );
                   }}

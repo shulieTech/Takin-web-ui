@@ -16,11 +16,19 @@ interface Props {
     threadNum?: number; // 最大并发
     mode?: number; //  施压模式: 固定压力值/线性递增/阶梯递增
   };
+  checkValid: () => Promise<any>;
+  afterCalculate?: (data: any) => void;
 }
 
 const FlowPreview: React.FC<Props> = (props) => {
   const [estimateFlow, setEstimateFlow] = useState();
-  const { duration, targetTps = 3, pressConfig = {} } = props;
+  const {
+    duration,
+    targetTps = 3,
+    pressConfig = {},
+    checkValid,
+    afterCalculate,
+  } = props;
 
   /**
    * 计算阶梯递增数据
@@ -53,54 +61,46 @@ const FlowPreview: React.FC<Props> = (props) => {
     }
   };
 
-  // // 获取流量预估
-  // const getEstimateFlow = useCallback(
-  //   debounce(async (params) => {
-  //     const {
-  //       data: { success, data },
-  //     } = await service.getEstimateFlow(params);
-  //     if (success) {
-  //       const result = data?.value;
-  //       setEstimateFlow(result);
-  //       form.setFieldValue(parentPath.concat('.estimateFlow'), result);
-  //     }
-  //   }, 500),
-  //   []
-  // );
+  // 获取流量预估
+  const getEstimateFlow = useCallback(
+    debounce(async (params) => {
+      const {
+        data: { success, data },
+      } = await service.getEstimateFlow(params);
+      if (success) {
+        const result = data?.value;
+        setEstimateFlow(result);
+        if (typeof afterCalculate === 'function') {
+          afterCalculate(result);
+        }
+      }
+    }, 500),
+    []
+  );
 
-  // const { estimateFlow: aaa, ...restPressConfig } = pressConfig;
-
-  // useEffect(() => {
-  //   Promise.all([
-  //     form.validate('.config.duration'),
-  //     form.validate(parentPath.concat('.threadNum')),
-  //     form.validate(parentPath.concat('.duration')),
-  //     form.validate(parentPath.concat('.type')),
-  //     form.validate(parentPath.concat('.mode')),
-  //     form.validate(parentPath.concat('.rampUp')),
-  //     form.validate(parentPath.concat('.steps')),
-  //   ])
-  //     .then((res) => {
-  //       getEstimateFlow({
-  //         concurrenceNum: pressConfig.threadNum,
-  //         pressureTestTime: {
-  //           time: formValue?.config.duration,
-  //           unit: 'm',
-  //         },
-  //         pressureType: pressConfig.type,
-  //         pressureMode: pressConfig.mode,
-  //         increasingTime: {
-  //           time: pressConfig.rampUp,
-  //           unit: 'm',
-  //         },
-  //         step: pressConfig.steps,
-  //         pressureScene: 0,
-  //       });
-  //     })
-  //     .catch(() => {
-  //       setEstimateFlow(null);
-  //     });
-  // }, [formValue?.config?.duration, ...Object.values(restPressConfig)]);
+  useEffect(() => {
+    checkValid()
+      .then(() => {
+        getEstimateFlow({
+          concurrenceNum: pressConfig.threadNum,
+          pressureTestTime: {
+            time: duration,
+            unit: 'm',
+          },
+          pressureType: pressConfig.type,
+          pressureMode: pressConfig.mode,
+          increasingTime: {
+            time: pressConfig.rampUp,
+            unit: 'm',
+          },
+          step: pressConfig.steps,
+          pressureScene: 0,
+        });
+      })
+      .catch(() => {
+        setEstimateFlow(null);
+      });
+  }, [duration, ...Object.values(pressConfig)]);
 
   return (
     <div

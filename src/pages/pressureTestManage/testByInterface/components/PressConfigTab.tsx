@@ -166,9 +166,9 @@ const PressConfigTab: React.FC<Props> = (props) => {
               type: 'value:schema',
               target: '.rampUp',
               schema: {
-                'x-component-props.max': '{{ $self.value }}'
-              }
-            }
+                'x-component-props.max': '{{ $self.value }}',
+              },
+            },
           ]}
           required
           default={1}
@@ -187,6 +187,17 @@ const PressConfigTab: React.FC<Props> = (props) => {
                     type: formValues.type, // 压力模式 并发或TPS模式
                     threadNum: formValues.threadNum, // 最大并发
                     mode: formValues.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
+                  }}
+                  checkValid={() => {
+                    return Promise.all([
+                      form.validate('.duration'),
+                      form.validate('.threadNum'),
+                      form.validate('.duration'),
+                      form.validate('.type'),
+                      form.validate('.mode'),
+                      form.validate('.rampUp'),
+                      form.validate('.steps'),
+                    ]);
                   }}
                 />
               );
