@@ -39,11 +39,11 @@ const EditSence: React.FC<Props> = (props) => {
   const [detail, setDetail] = useState(currentSence);
   const [saving, setSaving] = useState(false);
 
-  const getDetail = async () => {
+  const getDetail = async (id) => {
     setDetailLoading(true);
     const {
       data: { success, data },
-    } = await service.getSence({ id: currentSence.id }).finally(() => {
+    } = await service.getSence({ id }).finally(() => {
       setDetailLoading(false);
     });
     if (success) {
@@ -87,14 +87,14 @@ const EditSence: React.FC<Props> = (props) => {
       });
       if (success) {
         message.success('操作成功');
-        // TODO 刷新
+        getDetail({ id: data.id });
       }
     }
   };
 
   useEffect(() => {
     if (currentSence.id) {
-      getDetail();
+      getDetail(currentSence.id);
     }
   }, [currentSence.id]);
 
@@ -170,7 +170,6 @@ const EditSence: React.FC<Props> = (props) => {
           x-component-props={{
             style: {
               display: 'flex',
-              // borderTop: '1px solid #EEF0F2',
             },
           }}
         >
@@ -183,9 +182,11 @@ const EditSence: React.FC<Props> = (props) => {
             <BaseTab actions={actions} />
             <PressConfigTab actions={actions} />
           </FormTab>
-          <FormSlot>
-            <Sider detail={detail}/>
-          </FormSlot>
+          {detail.id && (
+            <FormSlot>
+              <Sider detail={detail} />
+            </FormSlot>
+          )}
         </LayoutBox>
       </SchemaForm>
     </Spin>

@@ -34,6 +34,7 @@ const IntroduceSence: React.FC<Props> = (props) => {
           backgroundSize: 'auto 100%',
           backgroundPosition: 'right',
           padding: 32,
+          paddingRight: 340,
         }}
       >
         <h1
@@ -43,7 +44,7 @@ const IntroduceSence: React.FC<Props> = (props) => {
             fontSize: 20,
           }}
         >
-          接口测试
+          Takin压测
         </h1>
         <div style={{ margin: '16px 0' }}>
           测试环境单接口压测功能模块简介测试环境单接口压测功能模块简介测试环境单接口压试着创建一个压测场景吧～

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Tooltip, Icon, message } from 'antd';
-import ParamsModal from '../modals/Params';
+import ParamsDrawer from '../modals/Params';
+import BaseDrawer from '../modals/Base';
+import { router } from 'umi';
 
 interface Props {
   detail: any;
@@ -14,14 +16,21 @@ const Sider = (props: Props) => {
     {
       title: '参数编辑',
       icon: 'code',
+      onClick: () => setModalIndex(0),
     },
     {
       title: '基本信息设置',
       icon: 'control',
+      onClick: () => setModalIndex(1),
     },
     {
       title: '压测报告',
       icon: 'history',
+      onClick: () => {
+        router.push(
+          `/pressureTestManage/pressureTestReport?sceneId=${detail.id}`
+        );
+      },
     },
   ];
   return (
@@ -38,13 +47,7 @@ const Sider = (props: Props) => {
             <Tooltip key={item.title} title={item.title} placement="left">
               <div
                 style={{ lineHeight: '50px', cursor: 'pointer' }}
-                onClick={() => {
-                  // if (!detail?.id) {
-                  //   message.warn('请先保存压测场景');
-                  //   return;
-                  // }
-                  setModalIndex(index);
-                }}
+                onClick={item.onClick}
               >
                 <Icon type={item.icon} />
               </div>
@@ -53,7 +56,14 @@ const Sider = (props: Props) => {
         })}
       </div>
       {modalIndex === 0 && (
-        <ParamsModal
+        <ParamsDrawer
+          detail={detail}
+          okCallback={() => setModalIndex(null)}
+          cancelCallback={() => setModalIndex(null)}
+        />
+      )}
+      {modalIndex === 1 && (
+        <BaseDrawer
           detail={detail}
           okCallback={() => setModalIndex(null)}
           cancelCallback={() => setModalIndex(null)}
