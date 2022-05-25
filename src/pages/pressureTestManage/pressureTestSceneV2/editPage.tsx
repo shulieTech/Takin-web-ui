@@ -47,15 +47,15 @@ const EditPage = (props) => {
   const [detailLoading, setDetailLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const { id: sceneId, readOnly } = props.location.query;
   /**
    * 获取详情信息
    */
   const getDetailData = async () => {
-    const id = props.location.query.id;
-    if (id) {
+    if (sceneId) {
       const {
         data: { success, data },
-      } = await services.getSenceDetailV2({ sceneId: id });
+      } = await services.getSenceDetailV2({ sceneId });
       if (success) {
         setInitialValue(data);
       }
@@ -340,6 +340,7 @@ const EditPage = (props) => {
         </div>
         <SchemaForm
           actions={actions}
+          editable={!readOnly}
           initialValues={filteredInitialValue}
           validateFirst
           components={{
@@ -685,7 +686,7 @@ const EditPage = (props) => {
                   >
                     上一步
                   </Button>
-                  <Button
+                  {!(isLastStep && readOnly) && <Button
                     type={isLastStep ? 'primary' : undefined}
                     loading={saving}
                     onClick={() => {
@@ -697,7 +698,7 @@ const EditPage = (props) => {
                     }}
                   >
                     {isLastStep ? '保存' : '下一步'}
-                  </Button>
+                  </Button>}
                   {/* <Button
                     onClick={() =>
                       actions.getFormState((state) => console.log(state.values))

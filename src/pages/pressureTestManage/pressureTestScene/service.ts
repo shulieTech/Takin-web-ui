@@ -157,6 +157,13 @@ const PressureTestSceneService = {
     const url = '/scene/task/preCheck';
     return httpGet(url, data);
   },
+  /**
+   * @name 恢复被删除的压测场景
+   */
+  async scenceRecovery(data) {
+    const url = '/scenemanage/recovery';
+    return httpPut(url, data);
+  },
 };
 
 export default PressureTestSceneService;

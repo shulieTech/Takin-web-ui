@@ -70,10 +70,14 @@ const ExcludeApps = (props: IFieldMergeState) => {
       width: 80,
       render: (text, record, index) => {
         const includedIndex = value.findIndex((x) => x === text);
-        return (
+        return editable ? (
           <a onClick={() => toggleIgnore(text, includedIndex)}>
             {includedIndex > -1 ? '取消忽略' : '忽略'}
           </a>
+        ) : includedIndex > -1 ? (
+          '已忽略'
+        ) : (
+          '-'
         );
       },
     },
@@ -85,26 +89,28 @@ const ExcludeApps = (props: IFieldMergeState) => {
 
   return (
     <>
-      <Select
-        placeholder="服务"
-        allowClear
-        showSearch
-        optionFilterProp="children"
-        onChange={(val: any) => {
-          setQueryParams({
-            ...queryParams,
-            applicationName: val,
-            current: 0,
-          });
-        }}
-        loading={loading}
-      >
-        {appList.map((x) => (
-          <Option key={x.applicationId} value={x.applicationName}>
-            {x.applicationName}
-          </Option>
-        ))}
-      </Select>
+      {editable && (
+        <Select
+          placeholder="服务"
+          allowClear
+          showSearch
+          optionFilterProp="children"
+          onChange={(val: any) => {
+            setQueryParams({
+              ...queryParams,
+              applicationName: val,
+              current: 0,
+            });
+          }}
+          loading={loading}
+        >
+          {appList.map((x) => (
+            <Option key={x.applicationId} value={x.applicationName}>
+              {x.applicationName}
+            </Option>
+          ))}
+        </Select>
+      )}
       <Table
         size="small"
         columns={columns}
@@ -125,7 +131,7 @@ const ExcludeApps = (props: IFieldMergeState) => {
         footer={() => (
           <span>
             已忽略<strong>{value?.length}</strong>个应用
-            {value?.length > 0 && (
+            {value?.length > 0 && editable && (
               <>
                 ，
                 <a
