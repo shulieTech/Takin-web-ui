@@ -150,7 +150,6 @@ const BaseTab: React.FC<Props> = (props) => {
                 <TipTittle
                   tips={
                     <div>
-                      {' '}
                       1.
                       关联应用入口后，可自动填充采集到header头、请求入参数据。
                       2. 压测过程中可追踪该入口链路的应用容量水位
@@ -217,12 +216,10 @@ const BaseTab: React.FC<Props> = (props) => {
               <Field
                 type="string"
                 name="contentType"
-                title={<TipTittle tips="333">Content-Type</TipTittle>}
+                title={<TipTittle tips="Content-Type 会根据请求 Body 里面的 Cotent-Type 来自动填写">Content-Type</TipTittle>}
                 x-component="Input"
-                x-component-props={{
-                  placeholder:
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-                }}
+                editable={false}
+                default="application/x-www-form-urlencoded;charset=UTF-8"
               />
             </FormMegaLayout>
             <Field

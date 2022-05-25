@@ -5,8 +5,10 @@ import { CommonTableProps } from 'racc/dist/common-table/CommonTable';
 import { Pagination } from 'antd';
 
 interface Props extends CommonTableProps {
-  service: (params: any) => Promise<any>;
+  service?: (params: any) => Promise<any>;
   defaultQuery?: any;
+  dataListPath?: string;
+  isQueryOnMount?: boolean;
 }
 
 /**
@@ -16,16 +18,18 @@ interface Props extends CommonTableProps {
  * @returns
  */
 const ServiceCustomTable = (props: Props, ref) => {
-  const { service, defaultQuery, columns, ...rest } = props;
+  const { service, defaultQuery, dataListPath, isQueryOnMount = true,  columns, pagination, ...rest } =
+    props;
 
   const serviceOptions = useListService({
     service,
+    dataListPath,
+    isQueryOnMount,
     defaultQuery: {
       current: 0,
       pageSize: 10,
       ...defaultQuery,
     },
-    isQueryOnQueryChange: false,
   });
 
   const { list, loading, total, query, getList } = serviceOptions;
@@ -33,37 +37,39 @@ const ServiceCustomTable = (props: Props, ref) => {
   // 转发内部的一些属性及方法
   useImperativeHandle(ref, () => serviceOptions, []);
 
-  useEffect(() => {
-    getList(defaultQuery);
-  }, [defaultQuery]);
+  // useEffect(() => {
+  //   getList(defaultQuery);
+  // }, [JSON.stringify(defaultQuery)]);
 
   return (
     <>
       <CustomTable
-        {...rest}
         loading={loading}
         dataSource={list}
         columns={columns}
         pagination={false}
+        {...rest}
       />
-      <Pagination
-        style={{ marginTop: 20, textAlign: 'right' }}
-        total={total}
-        current={query.current + 1}
-        pageSize={query.pageSize}
-        showTotal={(t, range) =>
-          `共 ${total} 条数据 第${query.current + 1}页 / 共 ${Math.ceil(
-            total / (query.pageSize || 10)
-          )}页`
-        }
-        showSizeChanger={true}
-        onChange={(current, pageSize) =>
-          getList({ pageSize, current: current - 1 })
-        }
-        onShowSizeChange={(current, pageSize) =>
-          getList({ pageSize, current: 0 })
-        }
-      />
+      {pagination !== false && (
+        <Pagination
+          style={{ marginTop: 20, textAlign: 'right' }}
+          total={total}
+          current={query.current + 1}
+          pageSize={query.pageSize}
+          showTotal={(t, range) =>
+            `共 ${total} 条数据 第${query.current + 1}页 / 共 ${Math.ceil(
+              total / (query.pageSize || 10)
+            )}页`
+          }
+          showSizeChanger={true}
+          onChange={(current, pageSize) =>
+            getList({ pageSize, current: current - 1 })
+          }
+          onShowSizeChange={(current, pageSize) =>
+            getList({ pageSize, current: 0 })
+          }
+        />
+      )}
     </>
   );
 };

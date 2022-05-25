@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { get } from 'lodash';
 
 interface Props {
   service: (params: any) => Promise<any>;
   defaultQuery?: any;
-  isQueryOnQueryChange?: boolean;
+  isQueryOnMount?: boolean;
   afterSearchCallback?: (res: any) => void;
+  dataListPath?: string;
 }
 
 const useListService = (props: Props) => {
   const {
     service,
     defaultQuery = {},
-    isQueryOnQueryChange = true,
+    isQueryOnMount = true,
     afterSearchCallback,
+    dataListPath = '.',
   } = props;
 
   const [query, setQuery] = useState(defaultQuery);
@@ -42,13 +45,14 @@ const useListService = (props: Props) => {
       if (typeof afterSearchCallback === 'function') {
         afterSearchCallback(res);
       }
+      return res;
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (isQueryOnQueryChange) {
+    if (isQueryOnMount) {
       getList(query);
     }
   }, []);

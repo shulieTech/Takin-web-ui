@@ -227,6 +227,17 @@ const ConfigMap = (props: IFieldMergeState) => {
                     })
                   }
                 />
+                <SchemaField
+                  path={FormPath.parse(path).concat(`${x.xpathMd5}.estimateFlow`)}
+                  schema={
+                    new Schema({
+                      type: 'number',
+                      'x-component': 'NumberPicker',
+                      title: '预估流量',
+                      display: false,
+                    })
+                  }
+                />
               </Col>
               <Col span={12}>
                 <FormSpy>

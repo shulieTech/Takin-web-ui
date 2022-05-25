@@ -211,6 +211,11 @@ const PressureTestReportService = {
     const url = '/application/interface/configs/middleware/list';
     return httpGet(url, data);
   },
+  // 压力机明细
+  async machineSummary(data = {}) {
+    const url = '/cloud/resources/getDetails';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

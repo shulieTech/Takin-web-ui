@@ -15,6 +15,7 @@ import MissingDataListModal from './modals/MissingDataListModal';
 import PressureTestReportService from './service';
 import { GraphData } from '@antv/g6';
 import downloadFile from 'src/utils/downloadFile';
+import PressTestMachines from './components/PressTestMachines';
 
 interface State {
   isReload?: boolean;
@@ -36,7 +37,7 @@ interface Props {
 
 declare var window;
 
-const PressureTestReportDetail: React.FC<Props> = props => {
+const PressureTestReportDetail: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     detailData: {},
@@ -51,7 +52,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     failedCount: null,
     /** 是否漏数 */
     hasMissingData: null,
-    tenantList: []
+    tenantList: [],
   });
 
   const { location } = props;
@@ -71,11 +72,21 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     queryRequestCount(id);
   }, [state.isReload]);
 
+  useEffect(() => {
+    // 数据校准中时5s刷新一次
+    if (detailData?.calibration === 1) {
+      const ticker = setInterval(() => {
+        queryReportDetail(id);
+      }, 5000);
+      return () => clearInterval(ticker);
+    }
+  }, [detailData?.calibration]);
+
   const tenantList = async (s) => {
     const {
       data: { data, success },
     } = await PressureTestReportService.monitor({
-      sceneId: s
+      sceneId: s,
     });
     if (success) {
       setState({
@@ -92,11 +103,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   /**
    * @name 获取压测报告详情
    */
-  const queryReportDetail = async value => {
+  const queryReportDetail = async (value) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestReportService.queryReportDetail({
-      reportId: value
+      reportId: value,
     });
     if (success) {
       // 判断是否有国寿竞赛这个菜单再调该接口
@@ -106,7 +117,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       setState({
         detailData: data,
         hasMissingData:
-          data && data.leakVerifyResult && data.leakVerifyResult.code
+          data && data.leakVerifyResult && data.leakVerifyResult.code,
       });
     }
   };
@@ -114,15 +125,15 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   /**
    * @name 获取压测报告汇总数据
    */
-  const queryReportCount = async value => {
+  const queryReportCount = async (value) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestReportService.queryReportCount({
-      reportId: value
+      reportId: value,
     });
     if (success) {
       setState({
-        reportCountData: data
+        reportCountData: data,
       });
     }
   };
@@ -130,15 +141,15 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   /**
    * @name 获取压测报告汇总流量数据
    */
-  const queryRequestCount = async value => {
+  const queryRequestCount = async (value) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestReportService.queryRequestCount({
-      reportId: value
+      reportId: value,
     });
     if (success) {
       setState({
-        failedCount: data
+        failedCount: data,
       });
     }
   };
@@ -146,16 +157,16 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   /**
    * @name 获取压测报告业务活动列表
    */
-  const queryReportBusinessActivity = async value => {
+  const queryReportBusinessActivity = async (value) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await PressureTestReportService.queryBusinessActivityTree({
-      reportId: value
+      reportId: value,
     });
     if (success) {
       setState({
         tabList: data,
-        tabKey: data && data[0].xpathMd5
+        tabKey: data && data[0].xpathMd5,
       });
     }
   };
@@ -167,16 +178,16 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     const {
       data: {
         data: { activity, ...chartsInfo },
-        success
-      }
+        success,
+      },
     } = await PressureTestReportService.queryLinkChartsInfo({
       reportId,
-      xpathMd5
+      xpathMd5,
     });
     if (success) {
       setState({
         chartsInfo,
-        graphData: activity?.topology || { nodes: [], edges: [] }
+        graphData: activity?.topology || { nodes: [], edges: [] },
       });
     }
   };
@@ -190,11 +201,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     { label: '场景ID', value: detailData.sceneId },
     {
       label: '压测时长',
-      value: detailData.testTotalTime
+      value: detailData.testTotalTime,
     },
     {
       label: '开始时间',
-      value: detailData.startTime
+      value: detailData.startTime,
     },
     {
       label: '消耗流量',
@@ -203,37 +214,37 @@ const PressureTestReportDetail: React.FC<Props> = props => {
           <Statistic
             style={{
               display: 'inline-block',
-              padding: 0
+              padding: 0,
             }}
             value={detailData.amount}
             suffix="vum"
           />
         </span>
       ),
-      notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
+      notShow: getTakinAuthority() === 'true' ? false : true, // true：不展示，false或不配置：展示
     },
     {
       label: '执行人',
       value: detailData.operateName,
-      notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
-    }
+      notShow: getTakinAuthority() === 'true' ? false : true, // true：不展示，false或不配置：展示
+    },
   ];
 
-  const summaryList = [
+  let summaryList = [
     {
       label: '请求总数',
       value: detailData.totalRequest,
-      precision: 0
+      precision: 0,
     },
     {
       label: '最大并发',
       value: detailData.concurrent,
-      precision: 0
+      precision: 0,
     },
     {
       label: '平均并发数',
       value: detailData.avgConcurrent,
-      precision: 2
+      precision: 2,
     },
     {
       label: '实际/目标TPS',
@@ -253,27 +264,51 @@ const PressureTestReportDetail: React.FC<Props> = props => {
             precision={0}
           />
         </Fragment>
-      )
+      ),
     },
     {
       label: '平均RT',
       value: detailData.avgRt,
       precision: 2,
-      suffix: 'ms'
+      suffix: 'ms',
     },
     {
       label: '成功率',
       value: detailData.successRate,
       precision: 2,
-      suffix: '%'
+      suffix: '%',
     },
     {
       label: 'SA',
       value: detailData.sa,
       precision: 2,
-      suffix: '%'
-    }
+      suffix: '%',
+    },
   ];
+
+  // 数据校准中不显示统计数据
+  if (detailData?.calibration === 1) {
+    const checkTxt = (
+      <span style={{ fontSize: 12, color: '#999', fontWeight: 'normal', lineHeight: '40px' }}>
+        校准中
+      </span>
+    );
+    summaryList = summaryList.map((x) => ({
+      ...x,
+      value: 0,
+      render: () =>
+        x.label === '实际/目标TPS' ? (
+          <>
+            {checkTxt}/
+            {detailData.tps || 0}
+          </>
+        ) : (
+          checkTxt
+        ),
+      precision: 0,
+      suffix: undefined,
+    }));
+  }
 
   const downloadJtlFile = async () => {
     setIsDownloading(true);
@@ -293,16 +328,12 @@ const PressureTestReportDetail: React.FC<Props> = props => {
 
   const extra = (
     <>
-      {
-        state.tenantList.length > 0 &&
+      {state.tenantList.length > 0 && (
         <Dropdown
           overlay={
             <Menu>
-              {state.tenantList.map(x => (
-                <Menu.Item
-                  key={x.url}
-                  onClick={() => changeTenant(x.url)}
-                >
+              {state.tenantList.map((x) => (
+                <Menu.Item key={x.url} onClick={() => changeTenant(x.url)}>
                   {x.title}
                 </Menu.Item>
               ))}
@@ -314,15 +345,32 @@ const PressureTestReportDetail: React.FC<Props> = props => {
             <Icon type="down" />
           </Button>
         </Dropdown>
-      }
+      )}
       {detailData?.hasJtl && (
-        <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloading}>
+        <Button
+          type="primary"
+          ghost
+          onClick={downloadJtlFile}
+          style={{ marginRight: 8 }}
+          loading={isDownloading}
+        >
           下载Jtl文件
         </Button>
       )}
+      
+      <PressTestMachines
+        reportInfo={{
+          jobId: detailData.jobId,
+          resourceId: detailData.resourceId,
+        }}
+        isLive={false}
+      />
+
       <Button
         type="primary"
-        onClick={() => window.open(`#/analysisManage?type=report&reportId=${id}`)}
+        onClick={() =>
+          window.open(`#/analysisManage?type=report&reportId=${id}`)
+        }
       >
         查看性能分析报告
       </Button>
@@ -336,14 +384,16 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       {hasMissingData === 1 && (
         <div style={{ padding: '16px 16px 0px', position: 'relative' }}>
           <Alert
-            message={<div>
-              本次压测存在数据泄露，请尽快确认
-              <MissingDataListModal
-                reportId={id}
-                hasMissingData={1}
-                btnText="查看详情"
-              />
-            </div>}
+            message={
+              <div>
+                本次压测存在数据泄露，请尽快确认
+                <MissingDataListModal
+                  reportId={id}
+                  hasMissingData={1}
+                  btnText="查看详情"
+                />
+              </div>
+            }
             type="error"
             showIcon
           />
@@ -370,31 +420,32 @@ const PressureTestReportDetail: React.FC<Props> = props => {
         style={{ padding: 8 }}
         extraPosition="top"
         extra={extra}
-        title={<div style={{ position: 'relative' }}>
-          <span style={{ fontSize: 20 }}>
-            {detailData.sceneName ? detailData.sceneName : '-'}
-          </span>
-          {hasMissingData === 0 && (
-            <span
-              style={{
-                display: 'inline-block',
-                color: '#666666',
-                padding: '6px 8px',
-                background: '#F2F2F2',
-                borderRadius: '4px',
-                float: 'right',
-              }}
-            >
-              <Icon type="exclamation-circle" />
-              <span style={{ marginRight: 16, marginLeft: 8 }}>无漏数</span>
-              <MissingDataListModal
-                reportId={id}
-                hasMissingData={0}
-                btnText="查看详情"
-              />
+        title={
+          <div style={{ position: 'relative' }}>
+            <span style={{ fontSize: 20 }}>
+              {detailData.sceneName ? detailData.sceneName : '-'}
             </span>
-          )}
-        </div>}
+            {hasMissingData === 0 && (
+              <span
+                style={{
+                  display: 'inline-block',
+                  color: '#666666',
+                  padding: '6px 8px',
+                  background: '#F2F2F2',
+                  borderRadius: '4px',
+                  float: 'right',
+                }}
+              >
+                <Icon type="exclamation-circle" />
+                <span style={{ marginRight: 16, marginLeft: 8 }}>无漏数</span>
+                <MissingDataListModal
+                  reportId={id}
+                  hasMissingData={0}
+                  btnText="查看详情"
+                />
+              </span>
+            )}
+          </div>}
       >
         {/* <Button onClick={() => exportPdf()}>导出PDF</Button> */}
         <Header list={headList} isExtra={false} />
@@ -405,34 +456,36 @@ const PressureTestReportDetail: React.FC<Props> = props => {
           style={{
             marginTop: 24,
             marginBottom: 24,
-            background: detailData.conclusion === 1 ? '#75D0DD' : '#F58D76'
+            background: detailData.conclusion === 1 ? '#75D0DD' : '#F58D76',
           }}
-          leftWrap={<Col span={4}>
-            <Row type="flex" align="middle">
-              <Col>
-                <img
-                  style={{ width: 40 }}
-                  src={require(`./../../../assets/${detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
+          leftWrap={
+            <Col span={4}>
+              <Row type="flex" align="middle">
+                <Col>
+                  <img
+                    style={{ width: 40 }}
+                    src={require(`./../../../assets/${
+                      detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
                     }.png`)}
-                />
-              </Col>
-              <Col style={{ marginLeft: 8 }}>
-                <p
-                  style={{
-                    fontSize: 20,
-                    color: '#fff',
-                  }}
-                >
-                  {detailData.conclusion === 1 ? '压测通过' : '压测不通过'}
-                </p>
-                {detailData.conclusion === 0 && (
-                  <p style={{ color: '#fff' }}>
-                    {detailData.conclusionRemark}
+                  />
+                </Col>
+                <Col style={{ marginLeft: 8 }}>
+                  <p
+                    style={{
+                      fontSize: 20,
+                      color: '#fff',
+                    }}
+                  >
+                    {detailData.conclusion === 1 ? '压测通过' : '压测不通过'}
                   </p>
-                )}
-              </Col>
-            </Row>
-          </Col>}
+                  {detailData.conclusion === 0 && (
+                    <p style={{ color: '#fff' }}>
+                      {detailData.conclusionRemark}
+                    </p>
+                  )}
+                </Col>
+              </Row>
+            </Col>}
         />
         <ModuleTabs
           id={id}
@@ -450,17 +503,18 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     <div style={{ marginTop: 200 }}>
       <EmptyNode
         title="报告生成中..."
-        extra={<div style={{ marginTop: 16 }}>
-          <Button
-            onClick={() => {
-              setState({
-                isReload: !state.isReload,
-              });
-            }}
-          >
-            刷新
-          </Button>
-        </div>}
+        extra={
+          <div style={{ marginTop: 16 }}>
+            <Button
+              onClick={() => {
+                setState({
+                  isReload: !state.isReload,
+                });
+              }}
+            >
+              刷新
+            </Button>
+          </div>}
       />
     </div>
   ) : (

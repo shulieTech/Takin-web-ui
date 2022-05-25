@@ -21,6 +21,10 @@ const tenantCodeService = {
     const url = '/sys/version/confirm';
     return httpPut(url, data);
   },
+  async checkMachineStatus(data = {}) {
+    const url = '/sys/pressure/state';
+    return httpGet(url, data);
+  },
 };
 
 export default tenantCodeService;

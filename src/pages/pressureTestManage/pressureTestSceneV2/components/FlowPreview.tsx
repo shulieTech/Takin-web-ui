@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Tooltip, Icon, Statistic } from 'antd';
 import FixLineCharts from '../../pressureTestScene/components/FixLineCharts';
 import StepCharts from '../../pressureTestScene/components/StepCharts';
+import service from '../service';
+import { FormPath, IForm } from '@formily/antd';
+import { debounce } from 'lodash';
 
 interface Props {
   targetTps: number; // 目标TPS
@@ -50,6 +53,55 @@ const FlowPreview: React.FC<Props> = (props) => {
     }
   };
 
+  // // 获取流量预估
+  // const getEstimateFlow = useCallback(
+  //   debounce(async (params) => {
+  //     const {
+  //       data: { success, data },
+  //     } = await service.getEstimateFlow(params);
+  //     if (success) {
+  //       const result = data?.value;
+  //       setEstimateFlow(result);
+  //       form.setFieldValue(parentPath.concat('.estimateFlow'), result);
+  //     }
+  //   }, 500),
+  //   []
+  // );
+
+  // const { estimateFlow: aaa, ...restPressConfig } = pressConfig;
+
+  // useEffect(() => {
+  //   Promise.all([
+  //     form.validate('.config.duration'),
+  //     form.validate(parentPath.concat('.threadNum')),
+  //     form.validate(parentPath.concat('.duration')),
+  //     form.validate(parentPath.concat('.type')),
+  //     form.validate(parentPath.concat('.mode')),
+  //     form.validate(parentPath.concat('.rampUp')),
+  //     form.validate(parentPath.concat('.steps')),
+  //   ])
+  //     .then((res) => {
+  //       getEstimateFlow({
+  //         concurrenceNum: pressConfig.threadNum,
+  //         pressureTestTime: {
+  //           time: formValue?.config.duration,
+  //           unit: 'm',
+  //         },
+  //         pressureType: pressConfig.type,
+  //         pressureMode: pressConfig.mode,
+  //         increasingTime: {
+  //           time: pressConfig.rampUp,
+  //           unit: 'm',
+  //         },
+  //         step: pressConfig.steps,
+  //         pressureScene: 0,
+  //       });
+  //     })
+  //     .catch(() => {
+  //       setEstimateFlow(null);
+  //     });
+  // }, [formValue?.config?.duration, ...Object.values(restPressConfig)]);
+
   return (
     <div
       style={{
@@ -74,7 +126,12 @@ const FlowPreview: React.FC<Props> = (props) => {
         <span>预计消耗：</span>
         {estimateFlow ? (
           <span>
-            <Statistic precision={2} suffix="vum" value={estimateFlow} />
+            <Statistic
+              style={{ display: 'inline-block' }}
+              precision={2}
+              suffix="vum"
+              value={estimateFlow}
+            />
           </span>
         ) : (
           '-- vum'

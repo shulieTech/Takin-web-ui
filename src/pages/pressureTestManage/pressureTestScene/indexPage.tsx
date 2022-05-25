@@ -12,6 +12,7 @@ import PressureTestSceneTableAction from './components/TableAction';
 import styles from './index.less';
 import PressureTestSceneService from './service';
 import { PressureStyle } from './enum';
+import StartStatusModal from './modals/StartStatusModal';
 
 interface PressureTestSceneProps {
   dictionaryMap?: any;
@@ -38,8 +39,8 @@ export interface PressureTestSceneState {
   pressureStyle: string;
   dataScriptNum: any[];
   tagReloadKey: number;
+  startedScence: any;
 }
-const liList = [1, 1, 1, 1, 1, 1, 1, 1];
 const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   const [state, setState] = useStateReducer<PressureTestSceneState>({
     isReload: false,
@@ -68,6 +69,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     pressureStyle: PressureStyle.从头开始压测,
     dataScriptNum: null, // 数据脚本数
     tagReloadKey: 1,
+    startedScence: null,
   });
 
   const [searchTableRef, setSearchTableRef] = useState<any>();
@@ -134,30 +136,30 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   /**
    * @name 启动检查并开启压测
    */
-  const handleCheckAndStart = async (sceneId) => {
+  const handleCheckAndStart = async (scenceInfo) => {
     setState({
       visible: true,
-      configStatus: 'loading',
+      // configStatus: 'loading',
       missingDataStatus: false,
     });
-    const {
-      data: { data, success },
-    } = await PressureTestSceneService.startPressureTestScene({
-      sceneId,
-      leakSqlEnable: state.missingDataSwitch,
-      continueRead: state.pressureStyle,
-    });
-    if (success && data.data) {
-      setState({
-        configStatus: 'success',
-      });
-      handleStart(sceneId, data.data);
-    } else {
-      setState({
-        configStatus: 'fail',
-        configErrorList: data && data.msg,
-      });
-    }
+    // const {
+    //   data: { data, success },
+    // } = await PressureTestSceneService.startPressureTestScene({
+    //   sceneId,
+    //   leakSqlEnable: state.missingDataSwitch,
+    //   continueRead: state.pressureStyle,
+    // });
+    // if (success && data.data) {
+    //   setState({
+    //     configStatus: 'success',
+    //   });
+    //   handleStart(sceneId, data.data);
+    // } else {
+    //   setState({
+    //     configStatus: 'fail',
+    //     configErrorList: data && data.msg,
+    //   });
+    // }
   };
 
   /**
@@ -223,11 +225,13 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     props.dictionaryMap
   );
 
-  const refHandle = useCallback(ref => setSearchTableRef(ref), []);
+  const refHandle = useCallback((ref) => setSearchTableRef(ref), []);
 
   useEffect(() => {
     // 有定时压测或者非待启动压测时启用定时刷新
-    const needRefresh = searchTableRef?.tableState?.dataSource.some(x => x.isScheduler || x.status !== 0);
+    const needRefresh = searchTableRef?.tableState?.dataSource.some(
+      (x) => x.isScheduler || x.status !== 0
+    );
     if (needRefresh) {
       const { queryList } = searchTableRef;
       const refreshTimer = setInterval(() => {
@@ -242,11 +246,11 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
       <SearchTable
         ref={refHandle}
         commonTableProps={{
-          columns 
+          columns,
         }}
         commonFormProps={{
           formData: getPressureTestSceneFormData(state),
-          rowNum: 4
+          rowNum: 4,
         }}
         ajaxProps={{ url: '/scenemanage/list', method: 'GET' }}
         // searchParams={{ ...state.searchParams }}
@@ -257,21 +261,21 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
         datekeys={[
           {
             originKey: 'time',
-            separateKey: ['lastPtStartTime', 'lastPtEndTime']
-          }
+            separateKey: ['lastPtStartTime', 'lastPtEndTime'],
+          },
         ]}
       />
       <Modal
         title={state.hasMissingData ? '是否要开启数据验证' : '启动压测'}
         visible={state.missingDataStatus}
         onOk={() => {
-          handleCheckAndStart(state.sceneId);
+          handleCheckAndStart(state.startedScence);
         }}
         onCancel={() => {
           setState({
             missingDataStatus: false,
             missingDataSwitch: false,
-            sceneId: null
+            sceneId: null,
           });
         }}
       >
@@ -280,7 +284,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             color: '#8C8C8C',
             lineHeight: '22px',
             fontSize: 14,
-            marginBottom: 10
+            marginBottom: 10,
           }}
         >
           {state.hasMissingData
@@ -314,7 +318,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
               marginTop: 16,
               borderTop: '1px solid #F6F6F6',
               padding: '16px 0',
-              borderBottom: '1px solid #F6F6F6'
+              borderBottom: '1px solid #F6F6F6',
             }}
           >
             <Col style={{ fontSize: 14, color: '#595959' }}>数据验证开关</Col>
@@ -327,7 +331,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           </Row>
         )}
       </Modal>
-      <Modal
+      {/* <Modal
         title="启动进度"
         visible={state.visible}
         footer={null}
@@ -338,7 +342,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
         }
         bodyStyle={{
           width: 522,
-          minHeight: 279
+          minHeight: 279,
         }}
         onCancel={() => handleCancel()}
       >
@@ -419,13 +423,13 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
                         ? '1px dotted #29C7D7'
                         : '1px dotted #CACED5',
                     marginBottom: 8,
-                    marginRight: 8
+                    marginRight: 8,
                   }}
                 />
               </Col>
               <Col
                 style={{
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 <p>
@@ -442,21 +446,48 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
                 </p>
                 <span
                   style={{
-                    color: state.startStatus === 'ready' ? '#E4EAF0' : '#474C50'
+                    color:
+                      state.startStatus === 'ready' ? '#E4EAF0' : '#474C50',
                   }}
                 >
                   {state.startStatus === 'ready' ? '启动压测' : '启动中'}
                 </span>
               </Col>
             </Row>
-            {state.startStatus === 'loading' && <div 
-              style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 70 }}
-            >
-              <Button type="danger" onClick={() => cancelLaunch(state.sceneId)}>停止</Button>
-            </div>}
+            {state.startStatus === 'loading' && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  marginTop: 70,
+                }}
+              >
+                <Button
+                  type="danger"
+                  onClick={() => cancelLaunch(state.sceneId)}
+                >
+                  停止
+                </Button>
+              </div>
+            )}
           </div>
         )}
-      </Modal>
+      </Modal> */}
+      {state.visible && <StartStatusModal
+        visible
+        onCancel={() => {
+          setState({
+            visible: false,
+            isReload: !state.isReload,
+            startedScence: null,
+          });
+        }}
+        startedScence={{
+          ...state.startedScence,
+          leakSqlEnable: state.missingDataSwitch,
+          continueRead: state.pressureStyle,
+        }}
+      />}
     </Fragment>
   );
 };

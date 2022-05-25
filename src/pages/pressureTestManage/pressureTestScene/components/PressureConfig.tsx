@@ -233,55 +233,49 @@ const PressureConfig = (
       }
     };
 
+    const datas = state.form && state.form.getFieldsValue();
     /**
      * @name 获取预计消耗流量
      */
     const getEstimateFlow = async () => {
-      let result = {};
-      const datas = state.form && state.form.getFieldsValue();
-      if (pressureMode === 1) {
-        result = {
-          concurrenceNum: datas && datas.concurrenceNum,
-          pressureMode: datas && datas.pressureMode,
-          pressureTestTime: datas && datas.pressureTestTime,
-          pressureType: datas && datas.testMode
-        };
-      }
-      if (pressureMode === 2) {
-        result = {
-          concurrenceNum: datas && datas.concurrenceNum,
-          increasingTime: datas && datas.increasingTime,
-          pressureMode: datas && datas.pressureMode,
-          pressureTestTime: datas && datas.pressureTestTime,
-          pressureType: datas && datas.testMode
-        };
-      }
-      if (pressureMode === 3) {
-        result = {
-          concurrenceNum: datas && datas.concurrenceNum,
-          increasingTime: datas && datas.increasingTime,
-          pressureMode: datas && datas.pressureMode,
-          pressureTestTime: datas && datas.pressureTestTime,
-          step: datas && datas.step,
-          pressureType: datas && datas.testMode
-        };
-      }
-      if (handleCheckIsComplete()) {
-        const {
+      const result = {};
+      const {
           // tslint:disable-next-line:no-shadowed-variable
           data: { success, data }
-        } = await PressureTestSceneService.getEstimateFlow(result);
-        if (success) {
-          setState({
-            estimateFlow: data.data
-          });
-        }
-      } else {
+        } = await PressureTestSceneService.getEstimateFlow({
+          concurrenceNum: datas?.concurrenceNum,
+          pressureTestTime: {
+            time: datas?.pressureTestTime,
+            unit: 'm',
+          },
+          pressureType: datas?.pressureType,
+          pressureMode: datas?.pressureMode,
+          increasingTime: {
+            time: datas?.increasingTime,
+            unit: 'm',
+          },
+          step: datas?.step,
+          pressureScene: 0,
+        });
+      if (success) {
         setState({
-          estimateFlow: null
+          estimateFlow: data.value
         });
       }
     };
+
+    useEffect(() => {
+      if (datas?.pressureTestTime && datas?.concurrenceNum) {
+        getEstimateFlow();
+      }
+    }, [
+      datas?.concurrenceNum,
+      datas?.pressureTestTime,
+      datas?.pressureType,
+      datas?.pressureMode,
+      datas?.increasingTime,
+      datas?.step,
+    ]);
 
     const basicFormData: FormDataType[] = [
       {
@@ -367,7 +361,7 @@ const PressureConfig = (
                 <Icon type="question-circle" style={{ marginLeft: 4 }} />
               </Tooltip>
               <span className={styles.subTitle}>预计消耗：</span>
-              {state.estimateFlow ? (
+              {state.flag && state.estimateFlow ? (
                 <span className={styles.subTitleNum}>
                   <Statistic
                     precision={2}
