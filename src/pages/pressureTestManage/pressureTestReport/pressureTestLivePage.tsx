@@ -31,7 +31,10 @@ import { GraphData } from '@antv/g6';
 import CommonHeader from 'src/common/header/Header';
 import RequestFlowQueryForm from './components/RequestFlowQueryForm';
 import moment from 'moment';
-import BusinessActivityTree, { getFirstTreeNodeByFilter } from './components/BusinessActivityTree';
+import BusinessActivityTree, {
+  getFirstTreeNodeByFilter,
+} from './components/BusinessActivityTree';
+import PressTestMachines from './components/PressTestMachines';
 
 interface State {
   isReload?: boolean;
@@ -185,7 +188,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
       if (data.taskStatus !== 0) {
         setState({
           flag: true,
-          visible: true,
+          // visible: true,
         });
       }
     }
@@ -223,7 +226,6 @@ const PressureTestLive: React.FC<Props> = (props) => {
       //   });
 
       // }
-      
     }
   };
 
@@ -390,7 +392,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     if (success) {
       setState({
         flag: true,
-        visible: true,
+        // visible: true,
       });
     }
   };
@@ -610,14 +612,17 @@ const PressureTestLive: React.FC<Props> = (props) => {
                 okColor="var(--FunctionalError-500)"
                 okText="确认停止"
                 onConfirm={() => handleConfirm()}
+                disabled={state.flag}
               >
                 <Button
                   type="danger"
                   style={{
                     background: '#FE7D61',
+                    opacity: state.flag ? 0.5 : 1,
                     color: '#fff',
                     border: 'none',
                   }}
+                  disabled={state.flag}
                 >
                   停止压测
                 </Button>
@@ -636,6 +641,16 @@ const PressureTestLive: React.FC<Props> = (props) => {
         style={{ marginTop: 24, marginBottom: 24 }}
         leftWrap={leftWrap}
       />
+
+      <PressTestMachines
+        reportInfo={{
+          jobId: detailData.jobId,
+          resourceId: detailData.resourceId,
+        }}
+        detailData={detailData}
+        ticker={ticker}
+      />
+
       <CommonTabs
         dataSource={tabData}
         tabsProps={{ destroyInactiveTabPane: true }}

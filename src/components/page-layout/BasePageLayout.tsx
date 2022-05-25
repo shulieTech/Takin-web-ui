@@ -23,7 +23,7 @@ export default class BasePageLayout extends Component<BasePageLayoutProps> {
           offsetTop={64}
           target={() => document.getElementById('contentLayout')}
         >
-          <div className="pd-r1x" style={{ borderBottom: '1px solid #ddd' }}>
+          <div className="pd-r1x" style={{ borderBottom: '1px solid #eee', paddingBottom: 16 }}>
             <Row type="flex" align="middle" justify="space-between">
               <h1 className="ft-20 mg-b0">{title}</h1>
               {(extraPosition === 'top' || extraPosition === '2') && (

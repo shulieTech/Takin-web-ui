@@ -8,6 +8,7 @@ import service from './service';
 const NewVersionHelp: React.FC = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [isShowNewVersion, setIsShowNewVersion] = useState(false);
+  const [machineError, setMachineError] = useState('');
 
   const checkShowNewVersion = async () => {
     const {
@@ -17,6 +18,7 @@ const NewVersionHelp: React.FC = (props) => {
       setIsShowNewVersion(true);
     }
   };
+
   const confirmNewVersion = async () => {
     const {
       data: { data, success },
@@ -26,12 +28,68 @@ const NewVersionHelp: React.FC = (props) => {
     }
   };
 
+  const checkMachineStatus = async () => {
+    const {
+      data: { data, success },
+    } = await service.checkMachineStatus();
+    if (success) {
+      setMachineError(data);
+      return data;
+    }
+    return '';
+  };
+
   useEffect(() => {
-    checkShowNewVersion();
+    (async () => {
+      const data = await checkMachineStatus();
+      if (!data) {
+        checkShowNewVersion();
+      }
+    })();
   }, []);
 
   return (
     <>
+      {machineError && (
+        <Alert
+          type="error"
+          style={{
+            border: 'none',
+            backgroundColor: 'var(--FunctionalError-50, #FFF7F8)',
+            borderRadius: 0,
+          }}
+          showIcon
+          icon={
+            <span
+              className="iconfont icon-anquandefuben"
+              style={{
+                fontSize: 20,
+                color: 'var(--FunctionalError-500, #F15F4A)',
+                top: 6,
+              }}
+            />
+          }
+          message={
+            <div>
+              <span
+                style={{
+                  fontSize: 16,
+                  marginRight: 8,
+                  marginLeft: 8,
+                  color: 'var(--Netural-14, #424242)',
+                }}
+              >
+                压力机环境异常
+              </span>
+              <span
+                style={{ marginRight: 8, color: 'var(--Netural/850, #414548)' }}
+              >
+                {machineError}
+              </span>
+            </div>
+          }
+        />
+      )}
       {isShowNewVersion && (
         <Alert
           type="info"

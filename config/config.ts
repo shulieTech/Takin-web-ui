@@ -39,7 +39,7 @@ export default {
   // proxy,
   theme,
   history: 'hash',
-  publicPath: './',
+  publicPath: process.env.CDN_PATH || './',
   hash: true,
   treeShaking: true,
   plugins: [

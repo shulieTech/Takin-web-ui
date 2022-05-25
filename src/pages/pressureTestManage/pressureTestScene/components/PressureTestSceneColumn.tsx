@@ -25,6 +25,7 @@ import styles from '../../../scriptManage/index.less';
 import { PressureTestSceneEnum } from '../enum';
 import AddTagsModal from '../modals/AddTagsModal';
 import PressureTestSceneService from '../service';
+import moment from 'moment';
 
 const getPressureTestSceneColumns = (
   state,
@@ -111,15 +112,21 @@ const getPressureTestSceneColumns = (
   /**
    * @name 是否有数据验证
    */
-  const queryHasMissingDataScript = async (sceneId) => {
+  const queryHasMissingDataScript = async (row) => {
     const {
       data: { data, success },
-    } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId });
+    } = await PressureTestSceneService.queryHasMissingDataScript({
+      sceneId: row.id,
+    });
     if (success) {
       setState({
-        sceneId,
+        sceneId: row.id,
         missingDataStatus: true,
         hasMissingData: data,
+        startedScence: {
+          scenceInfo: row,
+          triggerTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        },
       });
     }
   };
@@ -138,8 +145,9 @@ const getPressureTestSceneColumns = (
     }
   };
 
-  const handleClickStart = async (sceneId) => {
-    queryHasMissingDataScript(sceneId);
+  const handleClickStart = async (row) => {
+    const { id: sceneId } = row;
+    queryHasMissingDataScript(row);
     queryDataScriptNum(sceneId);
   };
 
@@ -253,7 +261,14 @@ const getPressureTestSceneColumns = (
       render: (text) => {
         return (
           <Badge
-            text={text === 0 ? '待启动' : text === 1 ? '启动中' : '压测中'}
+            text={
+              {
+                0: '待启动',
+                1: '启动中',
+                2: '压测中',
+                11: '资源锁定中',
+              }[text || 0]
+            }
             color={text === 2 ? 'var(--BrandPrimary-500)' : 'var(--Netural-06)'}
           />
         );
@@ -328,7 +343,7 @@ const getPressureTestSceneColumns = (
               >
                 <Button
                   onClick={() => {
-                    handleClickStart(row.id);
+                    handleClickStart(row);
                   }}
                   type="link"
                   style={{ marginRight: 8 }}
@@ -337,14 +352,22 @@ const getPressureTestSceneColumns = (
                 </Button>
               </AuthorityBtn>
             )}
-            {row.status === 1 && (
-              <Button
-                type="link"
-                style={{ marginRight: 8 }}
-                onClick={() => cancelLaunch(row.id)}
+            {[1, 11].includes(row.status) && (
+              <AuthorityBtn
+                isShow={
+                  btnAuthority &&
+                  btnAuthority.pressureTestManage_pressureTestScene_5_start_stop &&
+                  row.canStartStop
+                }
               >
-                启动中
-              </Button>
+                <Button
+                  type="link"
+                  style={{ marginRight: 8 }}
+                  onClick={() => cancelLaunch(row.id)}
+                >
+                  启动中
+                </Button>
+              </AuthorityBtn>
             )}
             {(getTakinAuthority() === 'false' ||
               (row.hasReport &&
