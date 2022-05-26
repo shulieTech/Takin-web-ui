@@ -23,7 +23,8 @@ const Params: React.FC<Props> = (props) => {
   const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
     FormEffectHooks;
 
-  const saveParams = async () => {
+  const saveBase = async () => {
+    // TODO 更换接口
     const { values } = await actions.submit();
     setSaving(true);
     const {
@@ -41,6 +42,26 @@ const Params: React.FC<Props> = (props) => {
     }
   };
 
+  const handleCancel = () => {
+    if (formChanged) {
+      Modal.confirm({
+        title: '提示',
+        content: '您有未保存内容，是否保存修改后退出？',
+        okText: '保存并退出',
+        onCancel: cancelCallback,
+        onOk: saveBase,
+      });
+    } else {
+      cancelCallback();
+    }
+  };
+
+  const formEffects = () => {
+    onFieldInputChange$().subscribe((fieldState) => {
+      setFormChanged(true);
+    });
+  };
+
   return (
     <Drawer
       visible
@@ -53,9 +74,7 @@ const Params: React.FC<Props> = (props) => {
         height: `calc(100% - 60px)`,
         overflow: 'hidden',
       }}
-      onClose={() => {
-        cancelCallback();
-      }}
+      onClose={handleCancel}
     >
       <div
         style={{
@@ -70,6 +89,7 @@ const Params: React.FC<Props> = (props) => {
             Input,
             TextArea: Input.TextArea,
           }}
+          effects={formEffects}
         >
           <Field
             name="name"
@@ -99,6 +119,7 @@ const Params: React.FC<Props> = (props) => {
             }}
             x-rules={[{ required: true, message: '请输入' }]}
           />
+          {/* TODO 选人组件 */}
           <Field
             name="manager"
             title="归属人"
@@ -139,15 +160,10 @@ const Params: React.FC<Props> = (props) => {
           borderTop: '1px solid #e8e8e8',
         }}
       >
-        <Button
-          onClick={cancelCallback}
-          style={{
-            marginRight: 8,
-          }}
-        >
+        <Button onClick={handleCancel} style={{ marginRight: 8 }}>
           取消
         </Button>
-        <Button type="primary" ghost onClick={saveParams} loading={saving}>
+        <Button type="primary" ghost onClick={saveBase} loading={saving}>
           保存
         </Button>
       </div>

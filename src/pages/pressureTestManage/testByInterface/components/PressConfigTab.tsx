@@ -33,7 +33,8 @@ const PressConfigTab: React.FC<Props> = (props) => {
           //     如何设定？ <Icon type="right" />
           //   </a>}
         >
-          <Field type="object" name="goal">
+          <Field type="object" name="goal" display={false} default={{}} />
+          <Field type="object" name="targetGoal">
             <FormMegaLayout labelAlign="top" grid autoRow full columns={4}>
               <Field
                 name="tps"
@@ -184,14 +185,26 @@ const PressConfigTab: React.FC<Props> = (props) => {
                   const formValues = form?.getFormState()?.values || {};
                   return (
                     <FlowPreview
-                      targetTps={formValues?.pressureConfigRequest?.goal?.tps}
-                      duration={formValues?.pressureConfigRequest?.config?.duration}
+                      targetTps={
+                        formValues?.pressureConfigRequest?.targetGoal?.tps
+                      }
+                      duration={
+                        formValues?.pressureConfigRequest?.config?.duration
+                      }
                       pressConfig={{
-                        rampUp: formValues?.pressureConfigRequest?.config?.threadGroupConfigMap?.rampUp, // 递增时长
-                        steps: formValues?.pressureConfigRequest?.config?.threadGroupConfigMap?.steps, // 递增层数
-                        type: formValues?.pressureConfigRequest?.config?.threadGroupConfigMap?.type, // 压力模式 并发或TPS模式
-                        threadNum: formValues?.pressureConfigRequest?.config?.threadGroupConfigMap?.threadNum, // 最大并发
-                        mode: formValues?.pressureConfigRequest?.config?.threadGroupConfigMap?.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
+                        rampUp:
+                          formValues?.pressureConfigRequest?.config
+                            ?.threadGroupConfigMap?.rampUp, // 递增时长
+                        steps:
+                          formValues?.pressureConfigRequest?.config
+                            ?.threadGroupConfigMap?.steps, // 递增层数
+                        type: formValues?.pressureConfigRequest?.config
+                          ?.threadGroupConfigMap?.type, // 压力模式 并发或TPS模式
+                        threadNum:
+                          formValues?.pressureConfigRequest?.config
+                            ?.threadGroupConfigMap?.threadNum, // 最大并发
+                        mode: formValues?.pressureConfigRequest?.config
+                          ?.threadGroupConfigMap?.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
                       }}
                       checkValid={() => {
                         return Promise.all([
@@ -423,7 +436,9 @@ const PressConfigTab: React.FC<Props> = (props) => {
               />
               <Field
                 title={
-                  <TipTittle tips="增压直至最大并发量的时间">递增时长</TipTittle>
+                  <TipTittle tips="增压直至最大并发量的时间">
+                    递增时长
+                  </TipTittle>
                 }
                 name="rampUp"
                 type="number"
@@ -474,7 +489,6 @@ const PressConfigTab: React.FC<Props> = (props) => {
                 required
                 default={1}
               />
-
             </Field>
             <Field
               name="podNum"

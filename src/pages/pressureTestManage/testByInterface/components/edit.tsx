@@ -53,6 +53,12 @@ const EditSence: React.FC<Props> = (props) => {
     });
     if (success) {
       setDetail(data);
+      // 非待启动状态时轮询
+      if (data.status !== 0) {
+        setTimeout(() => {
+          getDetail(id);
+        }, 5000);
+      }
     }
   };
 
@@ -71,7 +77,9 @@ const EditSence: React.FC<Props> = (props) => {
       if (success) {
         message.success('操作成功');
         // TODO 刷新并启动压测检测弹窗
-        getDetail(data.id || detail.id);
+        getDetail(data.id || detail.id).then(() => {
+          setPressStarted(true);
+        });
       }
     };
     if (hasUnsaved) {
@@ -176,9 +184,18 @@ const EditSence: React.FC<Props> = (props) => {
                 >
                   保存场景
                 </Button>
-                <Button type="primary" onClick={startTest} disabled={saving}>
+                <Button
+                  type="primary"
+                  onClick={startTest}
+                  disabled={saving || [2].includes(detail.status)}
+                >
                   <Icon type="play-circle" theme="filled" />
-                  启动压测
+                  {
+                    {
+                      0: '启动压测',
+                      2: '压测中',
+                    }[detail.status || 0]
+                  }
                 </Button>
               </div>
             </FormSlot>

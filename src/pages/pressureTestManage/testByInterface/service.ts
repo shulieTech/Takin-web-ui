@@ -51,10 +51,17 @@ export default {
     return httpPost(url, data);
   },
   /**
-   * @name 解析上传文件内容
+   * @name 保存文件参数
+   */
+  async saveFileParams(data = {}) {
+    const url = '/interfaceperformance/param/save';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 获取上传文件内容
    */
   async getDataSource(data = {}) {
-    const url = `/interfaceperformance/param/detail/${data.configId}`;
+    const url = `/interfaceperformance/param/detail/${data.id}`;
     return httpGet(url, data);
   },
   /**
