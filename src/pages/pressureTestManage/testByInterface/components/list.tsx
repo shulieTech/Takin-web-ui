@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Dropdown,
   Input,
@@ -13,6 +13,8 @@ import useListService from 'src/utils/useListService';
 import service from '../service';
 import styles from '../index.less';
 import classNames from 'classnames';
+import { router } from 'umi';
+import { SenceContext } from '../indexPage';
 
 interface Props {
   currentSence: any;
@@ -21,6 +23,7 @@ interface Props {
 
 const SenceList: React.FC<Props> = (props) => {
   const { currentSence, setCurrentSence } = props;
+  const { hasUnsaved, setHasUnsaved } = useContext(SenceContext);
   const { list, loading, total, query, getList } = useListService({
     service: service.getSenceList,
     defaultQuery: {
@@ -30,20 +33,31 @@ const SenceList: React.FC<Props> = (props) => {
     // isQueryOnQueryChange: false,
   });
 
-  const copySence = async (sence, event) => {
+  const checkSave = (callback) => {
+    if (hasUnsaved) {
+      Modal.confirm({
+        title: '提示',
+        content: '您的场景有内容修改，切换场景将清空修改内容，是否保存场景？',
+        okText: '保存场景',
+        onOk: async () => {
+          // TODO 保存场景
+        },
+        onCancel: () => {
+          callback();
+          setHasUnsaved(false);
+        },
+      });
+    } else {
+      callback();
+    }
+  };
+
+  const toLive = (sence, event) => {
     event.stopPropagation();
-    Modal.confirm({
-      title: '提示',
-      content: `确认复制${sence.name}？`,
-      onOk: async () => {
-        const {
-          data: { success, data },
-        } = await service.copySence(sence.id);
-        if (success) {
-          message.success('操作成功');
-          getList({ current: 0 });
-        }
-      },
+    checkSave(() => {
+      router.push(
+        `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sence.id}`
+      );
     });
   };
 
@@ -59,6 +73,9 @@ const SenceList: React.FC<Props> = (props) => {
         if (success) {
           message.success('操作成功');
           getList({ current: 0 });
+          if (sence.id === currentSence.id) {
+            setCurrentSence(null);
+          }
         }
       },
     });
@@ -105,7 +122,9 @@ const SenceList: React.FC<Props> = (props) => {
                   [styles.active]: x.id === currentSence?.id,
                 })}
                 onClick={() => {
-                  setCurrentSence(x);
+                  checkSave(() => {
+                    setCurrentSence(x);
+                  });
                 }}
               >
                 <div style={{ display: 'flex' }}>
@@ -124,11 +143,13 @@ const SenceList: React.FC<Props> = (props) => {
                   <Dropdown
                     overlay={
                       <Menu style={{ width: 140 }}>
-                        <Menu.Item
-                          onClick={({ domEvent }) => copySence(x, domEvent)}
-                        >
-                          复制
-                        </Menu.Item>
+                        {x.status === 2 && (
+                          <Menu.Item
+                            onClick={({ domEvent }) => toLive(x, domEvent)}
+                          >
+                            查看实况
+                          </Menu.Item>
+                        )}
                         <Menu.Item
                           style={{ color: 'red' }}
                           onClick={({ domEvent }) => deleteSence(x, domEvent)}

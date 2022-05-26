@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import {
   SchemaForm,
   SchemaMarkupField as Field,
@@ -29,6 +29,7 @@ import LayoutBox from './LayoutBox';
 import Sider from './Sider';
 import StartStatusModal from '../../pressureTestScene/modals/StartStatusModal';
 import moment from 'moment';
+import { SenceContext } from '../indexPage';
 
 interface Props {
   currentSence: any;
@@ -41,7 +42,7 @@ const EditSence: React.FC<Props> = (props) => {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detail, setDetail] = useState(currentSence);
   const [saving, setSaving] = useState(false);
-  const [hasUnsaved, setHasUnsaved] = useState(false);
+  const { hasUnsaved, setHasUnsaved } = useContext(SenceContext);
   const [pressStarted, setPressStarted] = useState(false);
 
   const getDetail = async (id) => {
