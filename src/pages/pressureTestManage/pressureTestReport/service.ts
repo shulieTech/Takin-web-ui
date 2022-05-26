@@ -216,6 +216,11 @@ const PressureTestReportService = {
     const url = '/cloud/resources/getDetails';
     return httpGet(url, data);
   },
+  // 请求类型列表
+  async getReportPdf(data = {}) {
+    const url = '/report/export';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;
