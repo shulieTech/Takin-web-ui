@@ -9,13 +9,13 @@ import { Select } from '@formily/antd-components';
 import service from '../service';
 
 interface Props {
-  details: any;
+  debugInput: any;
   okCallback: (data: any) => void;
   cancelCallback: () => void;
 }
 
 const DebugModal: React.FC<Props> = (props) => {
-  const { details, okCallback, cancelCallback } = props;
+  const { debugInput, okCallback, cancelCallback } = props;
 
   const actions = useMemo(() => createAsyncFormActions(), []);
   const startDebug = async () => {
@@ -23,8 +23,8 @@ const DebugModal: React.FC<Props> = (props) => {
     const {
       data: { data, success },
     } = await service.debugSence({
+      ...debugInput,
       ...values,
-      ...details,
     });
     if (success) {
       okCallback(data);

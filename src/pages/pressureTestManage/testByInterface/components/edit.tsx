@@ -215,7 +215,7 @@ const EditSence: React.FC<Props> = (props) => {
             type="card"
             style={{ flex: 1, padding: 16 }}
           >
-            <BaseTab actions={actions} />
+            <BaseTab actions={actions} detail={detail}/>
             <PressConfigTab actions={actions} />
           </FormTab>
           {detail.id && (

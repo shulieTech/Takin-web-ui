@@ -8,20 +8,23 @@ import service from '../service';
 import { debounce } from 'lodash';
 import styles from '../index.less';
 import LayoutBox from './LayoutBox';
+import DebugResult from './DebugResult';
 import { connect } from 'dva';
 
 interface Props {
   actions: IFormAsyncActions;
   dictionaryMap: any;
+  detail: any;
 }
 
 const BaseTab: React.FC<Props> = (props) => {
   const {
     actions,
     dictionaryMap: { DEBUG_HTTP_TYPE },
+    detail,
   } = props;
   const [debugInput, setDebugInput] = useState();
-  const [debugOutput, setDebugOutput] = useState();
+  const [debugId, setDebugId] = useState();
 
   const searchEntrance = debounce(async (val) => {
     actions.setFieldState('.entranceAppName', (state) => {
@@ -314,45 +317,13 @@ const BaseTab: React.FC<Props> = (props) => {
           </FormTab.TabPane>
         </FormTab>
         <FormSlot>
-          <div>
-            <div
-              style={{
-                padding: '8px 0',
-                borderTop: '1px solid #EEF0F2',
-                color: 'var(--Netural-500, #AEB2B7)',
-              }}
-            >
-              响应结果
-            </div>
-            {!debugOutput ? (
-              <div
-                style={{
-                  color: 'var(--Netural-800, #5A5E62)',
-                  lineHeight: '20px',
-                  textAlign: 'center',
-                  padding: '40px 0',
-                }}
-              >
-                您可以输入一个URL，点击调
-                <br />
-                试后，可在此查看响应结果
-              </div>
-            ) : (
-              <div
-                style={{
-                  borderTop: '1px solid #EEF0F2',
-                }}
-              >
-                结果
-              </div>
-            )}
-          </div>
+          <DebugResult debugId={debugId} detail={detail} />
         </FormSlot>
       </FormTab.TabPane>
       {debugInput && (
         <DebugModal
-          details={debugInput}
-          okCallback={setDebugOutput}
+          debugInput={debugInput}
+          okCallback={setDebugId}
           cancelCallback={() => {
             setDebugInput(null);
           }}
