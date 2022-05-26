@@ -243,47 +243,56 @@ const BaseTab: React.FC<Props> = (props) => {
             />
           </FormTab.TabPane>
           <FormTab.TabPane name="tab-1-3" tab="Body">
-            <FormMegaLayout inline>
-              <Field
-                type="number"
-                name="bodyType"
-                x-component="RadioGroup"
-                x-component-props={{
-                  style: {
-                    lineHeight: '32px',
-                  },
-                }}
-                enum={[
-                  { label: 'x-www-form-urlencoded', value: 0 },
-                  { label: 'Raw', value: 1 },
-                ]}
-                default={0}
-                x-linkages={[
-                  {
-                    type: 'value:visible',
-                    target: '.rawType',
-                    condition: '{{ $self.value === 1 }}',
-                  },
-                ]}
-              />
-              <Field
-                type="string"
-                name="rawType"
-                x-component="Select"
-                enum={DEBUG_HTTP_TYPE}
-                default="application/json"
-                x-linkages={[
-                  {
-                    type: 'value:state',
-                    target: '.contentType',
-                    state: {
-                      value:
-                        '{{ ($self.value || "application/x-www-form-urlencoded") + ";charset=UTF-8" }}',
+            <Field name="contentTypeVo" type="object">
+              <FormMegaLayout inline>
+                <Field
+                  type="string"
+                  name="codingFormat"
+                  x-component="Input"
+                  default="UTF-8"
+                  display={false}
+                />
+                <Field
+                  type="number"
+                  name="radio"
+                  x-component="RadioGroup"
+                  x-component-props={{
+                    style: {
+                      lineHeight: '32px',
                     },
-                  },
-                ]}
-              />
-            </FormMegaLayout>
+                  }}
+                  enum={[
+                    { label: 'x-www-form-urlencoded', value: 0 },
+                    { label: 'Raw', value: 1 },
+                  ]}
+                  default={0}
+                  x-linkages={[
+                    {
+                      type: 'value:visible',
+                      target: '.type',
+                      condition: '{{ $self.value === 1 }}',
+                    },
+                  ]}
+                />
+                <Field
+                  type="string"
+                  name="type"
+                  x-component="Select"
+                  enum={DEBUG_HTTP_TYPE}
+                  default="application/json"
+                  x-linkages={[
+                    {
+                      type: 'value:state',
+                      target: 'contentType',
+                      state: {
+                        value:
+                          '{{ ($self.value || "application/x-www-form-urlencoded") + ";charset=UTF-8" }}',
+                      },
+                    },
+                  ]}
+                />
+              </FormMegaLayout>
+            </Field>
             <Field
               type="string"
               name="body"

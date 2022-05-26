@@ -91,7 +91,7 @@ const EditSence: React.FC<Props> = (props) => {
       setSaving(true);
       const {
         data: { success, data },
-      } = await service[detail?.id ? 'addSence' : 'updateSence']({
+      } = await service[detail?.id ? 'updateSence' : 'addSence']({
         ...detail,
         ...values,
       }).finally(() => {
