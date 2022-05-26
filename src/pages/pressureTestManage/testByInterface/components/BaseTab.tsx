@@ -30,7 +30,11 @@ const BaseTab: React.FC<Props> = (props) => {
     try {
       const {
         data: { success, data },
-      } = await service.searchEntrance(val);
+      } = await service.searchEntrance({
+        requestUrl: val,
+        current: 0,
+        pageSize: 20,
+      });
       if (success) {
         actions.setFieldState('.entranceAppName', (state) => {
           state.props.enum = data;
@@ -50,6 +54,10 @@ const BaseTab: React.FC<Props> = (props) => {
       setDebugInput(values);
     }
   };
+
+  useEffect(() => {
+    searchEntrance('');
+  }, []);
 
   return (
     <>

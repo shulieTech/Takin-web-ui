@@ -89,7 +89,7 @@ export default {
    * @name 查询关联应用
    */
   async searchEntrance(data = {}) {
-    const url = '/startSence';
+    const url = '/interfaceperformance/config/relationName';
     return httpPost(url, data);
   },
 };
