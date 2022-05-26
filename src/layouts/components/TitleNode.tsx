@@ -68,7 +68,7 @@ const TitleNode: React.FC<Props> = (props) => {
               <img width={30} src={require('./../../assets/takin_logo.png')} />
 
               {!props.collapsedStatus && (
-                <span className={styles.logoName}>Takin</span>
+                <span className={styles.logoName} style={{ fontSize: 18 }}>性能测试</span>
               )}
             </>
           )}

@@ -35,7 +35,7 @@ const state = {
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
   const disableTenant = getThemeByKeyName('disableTenant');
-  const usernamePlaceholder = disableTenant ? '请输入账号' : '<用户名>@<企业别名>，例如： username@shulie';
+  const usernamePlaceholder = disableTenant ? '请输入账号' : '用户名';
   return [
     {
       key: 'username',
@@ -492,13 +492,13 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          // tabBarExtraContent={<Popover
+          //   content={this.content()}
+          //   trigger="click"
+          //   placement="top"
+          // >
+          //   <a>申请账号</a>
+          // </Popover>}
         >
           <TabPane tab="SSO登录" key="1" >
             <CommonForm
@@ -523,13 +523,13 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          // tabBarExtraContent={<Popover
+          //   content={this.content()}
+          //   trigger="click"
+          //   placement="top"
+          // >
+          //   <a>申请账号</a>
+          // </Popover>}
         >
           <TabPane tab="短信登录" key="2">
             <CommonForm
@@ -555,13 +555,13 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          // tabBarExtraContent={<Popover
+          //   content={this.content()}
+          //   trigger="click"
+          //   placement="top"
+          // >
+          //   <a>申请账号</a>
+          // </Popover>}
         >
           <TabPane tab="SSO登录" key="1" >
             <CommonForm
@@ -603,13 +603,13 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={<Popover
-            content={this.content()}
-            trigger="click"
-            placement="top"
-          >
-            <a>申请账号</a>
-          </Popover>}
+          // tabBarExtraContent={<Popover
+          //   content={this.content()}
+          //   trigger="click"
+          //   placement="top"
+          // >
+          //   <a>申请账号</a>
+          // </Popover>}
         >
           <TabPane tab="短信登录" key="2">
             <CommonForm
@@ -655,10 +655,10 @@ export default class Login extends DvaComponent<Props, State> {
               className={styles.bg3}
               src={require('./../../assets/login_img.png')}
             />
-            <img
+            {/* <img
               className={styles.bg4}
               src={require('./../../assets/logo.png')}
-            />
+            /> */}
           </>
         )}
 
