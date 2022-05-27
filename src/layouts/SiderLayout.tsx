@@ -43,7 +43,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     const {
       data: { success, data }
     } = await UserService.thirdPartylogin({
-      flag: queryString.parse(location.search).flag
+      // flag: queryString.parse(location.search).flag
+      ...queryString.parse(location.search),
     });
     if (success) {
       if (!data.errorMessage) {
