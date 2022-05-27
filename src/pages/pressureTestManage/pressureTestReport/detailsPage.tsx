@@ -290,7 +290,14 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   // 数据校准中不显示统计数据
   if (detailData?.calibration === 1) {
     const checkTxt = (
-      <span style={{ fontSize: 12, color: '#999', fontWeight: 'normal', lineHeight: '40px' }}>
+      <span
+        style={{
+          fontSize: 12,
+          color: '#999',
+          fontWeight: 'normal',
+          lineHeight: '40px',
+        }}
+      >
         校准中
       </span>
     );
@@ -300,8 +307,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       render: () =>
         x.label === '实际/目标TPS' ? (
           <>
-            {checkTxt}/
-            {detailData.tps || 0}
+            {checkTxt}/{detailData.tps || 0}
           </>
         ) : (
           checkTxt
@@ -362,15 +368,29 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           </Button>
         </Dropdown>
       )}
-      <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }} loading={isDownloadingReport}>
-        下载压测报告
-      </Button>
+      {detailData?.calibration !== 1 && (
+        <Button
+          type="primary"
+          ghost
+          onClick={downloadReportPdf}
+          style={{ marginRight: 8 }}
+          loading={isDownloadingReport}
+        >
+          下载压测报告
+        </Button>
+      )}
       {detailData?.hasJtl && (
-        <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloadingJtl}>
+        <Button
+          type="primary"
+          ghost
+          onClick={downloadJtlFile}
+          style={{ marginRight: 8 }}
+          loading={isDownloadingJtl}
+        >
           下载Jtl文件
         </Button>
       )}
-      
+
       <PressTestMachines
         reportInfo={{
           jobId: detailData.jobId,
