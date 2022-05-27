@@ -30,6 +30,7 @@ import Sider from './Sider';
 import StartStatusModal from '../../pressureTestScene/modals/StartStatusModal';
 import moment from 'moment';
 import { SenceContext } from '../indexPage';
+import { getTakinAuthority } from 'src/utils/utils';
 
 interface Props {
   currentSence: any;
@@ -37,7 +38,7 @@ interface Props {
 
 const EditSence: React.FC<Props> = (props) => {
   const { currentSence } = props;
-  const { onFieldInputChange$ } = FormEffectHooks;
+  const { onFieldInputChange$, onFieldValueChange$ } = FormEffectHooks;
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detail, setDetail] = useState(currentSence);
@@ -144,6 +145,38 @@ const EditSence: React.FC<Props> = (props) => {
           onFieldInputChange$().subscribe((state) => {
             setHasUnsaved(true);
           });
+          // 计算建议pod数
+          if (getTakinAuthority() === 'true') {
+            onFieldValueChange$(
+              'pressureConfigRequest.config.threadGroupConfigMap.threadNum'
+            ).subscribe(async (fieldState) => {
+              const { values } = await actions.getFormState();
+              const {
+                data: { success, data },
+              } = await service.querySuggestPodNum({
+                111: {
+                  ...values?.pressureConfigRequest?.config
+                    ?.threadGroupConfigMap,
+                  tpsSum: values?.pressureConfigRequest?.targetGoal?.tps,
+                },
+              });
+              if (success) {
+                actions.setFieldState(
+                  'pressureConfigRequest.config.podNum',
+                  (podState) => {
+                    podState.props['x-component-props'].addonAfter = (
+                      <Button>
+                        建议Pod数:
+                        {data?.min !== data?.max
+                          ? `${data?.min}-${data?.max}`
+                          : data?.min || '-'}
+                      </Button>
+                    );
+                  }
+                );
+              }
+            });
+          }
         }}
       >
         <LayoutBox
@@ -215,7 +248,7 @@ const EditSence: React.FC<Props> = (props) => {
             type="card"
             style={{ flex: 1, padding: 16 }}
           >
-            <BaseTab actions={actions} detail={detail}/>
+            <BaseTab actions={actions} detail={detail} />
             <PressConfigTab actions={actions} />
           </FormTab>
           {detail.id && (

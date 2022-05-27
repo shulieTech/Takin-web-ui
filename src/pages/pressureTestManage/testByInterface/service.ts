@@ -92,4 +92,11 @@ export default {
     const url = '/interfaceperformance/config/relationName';
     return httpPost(url, data);
   },
+  /**
+   * @name 获取建议pod数
+   */
+  async querySuggestPodNum(data) {
+    const url = '/v2/scene/pod_number';
+    return httpPost(url, data);
+  },
 };
