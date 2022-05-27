@@ -73,6 +73,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   });
 
   const [searchTableRef, setSearchTableRef] = useState<any>();
+  const [refreshTimer, setRefreshTimer] = useState<any>();
 
   useEffect(() => {
     querySwitchStatus();
@@ -228,15 +229,20 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   const refHandle = useCallback((ref) => setSearchTableRef(ref), []);
 
   useEffect(() => {
+    if (refreshTimer) {
+      clearInterval(refreshTimer);
+    }
     // 有定时压测或者非待启动压测时启用定时刷新
     const needRefresh = searchTableRef?.tableState?.dataSource.some(
       (x) => x.isScheduler || x.status !== 0
     );
     if (needRefresh) {
       const { queryList } = searchTableRef;
-      const refreshTimer = setInterval(() => {
-        queryList();
-      }, 10000);
+      setRefreshTimer(
+        setInterval(() => {
+          queryList();
+        }, 10000)
+      );
       return () => clearInterval(refreshTimer);
     }
   }, [JSON.stringify(searchTableRef?.tableState?.dataSource)]);
@@ -473,21 +479,23 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           </div>
         )}
       </Modal> */}
-      {state.visible && <StartStatusModal
-        visible
-        onCancel={() => {
-          setState({
-            visible: false,
-            isReload: !state.isReload,
-            startedScence: null,
-          });
-        }}
-        startedScence={{
-          ...state.startedScence,
-          leakSqlEnable: state.missingDataSwitch,
-          continueRead: state.pressureStyle,
-        }}
-      />}
+      {state.visible && (
+        <StartStatusModal
+          visible
+          onCancel={() => {
+            setState({
+              visible: false,
+              isReload: !state.isReload,
+              startedScence: null,
+            });
+          }}
+          startedScence={{
+            ...state.startedScence,
+            leakSqlEnable: state.missingDataSwitch,
+            continueRead: state.pressureStyle,
+          }}
+        />
+      )}
     </Fragment>
   );
 };
