@@ -50,6 +50,30 @@ const RecycleManage: React.FC<Props> = (props) => {
     });
   };
 
+  const scenceDelete = ({ sceneName, id }) => {
+    Modal.confirm({
+      title: '提示',
+      content: (
+        <div>
+          确定删除场景 <strong>{sceneName}</strong> ？
+        </div>
+      ),
+      onOk: async () => {
+        const {
+          data: { data, success },
+        } = await service.deletePressureTestScene({ id });
+        if (success) {
+          message.success('操作成功');
+          setState({
+            isReload: !columnState.isReload,
+          });
+          return Promise.resolve();
+        }
+        return Promise.reject();
+      },
+    });
+  };
+
   // 移除标签显示栏
   columns.splice(2, 1);
   // 覆盖操作栏
@@ -68,6 +92,14 @@ const RecycleManage: React.FC<Props> = (props) => {
           }}
         >
           恢复
+        </a>
+        <span className="ant-divider" />
+        <a
+          onClick={() => {
+            scenceDelete(record);
+          }}
+        >
+          删除
         </a>
       </div>
     );

@@ -46,12 +46,12 @@ const getPressureTestSceneColumns = (
   const expire: string = localStorage.getItem('troweb-expire');
 
   /**
-   * @name 删除压测场景
+   * @name 归档压测场景
    */
-  const handleDelete = async (id) => {
+  const handleArchive = async (id) => {
     const {
       data: { data, success },
-    } = await PressureTestSceneService.deletePressureTestScene({ id });
+    } = await PressureTestSceneService.scenceArchive({ id });
     if (success) {
       message.success('操作成功！');
       setState({
@@ -412,7 +412,7 @@ const getPressureTestSceneColumns = (
                   okText="确认归档"
                   title={'归档后该压测场景将被移动到回收站'}
                   okColor="var(--FunctionalError-500)"
-                  onConfirm={() => handleDelete(row.id)}
+                  onConfirm={() => handleArchive(row.id)}
                 >
                   <Button type="link" style={{ marginRight: 8 }}>
                     归档
