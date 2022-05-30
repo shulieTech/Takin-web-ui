@@ -105,32 +105,57 @@ const FlowPreview: React.FC<Props> = (props) => {
   return (
     <div
       style={{
-        border: '1px dashed #979797',
+        border: '1px solid #E5F1F3',
         padding: '5px 20px',
-        backgroundColor: '#fafbfd',
+        backgroundImage:
+          'linear-gradient(118.93deg, #F1F8FA 2.61%, #F8FEFF 100%)',
         marginTop: 8,
       }}
     >
-      <div>
-        流量预估
-        <Tooltip
-          title="流量预估是根据施压配置参数模拟的压力图与预计消耗流量，最终计费以实际施压情况为准"
-          placement="right"
-          trigger="click"
-        >
-          <Icon
-            type="question-circle"
-            style={{ marginLeft: 4, marginRight: 4 }}
-          />
-        </Tooltip>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          流量预估
+          <Tooltip
+            title="流量预估是根据施压配置参数模拟的压力图与预计消耗流量，最终计费以实际施压情况为准"
+            placement="right"
+            trigger="click"
+          >
+            <Icon
+              type="question-circle"
+              style={{ marginLeft: 4, marginRight: 4 }}
+            />
+          </Tooltip>
+        </div>
         <span>预计消耗：</span>
         {estimateFlow ? (
           <span>
             <Statistic
-              style={{ display: 'inline-block' }}
+              style={{
+                display: 'inline-block',
+              }}
               precision={2}
-              suffix="vum"
+              suffix={
+                <span
+                  style={{
+                    fontWeight: 'normal',
+                    color: '#90959A',
+                    fontSize: 12,
+                  }}
+                >
+                  vum
+                </span>
+              }
               value={estimateFlow}
+              valueStyle={{
+                color: '#11BBD5',
+                fontWeight: 700,
+                fontSize: 24,
+              }}
             />
           </span>
         ) : (
