@@ -24,7 +24,7 @@ const BaseTab: React.FC<Props> = (props) => {
     detail,
   } = props;
   const [debugInput, setDebugInput] = useState();
-  const [debugId, setDebugId] = useState();
+  const [debugId, setDebugId] = useState<string>();
 
   const searchEntrance = debounce(async (val) => {
     actions.setFieldState('.entranceAppName', (state) => {
@@ -323,7 +323,10 @@ const BaseTab: React.FC<Props> = (props) => {
       {debugInput && (
         <DebugModal
           debugInput={debugInput}
-          okCallback={setDebugId}
+          okCallback={(data) => {
+            setDebugId(data);
+            setDebugInput(null);
+          }}
           cancelCallback={() => {
             setDebugInput(null);
           }}

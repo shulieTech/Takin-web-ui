@@ -13,40 +13,28 @@ interface Props {
 
 const DebugResult: React.FC<Props> = (props) => {
   const { debugId, detail } = props;
-  const [result, setResult] = useState();
   const { query, total, list, getList, loading } = useListService({
     service: service.getDebugResult,
     defaultQuery: {
-      id: debugId,
-      senceId: detail?.id,
+      resultId: debugId,
+      IdleDeadline: detail?.id,
       current: 0,
       pageSize: 10,
     },
     afterSearchCallback: (res) => {
       // 轮询结果
-      if (res.data.success && res.data.data.status === 1) {
-        getList();
-      }
-    },
-  });
-
-  const getDebugResult = async () => {
-    const {
-      data: { success, data },
-    } = await service.getDebugResult({ id: debugId, senceId: detail?.id });
-    if (success) {
-      setResult(data);
-      if (data.status === 1) {
+      if (res.data.success && res.data.data.empty) {
         setTimeout(() => {
-          getDebugResult();
+          getList();
         }, 5000);
       }
-    }
-  };
+    },
+    isQueryOnMount: false,
+  });
 
   useEffect(() => {
     if (debugId) {
-      getDebugResult();
+      getList();
     }
   }, [debugId]);
 
@@ -66,7 +54,7 @@ const DebugResult: React.FC<Props> = (props) => {
         }}
       >
         <span style={{ flex: 1 }}>响应结果</span>
-        {result && (
+        {list.length > 0 && (
           <div style={{ color: 'var(--Netural-850, #414548)' }}>
             <span style={{ marginRight: 32 }}>
               <Icon
@@ -92,7 +80,7 @@ const DebugResult: React.FC<Props> = (props) => {
           </div>
         )}
       </div>
-      {!result ? (
+      {!(list.length > 0) ? (
         <div
           style={{
             color: 'var(--Netural-800, #5A5E62)',
@@ -197,13 +185,15 @@ const DebugResult: React.FC<Props> = (props) => {
                         })}
                       </div>
                     </Panel>
-                    <Panel
-                      header="Body"
-                      key="Body"
-                      style={{ borderBottom: 'none' }}
-                    >
-                      <div style={{ paddingLeft: 16 }}>{body}</div>
-                    </Panel>
+                    {body && (
+                      <Panel
+                        header="Body"
+                        key="Body"
+                        style={{ borderBottom: 'none' }}
+                      >
+                        <div style={{ paddingLeft: 16 }}>{body}</div>
+                      </Panel>
+                    )}
                     <Panel
                       header="Response"
                       key="Response"
