@@ -17,7 +17,7 @@ const DebugResult: React.FC<Props> = (props) => {
     service: service.getDebugResult,
     defaultQuery: {
       resultId: debugId,
-      IdleDeadline: detail?.id,
+      id: detail?.id,
       current: 0,
       pageSize: 10,
     },
@@ -33,10 +33,10 @@ const DebugResult: React.FC<Props> = (props) => {
   });
 
   useEffect(() => {
-    if (debugId) {
-      getList();
+    if (debugId || detail?.id) {
+      getList({ current: 0 });
     }
-  }, [debugId]);
+  }, [debugId, detail?.id]);
 
   const expandIcon = ({ isActive }) => (
     <Icon type="caret-right" rotate={isActive ? 90 : 0} />
