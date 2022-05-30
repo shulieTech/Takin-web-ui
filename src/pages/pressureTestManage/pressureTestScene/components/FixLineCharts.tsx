@@ -12,7 +12,7 @@ const FixLineCharts: React.FC<Props> = props => {
       <ReactEcharts
         style={{ height: 190, ...style }}
         option={{
-          color: ['#FFB64A'],
+          color: ['#00BCD4'],
           tooltip: {
             trigger: 'axis'
           },
