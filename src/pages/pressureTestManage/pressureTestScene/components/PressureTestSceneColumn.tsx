@@ -263,6 +263,7 @@ const getPressureTestSceneColumns = (
           <Badge
             text={
               {
+                '-1': '已归档',
                 0: '待启动',
                 1: '启动中',
                 2: '压测中',
