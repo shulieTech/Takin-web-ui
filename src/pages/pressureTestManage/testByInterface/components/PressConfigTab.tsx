@@ -471,7 +471,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
                   { format: 'integer', message: '请输入整数' },
                 ]}
                 required
-                default={5}
+                default={1}
               />
               <Field
                 title={
