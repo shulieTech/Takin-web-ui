@@ -6,7 +6,7 @@ export default {
    */
   async getSenceList(data = {}) {
     const url = '/interfaceperformance/config/query';
-    return httpPost(url, data);
+    return httpGet(url, data);
   },
   /**
    * @name 单个场景详情
