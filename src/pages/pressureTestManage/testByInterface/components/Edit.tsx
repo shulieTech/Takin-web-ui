@@ -43,7 +43,14 @@ const EditSence: React.FC<Props> = (props) => {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detail, setDetail] = useState(currentSence);
   const [saving, setSaving] = useState(false);
-  const { hasUnsaved, setHasUnsaved } = useContext(SenceContext);
+  const {
+    hasUnsaved,
+    setHasUnsaved,
+    listRefreshKey,
+    setListRefreshKey,
+    editSaveKey,
+    setEditSaveKey,
+  } = useContext(SenceContext);
   const [pressStarted, setPressStarted] = useState(false);
 
   const getDetail = async (id) => {
@@ -108,9 +115,10 @@ const EditSence: React.FC<Props> = (props) => {
         setSaving(false);
       });
       if (success) {
-        message.success('操作成功');
+        message.success('保存成功');
         setHasUnsaved(false);
         getDetail(data || detail.id);
+        setListRefreshKey(listRefreshKey + 1);
       }
     }
   };
@@ -118,14 +126,23 @@ const EditSence: React.FC<Props> = (props) => {
   useEffect(() => {
     if (currentSence.id) {
       getDetail(currentSence.id);
+    } else {
+      setDetail({});
     }
-  }, [currentSence.id]);
+  }, [currentSence?.id]);
+
+  useEffect(() => {
+    if (editSaveKey) {
+      saveSence();
+    }
+  }, [editSaveKey]);
 
   return (
     <Spin spinning={detailLoading} wrapperClassName="spin-full">
       <SchemaForm
+        key={detail?.id}
         actions={actions}
-        initialValues={detail}
+        defaultValue={detail}
         validateFirst
         components={{
           Input,

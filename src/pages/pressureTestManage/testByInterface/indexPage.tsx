@@ -12,10 +12,21 @@ const TestByInterface: React.FC<Props> = (props) => {
 
   const [currentSence, setCurrentSence] = useState(id ? { id } : null);
   const [hasUnsaved, setHasUnsaved] = useState(false);
+  const [listRefreshKey, setListRefreshKey] = useState(0);
+  const [editSaveKey, setEditSaveKey] = useState(0);
 
   return (
     <SenceContext.Provider
-      value={{ currentSence, setCurrentSence, hasUnsaved, setHasUnsaved }}
+      value={{
+        currentSence,
+        setCurrentSence,
+        hasUnsaved,
+        setHasUnsaved,
+        listRefreshKey,
+        setListRefreshKey,
+        editSaveKey,
+        setEditSaveKey,
+      }}
     >
       <Layout>
         <Layout.Sider

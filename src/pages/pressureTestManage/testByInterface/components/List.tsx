@@ -23,7 +23,13 @@ interface Props {
 
 const SenceList: React.FC<Props> = (props) => {
   const { currentSence, setCurrentSence } = props;
-  const { hasUnsaved, setHasUnsaved } = useContext(SenceContext);
+  const {
+    hasUnsaved,
+    setHasUnsaved,
+    listRefreshKey,
+    editSaveKey,
+    setEditSaveKey,
+  } = useContext(SenceContext);
   const { list, loading, total, query, getList } = useListService({
     service: service.getSenceList,
     defaultQuery: {
@@ -41,6 +47,7 @@ const SenceList: React.FC<Props> = (props) => {
         okText: '保存场景',
         onOk: async () => {
           // TODO 保存场景
+          setEditSaveKey(editSaveKey + 1);
         },
         onCancel: () => {
           callback();
@@ -81,6 +88,12 @@ const SenceList: React.FC<Props> = (props) => {
     });
   };
 
+  useEffect(() => {
+    if (listRefreshKey) {
+      getList();
+    }
+  }, [listRefreshKey]);
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', padding: 8 }}>
@@ -89,7 +102,7 @@ const SenceList: React.FC<Props> = (props) => {
           placeholder="请输入"
           onSearch={(val) =>
             getList({
-              keyword: val?.trim(),
+              queryName: val?.trim(),
             })
           }
         />
@@ -97,12 +110,12 @@ const SenceList: React.FC<Props> = (props) => {
           type="plus"
           className="pointer"
           style={{ marginLeft: 16, marginRight: 8 }}
-          onClick={() => setCurrentSence({})}
+          onClick={() => checkSave(() => setCurrentSence({}))}
         />
       </div>
       <div>
         <Spin spinning={loading}>
-          {total === 0 && !query.keyword && (
+          {total === 0 && !query.queryName && (
             <div
               style={{
                 textAlign: 'center',
@@ -135,7 +148,7 @@ const SenceList: React.FC<Props> = (props) => {
                       marginRight: 12,
                     }}
                   >
-                    GET
+                    {x.httpMethod}
                   </span>
                   <span style={{ flex: 1 }} className="truncate" title={x.name}>
                     {x.name}
@@ -167,7 +180,7 @@ const SenceList: React.FC<Props> = (props) => {
                     color: 'var(--Netural-600, #90959A)',
                   }}
                 >
-                  {x.url}
+                  {x.requestUrl}
                 </div>
               </div>
             );
