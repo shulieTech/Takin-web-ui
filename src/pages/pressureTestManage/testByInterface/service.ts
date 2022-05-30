@@ -6,7 +6,7 @@ export default {
    */
   async getSenceList(data = {}) {
     const url = '/interfaceperformance/config/query';
-    return httpGet(url, data);
+    return httpPost(url, data);
   },
   /**
    * @name 单个场景详情
@@ -69,10 +69,10 @@ export default {
    */
   async debugSence(data = {}) {
     const url = '/interfaceperformance/debug/start';
-    return httpGet(url, data);
+    return httpPost(url, data);
   },
   /**
-   * @name 调试场景
+   * @name 调试场景结果
    */
   async getDebugResult(data = {}) {
     const url = '/interfaceperformance/debug/result';

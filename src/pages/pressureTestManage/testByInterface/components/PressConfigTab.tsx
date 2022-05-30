@@ -242,6 +242,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
                   {
                     label: '并发模式',
                     value: 0,
+                    icon: <Icon type="project" style={{ fontSize: 20 }} />,
                     description: (
                       <span>
                         业务流程是压测配置的业务流程是
@@ -249,8 +250,19 @@ const PressConfigTab: React.FC<Props> = (props) => {
                         压测配置的
                       </span>
                     ),
-                  },
-                  // { label: 'TPS模式', value: 1 },
+                  }, 
+                  // {
+                  //   label: 'TPS模式',
+                  //   value: 1,
+                  //   icon: <Icon type="line-chart" style={{ fontSize: 20 }} />,
+                  //   description: (
+                  //     <span>
+                  //       业务流程是压测配置的业务流程是
+                  //       <br />
+                  //       压测配置的
+                  //     </span>
+                  //   ),
+                  // },
                 ]}
                 default={0}
                 x-component-props={{

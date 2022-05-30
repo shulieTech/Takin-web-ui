@@ -70,7 +70,7 @@ const DebugModal: React.FC<Props> = (props) => {
       >
         <Field
           title="请求条数"
-          name="requestNum"
+          name="requestCount"
           x-component="Select"
           x-component-props={{
             placeholder: '请选择请求条数',
