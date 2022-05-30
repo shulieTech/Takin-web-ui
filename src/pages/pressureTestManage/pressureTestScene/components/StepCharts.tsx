@@ -33,7 +33,22 @@ const StepCharts: React.FC<Props> = props => {
               symbolSize: 0,
               type: 'line',
               step: 'start',
-              data: props.chartsInfo
+              data: props.chartsInfo,
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [{
+                    offset: 0, color: '#BCE8E2' // 0% 处的颜色
+                  }, {
+                    offset: 1, color: 'rgba(185, 229, 236, 0.19)' // 100% 处的颜色
+                  }],
+                  global: false // 缺省为 false
+                },
+              },
             }
           ]
         }}
