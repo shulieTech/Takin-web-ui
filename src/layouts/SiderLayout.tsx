@@ -33,7 +33,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const pathname: string | any = props.location.pathname;
   const popupDom = useRef(null);
 
-  const thirdPartyLoginFlag = props.location.query.flag || queryString.parse(window.location.search).flag;
+  const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl } =
+    props.location.query || queryString.parse(window.location.search) || {};
 
   useEffect(() => {
     if (thirdPartyLoginFlag) {
@@ -67,6 +68,13 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           localStorage.setItem('full-link-token', data.xToken);
           localStorage.setItem('troweb-expire', data.expire);
           localStorage.removeItem('Access-Token');
+
+          // 支持登录后跳转到指定页面
+          if (redirectUrl && data.xCode) {
+            window.location.href = `${redirectUrl}?code=${data.xCode}`;
+            return;
+          }
+
           setState({ request: true });
         }
       } else {
