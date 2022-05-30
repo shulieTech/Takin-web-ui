@@ -110,7 +110,7 @@ const EditSence: React.FC<Props> = (props) => {
       if (success) {
         message.success('操作成功');
         setHasUnsaved(false);
-        getDetail(data.id || detail.id);
+        getDetail(data || detail.id);
       }
     }
   };
