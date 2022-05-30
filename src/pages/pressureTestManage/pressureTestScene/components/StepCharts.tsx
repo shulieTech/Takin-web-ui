@@ -15,7 +15,7 @@ const StepCharts: React.FC<Props> = (props) => {
           grid: {
             top: 20,
             left: 40,
-            right: 10,
+            right: 20,
             bottom: 40,
           },
           color: ['#00BCD4'],
