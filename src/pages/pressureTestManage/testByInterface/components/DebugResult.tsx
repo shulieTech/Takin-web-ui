@@ -3,30 +3,35 @@ import { Select, Icon, Tree, Pagination, Collapse } from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
 import moment from 'moment';
+import { IFieldMergeState } from '@formily/antd';
 
 const { Panel } = Collapse;
 
-interface Props {
-  detail: any;
-  debugId?: number | string;
-}
-
-const DebugResult: React.FC<Props> = (props) => {
-  const { debugId, detail } = props;
+const DebugResult: React.FC<IFieldMergeState> = (props) => {
+  const { schema } = props;
+  const componentProps = schema.getExtendsComponentProps() || {};
+  const { debugId, detail, ...rest } = componentProps;
+  const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
+  const defaultQuery = {
+    resultId: debugId,
+    id: detail?.id,
+    current: 0,
+    pageSize: 10,
+  };
   const { query, total, list, getList, loading } = useListService({
+    defaultQuery,
     service: service.getDebugResult,
-    defaultQuery: {
-      resultId: debugId,
-      id: detail?.id,
-      current: 0,
-      pageSize: 10,
-    },
     afterSearchCallback: (res) => {
       // 轮询结果
-      if (res.data.success && res.data.data.empty) {
-        setTimeout(() => {
-          getList();
-        }, 5000);
+      if (timer) {
+        clearTimeout(timer);
+      }
+      if (debugId && res.data.success && res.data.data.empty) {
+        setTimer(
+          setTimeout(() => {
+            getList(defaultQuery);
+          }, 2000)
+        );
       }
     },
     isQueryOnMount: false,
@@ -34,8 +39,13 @@ const DebugResult: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (debugId || detail?.id) {
-      getList({ current: 0 });
+      getList(defaultQuery);
     }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [debugId, detail?.id]);
 
   const expandIcon = ({ isActive }) => (
@@ -107,7 +117,13 @@ const DebugResult: React.FC<Props> = (props) => {
             }}
           >
             {list.map((x) => {
-              const { headers, body, Cookie } = JSON.parse(x.request);
+              const {
+                headers: requestHeaders,
+                body: requestBody,
+                Cookie,
+              } = JSON.parse(x.request || '{}');
+              const { headers: responseHeaders, body: responseBody } =
+                JSON.parse(x.response || '{}');
               const hasError = !!x.errorMessage;
               return (
                 <Panel
@@ -160,47 +176,126 @@ const DebugResult: React.FC<Props> = (props) => {
                     }}
                   >
                     <Panel
-                      header="Header"
-                      key="Header"
+                      header="Request"
+                      key="Request"
                       style={{ borderBottom: 'none' }}
                     >
                       <div style={{ paddingLeft: 16 }}>
-                        {Object.entries(headers).map(([k, v]) => {
-                          return (
-                            <div key={k} style={{ lineHeight: '28px' }}>
-                              <span
-                                style={{ color: '#6187CF', marginRight: 8 }}
-                              >
-                                {k}：
-                              </span>
-                              <span
-                                style={{
-                                  color: 'var(--Netural-850, #414548)',
-                                }}
-                              >
-                                {v}
-                              </span>
+                        <Collapse
+                          bordered={false}
+                          expandIcon={expandIcon}
+                          style={{
+                            backgroundColor: 'transparent',
+                          }}
+                        >
+                          <Panel
+                            header="Header"
+                            key="Header"
+                            style={{ borderBottom: 'none' }}
+                          >
+                            <div style={{ paddingLeft: 16 }}>
+                              {Object.entries(requestHeaders).map(([k, v]) => {
+                                return (
+                                  <div key={k} style={{ lineHeight: '28px' }}>
+                                    <span
+                                      style={{
+                                        color: '#6187CF',
+                                        marginRight: 8,
+                                      }}
+                                    >
+                                      {k}：
+                                    </span>
+                                    <span
+                                      style={{
+                                        color: 'var(--Netural-850, #414548)',
+                                      }}
+                                    >
+                                      {v}
+                                    </span>
+                                  </div>
+                                );
+                              })}
                             </div>
-                          );
-                        })}
+                          </Panel>
+                          {requestBody && (
+                            <Panel
+                              header="Body"
+                              key="Body"
+                              style={{ borderBottom: 'none' }}
+                            >
+                              <div style={{ paddingLeft: 16 }}>
+                                {requestBody}
+                              </div>
+                            </Panel>
+                          )}
+                        </Collapse>
                       </div>
                     </Panel>
-                    {body && (
+
+                    {x.response && (
                       <Panel
-                        header="Body"
-                        key="Body"
+                        header="Response"
+                        key="Response"
                         style={{ borderBottom: 'none' }}
                       >
-                        <div style={{ paddingLeft: 16 }}>{body}</div>
+                        <div style={{ paddingLeft: 16 }}>
+                          <Collapse
+                            bordered={false}
+                            expandIcon={expandIcon}
+                            style={{
+                              backgroundColor: 'transparent',
+                            }}
+                          >
+                            <Panel
+                              header="Header"
+                              key="Header"
+                              style={{ borderBottom: 'none' }}
+                            >
+                              <div style={{ paddingLeft: 16 }}>
+                                {Object.entries(responseHeaders).map(
+                                  ([k, v]) => {
+                                    return (
+                                      <div
+                                        key={k}
+                                        style={{ lineHeight: '28px' }}
+                                      >
+                                        <span
+                                          style={{
+                                            color: '#6187CF',
+                                            marginRight: 8,
+                                          }}
+                                        >
+                                          {k}：
+                                        </span>
+                                        <span
+                                          style={{
+                                            color:
+                                              'var(--Netural-850, #414548)',
+                                          }}
+                                        >
+                                          {v}
+                                        </span>
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            </Panel>
+                            {responseBody && (
+                              <Panel
+                                header="Body"
+                                key="Body"
+                                style={{ borderBottom: 'none' }}
+                              >
+                                <div style={{ paddingLeft: 16 }}>
+                                  {responseBody}
+                                </div>
+                              </Panel>
+                            )}
+                          </Collapse>
+                        </div>
                       </Panel>
                     )}
-                    <Panel
-                      header="Response"
-                      key="Response"
-                      style={{ borderBottom: 'none' }}
-                    >
-                      <div style={{ paddingLeft: 16 }}>{x.response}</div>
-                    </Panel>
                   </Collapse>
                 </Panel>
               );
@@ -222,5 +317,7 @@ const DebugResult: React.FC<Props> = (props) => {
     </div>
   );
 };
+
+DebugResult.isVirtualFieldComponent = true;
 
 export default DebugResult;

@@ -26,6 +26,7 @@ import BaseTab from './BaseTab';
 import PressConfigTab from './PressConfigTab';
 import RadioCard from './RadioCard';
 import LayoutBox from './LayoutBox';
+import DebugResult from './DebugResult';
 import Sider from './Sider';
 import StartStatusModal from '../../pressureTestScene/modals/StartStatusModal';
 import moment from 'moment';
@@ -155,6 +156,7 @@ const EditSence: React.FC<Props> = (props) => {
           Switch,
           DatePicker,
           RadioCard,
+          DebugResult,
           TextArea: Input.TextArea,
           RadioGroup: Radio.Group,
         }}

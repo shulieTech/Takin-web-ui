@@ -8,7 +8,6 @@ import service from '../service';
 import { debounce } from 'lodash';
 import styles from '../index.less';
 import LayoutBox from './LayoutBox';
-import DebugResult from './DebugResult';
 import { connect } from 'dva';
 
 interface Props {
@@ -24,7 +23,6 @@ const BaseTab: React.FC<Props> = (props) => {
     detail,
   } = props;
   const [debugInput, setDebugInput] = useState();
-  const [debugId, setDebugId] = useState<string>();
 
   const searchEntrance = debounce(async (val) => {
     actions.setFieldState('.entranceAppName', (state) => {
@@ -61,6 +59,12 @@ const BaseTab: React.FC<Props> = (props) => {
   useEffect(() => {
     searchEntrance('');
   }, []);
+
+  useEffect(() => {
+    actions.setFieldState('.debugResult', (state) => {
+      state.props['x-component-props'].debugId = '';
+    });
+  }, [detail?.id]);
 
   return (
     <>
@@ -316,15 +320,23 @@ const BaseTab: React.FC<Props> = (props) => {
             />
           </FormTab.TabPane>
         </FormTab>
-        <FormSlot>
-          <DebugResult debugId={debugId} detail={detail} />
-        </FormSlot>
+        <Field
+          name=".debugResult"
+          x-component="DebugResult"
+          x-component-props={{
+            detail,
+            debugId: '',
+          }}
+        />
+        {/* <DebugResult debugId={debugId} detail={detail} /> */}
       </FormTab.TabPane>
       {debugInput && (
         <DebugModal
           debugInput={debugInput}
           okCallback={(data) => {
-            setDebugId(data);
+            actions.setFieldState('debugResult', (state) => {
+              state.props['x-component-props'].debugId = data;
+            });
             setDebugInput(null);
           }}
           cancelCallback={() => {
