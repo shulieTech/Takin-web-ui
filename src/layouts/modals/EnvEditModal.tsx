@@ -32,7 +32,7 @@ const EnvEditModal: React.FC<Props> = (props) => {
     const { values } = await actions.submit();
     const {
       data: { data, success },
-    } = await service[isEdit ? 'updateEnv' : 'addEnv']({
+    } = await service.addEnv({
       ...values,
       ...detail,
     });
@@ -103,6 +103,7 @@ const EnvEditModal: React.FC<Props> = (props) => {
           x-component-props={{
             placeholder: '请输入',
             maxLength: 20,
+            disabled: isEdit,
           }}
           x-rules={[
             {
