@@ -197,7 +197,7 @@ const Params: React.FC<Props> = (props) => {
                   x-component-props={{
                     getTableColumns,
                     acceptExts: ['csv', 'xlsx', 'xls'],
-                    maxSize: 100 * 1024,
+                    maxSize: 200 * 1024 * 1024,
                     otherUploadProps: {
                       style: {
                         display: 'block',
@@ -241,9 +241,10 @@ const Params: React.FC<Props> = (props) => {
                     <Field
                       name="paramName"
                       type="string"
-                      title="参数名"
+                      title={<span>参数名(取自列表第一行数据)</span>}
                       x-component="Input"
                       editable={false}
+                      // TODO tooltip加复制成${}格式
                     />
                   </Field>
                 </Field>
