@@ -38,8 +38,8 @@ const tenantCodeService = {
     return httpDelete(url, data);
   },
   async setDefaultEnv(data = {}) {
-    const url = '/tenant/env/setDefault';
-    return httpGet(url, data);
+    const url = '/tenant/env/default';
+    return httpPut(url, data);
   },
 };
 
