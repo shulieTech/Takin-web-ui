@@ -81,7 +81,11 @@ const RecycleManage: React.FC<Props> = (props) => {
     return (
       <div>
         <Link
-          to={`/pressureTestManage/pressureTestSceneV2/edit?id=${record.id}&readOnly=1`}
+          to={
+            record.hasAnalysisResult
+              ? `/pressureTestManage/pressureTestSceneV2/edit?id=${record.id}&readOnly=1`
+              : `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${record.id}&readOnly=1`
+          }
         >
           查看
         </Link>
