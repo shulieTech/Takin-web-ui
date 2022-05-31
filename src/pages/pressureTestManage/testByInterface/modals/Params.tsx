@@ -34,7 +34,7 @@ const Params: React.FC<Props> = (props) => {
       data: { success, data },
     } = await service
       .getDataSource({
-        id: detail.id,
+        configId: detail.id,
       })
       .finally(() => {
         setLoading(false);

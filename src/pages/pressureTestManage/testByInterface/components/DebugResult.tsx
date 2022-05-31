@@ -14,7 +14,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
   const defaultQuery = {
     resultId: debugId,
-    id: detail?.id,
+    configId: detail?.id,
     current: 0,
     pageSize: 10,
   };

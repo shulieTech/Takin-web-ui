@@ -61,7 +61,7 @@ export default {
    * @name 获取上传文件内容
    */
   async getDataSource(data = {}) {
-    const url = `/interfaceperformance/param/detail/${data.id}`;
+    const url = `/interfaceperformance/param/detail`;
     return httpGet(url, data);
   },
   /**
