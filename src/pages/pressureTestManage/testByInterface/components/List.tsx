@@ -46,7 +46,7 @@ const SenceList: React.FC<Props> = (props) => {
         content: '您的场景有内容修改，切换场景将清空修改内容，是否保存场景？',
         okText: '保存场景',
         onOk: async () => {
-          // TODO 保存场景
+          // 保存场景
           setEditSaveKey(editSaveKey + 1);
         },
         onCancel: () => {

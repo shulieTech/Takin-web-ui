@@ -4,13 +4,15 @@ import {
   SchemaMarkupField as Field,
   createAsyncFormActions,
   FormEffectHooks,
+  ISchemaFieldComponentProps,
 } from '@formily/antd';
 import { Input, ArrayTable, FormTab } from '@formily/antd-components';
-import { Drawer, Button, Modal, Spin } from 'antd';
+import { Drawer, Button, Modal, Spin, message, Tooltip, Icon } from 'antd';
 import FilesTable from '../components/FilesTable';
 import downdloadFile from 'src/utils/downloadFile';
 import service from '../service';
 import styles from '../index.less';
+import copy from 'copy-to-clipboard';
 
 interface Props {
   detail: any;
@@ -121,6 +123,7 @@ const Params: React.FC<Props> = (props) => {
         setSaving(false);
       });
     if (success) {
+      message.success('操作成功');
       setFormChanged(false);
       okCallback();
     }
@@ -192,7 +195,7 @@ const Params: React.FC<Props> = (props) => {
                 <Field
                   name="relatedFiles"
                   title="上传文件"
-                  required
+                  // required
                   x-component="FilesTable"
                   x-component-props={{
                     getTableColumns,
@@ -205,7 +208,7 @@ const Params: React.FC<Props> = (props) => {
                       },
                     },
                   }}
-                  x-rules={[{ required: true, message: '请上传文件' }]}
+                  // x-rules={[{ required: true, message: '请上传文件' }]}
                 />
                 <Field
                   name="paramList"
@@ -216,12 +219,12 @@ const Params: React.FC<Props> = (props) => {
                     size: 'small',
                     className: styles['tight-table'],
                   }}
-                  minItems={1}
                   editable={false}
-                  required
-                  x-rules={[
-                    { required: true, message: '请先上传有数据的文件' },
-                  ]}
+                  // minItems={1}
+                  // required
+                  // x-rules={[
+                  //   { required: true, message: '请先上传有数据的文件' },
+                  // ]}
                 >
                   <Field type="object">
                     <Field
@@ -244,7 +247,32 @@ const Params: React.FC<Props> = (props) => {
                       title={<span>参数名(取自列表第一行数据)</span>}
                       x-component="Input"
                       editable={false}
-                      // TODO tooltip加复制成${}格式
+                      x-render={(prop: ISchemaFieldComponentProps) => {
+                        // tooltip加复制成${}格式
+                        if (!prop.value) {
+                          return '-';
+                        }
+                        return (
+                          <span>
+                            <Tooltip title={prop.value}>
+                              <div
+                                className="truncate"
+                                style={{ maxWidth: 200 }}
+                              >
+                                {prop.value}
+                              </div>
+                            </Tooltip>
+                            <Icon
+                              type="copy"
+                              style={{ marginLeft: 8, cursor: 'pointer', color: '#11BBD5' }}
+                              onClick={() => {
+                                copy(`\${${prop.value}\}`);
+                                message.success('复制成功');
+                              }}
+                            />
+                          </span>
+                        );
+                      }}
                     />
                   </Field>
                 </Field>
