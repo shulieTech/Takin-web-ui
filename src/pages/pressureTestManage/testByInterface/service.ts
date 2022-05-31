@@ -79,6 +79,13 @@ export default {
     return httpGet(url, data);
   },
   /**
+   * @name 调试场景结果
+   */
+  async clearDebugResult(data = {}) {
+    const url = '/interfaceperformance/debug/flush';
+    return httpDelete(url, data);
+  },
+  /**
    * @name 保存并启动场景
    */
   async saveAndStartSence(data = {}) {

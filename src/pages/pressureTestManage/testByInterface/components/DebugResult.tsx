@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Icon, Tree, Pagination, Collapse, Spin } from 'antd';
+import {
+  Select,
+  Icon,
+  Tree,
+  Pagination,
+  Collapse,
+  Spin,
+  Button,
+  message,
+} from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
 import moment from 'moment';
@@ -8,10 +17,11 @@ import { IFieldMergeState } from '@formily/antd';
 const { Panel } = Collapse;
 
 const DebugResult: React.FC<IFieldMergeState> = (props) => {
-  const { schema } = props;
+  const { schema, form } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
   const { debugId, detail, ...rest } = componentProps;
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
+  const [errorCount, setErrorCount] = useState(0);
   const defaultQuery = {
     resultId: debugId,
     configId: detail?.id,
@@ -22,11 +32,14 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
     defaultQuery,
     service: service.getDebugResult,
     afterSearchCallback: (res) => {
+      if (res.data.success) {
+        setErrorCount(res.data?.data?.errorCount || 0);
+      }
       // 轮询结果
       if (timer) {
         clearTimeout(timer);
       }
-      if (debugId && res.data.success && res.data.data.empty) {
+      if (debugId && res.data.success && res.data?.data?.empty) {
         setTimer(
           setTimeout(() => {
             getList(defaultQuery);
@@ -37,7 +50,25 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
     isQueryOnMount: false,
   });
 
+  const clearDebugHistory = async () => {
+    const {
+      data: { data, success },
+    } = await service.clearDebugResult({
+      resultId: debugId,
+      configId: detail?.id,
+    });
+    if (success) {
+      message.success('操作成功');
+      form.setFieldState('.debugResult', (state) => {
+        state.props['x-component-props'].debugId = '';
+      });
+    }
+  };
+
   useEffect(() => {
+    if (timer) {
+      clearTimeout(timer);
+    }
     if (debugId || detail?.id) {
       getList(defaultQuery);
     }
@@ -66,20 +97,23 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
         <span style={{ flex: 1 }}>响应结果</span>
         {list.length > 0 && (
           <div style={{ color: 'var(--Netural-850, #414548)' }}>
-            <span style={{ marginRight: 32 }}>
-              <Icon
-                type="close-circle"
-                theme="filled"
-                style={{ color: '#D64C42', marginRight: 8 }}
-              />
-              1 失败
-            </span>
+            {errorCount > 0 && (
+              <span style={{ marginRight: 32 }}>
+                <Icon
+                  type="close-circle"
+                  theme="filled"
+                  style={{ color: '#D64C42', marginRight: 8 }}
+                />
+                {errorCount} 失败
+              </span>
+            )}
             <Select
               allowClear
               placeholder="状态"
-              style={{ width: 120 }}
+              style={{ width: 120, marginRight: 8 }}
               onChange={(val) =>
                 getList({
+                  ...defaultQuery,
                   status: val,
                 })
               }
@@ -87,6 +121,9 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
               <Select.Option value={1}>成功</Select.Option>
               <Select.Option value={2}>失败</Select.Option>
             </Select>
+            <Button onClick={clearDebugHistory}>
+              清空
+            </Button>
           </div>
         )}
       </div>
