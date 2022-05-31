@@ -262,6 +262,24 @@ const PressTestMachines: React.FC<Props> = (props) => {
     {
       title: '压力机名称',
       dataIndex: 'name',
+      render: (text) => {
+        return (
+          <Tooltip title={text}>
+            <div
+              style={{
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                maxWidth: 120,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {text}
+            </div>
+          </Tooltip>
+        );
+      },
     },
     // {
     //   title: '重启次数',

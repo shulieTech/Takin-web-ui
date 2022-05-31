@@ -28,6 +28,16 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
     queryPressureTestDetailList({ reportId: id });
   }, []);
 
+  useEffect(() => {
+    // 数据校准中时5s刷新一次
+    if (detailData?.calibration === 1) {
+      const ticker = setInterval(() => {
+        queryPressureTestDetailList({ reportId: id });
+      }, 5000);
+      return () => clearInterval(ticker);
+    }
+  }, [detailData?.calibration]);
+
   /**
    * @name 获取压测明细列表
    */

@@ -21,13 +21,24 @@ export type NodeTypeOneState = ReturnType<typeof getInitState>;
 const NodeTypeFive: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
 
+  const getShadowTableName = (bizTableName: string) => {
+    const dotIndex = bizTableName.lastIndexOf('.');
+    if (dotIndex > -1) {
+      return `${bizTableName.substring(
+        0,
+        dotIndex
+      )}.PT_${bizTableName.substring(dotIndex + 1)}'`;
+    }
+    return `PT_${bizTableName}`;
+  };
+
   useEffect(() => {
     setState({
       list: props.value
         ? props.value.map((item, k) => {
           return {
             ...item,
-            shaDowTableName: `PT_${item.bizTableName}`,
+            shaDowTableName: getShadowTableName(item.bizTableName),
             id: k,
             editable: false
           };
@@ -245,11 +256,11 @@ const NodeTypeFive: React.FC<Props> = props => {
           return row.editable ? (
             <Input
               maxLength={128}
-              value={row.bizTableName ? `PT_${row.bizTableName}` : undefined}
+              value={row.bizTableName ? getShadowTableName(row.bizTableName) : undefined}
               disabled={true}
             />
           ) : row.bizTableName ? (
-            `PT_${row.bizTableName}`
+            getShadowTableName(row.bizTableName)
           ) : (
             ''
           );

@@ -46,14 +46,14 @@ const getPressureTestSceneColumns = (
   const expire: string = localStorage.getItem('troweb-expire');
 
   /**
-   * @name 删除压测场景
+   * @name 归档压测场景
    */
-  const handleDelete = async (id) => {
+  const handleArchive = async (id) => {
     const {
       data: { data, success },
-    } = await PressureTestSceneService.deletePressureTestScene({ id });
+    } = await PressureTestSceneService.scenceArchive({ id });
     if (success) {
-      message.success('删除压测场景成功！');
+      message.success('操作成功！');
       setState({
         isReload: !state.isReload,
       });
@@ -263,6 +263,7 @@ const getPressureTestSceneColumns = (
           <Badge
             text={
               {
+                '-1': '已归档',
                 0: '待启动',
                 1: '启动中',
                 2: '压测中',
@@ -407,13 +408,15 @@ const getPressureTestSceneColumns = (
                 }
               >
                 <CustomPopconfirm
-                  okText="确认删除"
-                  title={'是否确认删除'}
+                  arrowPointAtCenter
+                  placement="topRight"
+                  okText="确认归档"
+                  title={'归档后该压测场景将被移动到回收站'}
                   okColor="var(--FunctionalError-500)"
-                  onConfirm={() => handleDelete(row.id)}
+                  onConfirm={() => handleArchive(row.id)}
                 >
                   <Button type="link" style={{ marginRight: 8 }}>
-                    删除
+                    归档
                   </Button>
                 </CustomPopconfirm>
               </AuthorityBtn>

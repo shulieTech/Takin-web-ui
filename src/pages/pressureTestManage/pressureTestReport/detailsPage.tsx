@@ -59,7 +59,8 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   const { query } = location;
   const { id } = query;
   const { detailData, reportCountData, hasMissingData } = state;
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isDownloadingJtl, setIsDownloadingJtl] = useState(false);
+  const [isDownloadingReport, setIsDownloadingReport] = useState(false);
 
   useEffect(() => {
     queryReportBusinessActivity(id);
@@ -71,6 +72,16 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     queryReportCount(id);
     queryRequestCount(id);
   }, [state.isReload]);
+
+  useEffect(() => {
+    // 数据校准中时5s刷新一次
+    if (detailData?.calibration === 1) {
+      const ticker = setInterval(() => {
+        queryReportDetail(id);
+      }, 5000);
+      return () => clearInterval(ticker);
+    }
+  }, [detailData?.calibration]);
 
   const tenantList = async (s) => {
     const {
@@ -279,7 +290,14 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   // 数据校准中不显示统计数据
   if (detailData?.calibration === 1) {
     const checkTxt = (
-      <span style={{ fontSize: 12, color: '#999', fontWeight: 'normal', lineHeight: '40px' }}>
+      <span
+        style={{
+          fontSize: 12,
+          color: '#999',
+          fontWeight: 'normal',
+          lineHeight: '40px',
+        }}
+      >
         校准中
       </span>
     );
@@ -289,8 +307,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       render: () =>
         x.label === '实际/目标TPS' ? (
           <>
-            {checkTxt}/
-            {detailData.tps || 0}
+            {checkTxt}/{detailData.tps || 0}
           </>
         ) : (
           checkTxt
@@ -301,7 +318,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   }
 
   const downloadJtlFile = async () => {
-    setIsDownloading(true);
+    setIsDownloadingJtl(true);
     const {
       data: { data, success },
     } = await PressureTestReportService.getJtlDownLoadUrl({
@@ -311,7 +328,22 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       const filePath: string = data.content;
       const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
       downloadFile(filePath, fileName).finally(() => {
-        setIsDownloading(false);
+        setIsDownloadingJtl(false);
+      });
+    }
+  };
+
+  const downloadReportPdf = async () => {
+    setIsDownloadingReport(true);
+    const {
+      data: { data, success },
+    } = await PressureTestReportService.getReportPdf({
+      reportId: id,
+    });
+    if (success && typeof data === 'string') {
+      const fileName = data.substring(data.lastIndexOf('/') + 1);
+      downloadFile(data, fileName).finally(() => {
+        setIsDownloadingReport(false);
       });
     }
   };
@@ -336,18 +368,29 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           </Button>
         </Dropdown>
       )}
+      {detailData?.calibration !== 1 && (
+        <Button
+          type="primary"
+          ghost
+          onClick={downloadReportPdf}
+          style={{ marginRight: 8 }}
+          loading={isDownloadingReport}
+        >
+          下载压测报告
+        </Button>
+      )}
       {detailData?.hasJtl && (
         <Button
           type="primary"
           ghost
           onClick={downloadJtlFile}
           style={{ marginRight: 8 }}
-          loading={isDownloading}
+          loading={isDownloadingJtl}
         >
           下载Jtl文件
         </Button>
       )}
-      
+
       <PressTestMachines
         reportInfo={{
           jobId: detailData.jobId,

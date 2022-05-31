@@ -5,19 +5,27 @@ import styles from './../index.less';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { ColumnProps } from 'antd/lib/table';
 import BusinessActivityPressureTestDetailModal from '../modals/BusinessActivityPressureTestDetailModal';
+
 interface Props {
   data?: any;
   id?: string;
+  detailData?: any;
 }
-const BusinessActivityFailList: React.FC<Props> = props => {
-  const { data, id } = props;
+const BusinessActivityFailList: React.FC<Props> = (props) => {
+  const { data, id, detailData } = props;
+  const dataCheckingText =
+    detailData?.calibration === 1 ? (
+      <span style={{ fontSize: 12, color: '#999' }}>校准中</span>
+    ) : (
+      ''
+    );
 
   const getBusinessActivityFailColumns = (): ColumnProps<any>[] => {
     return [
       {
         ...customColumnProps,
         title: '业务活动',
-        dataIndex: 'businessActivityName'
+        dataIndex: 'businessActivityName',
       },
       {
         ...customColumnProps,
@@ -26,19 +34,23 @@ const BusinessActivityFailList: React.FC<Props> = props => {
         render: (text, row) => {
           return (
             <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text?.result || 0}
-              </span>
+              {dataCheckingText || (
+                <span
+                  style={{
+                    color:
+                      Number(text && text.result) < Number(text && text.value)
+                        ? '#FE7D61'
+                        : '',
+                  }}
+                >
+                  {text.result || 0}
+                </span>
+              )}
               <span style={{ margin: '0 8px' }}>/</span>
               <span>{text?.value === -1 ? '-' : text?.value || 0}</span>
             </Fragment>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -47,22 +59,24 @@ const BusinessActivityFailList: React.FC<Props> = props => {
         render: (text, row) => {
           return (
             <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text?.result) > Number(text?.value) &&
-                    text?.value !== -1
-                      ? '#FE7D61'
-                      : ''
-                }}
-              >
-                {text?.result || 0}ms
-              </span>
+              {dataCheckingText || (
+                <span
+                  style={{
+                    color:
+                      Number(text && text.result) >
+                        Number(text && text.value) && text.value !== -1
+                        ? '#FE7D61'
+                        : '',
+                  }}
+                >
+                  {text.result}ms
+                </span>
+              )}
               <span style={{ margin: '0 8px' }}>/</span>
               <span>{text?.value === -1 ? '-' : `${text?.value || 0}ms`}</span>
             </Fragment>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -71,19 +85,23 @@ const BusinessActivityFailList: React.FC<Props> = props => {
         render: (text, row) => {
           return (
             <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text?.result || 0}%
-              </span>
+              {dataCheckingText || (
+                <span
+                  style={{
+                    color:
+                      Number(text && text.result) < Number(text && text.value)
+                        ? '#FE7D61'
+                        : '',
+                  }}
+                >
+                  {text.result}%
+                </span>
+              )}
               <span style={{ margin: '0 8px' }}>/</span>
               <span>{text?.value === -1 ? '-' : `${text?.value || 0}%`}</span>
             </Fragment>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -92,20 +110,24 @@ const BusinessActivityFailList: React.FC<Props> = props => {
         render: (text, row) => {
           return (
             <Fragment>
-              <span
-                style={{
-                  color:
-                    Number(text?.result) < Number(text?.value) ? '#FE7D61' : ''
-                }}
-              >
-                {text?.result || 0}%
-              </span>
+              {dataCheckingText || (
+                <span
+                  style={{
+                    color:
+                      Number(text && text.result) < Number(text && text.value)
+                        ? '#FE7D61'
+                        : '',
+                  }}
+                >
+                  {text.result}%
+                </span>
+              )}
               <span style={{ margin: '0 8px' }}>/</span>
               <span>{text?.value === -1 ? '-' : `${text?.value || 0}%`}</span>
             </Fragment>
           );
-        }
-      }
+        },
+      },
     ];
   };
   return (
@@ -118,7 +140,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                 color: '#393B4F',
                 fontSize: '18px',
                 fontWeight: 600,
-                marginLeft: 16
+                marginLeft: 16,
               }}
             >
               <span
@@ -126,7 +148,7 @@ const BusinessActivityFailList: React.FC<Props> = props => {
                   color: '#FE7D61',
                   fontSize: '24px',
                   fontWeight: 500,
-                  marginRight: 6
+                  marginRight: 6,
                 }}
               >
                 {data && data.length}
