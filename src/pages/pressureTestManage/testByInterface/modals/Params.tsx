@@ -137,7 +137,7 @@ const Params: React.FC<Props> = (props) => {
       } = await service
         .getDataFromFile({
           configId: detail.id,
-          uploadFiles: fieldState.value,
+          relatedFiles: fieldState.value,
         })
         .finally(() => {
           actions.setFieldState(

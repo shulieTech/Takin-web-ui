@@ -25,9 +25,9 @@ const BaseTab: React.FC<Props> = (props) => {
   const [debugInput, setDebugInput] = useState();
 
   const searchEntrance = debounce(async (val) => {
-    actions.setFieldState('.entranceAppName', (state) => {
-      state.loading = true;
-    });
+    // actions.setFieldState('.entranceAppName', (state) => {
+    //   state.loading = true;
+    // });
     try {
       const {
         data: { success, data },
@@ -42,9 +42,9 @@ const BaseTab: React.FC<Props> = (props) => {
         });
       }
     } finally {
-      actions.setFieldState('.entranceAppName', (state) => {
-        state.loading = false;
-      });
+      // actions.setFieldState('.entranceAppName', (state) => {
+      //   state.loading = false;
+      // });
     }
   }, 500);
 
