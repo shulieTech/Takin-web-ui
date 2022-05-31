@@ -84,7 +84,7 @@ const RecycleManage: React.FC<Props> = (props) => {
           to={
             record.hasAnalysisResult
               ? `/pressureTestManage/pressureTestSceneV2/edit?id=${record.id}&readOnly=1`
-              : `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${record.id}`
+              : `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${record.id}&readOnly=1`
           }
         >
           查看
