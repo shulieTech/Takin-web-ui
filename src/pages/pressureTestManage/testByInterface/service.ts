@@ -12,8 +12,8 @@ export default {
    * @name 单个场景详情
    */
   async getSence(data = {}) {
-    const url = `/interfaceperformance/config/detail/${data.id}`;
-    return httpGet(url);
+    const url = `/interfaceperformance/config/detail`;
+    return httpGet(url, data);
   },
   /**
    * @name 新增场景
