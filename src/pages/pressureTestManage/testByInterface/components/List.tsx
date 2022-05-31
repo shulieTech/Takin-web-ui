@@ -76,7 +76,7 @@ const SenceList: React.FC<Props> = (props) => {
       onOk: async () => {
         const {
           data: { success },
-        } = await service.deleteSence(sence.id);
+        } = await service.deleteSence({ id: sence.id });
         if (success) {
           message.success('操作成功');
           getList({ current: 0 });
