@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Icon, Tree, Pagination, Collapse } from 'antd';
+import { Select, Icon, Tree, Pagination, Collapse, Spin } from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
 import moment from 'moment';
@@ -53,7 +53,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
   );
 
   return (
-    <div>
+    <Spin spinning={loading}>
       <div
         style={{
           padding: '8px 0',
@@ -314,7 +314,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
           />
         </div>
       )}
-    </div>
+    </Spin>
   );
 };
 

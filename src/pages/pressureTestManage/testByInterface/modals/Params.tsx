@@ -10,6 +10,7 @@ import { Drawer, Button, Modal, Spin } from 'antd';
 import FilesTable from '../components/FilesTable';
 import downdloadFile from 'src/utils/downloadFile';
 import service from '../service';
+import styles from '../index.less';
 
 interface Props {
   detail: any;
@@ -39,7 +40,11 @@ const Params: React.FC<Props> = (props) => {
         setLoading(false);
       });
     if (success) {
-      setParamsDetail(data);
+      setParamsDetail({
+        ...data,
+        relatedFiles: data.relatedFiles || [],
+        paramList: data.paramList || [],
+      });
     }
   };
 
@@ -125,7 +130,7 @@ const Params: React.FC<Props> = (props) => {
     onFieldInputChange$().subscribe((fieldState) => {
       setFormChanged(true);
     });
-    onFieldValueChange$('.uploadFiles').subscribe(async (fieldState) => {
+    onFieldValueChange$('.relatedFiles').subscribe(async (fieldState) => {
       actions.setFieldState('paramList', (state) => (state.loading = true));
       const {
         data: { success, data },
@@ -141,7 +146,7 @@ const Params: React.FC<Props> = (props) => {
           );
         });
       if (success) {
-        actions.setFieldValue('paramList', data);
+        actions.setFieldValue('paramList', data.paramList);
       }
     });
   };
@@ -185,7 +190,7 @@ const Params: React.FC<Props> = (props) => {
             <FormTab defaultActiveKey={'tab-1'}>
               <FormTab.TabPane tab="数据源参数" name="tab-1">
                 <Field
-                  name="uploadFiles"
+                  name="relatedFiles"
                   title="上传文件"
                   required
                   x-component="FilesTable"
@@ -209,6 +214,7 @@ const Params: React.FC<Props> = (props) => {
                   x-component="ArrayTable"
                   x-component-props={{
                     size: 'small',
+                    className: styles['tight-table'],
                   }}
                   minItems={1}
                   editable={false}
@@ -222,9 +228,23 @@ const Params: React.FC<Props> = (props) => {
                       name="fileColumnIndex"
                       type="number"
                       title="索引列"
+                      x-component="Input"
+                      editable={false}
                     />
-                    <Field name="paramValue" type="string" title="数据来源" />
-                    <Field name="paramName" type="string" title="参数名" />
+                    <Field
+                      name="paramValue"
+                      type="string"
+                      title="数据来源"
+                      x-component="Input"
+                      editable={false}
+                    />
+                    <Field
+                      name="paramName"
+                      type="string"
+                      title="参数名"
+                      x-component="Input"
+                      editable={false}
+                    />
                   </Field>
                 </Field>
               </FormTab.TabPane>
