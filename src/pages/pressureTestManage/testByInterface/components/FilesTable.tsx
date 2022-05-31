@@ -77,7 +77,7 @@ const FilesTable = (props: IFieldMergeState) => {
         type="drag"
         multiple
         beforeUpload={beforeUpload}
-        accept={acceptExts?.length > 0 ? `.${acceptExts.join(',')}` : undefined}
+        accept={acceptExts?.length > 0 ? `.${acceptExts.join(',.')}` : undefined}
         {...otherUploadProps}
         disabled={!editable}
         customRequest={(options) => 0}
