@@ -11,24 +11,37 @@ interface Props {
 const Sider = (props: Props) => {
   const { detail } = props;
   const [modalIndex, setModalIndex] = useState(null);
+  const checkNew = (callback) => {
+    if (!detail.id) {
+      message.warn('请先保存场景');
+    } else {
+      callback();
+    }
+  };
 
   const icons = [
     {
       title: '参数编辑',
       icon: 'code',
-      onClick: () => setModalIndex(0),
+      onClick: () => {
+        checkNew(() => setModalIndex(0));
+      },
     },
     {
       title: '基本信息设置',
       icon: 'control',
-      onClick: () => setModalIndex(1),
+      onClick: () => {
+        checkNew(() => setModalIndex(1));
+      },
     },
     {
       title: '压测报告',
       icon: 'history',
       onClick: () => {
-        router.push(
-          `/pressureTestManage/pressureTestReport?sceneId=${detail.id}`
+        checkNew(() =>
+          router.push(
+            `/pressureTestManage/pressureTestReport?sceneId=${detail.id}`
+          )
         );
       },
     },

@@ -270,11 +270,9 @@ const EditSence: React.FC<Props> = (props) => {
             <BaseTab actions={actions} detail={detail} />
             {/* <PressConfigTab actions={actions} /> */}
           </FormTab>
-          {detail.id && (
-            <FormSlot>
-              <Sider detail={detail} />
-            </FormSlot>
-          )}
+          <FormSlot>
+            <Sider detail={detail} />
+          </FormSlot>
         </LayoutBox>
       </SchemaForm>
       {pressStarted && (
