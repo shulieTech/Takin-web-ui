@@ -93,7 +93,7 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
 
   const { location, dictionaryMap } = props;
   const { query } = location;
-  const { action, id } = query;
+  const { action, id, readOnly } = query;
 
   useEffect(() => {
     queryBussinessActive();
@@ -523,6 +523,7 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         type="primary"
         onClick={() => handleSubmit()}
         loading={state.loading}
+        disabled={!!readOnly}
         style={{ marginTop: 10 }}
       >
         保存
