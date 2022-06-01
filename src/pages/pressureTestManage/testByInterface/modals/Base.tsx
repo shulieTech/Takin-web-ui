@@ -6,8 +6,10 @@ import {
   FormEffectHooks,
 } from '@formily/antd';
 import { Input, ArrayTable, FormTab } from '@formily/antd-components';
-import { Drawer, Button, Modal } from 'antd';
+import { Drawer, Button, Modal, Icon, message } from 'antd';
 import service from '../service';
+import copy from 'copy-to-clipboard';
+import styles from '../index.less';
 
 interface Props {
   detail: any;
@@ -66,7 +68,7 @@ const Params: React.FC<Props> = (props) => {
     <Drawer
       visible
       title="场景基本信息"
-      width={'60vw'}
+      width={'40vw'}
       bodyStyle={{
         position: 'relative',
         padding: 0,
@@ -90,6 +92,7 @@ const Params: React.FC<Props> = (props) => {
             TextArea: Input.TextArea,
           }}
           effects={formEffects}
+          initialValues={detail}
         >
           <Field
             name="name"
@@ -101,6 +104,7 @@ const Params: React.FC<Props> = (props) => {
               placeholder: '请输入',
               style: {
                 width: 320,
+                background: '#F7F8FA',
               },
             }}
             x-rules={[{ required: true, message: '请输入场景名称' }]}
@@ -113,9 +117,20 @@ const Params: React.FC<Props> = (props) => {
             x-component-props={{
               readOnly: true,
               placeholder: '请输入',
+              className: styles['group-gray-input'],
               style: {
                 width: 320,
               },
+              addonAfter: (
+                <Icon
+                  style={{ color: '#11BBD5' }}
+                  type="copy"
+                  onClick={() => {
+                    copy(detail.id);
+                    message.success('复制成功');
+                  }}
+                />
+              ),
             }}
             x-rules={[{ required: true, message: '请输入' }]}
           />
@@ -152,7 +167,7 @@ const Params: React.FC<Props> = (props) => {
       <div
         style={{
           position: 'absolute',
-          bottom: -60,
+          bottom: 0,
           left: 0,
           right: 0,
           textAlign: 'right',
