@@ -93,7 +93,7 @@ const ExitJob: React.FC<Props> = props => {
         loading={state.loading}
         columns={getColumns(state, setState, detailState, action)}
         dataSource={state.jobList ? state.jobList : []}
-        scroll={{ y: 400 }}
+        // scroll={{ y: 400 }}
       />
     </div>
   );
