@@ -159,6 +159,10 @@ const EnvHeader: React.FC<Props> = (props) => {
 
   const deleteEnv = (event, env) => {
     event.stopPropagation();
+    if (localStorage.getItem('env-code') === env.envCode) {
+      message.warn('不能删除当前环境');
+      return;
+    }
     Modal.confirm({
       title: '提示',
       content: '确定要删除该环境吗？',
@@ -168,7 +172,6 @@ const EnvHeader: React.FC<Props> = (props) => {
         } = await tenantCodeService.deleteEnv({ envCode: env.envCode });
         if (success) {
           message.success('操作成功');
-          // TODO 删除当前环境时如何处理
           queryTenantList();
         }
       },
@@ -237,97 +240,110 @@ const EnvHeader: React.FC<Props> = (props) => {
           </Dropdown>
 
           <Dropdown
+            overlayStyle={{
+              maxWidth: 130,
+            }}
             overlay={
               <Menu>
-                {envList?.map((x, ind) => (
-                  <Menu.Item
-                    key={ind}
-                    onClick={() => changeEnv(x)}
-                    className="hover-group"
-                  >
-                    <div
-                      style={{
-                        display: 'flex',
-                        maxWidth: 300,
-                        overflow: 'hidden',
-                      }}
+                {envList?.map((x, ind) => {
+                  const isSystemEnv = x?.source === 0;
+                  return (
+                    <Menu.Item
+                      key={ind}
+                      onClick={() => changeEnv(x)}
+                      className="hover-group"
                     >
                       <div
                         style={{
-                          flex: 1,
-                          fontWeight:
-                            envList[index]?.envCode === x.envCode
-                              ? 'bold'
-                              : 'normal',
-                        }}
-                        className="truncate"
-                      >
-                        {x.envName}
-                      </div>
-                      <span
-                        style={{
-                          alignSelf: 'end',
-                          marginLeft: 8,
+                          display: 'flex',
+                          overflow: 'hidden',
                         }}
                       >
-                        <span className="hover-inline-block">
-                          {/* TODO 判断是否可编辑和删除 */}
-                          {isAdmin && (
-                            <>
-                              <Tooltip title="编辑">
+                        <div
+                          style={{
+                            flex: 1,
+                            fontWeight:
+                              envList[index]?.envCode === x.envCode
+                                ? 'bold'
+                                : 'normal',
+                          }}
+                          className="truncate"
+                        >
+                          {x.envName}
+                        </div>
+                        <span
+                          style={{
+                            alignSelf: 'end',
+                            marginLeft: 8,
+                          }}
+                        >
+                          <span className="hover-inline-block">
+                            {/* 判断是否可编辑和删除 */}
+                            {isAdmin && !isSystemEnv && (
+                              <>
+                                <Tooltip title="编辑">
+                                  <Icon
+                                    type="edit"
+                                    style={{
+                                      fontSize: 12,
+                                      // marginRight: 8,
+                                      cursor: 'pointer',
+                                      display: 'inline-block',
+                                      padding: 4,
+                                    }}
+                                    onClick={(e) => editEnv(e, x)}
+                                  />
+                                </Tooltip>
+                                <Tooltip title="删除">
+                                  <Icon
+                                    type="delete"
+                                    style={{
+                                      fontSize: 12,
+                                      // marginRight: 8,
+                                      cursor: 'pointer',
+                                      display: 'inline-block',
+                                      padding: 4,
+                                    }}
+                                    onClick={(e) => deleteEnv(e, x)}
+                                  />
+                                </Tooltip>
+                              </>
+                            )}
+                            {!x.isDefault && (
+                              <Tooltip title="设为默认">
                                 <Icon
-                                  type="edit"
+                                  type="star"
                                   style={{
                                     fontSize: 12,
-                                    marginRight: 8,
+                                    // marginRight: 8,
                                     cursor: 'pointer',
+                                    display: 'inline-block',
+                                    padding: 4,
                                   }}
-                                  onClick={(e) => editEnv(e, x)}
+                                  onClick={(e) => setDefaultEnv(e, x)}
                                 />
                               </Tooltip>
-                              <Tooltip title="删除">
-                                <Icon
-                                  type="delete"
-                                  style={{
-                                    fontSize: 12,
-                                    marginRight: 8,
-                                    cursor: 'pointer',
-                                  }}
-                                  onClick={(e) => deleteEnv(e, x)}
-                                />
-                              </Tooltip>
-                            </>
-                          )}
-                          {!x.isDefault && (
-                            <Tooltip title="设为默认">
+                            )}
+                          </span>
+                          {x.isDefault && (
+                            <Tooltip title="当前默认环境">
                               <Icon
                                 type="star"
                                 style={{
                                   fontSize: 12,
-                                  marginRight: 8,
-                                  cursor: 'pointer',
+                                  // marginRight: 8,
+                                  color: 'var(--BrandPrimary-500)',
+                                  display: 'inline-block',
+                                  padding: 4,
                                 }}
-                                onClick={(e) => setDefaultEnv(e, x)}
                               />
                             </Tooltip>
                           )}
                         </span>
-                        {x.isDefault && (
-                          <Tooltip title="当前默认环境">
-                            <Icon
-                              type="star"
-                              style={{
-                                fontSize: 12,
-                                marginRight: 8,
-                                color: 'var(--BrandPrimary-500)',
-                              }}
-                            />
-                          </Tooltip>
-                        )}
-                      </span>
-                    </div>
-                  </Menu.Item>
-                ))}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
               </Menu>
             }
           >

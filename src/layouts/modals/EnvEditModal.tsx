@@ -32,7 +32,7 @@ const EnvEditModal: React.FC<Props> = (props) => {
     const { values } = await actions.submit();
     const {
       data: { data, success },
-    } = await service.addEnv({
+    } = await service[isEdit ? 'updateEnv' : 'addEnv']({
       ...values,
       ...detail,
     });

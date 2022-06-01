@@ -30,10 +30,10 @@ const tenantCodeService = {
     return httpPost(url, data);
   },
   // 编辑和新增使用的同一个接口，修改时envCode不可编辑
-  // async updateEnv(data = {}) {
-  //   const url = '/tenant/env/update';
-  //   return httpPut(url, data);
-  // },
+  async updateEnv(data = {}) {
+    const url = '/tenant/env/update';
+    return httpPut(url, data);
+  },
   async deleteEnv(data = {}) {
     const url = '/tenant/env/delete';
     return httpDelete(url, data);
