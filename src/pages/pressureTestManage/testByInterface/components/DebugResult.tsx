@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Select,
   Icon,
-  Tree,
   Pagination,
   Collapse,
   Spin,
@@ -20,7 +19,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
   const { schema, form } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
   const { debugId, detail, ...rest } = componentProps;
-  const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
+  let timer;
   const [errorCount, setErrorCount] = useState(0);
   const defaultQuery = {
     resultId: debugId,
@@ -33,18 +32,17 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
     service: service.getDebugResult,
     afterSearchCallback: (res) => {
       if (res.data.success) {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
         setErrorCount(res.data?.extData?.failCount || 0);
-      }
-      // 轮询结果
-      if (timer) {
-        clearTimeout(timer);
-      }
-      if (debugId && res.data.success && res.data?.data?.empty) {
-        setTimer(
-          setTimeout(() => {
+        // 轮询结果
+        if (!res.data?.extData?.requestFinished) {
+          timer = setTimeout(() => {
             getList(defaultQuery);
-          }, 2000)
-        );
+          }, 2000);
+        }
       }
     },
     isQueryOnMount: false,
@@ -69,6 +67,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
   useEffect(() => {
     if (timer) {
       clearTimeout(timer);
+      timer = null;
     }
     if (debugId || detail?.id) {
       getList(defaultQuery);
@@ -76,6 +75,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
     return () => {
       if (timer) {
         clearTimeout(timer);
+        timer = null;
       }
     };
   }, [debugId, detail?.id]);
