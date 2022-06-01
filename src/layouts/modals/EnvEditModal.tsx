@@ -33,10 +33,11 @@ const EnvEditModal: React.FC<Props> = (props) => {
     const {
       data: { data, success },
     } = await service[isEdit ? 'updateEnv' : 'addEnv']({
-      ...values,
       ...detail,
+      ...values,
     });
     if (success) {
+      message.success('操作成功');
       okCallback(data);
       return Promise.resolve();
     }
