@@ -51,6 +51,23 @@ const Params: React.FC<Props> = (props) => {
   };
 
   const getTableColumns = (mutators, editable) => {
+    const deleteFile = async (file, index) => {
+      if (file.uploadId) {
+        // 删除已上传的临时文件
+        const msg = message.loading('正在删除...', 0);
+        const {
+          data: { data, success },
+        } = await service.deleteFile(file).finally(() => {
+          msg();
+        });
+        if (success) {
+          mutators.remove(index);
+        }
+      } else {
+        mutators.remove(index);
+      }
+    };
+
     return [
       {
         title: '文件名称',
@@ -87,7 +104,9 @@ const Params: React.FC<Props> = (props) => {
               >
                 下载
               </a>
-              {editable && <a onClick={() => mutators.remove(index)}>删除</a>}
+              {editable && (
+                <a onClick={() => deleteFile(record, index)}>删除</a>
+              )}
             </span>
           );
         },
@@ -257,14 +276,22 @@ const Params: React.FC<Props> = (props) => {
                             <Tooltip title={prop.value}>
                               <div
                                 className="truncate"
-                                style={{ maxWidth: 200 }}
+                                style={{
+                                  maxWidth: 200,
+                                  display: 'inline-block',
+                                  verticalAlign: 'middle',
+                                }}
                               >
                                 {prop.value}
                               </div>
                             </Tooltip>
                             <Icon
                               type="copy"
-                              style={{ marginLeft: 8, cursor: 'pointer', color: '#11BBD5' }}
+                              style={{
+                                marginLeft: 8,
+                                cursor: 'pointer',
+                                color: '#11BBD5',
+                              }}
                               onClick={() => {
                                 copy(`\${${prop.value}\}`);
                                 message.success('复制成功');

@@ -44,6 +44,13 @@ export default {
     return httpPost(url, data);
   },
   /**
+   * @name 删除文件
+   */
+  async deleteFile(data = {}) {
+    const url = '/file';
+    return httpDelete(url, data);
+  },
+  /**
    * @name 解析上传文件内容
    */
   async getDataFromFile(data = {}) {

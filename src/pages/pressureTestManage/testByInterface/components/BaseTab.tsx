@@ -131,7 +131,7 @@ const BaseTab: React.FC<Props> = (props) => {
                 {
                   required: true,
                   whitespace: true,
-                  format: 'url',
+                  // format: 'url',
                   message: '请输入正确的压测URL',
                 },
               ]}

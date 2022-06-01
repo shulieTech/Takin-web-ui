@@ -33,7 +33,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
     service: service.getDebugResult,
     afterSearchCallback: (res) => {
       if (res.data.success) {
-        setErrorCount(res.data?.data?.errorCount || 0);
+        setErrorCount(res.data?.data?.extData?.failCount || 0);
       }
       // 轮询结果
       if (timer) {
