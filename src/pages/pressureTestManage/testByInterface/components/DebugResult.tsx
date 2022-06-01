@@ -33,7 +33,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
     service: service.getDebugResult,
     afterSearchCallback: (res) => {
       if (res.data.success) {
-        setErrorCount(res.data?.data?.extData?.failCount || 0);
+        setErrorCount(res.data?.extData?.failCount || 0);
       }
       // 轮询结果
       if (timer) {
@@ -62,6 +62,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
       form.setFieldState('.debugResult', (state) => {
         state.props['x-component-props'].debugId = '';
       });
+      getList(defaultQuery);
     }
   };
 
@@ -95,7 +96,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
         }}
       >
         <span style={{ flex: 1 }}>响应结果</span>
-        {list.length > 0 && (
+        {(list.length > 0 || query.status) && (
           <div style={{ color: 'var(--Netural-850, #414548)' }}>
             {errorCount > 0 && (
               <span style={{ marginRight: 32 }}>
@@ -121,9 +122,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
               <Select.Option value={1}>成功</Select.Option>
               <Select.Option value={2}>失败</Select.Option>
             </Select>
-            <Button onClick={clearDebugHistory}>
-              清空
-            </Button>
+            <Button onClick={clearDebugHistory}>清空</Button>
           </div>
         )}
       </div>
