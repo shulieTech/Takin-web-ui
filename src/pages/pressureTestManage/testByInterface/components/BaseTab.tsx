@@ -285,7 +285,7 @@ const BaseTab: React.FC<Props> = (props) => {
                     {
                       type: 'value:visible',
                       target: '.type',
-                      condition: '{{ $self.value === 1 }}',
+                      condition: '{{ $self.value !== 0 }}',
                     },
                   ]}
                 />
