@@ -7,7 +7,7 @@ declare var window: Window;
 declare var serverUrl: string;
 
 axios.defaults.withCredentials = true;
-window.parent.outloginFlag = false;
+window.outloginFlag = false;
 // axios.interceptors.request.use(
 //   req => {
 //     const token = getAuthorization();
@@ -71,12 +71,12 @@ function parseJSON(response: BaseResponse) {
   return response;
 }
 const getBackLogin = response => {
-  window.parent.outloginFlag = true;
+  window.outloginFlag = true;
   Modal.warning({
     content: '请登录',
     okText: '确认',
     onOk: () => {
-      window.parent.outloginFlag = false;
+      window.outloginFlag = false;
       window.g_app._store.dispatch({
         type: 'user/troLogout'
       });
@@ -91,7 +91,7 @@ function checkStatus(response: BaseResponse) {
   // 权限判断（微应用跳转主应用）
   if (response.status === 401) {
     if (getTakinAuthority() === 'true' && window.location.href.indexOf('/pro/') === -1) {
-      if (!window.parent.outloginFlag) {
+      if (!window.outloginFlag) {
         getBackLogin(response);
       }
     }
