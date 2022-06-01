@@ -26,13 +26,13 @@ const Params: React.FC<Props> = (props) => {
     FormEffectHooks;
 
   const saveBase = async () => {
-    // TODO 更换接口
     const { values } = await actions.submit();
     setSaving(true);
     const {
       data: { success, data },
     } = await service
-      .getDataFromFile({
+      .updateSence({
+        ...detail,
         ...values,
       })
       .finally(() => {
@@ -56,6 +56,10 @@ const Params: React.FC<Props> = (props) => {
     } else {
       cancelCallback();
     }
+  };
+
+  const showUserSelector = async () => {
+    const { values } = await actions.getFormState();
   };
 
   const formEffects = () => {
@@ -136,21 +140,35 @@ const Params: React.FC<Props> = (props) => {
           />
           {/* TODO 选人组件 */}
           <Field
-            name="manager"
+            name="creatorId"
+            title="归属人id"
+            required
+            x-component="Input"
+            default={detail.creatorId}
+            x-component-props={{
+              readOnly: true,
+            }}
+            x-rules={[{ required: true, message: '请选择归属人' }]}
+            display={false}
+          />
+          <Field
+            name="creatorName"
             title="归属人"
             required
             x-component="Input"
+            default={detail.creatorName}
             x-component-props={{
               readOnly: true,
               placeholder: '请选择',
               style: {
                 width: 320,
               },
+              onClick: showUserSelector
             }}
             x-rules={[{ required: true, message: '请选择归属人' }]}
           />
           <Field
-            name="desc"
+            name="remark"
             title="简介"
             x-component="TextArea"
             x-component-props={{

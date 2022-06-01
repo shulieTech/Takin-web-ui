@@ -32,6 +32,7 @@ import StartStatusModal from '../../pressureTestScene/modals/StartStatusModal';
 import moment from 'moment';
 import { SenceContext } from '../indexPage';
 import { getTakinAuthority } from 'src/utils/utils';
+import { debounce } from 'lodash';
 
 interface Props {
   currentSence: any;
@@ -164,6 +165,35 @@ const EditSence: React.FC<Props> = (props) => {
           onFieldInputChange$().subscribe((state) => {
             setHasUnsaved(true);
           });
+          // 关联应用入口下拉框查询
+          onFieldValueChange$('*(requestUrl,httpMethod)').subscribe(
+            debounce(async () => {
+              const {
+                values: { requestUrl, httpMethod },
+              } = await actions.getFormState();
+              if (!(requestUrl?.trim() && httpMethod)) {
+                return;
+              }
+              const {
+                data: { success, data = [] },
+              } = await service.searchEntrance({
+                requestUrl,
+                httpMethod,
+                current: 0,
+                pageSize: 20,
+              });
+              if (success) {
+                const apps = data.map((x) => ({
+                  ...x,
+                  label: x.entranceAppName,
+                  value: x.entranceAppName,
+                }));
+                actions.setFieldState('.entranceAppName', (state) => {
+                  state.props.enum = apps;
+                });
+              }
+            }, 500)
+          );
           // 计算建议pod数
           if (getTakinAuthority() === 'true') {
             onFieldValueChange$(

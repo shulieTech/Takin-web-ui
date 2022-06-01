@@ -4,8 +4,8 @@ import { FormTab, FormMegaLayout, FormSlot } from '@formily/antd-components';
 import { Button } from 'antd';
 import TipTittle from '../../pressureTestSceneV2/components/TipTittle';
 import DebugModal from '../modals/Debug';
-import service from '../service';
-import { debounce } from 'lodash';
+// import service from '../service';
+// import { debounce } from 'lodash';
 import styles from '../index.less';
 import LayoutBox from './LayoutBox';
 import { connect } from 'dva';
@@ -24,29 +24,28 @@ const BaseTab: React.FC<Props> = (props) => {
   } = props;
   const [debugInput, setDebugInput] = useState();
 
-  const searchEntrance = debounce(async (val) => {
-    // actions.setFieldState('.entranceAppName', (state) => {
-    //   state.loading = true;
-    // });
-    try {
-      const {
-        data: { success, data },
-      } = await service.searchEntrance({
-        requestUrl: val,
-        current: 0,
-        pageSize: 20,
-      });
-      if (success) {
-        actions.setFieldState('.entranceAppName', (state) => {
-          state.props.enum = data;
-        });
+  const onEntranceChange = (val) => {
+    actions.getFieldState('.entranceAppName', (state) => {
+      const entranceAppList = state.props.enum;
+      const entranceItem = entranceAppList.find((x) => x.value === val);
+      if (val && entranceItem) {
+        // 使用关联应用入口的参数，填充header和body等
+        const { header, param } = entranceItem;
+        if (header) {
+          actions.setFieldState('.headers', (headerState) => {
+            headerState.value = header;
+          });
+        }
+        if (param) {
+          actions.setFieldState('.body', (bodyState) => {
+            bodyState.value = param;
+          });
+        }
+      } else {
+        state.value = undefined;
       }
-    } finally {
-      // actions.setFieldState('.entranceAppName', (state) => {
-      //   state.loading = false;
-      // });
-    }
-  }, 500);
+    });
+  };
 
   const startDebug = async () => {
     const res = await actions.validate('.requestUrl');
@@ -55,10 +54,6 @@ const BaseTab: React.FC<Props> = (props) => {
       setDebugInput(values);
     }
   };
-
-  useEffect(() => {
-    searchEntrance('');
-  }, []);
 
   useEffect(() => {
     actions.setFieldState('.debugResult', (state) => {
@@ -164,7 +159,8 @@ const BaseTab: React.FC<Props> = (props) => {
                 placeholder: '请选择',
                 allowClear: true,
                 showSearch: true,
-                onSearch: searchEntrance,
+                // onSearch: searchEntrance,
+                onChange: onEntranceChange,
               }}
               title={
                 <TipTittle
