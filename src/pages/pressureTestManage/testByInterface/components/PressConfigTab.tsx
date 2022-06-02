@@ -228,7 +228,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
                         formValues?.pressureConfigRequest?.targetGoal?.tps
                       }
                       duration={
-                        formValues?.pressureConfigRequest?.config?.duration
+                        formValues?.pressureConfigRequest?.threadConfig?.duration
                       }
                       pressConfig={{
                         rampUp:

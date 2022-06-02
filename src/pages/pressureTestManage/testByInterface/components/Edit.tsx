@@ -190,7 +190,7 @@ const EditSence: React.FC<Props> = (props) => {
           // 计算建议pod数
           if (getTakinAuthority() === 'true') {
             onFieldValueChange$(
-              'pressureConfigRequest.config.threadGroupConfigMap.threadNum'
+              'pressureConfigRequest.threadConfig.threadNum'
             ).subscribe(
               debounce(async (fieldState) => {
                 const { values } = await actions.getFormState();
@@ -205,7 +205,7 @@ const EditSence: React.FC<Props> = (props) => {
                 });
                 if (success) {
                   actions.setFieldState(
-                    'pressureConfigRequest.config.podNum',
+                    'pressureConfigRequest.threadConfig.podNum',
                     (podState) => {
                       podState.props['x-component-props'].addonAfter = (
                         <Button>
