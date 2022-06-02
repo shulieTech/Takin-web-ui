@@ -79,29 +79,20 @@ const EditSence: React.FC<Props> = (props) => {
     if (!values) {
       return;
     }
-    const start = async () => {
-      const {
-        data: { success, data },
-      } = await service.saveAndStartSence({
-        ...detail,
-        ...values,
-      });
-      if (success) {
-        message.success('操作成功');
-        // TODO 刷新并启动压测检测弹窗
-        getDetail(data.id || detail.id).then(() => {
-          setPressStarted(true);
-        });
-      }
-    };
+
     if (hasUnsaved) {
       Modal.confirm({
         title: '提示',
         content: '您的场景有内容修改，是否保存并启动压测？',
-        onOk: start,
+        onOk: async () => {
+          const success = await saveSence();
+          if (success) {
+            setPressStarted(true);
+          }
+        },
       });
     } else {
-      start();
+      setPressStarted(true);
     }
   };
 
@@ -122,6 +113,7 @@ const EditSence: React.FC<Props> = (props) => {
         setHasUnsaved(false);
         getDetail(data || detail.id);
         setListRefreshKey(listRefreshKey + 1);
+        return success;
       }
     }
   };
@@ -308,7 +300,7 @@ const EditSence: React.FC<Props> = (props) => {
           </FormSlot>
         </LayoutBox>
       </SchemaForm>
-      {pressStarted && (
+      {pressStarted && detail.bindSceneId && (
         <StartStatusModal
           visible
           onCancel={() => {
