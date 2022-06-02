@@ -140,7 +140,14 @@ const SenceList: React.FC<Props> = (props) => {
                   });
                 }}
               >
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  {x.status === 2 && (
+                    <Icon
+                      type="play-circle"
+                      theme="filled"
+                      style={{ marginRight: 8, color: '#11BBD5' }}
+                    />
+                  )}
                   <span
                     style={{
                       color: 'var(--Netural-850, #414548)',

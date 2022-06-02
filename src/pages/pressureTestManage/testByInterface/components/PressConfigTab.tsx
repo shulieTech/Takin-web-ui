@@ -232,18 +232,14 @@ const PressConfigTab: React.FC<Props> = (props) => {
                       }
                       pressConfig={{
                         rampUp:
-                          formValues?.pressureConfigRequest?.config
-                            ?.threadGroupConfigMap?.rampUp, // 递增时长
+                          formValues?.pressureConfigRequest?.threadConfig?.rampUp, // 递增时长
                         steps:
-                          formValues?.pressureConfigRequest?.config
-                            ?.threadGroupConfigMap?.steps, // 递增层数
+                          formValues?.pressureConfigRequest?.threadConfig?.steps, // 递增层数
                         type: formValues?.pressureConfigRequest?.config
                           ?.threadGroupConfigMap?.type, // 压力模式 并发或TPS模式
                         threadNum:
-                          formValues?.pressureConfigRequest?.config
-                            ?.threadGroupConfigMap?.threadNum, // 最大并发
-                        mode: formValues?.pressureConfigRequest?.config
-                          ?.threadGroupConfigMap?.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
+                          formValues?.pressureConfigRequest?.threadConfig?.threadNum, // 最大并发
+                        mode: formValues?.pressureConfigRequest?.threadConfig?.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
                       }}
                       checkValid={() => {
                         return Promise.all([
