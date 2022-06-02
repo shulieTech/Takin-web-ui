@@ -141,7 +141,7 @@ const BaseTab: React.FC<Props> = (props) => {
                 style={{ marginRight: 16 }}
                 ghost
                 onClick={startDebug}
-                id="guide-2 "
+                id="guide-2"
               >
                 调试
               </Button>

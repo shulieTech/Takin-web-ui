@@ -318,7 +318,7 @@ const EditSence: React.FC<Props> = (props) => {
           }}
         />
       )}
-      {/* <Guide /> */}
+      <Guide />
     </Spin>
   );
 };

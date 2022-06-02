@@ -1,5 +1,5 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
-import { Tooltip, Button } from 'antd';
+import { Tooltip, Button, Icon } from 'antd';
 
 const Guide = () => {
   const [step, setStep] = useState(-1);
@@ -15,12 +15,12 @@ const Guide = () => {
           -后续的名称修改也可以在这里编辑呢～
         </span>
       ),
-      placement: 'bottomLeft ',
+      placement: 'bottomLeft',
     },
     {
       title: '编辑场景URL',
       content: <span>-场景新建保存之前需要填写URL哦～</span>,
-      placement: 'bottomLeft ',
+      placement: 'bottomLeft',
     },
     {
       title: 'URL调试',
@@ -46,9 +46,14 @@ const Guide = () => {
           </span>
         </span>
       ),
-      placement: 'topLeft',
+      placement: 'leftTop',
     },
   ];
+
+  const skipGuide = () => {
+    setStep(-1);
+    localStorage.setItem('guide-5.7.0', 1);
+  };
 
   useEffect(() => {
     if (step > -1) {
@@ -67,7 +72,9 @@ const Guide = () => {
   }, [step]);
 
   useEffect(() => {
-    setStep(0);
+    if (!localStorage.getItem('guide-5.7.0')) {
+      setStep(0);
+    }
   }, []);
 
   return (
@@ -79,36 +86,55 @@ const Guide = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          // backgroundColor: 'rgba(0,0,0,0.5)',
         }}
       >
         {guideList.map((x, index, arr) => {
-          return step === index && (
+          return (
             <Tooltip
               key={x.title}
-              visible
+              visible={step === index}
               placement={x.placement}
+              overlayStyle={{ minWidth: 370 }}
               title={
                 <div
                   style={{
                     color: '#fff',
+                    padding: 8,
+                    position: 'relative',
                   }}
                 >
-                  <div style={{ fontSize: 16, fontWeight: 600 }}>{x.title}</div>
-                  <div>{x.content}</div>
-                  <div>
-                    {index + 1} / {arr.length}
+                  <Icon
+                    type="close"
+                    style={{
+                      position: 'absolute',
+                      top: 4,
+                      right: 0,
+                      cursor: 'pointer',
+                    }}
+                    onClick={skipGuide}
+                  />
+                  <div
+                    style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}
+                  >
+                    {x.title}
+                  </div>
+                  <div style={{ marginBottom: 16 }}>{x.content}</div>
+                  <div style={{ display: 'flex' }}>
+                    <div style={{ flex: 1 }}>
+                      {index + 1} / {arr.length}
+                    </div>
                     <span>
                       <Button
+                        size="small"
                         ghost
-                        onClick={() => {
-                          setStep(-1);
-                        }}
+                        onClick={skipGuide}
                       >
                         退出引导
                       </Button>
                       {index < arr.length - 1 && (
                         <Button
+                          size="small"
                           style={{ marginLeft: 16 }}
                           onClick={() => {
                             setStep(index + 1);
@@ -122,7 +148,9 @@ const Guide = () => {
                 </div>
               }
             >
-              <div style={shadowTargetStyle}>111</div>
+              <div
+                style={step === index ? shadowTargetStyle : { display: 'none' }}
+              />
             </Tooltip>
           );
         })}

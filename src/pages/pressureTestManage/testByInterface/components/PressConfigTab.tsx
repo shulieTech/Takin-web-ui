@@ -33,20 +33,46 @@ const PressConfigTab: React.FC<Props> = (props) => {
           //     如何设定？ <Icon type="right" />
           //   </a>}
         >
+          {/* 下面是一些占位用的空字段 */}
+          <Field
+            type="object"
+            name="basicInfo"
+            display={false}
+            default={{}}
+          />
           <Field
             type="object"
             name="goal"
             display={false}
-            default={{
-              // 这里是假数据
-              b787744da465501175f19effa9b29855: {
-                tps: 100,
-                rt: 100,
-                sr: 100,
-                sa: 100,
-              },
-            }}
+            default={{}}
           />
+          <Field
+            type="object"
+            name="config"
+            display={false}
+            default={{}}
+          />
+          <Field
+            type="array"
+            name="destroyMonitoringGoal"
+            x-component="ArrayTable"
+            display={false}
+            default={[]}
+          />
+          <Field
+            type="array"
+            name="warnMonitoringGoal"
+            x-component="ArrayTable"
+            display={false}
+            default={[]}
+          />
+          <Field
+            type="object"
+            name="dataValidation"
+            display={false}
+            default={{}}
+          />
+
           <Field type="object" name="targetGoal">
             <FormMegaLayout labelAlign="top" grid autoRow full columns={4}>
               <Field
