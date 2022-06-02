@@ -33,7 +33,20 @@ const PressConfigTab: React.FC<Props> = (props) => {
           //     如何设定？ <Icon type="right" />
           //   </a>}
         >
-          <Field type="object" name="goal" display={false} default={{}} />
+          <Field
+            type="object"
+            name="goal"
+            display={false}
+            default={{
+              // 这里是假数据
+              b787744da465501175f19effa9b29855: {
+                tps: 100,
+                rt: 100,
+                sr: 100,
+                sa: 100,
+              },
+            }}
+          />
           <Field type="object" name="targetGoal">
             <FormMegaLayout labelAlign="top" grid autoRow full columns={4}>
               <Field
@@ -145,7 +158,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
           //     如何设定？ <Icon type="right" />
           //   </a>}
         >
-          <Field type="object" name="config">
+          <Field type="object" name="threadConfig">
             <Field
               title="压测时间"
               name="duration"
@@ -221,113 +234,113 @@ const PressConfigTab: React.FC<Props> = (props) => {
                 }}
               </FormSpy>
             </FormSlot>
-            <Field type="object" name="threadGroupConfigMap">
-              <Field
-                // title={
-                //   <TipTittle tips="并发模式：指定最大并发量，按照对应的施压模式进行施压；TPS模式：以目标TPS为限，系统逐步增压，摸高到目标TPS，过程中也可动态调整TPS">
-                //     压力模式
-                //   </TipTittle>
-                // }
-                name="type"
-                type="number"
-                x-component="RadioCard"
-                x-rules={[
-                  {
-                    required: true,
-                    message: '请选择压力模式',
-                  },
-                ]}
-                required
-                enum={[
-                  {
-                    label: '并发模式',
-                    value: 0,
-                    icon: <Icon type="project" style={{ fontSize: 20 }} />,
-                    description: (
-                      <span>
-                        业务流程是压测配置的业务流程是
-                        <br />
-                        压测配置的
-                      </span>
-                    ),
-                  }, 
-                  // {
-                  //   label: 'TPS模式',
-                  //   value: 1,
-                  //   icon: <Icon type="line-chart" style={{ fontSize: 20 }} />,
-                  //   description: (
-                  //     <span>
-                  //       业务流程是压测配置的业务流程是
-                  //       <br />
-                  //       压测配置的
-                  //     </span>
-                  //   ),
-                  // },
-                ]}
-                default={0}
-                x-component-props={{
-                  style: {
-                    marginTop: 24,
-                  },
-                  renderOption: (item, isChecked) => {
-                    return (
-                      <div
-                        style={{
-                          width: 160,
-                          display: 'flex',
-                          position: 'relative',
-                          alignItems: 'center',
-                          padding: 16,
-                          border: '1px solid var(--Netural-300, #DBDFE3)',
-                          borderRadius: 4,
-                        }}
-                      >
-                        {isChecked && (
-                          <span
-                            style={{
-                              position: 'absolute',
-                              top: 0,
-                              right: 0,
-                              width: 20,
-                              height: 20,
-                              lineHeight: '20px',
-                              textAlign: 'center',
-                              color: '#fff',
-                              backgroundColor: '#11BBD5',
-                              fontSize: 12,
-                              borderRadius: '0 4px 0 8px',
-                            }}
-                          >
-                            <Icon type="check" />
-                          </span>
-                        )}
-                        <div
+
+            <Field
+              // title={
+              //   <TipTittle tips="并发模式：指定最大并发量，按照对应的施压模式进行施压；TPS模式：以目标TPS为限，系统逐步增压，摸高到目标TPS，过程中也可动态调整TPS">
+              //     压力模式
+              //   </TipTittle>
+              // }
+              name="type"
+              type="number"
+              x-component="RadioCard"
+              x-rules={[
+                {
+                  required: true,
+                  message: '请选择压力模式',
+                },
+              ]}
+              required
+              enum={[
+                {
+                  label: '并发模式',
+                  value: 0,
+                  icon: <Icon type="project" style={{ fontSize: 20 }} />,
+                  description: (
+                    <span>
+                      业务流程是压测配置的业务流程是
+                      <br />
+                      压测配置的
+                    </span>
+                  ),
+                },
+                // {
+                //   label: 'TPS模式',
+                //   value: 1,
+                //   icon: <Icon type="line-chart" style={{ fontSize: 20 }} />,
+                //   description: (
+                //     <span>
+                //       业务流程是压测配置的业务流程是
+                //       <br />
+                //       压测配置的
+                //     </span>
+                //   ),
+                // },
+              ]}
+              default={0}
+              x-component-props={{
+                style: {
+                  marginTop: 24,
+                },
+                renderOption: (item, isChecked) => {
+                  return (
+                    <div
+                      style={{
+                        width: 160,
+                        display: 'flex',
+                        position: 'relative',
+                        alignItems: 'center',
+                        padding: 16,
+                        border: '1px solid var(--Netural-300, #DBDFE3)',
+                        borderRadius: 4,
+                      }}
+                    >
+                      {isChecked && (
+                        <span
                           style={{
-                            width: 40,
-                            height: 40,
-                            marginRight: 8,
-                            lineHeight: '40px',
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                            width: 20,
+                            height: 20,
+                            lineHeight: '20px',
                             textAlign: 'center',
-                            border: '1px solid #11BBD5',
-                            borderRadius: 4,
-                            background: '#F4FDFE',
-                            color: '#11BBD5',
+                            color: '#fff',
+                            backgroundColor: '#11BBD5',
+                            fontSize: 12,
+                            borderRadius: '0 4px 0 8px',
                           }}
                         >
-                          {item.icon}
+                          <Icon type="check" />
+                        </span>
+                      )}
+                      <div
+                        style={{
+                          width: 40,
+                          height: 40,
+                          marginRight: 8,
+                          lineHeight: '40px',
+                          textAlign: 'center',
+                          border: '1px solid #11BBD5',
+                          borderRadius: 4,
+                          background: '#F4FDFE',
+                          color: '#11BBD5',
+                        }}
+                      >
+                        {item.icon}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div
+                          style={{
+                            color: 'var(--Netural-990, #25282A)',
+                            fontSize: 14,
+                            fontWeight: 600,
+                            marginBottom: 8,
+                          }}
+                        >
+                          {item.label}
                         </div>
-                        <div style={{ flex: 1 }}>
-                          <div
-                            style={{
-                              color: 'var(--Netural-990, #25282A)',
-                              fontSize: 14,
-                              fontWeight: 600,
-                              marginBottom: 8,
-                            }}
-                          >
-                            {item.label}
-                          </div>
-                          {/* <div
+                        {/* <div
                             style={{
                               color: 'var(--Netural-600, #90959A)',
                               fontSize: 13,
@@ -335,174 +348,172 @@ const PressConfigTab: React.FC<Props> = (props) => {
                           >
                             {item.description}
                           </div> */}
-                        </div>
                       </div>
-                    );
+                    </div>
+                  );
+                },
+              }}
+              x-linkages={[
+                {
+                  type: 'value:schema',
+                  target: `.mode`,
+                  condition: '{{ $self.value === 1 }}',
+                  schema: {
+                    enum: [{ label: '固定压力值', value: 1 }],
                   },
-                }}
-                x-linkages={[
-                  {
-                    type: 'value:schema',
-                    target: `.mode`,
-                    condition: '{{ $self.value === 1 }}',
-                    schema: {
-                      enum: [{ label: '固定压力值', value: 1 }],
-                    },
-                    otherwise: {
-                      enum: [
-                        { label: '固定压力值', value: 1 },
-                        { label: '线性递增', value: 2 },
-                        { label: '阶梯递增', value: 3 },
-                      ],
-                    },
+                  otherwise: {
+                    enum: [
+                      { label: '固定压力值', value: 1 },
+                      { label: '线性递增', value: 2 },
+                      { label: '阶梯递增', value: 3 },
+                    ],
                   },
-                  {
-                    type: 'value:state',
-                    target: `.mode`,
-                    condition: '{{ $self.value === 1 }}',
-                    state: {
-                      value: 1,
-                    },
+                },
+                {
+                  type: 'value:state',
+                  target: `.mode`,
+                  condition: '{{ $self.value === 1 }}',
+                  state: {
+                    value: 1,
                   },
-                  {
-                    type: 'value:visible',
-                    target: `.threadNum`,
-                    condition: '{{ $self.value === 0 }}',
-                  },
-                ]}
-              />
-              <Field
-                title={
-                  <TipTittle tips="压测场景最终会达到的最大并发量。">
-                    最大并发
-                  </TipTittle>
-                }
-                name="threadNum"
-                type="number"
-                x-component="NumberPicker"
-                x-component-props={{
-                  placeholder: '请输入',
-                  min: 1,
-                  style: {
-                    width: 240,
-                  },
-                }}
-                x-rules={[
-                  {
-                    required: true,
-                    message: '请输入最大并发',
-                  },
-                  {
-                    format: 'integer',
-                    minimum: 1,
-                    maximum: 100000,
-                    message: '请输入1~100,000之间的正整数',
-                  },
-                ]}
-                required
-                default={1}
-              />
-              <Field
-                title={
-                  <TipTittle
-                    tips={
-                      <span>
-                        1.固定压力值：压力机将会全程保持最大并发量进行施压；
-                        <br />
-                        2.线性递增：压力机将会以固定速率增压，直至达到最大并发量；
-                        <br />
-                        3.阶梯递增：压力机将会以固定周期增压，每次增压后保持一段时间，直至达到最大并发量；
-                      </span>
-                    }
-                  >
-                    施压模式
-                  </TipTittle>
-                }
-                name="mode"
-                type="number"
-                x-component="RadioGroup"
-                x-rules={[
-                  {
-                    required: true,
-                    message: '请输入最大并发',
-                  },
-                ]}
-                required
-                enum={[
-                  { label: '固定压力值', value: 1 },
-                  { label: '线性递增', value: 2 },
-                  { label: '阶梯递增', value: 3 },
-                ]}
-                default={1}
-                x-linkages={[
-                  {
-                    type: 'value:visible',
-                    target: '.rampUp',
-                    condition: '{{ $self.value === 2 || $self.value === 3 }}',
-                  },
-                  {
-                    type: 'value:visible',
-                    target: '.steps',
-                    condition: '{{ $self.value === 3 }}',
-                  },
-                ]}
-              />
-              <Field
-                title={
-                  <TipTittle tips="增压直至最大并发量的时间">
-                    递增时长
-                  </TipTittle>
-                }
-                name="rampUp"
-                type="number"
-                x-component="NumberPicker"
-                x-component-props={{
-                  placeholder: '请输入',
-                  min: 1,
-                  addonAfter: <Button>min</Button>,
-                  style: {
-                    width: 240,
-                  },
-                }}
-                x-rules={[
-                  {
-                    required: true,
-                    message: '请输入递增时长',
-                  },
-                  { format: 'integer', message: '请输入整数' },
-                ]}
-                required
-                default={1}
-              />
-              <Field
-                title={
-                  <TipTittle tips="并发量从0周期增加到最大并发量的次数">
-                    阶梯层数
-                  </TipTittle>
-                }
-                name="steps"
-                type="number"
-                x-component="NumberPicker"
-                x-component-props={{
-                  placeholder: '请输入',
-                  min: 1,
-                  max: 100,
-                  style: {
-                    width: 240,
-                  },
-                  addonAfter: <Button>min</Button>,
-                }}
-                x-rules={[
-                  {
-                    required: true,
-                    message: '请输入阶梯层数',
-                  },
-                  { format: 'integer', message: '请输入整数' },
-                ]}
-                required
-                default={1}
-              />
-            </Field>
+                },
+                {
+                  type: 'value:visible',
+                  target: `.threadNum`,
+                  condition: '{{ $self.value === 0 }}',
+                },
+              ]}
+            />
+            <Field
+              title={
+                <TipTittle tips="压测场景最终会达到的最大并发量。">
+                  最大并发
+                </TipTittle>
+              }
+              name="threadNum"
+              type="number"
+              x-component="NumberPicker"
+              x-component-props={{
+                placeholder: '请输入',
+                min: 1,
+                style: {
+                  width: 240,
+                },
+              }}
+              x-rules={[
+                {
+                  required: true,
+                  message: '请输入最大并发',
+                },
+                {
+                  format: 'integer',
+                  minimum: 1,
+                  maximum: 100000,
+                  message: '请输入1~100,000之间的正整数',
+                },
+              ]}
+              required
+              default={1}
+            />
+            <Field
+              title={
+                <TipTittle
+                  tips={
+                    <span>
+                      1.固定压力值：压力机将会全程保持最大并发量进行施压；
+                      <br />
+                      2.线性递增：压力机将会以固定速率增压，直至达到最大并发量；
+                      <br />
+                      3.阶梯递增：压力机将会以固定周期增压，每次增压后保持一段时间，直至达到最大并发量；
+                    </span>
+                  }
+                >
+                  施压模式
+                </TipTittle>
+              }
+              name="mode"
+              type="number"
+              x-component="RadioGroup"
+              x-rules={[
+                {
+                  required: true,
+                  message: '请输入最大并发',
+                },
+              ]}
+              required
+              enum={[
+                { label: '固定压力值', value: 1 },
+                { label: '线性递增', value: 2 },
+                { label: '阶梯递增', value: 3 },
+              ]}
+              default={1}
+              x-linkages={[
+                {
+                  type: 'value:visible',
+                  target: '.rampUp',
+                  condition: '{{ $self.value === 2 || $self.value === 3 }}',
+                },
+                {
+                  type: 'value:visible',
+                  target: '.steps',
+                  condition: '{{ $self.value === 3 }}',
+                },
+              ]}
+            />
+            <Field
+              title={
+                <TipTittle tips="增压直至最大并发量的时间">递增时长</TipTittle>
+              }
+              name="rampUp"
+              type="number"
+              x-component="NumberPicker"
+              x-component-props={{
+                placeholder: '请输入',
+                min: 1,
+                addonAfter: <Button>min</Button>,
+                style: {
+                  width: 240,
+                },
+              }}
+              x-rules={[
+                {
+                  required: true,
+                  message: '请输入递增时长',
+                },
+                { format: 'integer', message: '请输入整数' },
+              ]}
+              required
+              default={1}
+            />
+            <Field
+              title={
+                <TipTittle tips="并发量从0周期增加到最大并发量的次数">
+                  阶梯层数
+                </TipTittle>
+              }
+              name="steps"
+              type="number"
+              x-component="NumberPicker"
+              x-component-props={{
+                placeholder: '请输入',
+                min: 1,
+                max: 100,
+                style: {
+                  width: 240,
+                },
+                addonAfter: <Button>min</Button>,
+              }}
+              x-rules={[
+                {
+                  required: true,
+                  message: '请输入阶梯层数',
+                },
+                { format: 'integer', message: '请输入整数' },
+              ]}
+              required
+              default={1}
+            />
+
             <Field
               name="podNum"
               type="number"

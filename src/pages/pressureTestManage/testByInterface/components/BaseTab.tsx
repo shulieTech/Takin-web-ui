@@ -113,6 +113,7 @@ const BaseTab: React.FC<Props> = (props) => {
               type="string"
               x-component="Input"
               x-component-props={{
+                id: 'guide-1',
                 placeholder: '请输入URL',
                 maxLength: 200,
                 style: {
@@ -140,6 +141,7 @@ const BaseTab: React.FC<Props> = (props) => {
                 style={{ marginRight: 16 }}
                 ghost
                 onClick={startDebug}
+                id="guide-2 "
               >
                 调试
               </Button>

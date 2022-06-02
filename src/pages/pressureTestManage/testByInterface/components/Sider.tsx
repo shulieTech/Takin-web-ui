@@ -61,6 +61,7 @@ const Sider = (props: Props) => {
               <div
                 style={{ lineHeight: '50px', cursor: 'pointer' }}
                 onClick={item.onClick}
+                id={item.icon === 'code' ? 'guide-4' : undefined}
               >
                 <Icon type={item.icon} />
               </div>

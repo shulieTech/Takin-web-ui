@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import { Tooltip, Button } from 'antd';
 
 const Guide = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1);
+  const [shadowTargetStyle, setShadowTargetStyle] = useState<CSSProperties>({});
 
   const guideList = [
     {
@@ -14,13 +15,11 @@ const Guide = () => {
           -后续的名称修改也可以在这里编辑呢～
         </span>
       ),
-      targetDom: '',
       placement: 'bottomLeft ',
     },
     {
       title: '编辑场景URL',
       content: <span>-场景新建保存之前需要填写URL哦～</span>,
-      targetDom: '',
       placement: 'bottomLeft ',
     },
     {
@@ -34,7 +33,6 @@ const Guide = () => {
           」右侧的展开按钮进行快速展开和查看哦
         </span>
       ),
-      targetDom: '',
       placement: 'bottomRight',
     },
     {
@@ -48,12 +46,29 @@ const Guide = () => {
           </span>
         </span>
       ),
-      targetDom: '',
       placement: 'topLeft',
     },
   ];
 
-  // useEffect(() => {}, []);
+  useEffect(() => {
+    if (step > -1) {
+      const targetDom = document.querySelector(`#guide-${step}`);
+      if (targetDom) {
+        const targetDomRect = targetDom.getBoundingClientRect();
+        setShadowTargetStyle({
+          position: 'absolute',
+          left: targetDomRect.x,
+          top: targetDomRect.y,
+          width: targetDomRect.width,
+          height: targetDomRect.height,
+        });
+      }
+    }
+  }, [step]);
+
+  useEffect(() => {
+    setStep(0);
+  }, []);
 
   return (
     step > -1 && (
@@ -68,10 +83,10 @@ const Guide = () => {
         }}
       >
         {guideList.map((x, index, arr) => {
-          return (
+          return step === index && (
             <Tooltip
               key={x.title}
-              visible={step === index}
+              visible
               placement={x.placement}
               title={
                 <div
@@ -107,7 +122,7 @@ const Guide = () => {
                 </div>
               }
             >
-              <span>1111</span>
+              <div style={shadowTargetStyle}>111</div>
             </Tooltip>
           );
         })}

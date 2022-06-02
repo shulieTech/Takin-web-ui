@@ -238,6 +238,7 @@ const EditSence: React.FC<Props> = (props) => {
               type="string"
               x-component="Input"
               x-component-props={{
+                id: 'guide-0',
                 placeholder: '请输入压测场景名称',
                 maxLength: 30,
                 style: {
