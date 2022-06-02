@@ -73,6 +73,7 @@ const UsersModal: React.FC<Props> = (props) => {
       onCancel={cancelCallback}
       onOk={handleOk}
       width={600}
+      bodyStyle={{ maxHeight: '80vh', overflow: 'auto' }}
       {...rest}
     >
       <Form

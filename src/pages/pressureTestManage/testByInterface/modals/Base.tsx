@@ -170,8 +170,10 @@ const Params: React.FC<Props> = (props) => {
               placeholder: '请选择',
               style: {
                 width: 320,
+                background: '#F7F8FA',
               },
-              onClick: showUserModal,
+              // TODO 编辑归属人
+              // onClick: showUserModal,
             }}
             // x-rules={[{ required: true, message: '请选择归属人' }]}
           />
