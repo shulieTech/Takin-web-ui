@@ -172,8 +172,7 @@ const Params: React.FC<Props> = (props) => {
                 width: 320,
                 background: '#F7F8FA',
               },
-              // TODO 编辑归属人
-              // onClick: showUserModal,
+              onClick: showUserModal,
             }}
             // x-rules={[{ required: true, message: '请选择归属人' }]}
           />
