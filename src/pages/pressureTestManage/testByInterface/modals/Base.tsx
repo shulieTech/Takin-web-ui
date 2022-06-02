@@ -185,7 +185,7 @@ const Params: React.FC<Props> = (props) => {
               style: {
                 width: 670,
               },
-              maxLenght: 200,
+              maxLength: 200,
               rows: 4,
             }}
           />
