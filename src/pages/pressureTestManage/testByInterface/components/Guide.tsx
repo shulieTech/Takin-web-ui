@@ -52,7 +52,7 @@ const Guide = () => {
 
   const skipGuide = () => {
     setStep(-1);
-    localStorage.setItem('guide-5.7.0', 1);
+    localStorage.setItem('guide-5.7.0', '1');
   };
 
   useEffect(() => {
@@ -67,6 +67,8 @@ const Guide = () => {
           width: targetDomRect.width,
           height: targetDomRect.height,
         });
+      } else {
+        skipGuide();
       }
     }
   }, [step]);

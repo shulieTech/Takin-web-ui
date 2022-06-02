@@ -124,7 +124,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
                 default={0}
               />
               <Field
-                name="successRate"
+                name="sr"
                 type="number"
                 x-component="NumberPicker"
                 x-component-props={{
