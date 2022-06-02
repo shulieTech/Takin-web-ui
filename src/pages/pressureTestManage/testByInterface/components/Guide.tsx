@@ -3,6 +3,7 @@ import { Tooltip, Button } from 'antd';
 
 const Guide = () => {
   const [step, setStep] = useState(0);
+
   const guideList = [
     {
       title: '编辑场景名称',
@@ -51,18 +52,67 @@ const Guide = () => {
       placement: 'topLeft',
     },
   ];
+
+  // useEffect(() => {}, []);
+
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}
-    >
-      1111
-    </div>
+    step > -1 && (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        }}
+      >
+        {guideList.map((x, index, arr) => {
+          return (
+            <Tooltip
+              key={x.title}
+              visible={step === index}
+              placement={x.placement}
+              title={
+                <div
+                  style={{
+                    color: '#fff',
+                  }}
+                >
+                  <div style={{ fontSize: 16, fontWeight: 600 }}>{x.title}</div>
+                  <div>{x.content}</div>
+                  <div>
+                    {index + 1} / {arr.length}
+                    <span>
+                      <Button
+                        ghost
+                        onClick={() => {
+                          setStep(-1);
+                        }}
+                      >
+                        退出引导
+                      </Button>
+                      {index < arr.length - 1 && (
+                        <Button
+                          style={{ marginLeft: 16 }}
+                          onClick={() => {
+                            setStep(index + 1);
+                          }}
+                        >
+                          下一步
+                        </Button>
+                      )}
+                    </span>
+                  </div>
+                </div>
+              }
+            >
+              <span>1111</span>
+            </Tooltip>
+          );
+        })}
+      </div>
+    )
   );
 };
 export default Guide;

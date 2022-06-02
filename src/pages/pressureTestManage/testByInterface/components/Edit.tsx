@@ -33,6 +33,7 @@ import moment from 'moment';
 import { SenceContext } from '../indexPage';
 import { getTakinAuthority } from 'src/utils/utils';
 import { debounce } from 'lodash';
+import Guide from './Guide';
 
 interface Props {
   currentSence: any;
@@ -198,33 +199,35 @@ const EditSence: React.FC<Props> = (props) => {
           if (getTakinAuthority() === 'true') {
             onFieldValueChange$(
               'pressureConfigRequest.config.threadGroupConfigMap.threadNum'
-            ).subscribe(async (fieldState) => {
-              const { values } = await actions.getFormState();
-              const {
-                data: { success, data },
-              } = await service.querySuggestPodNum({
-                111: {
-                  ...values?.pressureConfigRequest?.config
-                    ?.threadGroupConfigMap,
-                  tpsSum: values?.pressureConfigRequest?.targetGoal?.tps,
-                },
-              });
-              if (success) {
-                actions.setFieldState(
-                  'pressureConfigRequest.config.podNum',
-                  (podState) => {
-                    podState.props['x-component-props'].addonAfter = (
-                      <Button>
-                        建议Pod数:
-                        {data?.min !== data?.max
-                          ? `${data?.min}-${data?.max}`
-                          : data?.min || '-'}
-                      </Button>
-                    );
-                  }
-                );
-              }
-            });
+            ).subscribe(
+              debounce(async (fieldState) => {
+                const { values } = await actions.getFormState();
+                const {
+                  data: { success, data },
+                } = await service.querySuggestPodNum({
+                  111: {
+                    ...values?.pressureConfigRequest?.config
+                      ?.threadGroupConfigMap,
+                    tpsSum: values?.pressureConfigRequest?.targetGoal?.tps,
+                  },
+                });
+                if (success) {
+                  actions.setFieldState(
+                    'pressureConfigRequest.config.podNum',
+                    (podState) => {
+                      podState.props['x-component-props'].addonAfter = (
+                        <Button>
+                          建议Pod数:
+                          {data?.min !== data?.max
+                            ? `${data?.min}-${data?.max}`
+                            : data?.min || '-'}
+                        </Button>
+                      );
+                    }
+                  );
+                }
+              }, 500)
+            );
           }
         }}
       >
@@ -312,13 +315,17 @@ const EditSence: React.FC<Props> = (props) => {
             setPressStarted(false);
           }}
           startedScence={{
-            scenceInfo: detail,
+            scenceInfo: {
+              id: detail.bindSceneId,
+              sceneName: detail.name,
+            },
             triggerTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             // leakSqlEnable: state.missingDataSwitch,
             // continueRead: state.pressureStyle,
           }}
         />
       )}
+      {/* <Guide /> */}
     </Spin>
   );
 };

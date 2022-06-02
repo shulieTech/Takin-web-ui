@@ -40,7 +40,7 @@ const Sider = (props: Props) => {
       onClick: () => {
         checkNew(() =>
           router.push(
-            `/pressureTestManage/pressureTestReport?sceneId=${detail.id}`
+            `/pressureTestManage/pressureTestReport?sceneId=${detail.bindSceneId}`
           )
         );
       },

@@ -273,9 +273,10 @@ const PressConfigTab: React.FC<Props> = (props) => {
                     return (
                       <div
                         style={{
+                          width: 160,
                           display: 'flex',
                           position: 'relative',
-                          alignItems: 'start',
+                          alignItems: 'center',
                           padding: 16,
                           border: '1px solid var(--Netural-300, #DBDFE3)',
                           borderRadius: 4,
@@ -326,14 +327,14 @@ const PressConfigTab: React.FC<Props> = (props) => {
                           >
                             {item.label}
                           </div>
-                          <div
+                          {/* <div
                             style={{
                               color: 'var(--Netural-600, #90959A)',
                               fontSize: 13,
                             }}
                           >
                             {item.description}
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     );
