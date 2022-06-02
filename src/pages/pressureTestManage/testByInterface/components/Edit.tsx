@@ -298,7 +298,7 @@ const EditSence: React.FC<Props> = (props) => {
             style={{ flex: 1, padding: 16 }}
           >
             <BaseTab actions={actions} detail={detail} />
-            {/* <PressConfigTab actions={actions} /> */}
+            <PressConfigTab actions={actions} />
           </FormTab>
           <FormSlot>
             <Sider detail={detail} />

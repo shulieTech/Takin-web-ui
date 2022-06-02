@@ -10,6 +10,8 @@ import { Drawer, Button, Modal, Icon, message } from 'antd';
 import service from '../service';
 import copy from 'copy-to-clipboard';
 import styles from '../index.less';
+import { getTakinAuthority } from 'src/utils/utils';
+import UserModal from './Users';
 
 interface Props {
   detail: any;
@@ -22,6 +24,7 @@ const Params: React.FC<Props> = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [formChanged, setFormChanged] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
     FormEffectHooks;
 
@@ -58,8 +61,14 @@ const Params: React.FC<Props> = (props) => {
     }
   };
 
-  const showUserSelector = async () => {
+  const showUserModal = async () => {
+    if (getTakinAuthority() !== 'true') {
+      return;
+    }
     const { values } = await actions.getFormState();
+    setSelectedUser([
+      { id: values.creatorId, accountName: values.creatorName },
+    ]);
   };
 
   const formEffects = () => {
@@ -138,7 +147,6 @@ const Params: React.FC<Props> = (props) => {
             }}
             x-rules={[{ required: true, message: '请输入' }]}
           />
-          {/* TODO 选人组件 */}
           <Field
             name="creatorId"
             title="归属人id"
@@ -154,7 +162,7 @@ const Params: React.FC<Props> = (props) => {
           <Field
             name="creatorName"
             title="归属人"
-            required
+            // required
             x-component="Input"
             default={detail.creatorName}
             x-component-props={{
@@ -163,9 +171,9 @@ const Params: React.FC<Props> = (props) => {
               style: {
                 width: 320,
               },
-              onClick: showUserSelector
+              onClick: showUserModal,
             }}
-            x-rules={[{ required: true, message: '请选择归属人' }]}
+            // x-rules={[{ required: true, message: '请选择归属人' }]}
           />
           <Field
             name="remark"
@@ -200,6 +208,26 @@ const Params: React.FC<Props> = (props) => {
           保存
         </Button>
       </div>
+      {selectedUser && (
+        <UserModal
+          zIndex={1001}
+          defaultValue={selectedUser}
+          cancelCallback={() => setSelectedUser(null)}
+          okCallback={(result) => {
+            if (result?.length !== 1) {
+              message.warn('请选择人员');
+              return;
+            }
+            setSelectedUser(null);
+            actions.setFieldState('creatorId', (state) => {
+              state.value = result[0].id;
+            });
+            actions.setFieldState('creatorName', (state) => {
+              state.value = result[0].accountName;
+            });
+          }}
+        />
+      )}
     </Drawer>
   );
 };

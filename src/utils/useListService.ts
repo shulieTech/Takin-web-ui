@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { get } from 'lodash';
+import { get, isArray } from 'lodash';
 
 interface Props {
   service: (params: any) => Promise<any>;
@@ -15,7 +15,7 @@ const useListService = (props: Props) => {
     defaultQuery = {},
     isQueryOnMount = true,
     afterSearchCallback,
-    dataListPath = '.',
+    dataListPath,
   } = props;
 
   const [query, setQuery] = useState(defaultQuery);
@@ -39,7 +39,13 @@ const useListService = (props: Props) => {
 
       if (success) {
         setQuery(newQuery);
-        setList(data.list);
+        if (dataListPath && Array.isArray(get(data, dataListPath))) {
+          setList(get(data, dataListPath));
+        } else if (Array.isArray(data.list)) {
+          setList(data.list);
+        } else if (Array.isArray(data)) {
+          setList(data);
+        }
         setTotal(totalCount || data.count);
       }
       if (typeof afterSearchCallback === 'function') {

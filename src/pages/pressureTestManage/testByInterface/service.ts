@@ -113,4 +113,18 @@ export default {
     const url = '/v2/scene/pod_number';
     return httpPost(url, data);
   },
+  /**
+   * @name 获取账号列表
+   */
+  async queryAccountList(data = {}) {
+    const url = '/auth/dept/users';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 获取部门列表
+   */
+  async queryDepartmentList(data = {}) {
+    const url = '/auth/dept/tree';
+    return httpGet(url, data);
+  },
 };
