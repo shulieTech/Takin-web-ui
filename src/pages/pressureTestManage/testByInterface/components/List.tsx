@@ -94,6 +94,19 @@ const SenceList: React.FC<Props> = (props) => {
     }
   }, [listRefreshKey]);
 
+  useEffect(() => {
+    // 有定时压测或者非待启动压测时启用定时刷新
+    const needRefresh = list.some(
+      (x) => x.isScheduler || x.status !== 0
+    );
+    if (needRefresh) {
+      const refreshTimer = setInterval(() => {
+        getList();
+      }, 10000);
+      return () => clearInterval(refreshTimer);
+    }
+  }, [JSON.stringify(list)]);
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', padding: 8 }}>
