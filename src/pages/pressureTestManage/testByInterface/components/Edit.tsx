@@ -51,6 +51,7 @@ const EditSence: React.FC<Props> = (props) => {
     setHasUnsaved,
     listRefreshKey,
     setListRefreshKey,
+    detailRefreshKey,
     editSaveKey,
     setEditSaveKey,
   } = useContext(SenceContext);
@@ -131,6 +132,12 @@ const EditSence: React.FC<Props> = (props) => {
       saveSence();
     }
   }, [editSaveKey]);
+
+  useEffect(() => {
+    if (detailRefreshKey && detail.id) {
+      getDetail(detail.id);
+    }
+  }, [detailRefreshKey]);
 
   return (
     <Spin spinning={detailLoading} wrapperClassName="spin-full">

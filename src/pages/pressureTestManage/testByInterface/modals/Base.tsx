@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import {
   SchemaForm,
   SchemaMarkupField as Field,
@@ -12,6 +12,7 @@ import copy from 'copy-to-clipboard';
 import styles from '../index.less';
 import { getTakinAuthority } from 'src/utils/utils';
 import UserModal from './Users';
+import { SenceContext } from '../indexPage';
 
 interface Props {
   detail: any;
@@ -22,6 +23,12 @@ interface Props {
 const Params: React.FC<Props> = (props) => {
   const { detail, okCallback, cancelCallback } = props;
   const actions = useMemo(() => createAsyncFormActions(), []);
+  const {
+    listRefreshKey,
+    setListRefreshKey,
+    detailRefreshKey,
+    setDetailRefreshKey,
+  } = useContext(SenceContext);
   const [formChanged, setFormChanged] = useState(false);
   const [saving, setSaving] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -65,10 +72,25 @@ const Params: React.FC<Props> = (props) => {
     if (getTakinAuthority() !== 'true') {
       return;
     }
-    const { values } = await actions.getFormState();
-    setSelectedUser([
-      { id: values.creatorId, accountName: values.creatorName },
-    ]);
+    // const { values } = await actions.getFormState();
+    // setSelectedUser([{ id: values.userId, accountName: values.userName }]);
+    setSelectedUser([{ id: detail.userId, accountName: detail.userName }]);
+  };
+
+  const changeOwner = async (user) => {
+    const {
+      data: { success },
+    } = await service.allocation({
+      dataId: detail.id,
+      menuCode: 'INTERFACE_TEST',
+      userId: user.id,
+    });
+    if (success) {
+      message.success('分配成功');
+      setDetailRefreshKey(detailRefreshKey + 1);
+      setListRefreshKey(listRefreshKey + 1);
+    }
+    setSelectedUser(null);
   };
 
   const formEffects = () => {
@@ -148,11 +170,11 @@ const Params: React.FC<Props> = (props) => {
             x-rules={[{ required: true, message: '请输入' }]}
           />
           <Field
-            name="creatorId"
+            name="userId"
             title="归属人id"
             required
             x-component="Input"
-            default={detail.creatorId}
+            default={detail.userId}
             x-component-props={{
               readOnly: true,
             }}
@@ -160,11 +182,11 @@ const Params: React.FC<Props> = (props) => {
             display={false}
           />
           <Field
-            name="creatorName"
+            name="userName"
             title="归属人"
             // required
             x-component="Input"
-            default={detail.creatorName}
+            default={detail.userName}
             x-component-props={{
               readOnly: true,
               placeholder: '请选择',
@@ -220,12 +242,13 @@ const Params: React.FC<Props> = (props) => {
               return;
             }
             setSelectedUser(null);
-            actions.setFieldState('creatorId', (state) => {
-              state.value = result[0].id;
-            });
-            actions.setFieldState('creatorName', (state) => {
-              state.value = result[0].accountName;
-            });
+            changeOwner(result[0]);
+            // actions.setFieldState('userId', (state) => {
+            //   state.value = result[0].id;
+            // });
+            // actions.setFieldState('userName', (state) => {
+            //   state.value = result[0].accountName;
+            // });
           }}
         />
       )}

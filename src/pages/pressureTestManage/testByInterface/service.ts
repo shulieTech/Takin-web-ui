@@ -127,4 +127,11 @@ export default {
     const url = '/auth/dept/tree';
     return httpGet(url, data);
   },
+  /**
+   * @name 分配负责人
+   */
+  async allocation(data = {}) {
+    const url = '/user/allocation';
+    return httpPost(url, data);
+  },
 };
