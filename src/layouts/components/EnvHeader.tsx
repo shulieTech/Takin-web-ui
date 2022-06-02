@@ -83,18 +83,18 @@ const EnvHeader: React.FC<Props> = (props) => {
     });
     if (success) {
       localStorage.setItem('tenant-code', code);
-      setEnvList(data.envs);
-      const arr = data.envs.filter((item) => {
-        if (item.isDefault) {
-          return item;
-        }
-      });
-      localStorage.setItem('env-code', arr[0]?.envCode);
-      localStorage.setItem(
-        'securityCenterDomain',
-        arr[0]?.securityCenterDomain || ''
-      );
-      setDesc(arr[0]?.desc);
+      // setEnvList(data.envs);
+      // const arr = data.envs.filter((item) => {
+      //   if (item.isDefault) {
+      //     return item;
+      //   }
+      // });
+      // localStorage.setItem('env-code', arr[0]?.envCode);
+      // localStorage.setItem(
+      //   'securityCenterDomain',
+      //   arr[0]?.securityCenterDomain || ''
+      // );
+      // setDesc(arr[0]?.desc);
       localStorage.removeItem('trowebUserResource');
       localStorage.removeItem('trowebBtnResource');
       localStorage.removeItem('trowebUserMenu');
