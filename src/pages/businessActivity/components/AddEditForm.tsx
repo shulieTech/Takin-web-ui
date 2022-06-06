@@ -14,6 +14,7 @@ import styles from '../index.less';
 import { AddEditActivityModalState } from '../modals/AddEditActivityModal';
 import DomainManageModal from '../modals/DomainManageModal';
 import BusinessActivityService from '../service';
+import { debounce } from 'lodash';
 
 interface AddEditFormProps extends CommonModelState, AddEditActivityModalState {
   setState: (state: Partial<AddEditActivityModalState>) => void;
@@ -28,10 +29,11 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
       queryServiceList();
     }
   }, [app, serviceType]);
-  const queryServiceList = async () => {
+  const queryServiceList = async (inputVal = undefined) => {
     const {
       data: { data, success }
     } = await BusinessActivityService.queryServiceList({
+      serviceName: inputVal,
       applicationName: app,
       type: serviceType
     });
@@ -191,6 +193,9 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             }}
             placeholder="请选择服务"
             showSearch
+            onSearch={debounce((val) => {
+              queryServiceList(val);
+            }, 500)}
             disabled={disabled}
             optionFilterProp="children"
             dropdownClassName={styles.select}
