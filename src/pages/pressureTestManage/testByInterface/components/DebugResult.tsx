@@ -86,270 +86,310 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
 
   return (
     <Spin spinning={loading}>
-      <div
+      <Collapse
+        expandIcon={({ isActive }) => (
+          <Icon
+            type="caret-right"
+            rotate={isActive ? 90 : -90}
+            style={{ right: 22 }}
+          />
+        )}
+        expandIconPosition="right"
+        bordered={false}
         style={{
-          padding: '8px 0',
+          backgroundColor: '#fff',
           borderTop: '1px solid #EEF0F2',
-          color: 'var(--Netural-500, #AEB2B7)',
-          display: 'flex',
-          alignItems: 'center',
+          marginLeft: -32,
+          marginRight: -32,
         }}
       >
-        <span style={{ flex: 1 }}>响应结果</span>
-        {(list.length > 0 || query.status) && (
-          <div style={{ color: 'var(--Netural-850, #414548)' }}>
-            {errorCount > 0 && (
-              <span style={{ marginRight: 32 }}>
-                <Icon
-                  type="close-circle"
-                  theme="filled"
-                  style={{ color: '#D64C42', marginRight: 8 }}
-                />
-                {errorCount} 失败
-              </span>
-            )}
-            <Select
-              allowClear
-              placeholder="状态"
-              style={{ width: 120, marginRight: 8 }}
-              onChange={(val) =>
-                getList({
-                  ...defaultQuery,
-                  status: val,
-                })
-              }
+        <Panel
+          key="debugResultContent"
+          style={{
+            borderBottom: 'none',
+          }}
+          header={
+            <span
+              style={{
+                color: 'var(--Netural-500, #AEB2B7)',
+                padding: '0 16px',
+                lineHeight: '32px',
+              }}
             >
-              <Select.Option value={1}>成功</Select.Option>
-              <Select.Option value={2}>失败</Select.Option>
-            </Select>
-            <Button onClick={clearDebugHistory}>清空</Button>
-          </div>
-        )}
-      </div>
-      {!(list.length > 0) ? (
-        <div
-          style={{
-            color: 'var(--Netural-800, #5A5E62)',
-            lineHeight: '20px',
-            textAlign: 'center',
-            padding: '40px 0',
-          }}
-        >
-          您可以输入一个URL，点击调
-          <br />
-          试后，可在此查看响应结果
-        </div>
-      ) : (
-        <div
-          style={{
-            borderTop: '1px solid #EEF0F2',
-          }}
-        >
-          <Collapse
-            bordered={false}
-            expandIcon={expandIcon}
-            style={{
-              backgroundColor: '#fff',
-            }}
-          >
-            {list.map((x) => {
-              const {
-                headers: requestHeaders,
-                body: requestBody,
-                Cookie,
-              } = JSON.parse(x.request || '{}');
-              const { headers: responseHeaders, body: responseBody } =
-                JSON.parse(x.response || '{}');
-              const hasError = !!x.errorMessage;
-              return (
-                <Panel
-                  key={x.id}
-                  style={{
-                    borderBottom: 'none',
-                    backgroundColor: hasError ? '#FAF2F3' : '#fff',
-                  }}
-                  header={
-                    <div
-                      style={{
-                        display: 'flex',
-                        color: hasError
-                          ? 'var(--FunctionNegative-500, #D24D40)'
-                          : 'var(--Netural-700, #6F7479)',
-                      }}
-                    >
-                      <div style={{ flex: 1 }}>
-                        <span style={{ marginRight: 16 }}>{x.status}</span>
-                        <span style={{ marginRight: 16 }}>{x.httpMethod}</span>
-                        <span style={{ marginRight: 16 }}>{x.requestUrl}</span>
-                      </div>
-                      <span
-                        style={{
-                          fontSize: 12,
-                          color: 'var(--Netural-500, #AEB2B7)',
-                        }}
-                      >
-                        {moment(x.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}
-                      </span>
-                    </div>
-                  }
-                >
-                  {x.errorMessage && (
-                    <div
-                      style={{
-                        paddingLeft: 16,
-                        color: 'var(--FunctionNegative-500, #D24D40)',
-                        lineHeight: '28px',
-                      }}
-                    >
-                      {x.errorMessage}
-                    </div>
+              响应结果
+            </span>
+          }
+          extra={
+            <span>
+              {(list.length > 0 || query.status) && (
+                <div style={{ color: 'var(--Netural-850, #414548)' }}>
+                  {errorCount > 0 && (
+                    <span style={{ marginRight: 32 }}>
+                      <Icon
+                        type="close-circle"
+                        theme="filled"
+                        style={{ color: '#D64C42', marginRight: 8 }}
+                      />
+                      {errorCount} 失败
+                    </span>
                   )}
-                  <Collapse
-                    bordered={false}
-                    expandIcon={expandIcon}
-                    style={{
-                      backgroundColor: 'transparent',
-                    }}
+                  <Select
+                    allowClear
+                    placeholder="状态"
+                    style={{ width: 120, marginRight: 8 }}
+                    onChange={(val) =>
+                      getList({
+                        ...defaultQuery,
+                        status: val,
+                      })
+                    }
                   >
+                    <Select.Option value={1}>成功</Select.Option>
+                    <Select.Option value={2}>失败</Select.Option>
+                  </Select>
+                  <Button onClick={clearDebugHistory}>清空</Button>
+                </div>
+              )}
+            </span>
+          }
+        >
+          {!(list.length > 0) ? (
+            <div
+              style={{
+                color: 'var(--Netural-800, #5A5E62)',
+                lineHeight: '20px',
+                textAlign: 'center',
+                padding: '40px 0',
+              }}
+            >
+              您可以输入一个URL，点击调
+              <br />
+              试后，可在此查看响应结果
+            </div>
+          ) : (
+            <div
+              style={{
+                borderTop: '1px solid #EEF0F2',
+                minHeight: 200,
+              }}
+            >
+              <Collapse
+                bordered={false}
+                expandIcon={expandIcon}
+                style={{
+                  backgroundColor: '#fff',
+                }}
+              >
+                {list.map((x) => {
+                  const {
+                    headers: requestHeaders,
+                    body: requestBody,
+                    Cookie,
+                  } = JSON.parse(x.request || '{}');
+                  const { headers: responseHeaders, body: responseBody } =
+                    JSON.parse(x.response || '{}');
+                  const hasError = !!x.errorMessage;
+                  return (
                     <Panel
-                      header="Request"
-                      key="Request"
-                      style={{ borderBottom: 'none' }}
-                    >
-                      <div style={{ paddingLeft: 16 }}>
-                        <Collapse
-                          bordered={false}
-                          expandIcon={expandIcon}
+                      key={x.id}
+                      style={{
+                        borderBottom: 'none',
+                        backgroundColor: hasError ? '#FAF2F3' : '#fff',
+                      }}
+                      header={
+                        <div
                           style={{
-                            backgroundColor: 'transparent',
+                            display: 'flex',
+                            color: hasError
+                              ? 'var(--FunctionNegative-500, #D24D40)'
+                              : 'var(--Netural-700, #6F7479)',
                           }}
                         >
-                          <Panel
-                            header="Header"
-                            key="Header"
-                            style={{ borderBottom: 'none' }}
-                          >
-                            <div style={{ paddingLeft: 16 }}>
-                              {Object.entries(requestHeaders).map(([k, v]) => {
-                                return (
-                                  <div key={k} style={{ lineHeight: '28px' }}>
-                                    <span
-                                      style={{
-                                        color: '#6187CF',
-                                        marginRight: 8,
-                                      }}
-                                    >
-                                      {k}：
-                                    </span>
-                                    <span
-                                      style={{
-                                        color: 'var(--Netural-850, #414548)',
-                                      }}
-                                    >
-                                      {v}
-                                    </span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </Panel>
-                          {requestBody && (
-                            <Panel
-                              header="Body"
-                              key="Body"
-                              style={{ borderBottom: 'none' }}
-                            >
-                              <div style={{ paddingLeft: 16 }}>
-                                {requestBody}
-                              </div>
-                            </Panel>
-                          )}
-                        </Collapse>
-                      </div>
-                    </Panel>
-
-                    {x.response && (
-                      <Panel
-                        header="Response"
-                        key="Response"
-                        style={{ borderBottom: 'none' }}
-                      >
-                        <div style={{ paddingLeft: 16 }}>
-                          <Collapse
-                            bordered={false}
-                            expandIcon={expandIcon}
+                          <div style={{ flex: 1 }}>
+                            <span style={{ marginRight: 16 }}>{x.status}</span>
+                            <span style={{ marginRight: 16 }}>
+                              {x.httpMethod}
+                            </span>
+                            <span style={{ marginRight: 16 }}>
+                              {x.requestUrl}
+                            </span>
+                          </div>
+                          <span
                             style={{
-                              backgroundColor: 'transparent',
+                              fontSize: 12,
+                              color: 'var(--Netural-500, #AEB2B7)',
                             }}
                           >
-                            <Panel
-                              header="Header"
-                              key="Header"
-                              style={{ borderBottom: 'none' }}
+                            {moment(x.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}
+                          </span>
+                        </div>
+                      }
+                    >
+                      {x.errorMessage && (
+                        <div
+                          style={{
+                            paddingLeft: 16,
+                            color: 'var(--FunctionNegative-500, #D24D40)',
+                            lineHeight: '28px',
+                          }}
+                        >
+                          {x.errorMessage}
+                        </div>
+                      )}
+                      <Collapse
+                        bordered={false}
+                        expandIcon={expandIcon}
+                        style={{
+                          backgroundColor: 'transparent',
+                        }}
+                      >
+                        <Panel
+                          header="Request"
+                          key="Request"
+                          style={{ borderBottom: 'none' }}
+                        >
+                          <div style={{ paddingLeft: 16 }}>
+                            <Collapse
+                              bordered={false}
+                              expandIcon={expandIcon}
+                              style={{
+                                backgroundColor: 'transparent',
+                              }}
                             >
-                              <div style={{ paddingLeft: 16 }}>
-                                {Object.entries(responseHeaders).map(
-                                  ([k, v]) => {
-                                    return (
-                                      <div
-                                        key={k}
-                                        style={{ lineHeight: '28px' }}
-                                      >
-                                        <span
-                                          style={{
-                                            color: '#6187CF',
-                                            marginRight: 8,
-                                          }}
-                                        >
-                                          {k}：
-                                        </span>
-                                        <span
-                                          style={{
-                                            color:
-                                              'var(--Netural-850, #414548)',
-                                          }}
-                                        >
-                                          {v}
-                                        </span>
-                                      </div>
-                                    );
-                                  }
-                                )}
-                              </div>
-                            </Panel>
-                            {responseBody && (
                               <Panel
-                                header="Body"
-                                key="Body"
+                                header="Header"
+                                key="Header"
                                 style={{ borderBottom: 'none' }}
                               >
                                 <div style={{ paddingLeft: 16 }}>
-                                  {responseBody}
+                                  {Object.entries(requestHeaders).map(
+                                    ([k, v]) => {
+                                      return (
+                                        <div
+                                          key={k}
+                                          style={{ lineHeight: '28px' }}
+                                        >
+                                          <span
+                                            style={{
+                                              color: '#6187CF',
+                                              marginRight: 8,
+                                            }}
+                                          >
+                                            {k}：
+                                          </span>
+                                          <span
+                                            style={{
+                                              color:
+                                                'var(--Netural-850, #414548)',
+                                            }}
+                                          >
+                                            {v}
+                                          </span>
+                                        </div>
+                                      );
+                                    }
+                                  )}
                                 </div>
                               </Panel>
-                            )}
-                          </Collapse>
-                        </div>
-                      </Panel>
-                    )}
-                  </Collapse>
-                </Panel>
-              );
-            })}
-          </Collapse>
-          <Pagination
-            simple
-            hideOnSinglePage
-            size="small"
-            total={total}
-            pageSize={query.pageSize}
-            current={query.current + 1}
-            onChange={(page, pageSize) => {
-              getList({ pageSize, current: page - 1 });
-            }}
-          />
-        </div>
-      )}
+                              {requestBody && (
+                                <Panel
+                                  header="Body"
+                                  key="Body"
+                                  style={{ borderBottom: 'none' }}
+                                >
+                                  <div style={{ paddingLeft: 16 }}>
+                                    {requestBody}
+                                  </div>
+                                </Panel>
+                              )}
+                            </Collapse>
+                          </div>
+                        </Panel>
+
+                        {x.response && (
+                          <Panel
+                            header="Response"
+                            key="Response"
+                            style={{ borderBottom: 'none' }}
+                          >
+                            <div style={{ paddingLeft: 16 }}>
+                              <Collapse
+                                bordered={false}
+                                expandIcon={expandIcon}
+                                style={{
+                                  backgroundColor: 'transparent',
+                                }}
+                              >
+                                <Panel
+                                  header="Header"
+                                  key="Header"
+                                  style={{ borderBottom: 'none' }}
+                                >
+                                  <div style={{ paddingLeft: 16 }}>
+                                    {Object.entries(responseHeaders).map(
+                                      ([k, v]) => {
+                                        return (
+                                          <div
+                                            key={k}
+                                            style={{ lineHeight: '28px' }}
+                                          >
+                                            <span
+                                              style={{
+                                                color: '#6187CF',
+                                                marginRight: 8,
+                                              }}
+                                            >
+                                              {k}：
+                                            </span>
+                                            <span
+                                              style={{
+                                                color:
+                                                  'var(--Netural-850, #414548)',
+                                              }}
+                                            >
+                                              {v}
+                                            </span>
+                                          </div>
+                                        );
+                                      }
+                                    )}
+                                  </div>
+                                </Panel>
+                                {responseBody && (
+                                  <Panel
+                                    header="Body"
+                                    key="Body"
+                                    style={{ borderBottom: 'none' }}
+                                  >
+                                    <div style={{ paddingLeft: 16 }}>
+                                      {responseBody}
+                                    </div>
+                                  </Panel>
+                                )}
+                              </Collapse>
+                            </div>
+                          </Panel>
+                        )}
+                      </Collapse>
+                    </Panel>
+                  );
+                })}
+              </Collapse>
+              <Pagination
+                simple
+                hideOnSinglePage
+                size="small"
+                total={total}
+                pageSize={query.pageSize}
+                current={query.current + 1}
+                onChange={(page, pageSize) => {
+                  getList({ pageSize, current: page - 1 });
+                }}
+              />
+            </div>
+          )}
+        </Panel>
+      </Collapse>
     </Spin>
   );
 };

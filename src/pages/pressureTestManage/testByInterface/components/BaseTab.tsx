@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { SchemaMarkupField as Field, IFormAsyncActions } from '@formily/antd';
 import { FormTab, FormMegaLayout, FormSlot } from '@formily/antd-components';
 import { Button } from 'antd';
@@ -14,6 +14,7 @@ interface Props {
   actions: IFormAsyncActions;
   dictionaryMap: any;
   detail: any;
+  isActive?: boolean;
 }
 
 const BaseTab: React.FC<Props> = (props) => {
@@ -21,8 +22,10 @@ const BaseTab: React.FC<Props> = (props) => {
     actions,
     dictionaryMap: { DEBUG_HTTP_TYPE },
     detail,
+    isActive = true,
   } = props;
   const [debugInput, setDebugInput] = useState();
+  const [baseTabStyle, setBaseTabStyle] = useState({});
 
   const onEntranceChange = (val) => {
     actions.getFieldState('.entranceAppName', (state) => {
@@ -61,9 +64,24 @@ const BaseTab: React.FC<Props> = (props) => {
     });
   }, [detail?.id]);
 
+  useEffect(() => {
+    const tab1 = document.querySelector('#tab-1');
+    const { x } = tab1.getBoundingClientRect();
+    setBaseTabStyle({
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: `calc(100vh - ${x - 236}px)`,
+    });
+  }, []);
+
   return (
     <>
-      <FormTab.TabPane name="tab-1" tab="场景">
+      <FormTab.TabPane
+        name="tab-1"
+        tab="场景"
+        id="tab-1"
+        style={isActive ? baseTabStyle : {}}
+      >
         <LayoutBox
           x-component-props={{ style: { display: 'flex', alignItems: 'top' } }}
         >
@@ -148,7 +166,11 @@ const BaseTab: React.FC<Props> = (props) => {
             </div>
           </FormSlot>
         </LayoutBox>
-        <FormTab name="tabs-1-1" defaultActiveKey={'tab-1-1'}>
+        <FormTab
+          name="tabs-1-1"
+          defaultActiveKey={'tab-1-1'}
+          style={{ flex: 1 }}
+        >
           <FormTab.TabPane name="tab-1-1" tab="基本信息">
             <Field
               name="entranceAppName"

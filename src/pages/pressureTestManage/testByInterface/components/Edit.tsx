@@ -56,6 +56,7 @@ const EditSence: React.FC<Props> = (props) => {
     setEditSaveKey,
   } = useContext(SenceContext);
   const [pressStarted, setPressStarted] = useState(false);
+  const [tabKey, setTabKey] = useState('tab-1');
 
   const getDetail = async (id) => {
     setDetailLoading(true);
@@ -125,6 +126,7 @@ const EditSence: React.FC<Props> = (props) => {
     } else {
       setDetail({});
     }
+    setTabKey('tab-1');
   }, [currentSence?.id]);
 
   useEffect(() => {
@@ -297,9 +299,14 @@ const EditSence: React.FC<Props> = (props) => {
             name="tabs-1"
             defaultActiveKey={'tab-1'}
             type="card"
-            style={{ flex: 1, padding: 16 }}
+            style={{ flex: 1, padding: 16, paddingBottom: 0 }}
+            onTabClick={setTabKey}
           >
-            <BaseTab actions={actions} detail={detail} />
+            <BaseTab
+              actions={actions}
+              detail={detail}
+              isActive={tabKey === 'tab-1'}
+            />
             <PressConfigTab actions={actions} />
           </FormTab>
           <FormSlot>
