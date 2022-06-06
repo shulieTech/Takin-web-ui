@@ -205,8 +205,7 @@ const EditSence: React.FC<Props> = (props) => {
                   data: { success, data },
                 } = await service.querySuggestPodNum({
                   111: {
-                    ...values?.pressureConfigRequest?.config
-                      ?.threadGroupConfigMap,
+                    ...values?.pressureConfigRequest?.threadConfig,
                     tpsSum: values?.pressureConfigRequest?.targetGoal?.tps,
                   },
                 });
