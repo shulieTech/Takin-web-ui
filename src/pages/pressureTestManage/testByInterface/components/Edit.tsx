@@ -146,7 +146,7 @@ const EditSence: React.FC<Props> = (props) => {
       <SchemaForm
         key={detail?.id}
         actions={actions}
-        defaultValue={detail}
+        initialValues={detail}
         validateFirst
         components={{
           Input,
