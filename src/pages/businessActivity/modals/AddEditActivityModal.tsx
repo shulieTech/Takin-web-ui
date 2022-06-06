@@ -32,7 +32,8 @@ const getInitState = () => ({
   businessDomain: undefined,
   form: null as WrappedFormUtils,
   showModal: false,
-  virtualEntrance: null
+  virtualEntrance: null,
+  details: {},
 });
 const { confirm } = Modal;
 export type AddEditActivityModalState = ReturnType<typeof getInitState>;
@@ -53,6 +54,7 @@ const AddEditActivityModal: React.FC<Props> = props => {
     });
     if (success) {
       setState({
+        details: data,
         systemName: data.activityName,
         app: data.applicationName,
         serviceType: data.type,

@@ -19,9 +19,10 @@ import { debounce } from 'lodash';
 interface AddEditFormProps extends CommonModelState, AddEditActivityModalState {
   setState: (state: Partial<AddEditActivityModalState>) => void;
   isVirtual?: boolean;
+  details: any;
 }
 const AddEditForm: React.FC<AddEditFormProps> = props => {
-  const { setState, app, serviceType, form } = props;
+  const { setState, app, serviceType, form, details = {} } = props;
   const disabled = !props.app;
 
   useEffect(() => {
@@ -38,7 +39,15 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
       type: serviceType
     });
     if (success) {
-      setState({ serviceList: data });
+      // @ts-ignore 如果下拉框列表有分页，详情中的初始值在下拉框中没有，插入这条数据
+      if (details.linkId && details.entranceName && !data.some(x => x.value === details.linkId)) {
+        setState({
+          // @ts-ignore
+          serviceList: [{ label: details.entranceName, value: details.linkId }].concat(data)
+        });
+      } else {
+        setState({ serviceList: data });
+      }
     }
   };
   const getFormData = (): FormDataType[] => {
