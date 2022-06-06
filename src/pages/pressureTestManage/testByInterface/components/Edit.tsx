@@ -265,7 +265,7 @@ const EditSence: React.FC<Props> = (props) => {
                 <Button
                   style={{ marginRight: 16 }}
                   onClick={saveSence}
-                  loading-={saving}
+                  loading={saving}
                 >
                   保存场景
                 </Button>
