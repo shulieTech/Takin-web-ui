@@ -120,7 +120,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
             </span>
           }
           extra={
-            <span>
+            <span onClick={(e) => e.stopPropagation()}>
               {(list.length > 0 || query.status) && (
                 <div style={{ color: 'var(--Netural-850, #414548)' }}>
                   {errorCount > 0 && (
@@ -150,8 +150,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
                   <Button onClick={clearDebugHistory}>清空</Button>
                 </div>
               )}
-            </span>
-          }
+            </span>}
         >
           {!(list.length > 0) ? (
             <div
