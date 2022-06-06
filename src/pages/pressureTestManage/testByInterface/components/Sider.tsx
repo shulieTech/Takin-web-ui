@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Tooltip, Icon, message } from 'antd';
 import ParamsDrawer from '../modals/Params';
 import BaseDrawer from '../modals/Base';
-import { router } from 'umi';
 
 interface Props {
   detail: any;
@@ -39,9 +38,7 @@ const Sider = (props: Props) => {
       icon: 'history',
       onClick: () => {
         checkNew(() =>
-          router.push(
-            `/pressureTestManage/pressureTestReport?sceneId=${detail.bindSceneId}`
-          )
+          window.open(`#/pressureTestManage/pressureTestReport?sceneId=${detail.bindSceneId}`)
         );
       },
     },
