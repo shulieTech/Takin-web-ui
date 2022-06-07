@@ -301,6 +301,15 @@ const getPressureTestSceneColumns = (
       dataIndex: 'action',
       align: 'right',
       render: (text, row) => {
+        // 编辑地址，默认旧版
+        let editUrl = `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`;
+        if (row.configId) {
+          // 单接口压测场景编辑
+          editUrl = `/pressureTestManage/testByInterface?id=${row.configId}`;
+        } else if (row.hasAnalysisResult) {
+          // 新场景编辑
+          editUrl = `/pressureTestManage/pressureTestSceneV2/edit?id=${row.id}`;
+        }
         return (
           <Fragment>
             {row.isScheduler && (
@@ -321,14 +330,7 @@ const getPressureTestSceneColumns = (
                   row.canEdit
                 }
               >
-                <Link
-                  style={{ marginRight: 8 }}
-                  to={
-                    row.hasAnalysisResult
-                      ? `/pressureTestManage/pressureTestSceneV2/edit?id=${row.id}`
-                      : `/pressureTestManage/pressureTestScene/pressureTestSceneConfig?action=edit&id=${row.id}`
-                  }
-                >
+                <Link style={{ marginRight: 8 }} to={editUrl}>
                   编辑
                 </Link>
               </AuthorityBtn>
