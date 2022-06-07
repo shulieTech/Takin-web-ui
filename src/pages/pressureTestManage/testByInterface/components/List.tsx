@@ -145,7 +145,7 @@ const SenceList: React.FC<Props> = (props) => {
               <div
                 key={x.id}
                 className={classNames(styles['sence-item'], {
-                  [styles.active]: x.id === currentSence?.id,
+                  [styles.active]: x.id === parseInt(currentSence?.id, 10),
                 })}
                 onClick={() => {
                   checkSave(() => {
