@@ -55,7 +55,7 @@ const EditSence: React.FC<Props> = (props) => {
     editSaveKey,
     setEditSaveKey,
   } = useContext(SenceContext);
-  const [pressStarted, setPressStarted] = useState(false);
+  const [pressStartedBindSenceId, setPressStartedBindSenceId] = useState(null);
   const [tabKey, setTabKey] = useState('tab-1');
 
   const getDetail = async (id) => {
@@ -74,6 +74,7 @@ const EditSence: React.FC<Props> = (props) => {
           getDetail(id);
         }, 5000);
       }
+      return data;
     }
   };
 
@@ -88,14 +89,15 @@ const EditSence: React.FC<Props> = (props) => {
         title: '提示',
         content: '您的场景有内容修改，是否保存并启动压测？',
         onOk: async () => {
-          const success = await saveSence();
-          if (success) {
-            setPressStarted(true);
+          // 修改后bindSceneId会变
+          const newDetail = await saveSence();
+          if (newDetail?.bindSceneId) {
+            setPressStartedBindSenceId(newDetail.bindSceneId);
           }
         },
       });
     } else {
-      setPressStarted(true);
+      setPressStartedBindSenceId(detail.bindSceneId);
     }
   };
 
@@ -114,9 +116,9 @@ const EditSence: React.FC<Props> = (props) => {
       if (success) {
         message.success('保存成功');
         setHasUnsaved(false);
-        getDetail(data || detail.id);
+        const newDetail = await getDetail(data || detail.id);
         setListRefreshKey(listRefreshKey + 1);
-        return success;
+        return newDetail;
       }
     }
   };
@@ -325,15 +327,15 @@ const EditSence: React.FC<Props> = (props) => {
           </FormSlot>
         </LayoutBox>
       </SchemaForm>
-      {pressStarted && detail.bindSceneId && (
+      {pressStartedBindSenceId && (
         <StartStatusModal
           visible
           onCancel={() => {
-            setPressStarted(false);
+            setPressStartedBindSenceId(null);
           }}
           startedScence={{
             scenceInfo: {
-              id: detail.bindSceneId,
+              id: pressStartedBindSenceId,
               sceneName: detail.name,
             },
             triggerTime: moment().format('YYYY-MM-DD HH:mm:ss'),
