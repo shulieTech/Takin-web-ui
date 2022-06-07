@@ -216,6 +216,9 @@ const EditSence: React.FC<Props> = (props) => {
             ).subscribe(
               debounce(async (fieldState) => {
                 const { values } = await actions.getFormState();
+                if (!fieldState.value) {
+                  return;
+                }
                 const {
                   data: { success, data },
                 } = await service.querySuggestPodNum({
