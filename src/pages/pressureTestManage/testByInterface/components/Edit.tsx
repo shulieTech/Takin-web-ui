@@ -121,6 +121,12 @@ const EditSence: React.FC<Props> = (props) => {
     }
   };
 
+  const onTabClick = key => {
+    actions.getFieldState('tabs-1', state => {
+      setTabKey(key);
+    });
+  };
+
   useEffect(() => {
     if (currentSence.id) {
       getDetail(currentSence.id);
@@ -129,7 +135,10 @@ const EditSence: React.FC<Props> = (props) => {
       setDetail({});
       actions.reset({ validate: false });
     }
-    setTabKey('tab-1');
+    actions.setFieldState('tabs-1', state => {
+      state.activeKey = 'tab-1';
+      setTabKey('tab-1');
+    });
   }, [currentSence?.id]);
 
   useEffect(() => {
@@ -302,7 +311,7 @@ const EditSence: React.FC<Props> = (props) => {
             defaultActiveKey={'tab-1'}
             type="card"
             style={{ flex: 1, padding: 16, paddingBottom: 0 }}
-            onTabClick={setTabKey}
+            onTabClick={onTabClick}
           >
             <BaseTab
               actions={actions}
