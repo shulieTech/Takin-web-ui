@@ -63,7 +63,7 @@ const SenceList: React.FC<Props> = (props) => {
     event.stopPropagation();
     checkSave(() => {
       router.push(
-        `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sence.id}`
+        `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sence.bindSceneId}`
       );
     });
   };
