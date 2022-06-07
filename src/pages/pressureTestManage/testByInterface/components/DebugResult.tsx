@@ -387,6 +387,10 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
                 })}
               </Collapse>
               <Pagination
+                style={{
+                  padding: 16,
+                  textAlign: 'center',
+                }}
                 simple
                 hideOnSinglePage
                 size="small"

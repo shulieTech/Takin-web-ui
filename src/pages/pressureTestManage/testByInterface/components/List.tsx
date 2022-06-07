@@ -206,6 +206,10 @@ const SenceList: React.FC<Props> = (props) => {
             );
           })}
           <Pagination
+            style={{
+              padding: 16,
+              textAlign: 'center',
+            }}
             simple
             hideOnSinglePage
             size="small"

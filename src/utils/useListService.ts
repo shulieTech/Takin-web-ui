@@ -46,7 +46,7 @@ const useListService = (props: Props) => {
         } else if (Array.isArray(data)) {
           setList(data);
         }
-        setTotal(totalCount || data.count);
+        setTotal(totalCount || data.count || data.total);
       }
       if (typeof afterSearchCallback === 'function') {
         afterSearchCallback(res);
