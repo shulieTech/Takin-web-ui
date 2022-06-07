@@ -97,7 +97,7 @@ const SenceList: React.FC<Props> = (props) => {
   useEffect(() => {
     // 有定时压测或者非待启动压测时启用定时刷新
     const needRefresh = list.some(
-      (x) => x.isScheduler || x.status !== 0
+      (x) => x.isScheduler || x.pressureStatus !== 0
     );
     if (needRefresh) {
       const refreshTimer = setInterval(() => {

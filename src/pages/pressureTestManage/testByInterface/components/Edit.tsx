@@ -69,7 +69,7 @@ const EditSence: React.FC<Props> = (props) => {
       setDetail(data);
       actions.setFormState(state => state.values = data);
       // 非待启动状态时轮询
-      if (data.status !== 0) {
+      if (data.pressureStatus !== 0) {
         setTimeout(() => {
           getDetail(id);
         }, 5000);
@@ -290,14 +290,14 @@ const EditSence: React.FC<Props> = (props) => {
                 <Button
                   type="primary"
                   onClick={startTest}
-                  disabled={saving || [2].includes(detail.status)}
+                  disabled={saving || [2].includes(detail.pressureStatus)}
                 >
                   <Icon type="play-circle" theme="filled" />
                   {
                     {
                       0: '启动压测',
                       2: '压测中',
-                    }[detail.status || 0]
+                    }[detail.pressureStatus || 0]
                   }
                 </Button>
               </div>

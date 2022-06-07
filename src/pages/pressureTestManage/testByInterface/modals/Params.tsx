@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import {
   SchemaForm,
   SchemaMarkupField as Field,
@@ -13,6 +13,7 @@ import downdloadFile from 'src/utils/downloadFile';
 import service from '../service';
 import styles from '../index.less';
 import copy from 'copy-to-clipboard';
+import { SenceContext } from '../indexPage';
 
 interface Props {
   detail: any;
@@ -22,6 +23,7 @@ interface Props {
 
 const Params: React.FC<Props> = (props) => {
   const { detail, okCallback, cancelCallback } = props;
+  const { detailRefreshKey, setDetailRefreshKey } = useContext(SenceContext);
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [paramsDetail, setParamsDetail] = useState({ id: detail.id });
   const [formChanged, setFormChanged] = useState(false);
@@ -169,6 +171,8 @@ const Params: React.FC<Props> = (props) => {
         });
       if (success) {
         actions.setFieldValue('paramList', data.paramList);
+        // 刷新详情
+        setDetailRefreshKey(detailRefreshKey + 1);
       }
     });
   };
