@@ -67,29 +67,12 @@ const BaseTab: React.FC<Props> = (props) => {
   useEffect(() => {
     const tab1 = document.querySelector('#tab-1');
 
-    const setStyle = () => {
-      const { x } = tab1.getBoundingClientRect();
-      setBaseTabStyle({
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: `calc(100vh - ${x - 236}px)`,
-      });
-    };
-
-    if (window.MutationObserver) {
-      const observer = new MutationObserver((mutationsList, ob) => {
-        setStyle();
-      });
-      observer.observe(document.body, {
-        childList: true, // 观察目标子节点的变化，是否有添加或者删除
-        attributes: true, // 观察属性变动
-        subtree: true, // 观察后代节点，默认为 false
-      });
-      return () => {
-        observer.disconnect();
-      };
-    }
-    setStyle();
+    const { x } = tab1.getBoundingClientRect();
+    setBaseTabStyle({
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: `calc(100vh - ${x - 236}px)`,
+    });
   }, []);
 
   return (
