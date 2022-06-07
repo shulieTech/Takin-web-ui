@@ -49,7 +49,9 @@ const Params: React.FC<Props> = (props) => {
         setSaving(false);
       });
     if (success) {
+      message.success('操作成功');
       setFormChanged(false);
+      setDetailRefreshKey(detailRefreshKey + 1);
       okCallback();
     }
   };
@@ -99,6 +101,10 @@ const Params: React.FC<Props> = (props) => {
     });
   };
 
+  useEffect(() => {
+    actions.setFormState((state) => (state.values = detail));
+  }, [JSON.stringify(detail)]);
+
   return (
     <Drawer
       visible
@@ -127,7 +133,7 @@ const Params: React.FC<Props> = (props) => {
             TextArea: Input.TextArea,
           }}
           effects={formEffects}
-          initialValues={detail}
+          // initialValues={detail}
         >
           <Field
             name="name"
