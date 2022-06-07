@@ -68,6 +68,7 @@ const useListService = (props: Props) => {
     setQuery,
     list,
     getList,
+    setList,
     resetList,
     total,
     loading,

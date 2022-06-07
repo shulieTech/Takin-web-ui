@@ -68,6 +68,7 @@ const EditSence: React.FC<Props> = (props) => {
     if (success) {
       setDetail(data);
       actions.setFormState(state => state.values = data);
+      actions.setFieldState('.debugResult', state => state.props['x-component-props'].detail = data);
       // 非待启动状态时轮询
       if (data.pressureStatus !== 0) {
         setTimeout(() => {
@@ -135,6 +136,7 @@ const EditSence: React.FC<Props> = (props) => {
       actions.clearErrors();
     } else {
       setDetail({});
+      actions.setFieldState('.debugResult', state => state.props['x-component-props'].detail = {});
       actions.reset({ validate: false });
     }
     actions.setFieldState('tabs-1', state => {
