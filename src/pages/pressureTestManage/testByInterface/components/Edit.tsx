@@ -292,13 +292,15 @@ const EditSence: React.FC<Props> = (props) => {
                 <Button
                   type="primary"
                   onClick={startTest}
-                  disabled={saving || [2].includes(detail.pressureStatus)}
+                  disabled={saving || ![0, undefined].includes(detail.pressureStatus)}
                 >
                   <Icon type="play-circle" theme="filled" />
                   {
                     {
                       0: '启动压测',
+                      1: '启动中',
                       2: '压测中',
+                      11: '资源锁定中'
                     }[detail.pressureStatus || 0]
                   }
                 </Button>

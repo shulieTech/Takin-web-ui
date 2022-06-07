@@ -73,7 +73,7 @@ const BaseTab: React.FC<Props> = (props) => {
       flexDirection: 'column',
       minHeight: `calc(100vh - ${y}px)`,
     });
-  }, [detail?.id]);
+  }, []);
 
   return (
     <>
