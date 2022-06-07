@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useLayoutEffect } from 'react';
 import { SchemaMarkupField as Field, IFormAsyncActions } from '@formily/antd';
 import { FormTab, FormMegaLayout, FormSlot } from '@formily/antd-components';
 import { Button } from 'antd';
@@ -64,16 +64,16 @@ const BaseTab: React.FC<Props> = (props) => {
     });
   }, [detail?.id]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const tab1 = document.querySelector('#tab-1');
 
-    const { x } = tab1.getBoundingClientRect();
+    const { y } = tab1.getBoundingClientRect();
     setBaseTabStyle({
       display: 'flex',
       flexDirection: 'column',
-      minHeight: `calc(100vh - ${x - 236}px)`,
+      minHeight: `calc(100vh - ${y}px)`,
     });
-  }, []);
+  }, [detail?.id]);
 
   return (
     <>
