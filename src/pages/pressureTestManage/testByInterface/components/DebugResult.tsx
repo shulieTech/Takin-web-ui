@@ -7,6 +7,7 @@ import {
   Spin,
   Button,
   message,
+  Tooltip,
 } from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
@@ -204,13 +205,24 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
                               : 'var(--Netural-700, #6F7479)',
                           }}
                         >
-                          <div style={{ flex: 1 }}>
+                          <div
+                            style={{
+                              flex: 1,
+                              display: 'flex',
+                              overflow: 'hidden',
+                            }}
+                          >
                             <span style={{ marginRight: 16 }}>{x.status}</span>
                             <span style={{ marginRight: 16 }}>
                               {x.httpMethod}
                             </span>
-                            <span style={{ marginRight: 16 }}>
-                              {x.requestUrl}
+                            <span
+                              style={{ marginRight: 16, flex: 1 }}
+                              className="truncate"
+                            >
+                              <Tooltip title={x.requestUrl}>
+                                {x.requestUrl}
+                              </Tooltip>
                             </span>
                           </div>
                           <span
