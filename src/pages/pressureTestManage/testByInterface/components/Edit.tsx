@@ -44,7 +44,7 @@ const EditSence: React.FC<Props> = (props) => {
   const { onFieldInputChange$, onFieldValueChange$ } = FormEffectHooks;
   const actions = useMemo(() => createAsyncFormActions(), []);
   const [detailLoading, setDetailLoading] = useState(false);
-  const [detail, setDetail] = useState(currentSence);
+  const [detail, setDetail] = useState({});
   const [saving, setSaving] = useState(false);
   const {
     hasUnsaved,
@@ -67,6 +67,7 @@ const EditSence: React.FC<Props> = (props) => {
     });
     if (success) {
       setDetail(data);
+      actions.setFormState(state => state.values = data);
       // 非待启动状态时轮询
       if (data.status !== 0) {
         setTimeout(() => {
@@ -123,8 +124,10 @@ const EditSence: React.FC<Props> = (props) => {
   useEffect(() => {
     if (currentSence.id) {
       getDetail(currentSence.id);
+      actions.clearErrors();
     } else {
       setDetail({});
+      actions.reset({ validate: false });
     }
     setTabKey('tab-1');
   }, [currentSence?.id]);
@@ -144,9 +147,8 @@ const EditSence: React.FC<Props> = (props) => {
   return (
     <Spin spinning={detailLoading} wrapperClassName="spin-full">
       <SchemaForm
-        key={detail?.id}
         actions={actions}
-        initialValues={detail}
+        // initialValues={detail}
         validateFirst
         components={{
           Input,
