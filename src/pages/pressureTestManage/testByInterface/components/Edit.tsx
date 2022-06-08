@@ -115,12 +115,20 @@ const EditSence: React.FC<Props> = (props) => {
     const { values } = await actions.submit();
     if (values) {
       setSaving(true);
-      const {
-        data: { success, data },
-      } = await service[detail?.id ? 'updateSence' : 'addSence']({
+      const submitData = {
         ...detail,
         ...values,
-      }).finally(() => {
+      };
+      submitData.contentTypeVo = submitData.contentTypeVo || {
+        radio: 0,
+        type: null,
+        codingFormat: 'UTF-8',
+      };
+      const {
+        data: { success, data },
+      } = await service[detail?.id ? 'updateSence' : 'addSence'](
+        submitData
+      ).finally(() => {
         setSaving(false);
       });
       if (success) {
