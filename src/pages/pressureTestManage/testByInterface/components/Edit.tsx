@@ -57,6 +57,7 @@ const EditSence: React.FC<Props> = (props) => {
   } = useContext(SenceContext);
   const [pressStartedBindSenceId, setPressStartedBindSenceId] = useState(null);
   const [tabKey, setTabKey] = useState('tab-1');
+  let timer;
 
   const getDetail = async (id) => {
     setDetailLoading(true);
@@ -67,11 +68,14 @@ const EditSence: React.FC<Props> = (props) => {
     });
     if (success) {
       setDetail(data);
-      actions.setFormState(state => state.values = data);
-      actions.setFieldState('.debugResult', state => state.props['x-component-props'].detail = data);
+      actions.setFormState((state) => (state.values = data));
+      actions.setFieldState(
+        '.debugResult',
+        (state) => (state.props['x-component-props'].detail = data)
+      );
       // 非待启动状态时轮询
       if (data.pressureStatus !== 0) {
-        setTimeout(() => {
+        timer = setTimeout(() => {
           getDetail(id);
         }, 5000);
       }
@@ -124,8 +128,8 @@ const EditSence: React.FC<Props> = (props) => {
     }
   };
 
-  const onTabClick = key => {
-    actions.getFieldState('tabs-1', state => {
+  const onTabClick = (key) => {
+    actions.getFieldState('tabs-1', (state) => {
       setTabKey(key);
     });
   };
@@ -136,13 +140,21 @@ const EditSence: React.FC<Props> = (props) => {
       actions.clearErrors();
     } else {
       setDetail({});
-      actions.setFieldState('.debugResult', state => state.props['x-component-props'].detail = {});
+      actions.setFieldState(
+        '.debugResult',
+        (state) => (state.props['x-component-props'].detail = {})
+      );
       actions.reset({ validate: false });
     }
-    actions.setFieldState('tabs-1', state => {
+    actions.setFieldState('tabs-1', (state) => {
       state.activeKey = 'tab-1';
       setTabKey('tab-1');
     });
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [currentSence?.id]);
 
   useEffect(() => {
@@ -292,7 +304,9 @@ const EditSence: React.FC<Props> = (props) => {
                 <Button
                   type="primary"
                   onClick={startTest}
-                  disabled={saving || ![0, undefined].includes(detail.pressureStatus)}
+                  disabled={
+                    saving || ![0, undefined].includes(detail.pressureStatus)
+                  }
                 >
                   <Icon type="play-circle" theme="filled" />
                   {
@@ -300,7 +314,7 @@ const EditSence: React.FC<Props> = (props) => {
                       0: '启动压测',
                       1: '启动中',
                       2: '压测中',
-                      11: '资源锁定中'
+                      11: '资源锁定中',
                     }[detail.pressureStatus || 0]
                   }
                 </Button>
