@@ -139,18 +139,25 @@ const EditSence: React.FC<Props> = (props) => {
     });
   };
 
+  const restForm = async () => {
+    setDetail({});
+    await actions.setFormState((state) => (state.values = {}));
+    await actions.reset({ validate: false });
+    await actions.setFieldState(
+      '.debugResult',
+      (state) => (state.props['x-component-props'].detail = {})
+    );
+    await actions.setFieldState('contentTypeVo', (fieldState) => {
+      fieldState.value = undefined;
+    });
+  };
+
   useEffect(() => {
     if (currentSence.id) {
       getDetail(currentSence.id);
       actions.clearErrors();
     } else {
-      setDetail({});
-      actions.setFormState((state) => (state.values = {}));
-      actions.setFieldState(
-        '.debugResult',
-        (state) => (state.props['x-component-props'].detail = {})
-      );
-      actions.reset({ validate: false });
+      restForm();
     }
     actions.setFieldState('tabs-1', (state) => {
       state.activeKey = 'tab-1';
