@@ -73,11 +73,11 @@ const EditSence: React.FC<Props> = (props) => {
         '.debugResult',
         (state) => (state.props['x-component-props'].detail = data)
       );
-      if (data.httpMethod === 'GET') {
-        actions.setFieldState('contentTypeText', (fieldState) => {
-          fieldState.value = 'application/x-www-form-urlencoded;charset=UTF-8';
-        });
-      }
+      actions.setFieldState('contentTypeText', (fieldState) => {
+        fieldState.value = `${
+          data?.contentTypeVo?.type || 'application/x-www-form-urlencoded'
+        };charset=UTF-8`;
+      });
       // 非待启动状态时轮询
       if (data.pressureStatus !== 0) {
         timer = setTimeout(() => {
@@ -145,7 +145,7 @@ const EditSence: React.FC<Props> = (props) => {
       actions.clearErrors();
     } else {
       setDetail({});
-      actions.setFormState(state => state.values = {});
+      actions.setFormState((state) => (state.values = {}));
       actions.setFieldState(
         '.debugResult',
         (state) => (state.props['x-component-props'].detail = {})
@@ -204,8 +204,9 @@ const EditSence: React.FC<Props> = (props) => {
           onFieldValueChange$('httpMethod').subscribe((state) => {
             actions.setFieldState('tabs-1-1', (tabsState) => {
               tabsState.props['x-component-props'] =
-              tabsState.props['x-component-props'] || {};
-              tabsState.props['x-component-props'].hiddenKeys = state.value === 'GET' ? ['tab-1-3'] : [];
+                tabsState.props['x-component-props'] || {};
+              tabsState.props['x-component-props'].hiddenKeys =
+                state.value === 'GET' ? ['tab-1-3'] : [];
             });
           });
           // 关联应用入口下拉框查询
