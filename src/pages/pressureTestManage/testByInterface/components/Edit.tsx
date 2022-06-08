@@ -73,6 +73,11 @@ const EditSence: React.FC<Props> = (props) => {
         '.debugResult',
         (state) => (state.props['x-component-props'].detail = data)
       );
+      if (data.httpMethod === 'GET') {
+        actions.setFieldState('contentTypeText', (fieldState) => {
+          fieldState.value = 'application/x-www-form-urlencoded;charset=UTF-8';
+        });
+      }
       // 非待启动状态时轮询
       if (data.pressureStatus !== 0) {
         timer = setTimeout(() => {

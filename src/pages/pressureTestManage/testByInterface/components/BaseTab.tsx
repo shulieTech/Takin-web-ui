@@ -256,7 +256,7 @@ const BaseTab: React.FC<Props> = (props) => {
             <FormMegaLayout full>
               <Field
                 type="string"
-                name="contentType"
+                name="contentTypeText"
                 title={
                   <TipTittle tips="Content-Type 会根据请求 Body 里面的 Cotent-Type 来自动填写">
                     Content-Type
@@ -319,7 +319,7 @@ const BaseTab: React.FC<Props> = (props) => {
                   x-linkages={[
                     {
                       type: 'value:state',
-                      target: 'contentType',
+                      target: 'contentTypeText',
                       state: {
                         value:
                           '{{ ($self.value || "application/x-www-form-urlencoded") + ";charset=UTF-8" }}',
