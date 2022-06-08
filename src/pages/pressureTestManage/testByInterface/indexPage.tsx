@@ -31,7 +31,7 @@ const TestByInterface: React.FC<Props> = (props) => {
         setEditSaveKey,
       }}
     >
-      <Layout>
+      <Layout className="ant-layout-has-sider">
         <Layout.Sider
           width={287}
           theme="light"
