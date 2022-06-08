@@ -164,9 +164,15 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
                 padding: '40px 0',
               }}
             >
-              您可以输入一个URL，点击调
-              <br />
-              试后，可在此查看响应结果
+              {query.status ? (
+                <>暂无数据</>
+              ) : (
+                <>
+                  您可以输入一个URL，点击调
+                  <br />
+                  试后，可在此查看响应结果
+                </>
+              )}
             </div>
           ) : (
             <div
