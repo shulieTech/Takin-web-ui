@@ -194,6 +194,14 @@ const EditSence: React.FC<Props> = (props) => {
           onFieldInputChange$().subscribe((state) => {
             setHasUnsaved(true);
           });
+          // get请求没有body Tab
+          onFieldValueChange$('httpMethod').subscribe((state) => {
+            actions.setFieldState('tabs-1-1', (tabsState) => {
+              tabsState.props['x-component-props'] =
+              tabsState.props['x-component-props'] || {};
+              tabsState.props['x-component-props'].hiddenKeys = state.value === 'GET' ? ['tab-1-3'] : [];
+            });
+          });
           // 关联应用入口下拉框查询
           onFieldValueChange$('*(requestUrl,httpMethod)').subscribe(
             debounce(async () => {
