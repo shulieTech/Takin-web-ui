@@ -50,6 +50,10 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
   });
 
   const clearDebugHistory = async () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
     const {
       data: { data, success },
     } = await service.clearDebugResult({
