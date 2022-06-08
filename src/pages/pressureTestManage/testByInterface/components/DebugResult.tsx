@@ -26,7 +26,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
     resultId: debugId,
     configId: detail?.id,
     current: 0,
-    pageSize: 10,
+    pageSize: 20,
   };
   const { query, total, list, getList, loading, setList } = useListService({
     defaultQuery,

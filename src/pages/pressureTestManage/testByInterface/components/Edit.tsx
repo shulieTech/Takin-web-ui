@@ -145,6 +145,7 @@ const EditSence: React.FC<Props> = (props) => {
       actions.clearErrors();
     } else {
       setDetail({});
+      actions.setFormState(state => state.values = {});
       actions.setFieldState(
         '.debugResult',
         (state) => (state.props['x-component-props'].detail = {})
