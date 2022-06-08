@@ -154,7 +154,7 @@ const SenceList: React.FC<Props> = (props) => {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {x.status === 2 && (
+                  {x.pressureStatus === 2 && (
                     <Icon
                       type="play-circle"
                       theme="filled"
@@ -176,7 +176,7 @@ const SenceList: React.FC<Props> = (props) => {
                   <Dropdown
                     overlay={
                       <Menu style={{ width: 140 }}>
-                        {x.status === 2 && (
+                        {x.pressureStatus === 2 && (
                           <Menu.Item
                             onClick={({ domEvent }) => toLive(x, domEvent)}
                           >
