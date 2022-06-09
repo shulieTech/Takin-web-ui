@@ -9,6 +9,7 @@ import DebugModal from '../modals/Debug';
 import styles from '../index.less';
 import LayoutBox from './LayoutBox';
 import { connect } from 'dva';
+import { textRule } from '../rules';
 
 interface Props {
   actions: IFormAsyncActions;
@@ -149,6 +150,7 @@ const BaseTab: React.FC<Props> = (props) => {
                   // format: 'url',
                   message: '请输入正确的压测URL',
                 },
+                textRule,
               ]}
               required
             />
@@ -200,6 +202,7 @@ const BaseTab: React.FC<Props> = (props) => {
                   关联应用入口
                 </TipTittle>
               }
+              x-rules={[textRule]}
             />
             <FormMegaLayout labelAlign="top" inline autoRow>
               <Field
@@ -276,6 +279,7 @@ const BaseTab: React.FC<Props> = (props) => {
                 maxLength: 500,
                 rows: 10,
               }}
+              x-rules={[textRule]}
             />
           </FormTab.TabPane>
           <FormTab.TabPane name="tab-1-3" tab="Body">
@@ -338,6 +342,7 @@ const BaseTab: React.FC<Props> = (props) => {
                 maxLength: 500,
                 rows: 10,
               }}
+              x-rules={[textRule]}
             />
           </FormTab.TabPane>
         </FormTab>

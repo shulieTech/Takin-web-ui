@@ -35,6 +35,7 @@ import { getTakinAuthority } from 'src/utils/utils';
 import { debounce } from 'lodash';
 import Guide from './Guide';
 import AntSelect from './AntSelect';
+import { textRule } from '../rules';
 
 interface Props {
   currentSence: any;
@@ -321,6 +322,7 @@ const EditSence: React.FC<Props> = (props) => {
                   whitespace: true,
                   message: '请输入压测场景名称',
                 },
+                textRule,
               ]}
               required
             />

@@ -13,6 +13,7 @@ import styles from '../index.less';
 import { getTakinAuthority } from 'src/utils/utils';
 import UserModal from './Users';
 import { SenceContext } from '../indexPage';
+import { textRule } from '../rules';
 
 interface Props {
   detail: any;
@@ -216,6 +217,7 @@ const Params: React.FC<Props> = (props) => {
               maxLength: 200,
               rows: 4,
             }}
+            x-rules={[textRule]}
           />
         </SchemaForm>
       </div>
