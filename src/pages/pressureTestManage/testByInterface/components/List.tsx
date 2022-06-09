@@ -80,7 +80,7 @@ const SenceList: React.FC<Props> = (props) => {
         if (success) {
           message.success('操作成功');
           getList({ current: 0 });
-          if (sence.id === currentSence.id) {
+          if (sence?.id === currentSence?.id) {
             setCurrentSence(null);
           }
         }
