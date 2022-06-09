@@ -146,6 +146,7 @@ const Params: React.FC<Props> = (props) => {
     if (success) {
       message.success('操作成功');
       setFormChanged(false);
+      setDetailRefreshKey(detailRefreshKey + 1);
       okCallback();
     }
   };
