@@ -176,7 +176,7 @@ const BaseTab: React.FC<Props> = (props) => {
             <Field
               name="entranceAppName"
               type="string"
-              x-component="Select"
+              x-component="AntSelect"
               x-component-props={{
                 style: {
                   width: 480,

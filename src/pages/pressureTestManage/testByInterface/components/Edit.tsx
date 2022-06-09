@@ -34,6 +34,7 @@ import { SenceContext } from '../indexPage';
 import { getTakinAuthority } from 'src/utils/utils';
 import { debounce } from 'lodash';
 import Guide from './Guide';
+import AntSelect from './AntSelect';
 
 interface Props {
   currentSence: any;
@@ -208,6 +209,7 @@ const EditSence: React.FC<Props> = (props) => {
           DatePicker,
           RadioCard,
           DebugResult,
+          AntSelect,
           TextArea: Input.TextArea,
           RadioGroup: Radio.Group,
         }}
