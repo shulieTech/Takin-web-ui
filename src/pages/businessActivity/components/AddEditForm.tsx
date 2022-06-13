@@ -14,13 +14,15 @@ import styles from '../index.less';
 import { AddEditActivityModalState } from '../modals/AddEditActivityModal';
 import DomainManageModal from '../modals/DomainManageModal';
 import BusinessActivityService from '../service';
+import { debounce } from 'lodash';
 
 interface AddEditFormProps extends CommonModelState, AddEditActivityModalState {
   setState: (state: Partial<AddEditActivityModalState>) => void;
   isVirtual?: boolean;
+  details: any;
 }
 const AddEditForm: React.FC<AddEditFormProps> = props => {
-  const { setState, app, serviceType, form } = props;
+  const { setState, app, serviceType, form, details = {} } = props;
   const disabled = !props.app;
 
   useEffect(() => {
@@ -28,15 +30,24 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
       queryServiceList();
     }
   }, [app, serviceType]);
-  const queryServiceList = async () => {
+  const queryServiceList = async (inputVal = undefined) => {
     const {
       data: { data, success }
     } = await BusinessActivityService.queryServiceList({
+      serviceName: inputVal,
       applicationName: app,
       type: serviceType
     });
     if (success) {
-      setState({ serviceList: data });
+      // @ts-ignore 如果下拉框列表有分页，详情中的初始值在下拉框中没有，插入这条数据
+      if (details.linkId && details.entranceName && !data.some(x => x.value === details.linkId)) {
+        setState({
+          // @ts-ignore
+          serviceList: [{ label: details.entranceName, value: details.linkId }].concat(data)
+        });
+      } else {
+        setState({ serviceList: data });
+      }
     }
   };
   const getFormData = (): FormDataType[] => {
@@ -191,6 +202,9 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             }}
             placeholder="请选择服务"
             showSearch
+            onSearch={debounce((val) => {
+              queryServiceList(val);
+            }, 500)}
             disabled={disabled}
             optionFilterProp="children"
             dropdownClassName={styles.select}
