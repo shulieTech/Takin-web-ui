@@ -40,7 +40,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
     });
     if (success) {
       // @ts-ignore 如果下拉框列表有分页，详情中的初始值在下拉框中没有，插入这条数据
-      if (details.linkId && details.entranceName && !data.some(x => x.value === details.linkId)) {
+      if ((!inputVal) && details.linkId && details.entranceName && !data.some(x => x.value === details.linkId)) {
         setState({
           // @ts-ignore
           serviceList: [{ label: details.entranceName, value: details.linkId }].concat(data)
