@@ -235,7 +235,13 @@ const Params: React.FC<Props> = (props) => {
         <Button onClick={handleCancel} style={{ marginRight: 8 }}>
           取消
         </Button>
-        <Button type="primary" ghost onClick={saveBase} loading={saving}>
+        <Button
+          type="primary"
+          ghost
+          onClick={saveBase}
+          loading={saving}
+          disabled={![0, undefined].includes(detail.pressureStatus)}
+        >
           保存
         </Button>
       </div>

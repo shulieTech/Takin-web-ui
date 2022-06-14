@@ -332,6 +332,9 @@ const EditSence: React.FC<Props> = (props) => {
                   style={{ marginRight: 16 }}
                   onClick={saveSence}
                   loading={saving}
+                  disabled={
+                    ![0, undefined].includes(detail.pressureStatus)
+                  }
                 >
                   保存场景
                 </Button>
