@@ -208,7 +208,8 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
               queryServiceList(val);
             }, 500)}
             disabled={disabled}
-            optionFilterProp="children"
+            filterOption={false}
+            // optionFilterProp="children"
             dropdownClassName={styles.select}
             optionLabelProp="label"
             onRender={(item, index) => {
