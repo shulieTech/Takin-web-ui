@@ -223,7 +223,7 @@ const Params: React.FC<Props> = (props) => {
                   x-component="FilesTable"
                   x-component-props={{
                     getTableColumns,
-                    acceptExts: ['csv', 'xlsx', 'xls'],
+                    acceptExts: ['csv'],
                     maxSize: 200 * 1024 * 1024,
                     otherUploadProps: {
                       style: {
