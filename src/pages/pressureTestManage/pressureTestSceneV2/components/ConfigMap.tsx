@@ -19,14 +19,17 @@ const ConfigMap = (props: IFieldMergeState) => {
 
   const groupMap = {};
   // 取出线程组
-  flatTreeData.forEach(x => {
+  flatTreeData.forEach((x) => {
     if (x.type === 'THREAD_GROUP') {
       groupMap[x.xpathMd5] = x;
     }
   });
 
   return (
-    <Collapse {...componentProps} defaultActiveKey={Object.keys(groupMap)?.slice(0, 3)}>
+    <Collapse
+      {...componentProps}
+      defaultActiveKey={Object.keys(groupMap)?.slice(0, 3)}
+    >
       {Object.values(groupMap).map((x: any) => {
         return (
           <Panel header={x.testName} key={x.xpathMd5} forceRender>
@@ -56,7 +59,9 @@ const ConfigMap = (props: IFieldMergeState) => {
                       'x-linkages': [
                         {
                           type: 'value:schema',
-                          target: FormPath.parse(path).concat(`${x.xpathMd5}.mode`),
+                          target: FormPath.parse(path).concat(
+                            `${x.xpathMd5}.mode`
+                          ),
                           condition: '{{ $self.value === 1 }}',
                           schema: {
                             enum: [{ label: '固定压力值', value: 1 }],
@@ -71,15 +76,19 @@ const ConfigMap = (props: IFieldMergeState) => {
                         },
                         {
                           type: 'value:state',
-                          target: FormPath.parse(path).concat(`${x.xpathMd5}.mode`),
+                          target: FormPath.parse(path).concat(
+                            `${x.xpathMd5}.mode`
+                          ),
                           condition: '{{ $self.value === 1 }}',
                           state: {
                             value: 1,
-                          }
+                          },
                         },
                         {
                           type: 'value:visible',
-                          target: FormPath.parse(path).concat(`${x.xpathMd5}.threadNum`),
+                          target: FormPath.parse(path).concat(
+                            `${x.xpathMd5}.threadNum`
+                          ),
                           condition: '{{ $self.value === 0 }}',
                         },
                       ],
@@ -233,12 +242,30 @@ const ConfigMap = (props: IFieldMergeState) => {
               <Col span={12}>
                 <FormSpy>
                   {({ state, form }) => {
+                    const formValues = form.getFormState().values;
+                    const xpathMd5 = x.xpathMd5;
+                    const parentPath = FormPath.parse(path).concat(`${x.xpathMd5}`);
+
                     return (
                       <FlowPreview
-                        form={form}
-                        parentPath={FormPath.parse(path).concat(`${x.xpathMd5}`)}
-                        formValue={form.getFormState().values}
-                        xpathMd5={x.xpathMd5}
+                        duration={formValues?.config.duration}
+                        targetTps={formValues?.goal?.[xpathMd5]?.tps}
+                        pressConfig={
+                          formValues?.config?.threadGroupConfigMap?.[xpathMd5] || {}}
+                        checkValid={() => {
+                          return Promise.all([
+                            form.validate('.config.duration'),
+                            form.validate(parentPath.concat('.threadNum')),
+                            form.validate(parentPath.concat('.duration')),
+                            form.validate(parentPath.concat('.type')),
+                            form.validate(parentPath.concat('.mode')),
+                            form.validate(parentPath.concat('.rampUp')),
+                            form.validate(parentPath.concat('.steps')),
+                          ]);
+                        }}
+                        afterCalculate={(result) => {
+                          form.setFieldValue(parentPath.concat(`.estimateFlow`), result);
+                        }}
                       />
                     );
                   }}

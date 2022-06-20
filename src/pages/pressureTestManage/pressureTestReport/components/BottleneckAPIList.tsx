@@ -62,13 +62,6 @@ const BottleneckAPIList: React.FC<Props> = (props) => {
   return (
     <Fragment>
       <div style={{ display: 'flex' }}>
-        {/* TODO 业务活动树 */}
-        {/* <div className={styles.leftSelected}>
-          <BusinessActivityTree
-            tabList={props.tabList}
-            onChange={val => setTableQuery({tabelKey: val})}
-          />
-        </div> */}
         <div
           className={styles.riskMachineList}
           style={{ position: 'relative' }}

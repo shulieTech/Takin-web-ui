@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { get } from 'lodash';
+import { get, isArray } from 'lodash';
 
 interface Props {
   service: (params: any) => Promise<any>;
@@ -15,7 +15,7 @@ const useListService = (props: Props) => {
     defaultQuery = {},
     isQueryOnMount = true,
     afterSearchCallback,
-    dataListPath = '.',
+    dataListPath,
   } = props;
 
   const [query, setQuery] = useState(defaultQuery);
@@ -30,26 +30,31 @@ const useListService = (props: Props) => {
   const getList = async (params = {}) => {
     setLoading(true);
     const newQuery = { ...query, ...params };
-    const res = await service(newQuery);
-    const {
-      data: { success, data },
-      headers: { 'x-total-count': totalCount },
-    } = res;
-    setLoading(false);
-    if (success) {
-      setQuery(newQuery);
-      if (Array.isArray(data)) {
-        setList(data);
-      } else if (typeof data === 'object' && dataListPath) {
-        setList(get(data, dataListPath, []));
+    try {
+      const res = await service(newQuery);
+      const {
+        data: { success, data },
+        headers: { 'x-total-count': totalCount },
+      } = res;
+
+      if (success) {
+        setQuery(newQuery);
+        if (dataListPath && Array.isArray(get(data, dataListPath))) {
+          setList(get(data, dataListPath));
+        } else if (Array.isArray(data.list)) {
+          setList(data.list);
+        } else if (Array.isArray(data)) {
+          setList(data);
+        }
+        setTotal(totalCount || data.count || data.total);
       }
-      
-      setTotal(parseInt(totalCount || data?.count || data?.total, 10) || 0);
+      if (typeof afterSearchCallback === 'function') {
+        afterSearchCallback(res);
+      }
+      return res;
+    } finally {
+      setLoading(false);
     }
-    if (typeof afterSearchCallback === 'function') {
-      afterSearchCallback(res);
-    }
-    return res;
   };
 
   useEffect(() => {
@@ -63,6 +68,7 @@ const useListService = (props: Props) => {
     setQuery,
     list,
     getList,
+    setList,
     resetList,
     total,
     loading,

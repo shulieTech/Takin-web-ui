@@ -7,18 +7,28 @@ import { FormPath, IForm } from '@formily/antd';
 import { debounce } from 'lodash';
 
 interface Props {
-  form: IForm;
-  parentPath: FormPath;
-  formValue: any;
-  xpathMd5: string;
+  targetTps: number; // 目标TPS
+  duration: number; // 压测时长
+  pressConfig: {
+    rampUp?: number; // 递增时长
+    steps?: number; // 递增层数
+    type?: number; // 压力模式 并发或TPS模式
+    threadNum?: number; // 最大并发
+    mode?: number; //  施压模式: 固定压力值/线性递增/阶梯递增
+  };
+  checkValid: () => Promise<any>;
+  afterCalculate?: (data: any) => void;
 }
 
-export default (props: Props) => {
-  const { formValue, xpathMd5, form, parentPath } = props;
+const FlowPreview: React.FC<Props> = (props) => {
   const [estimateFlow, setEstimateFlow] = useState();
-
-  const targetConfig = formValue?.goal?.[xpathMd5] || { tps: 3 }; // 压测目标
-  const pressConfig = formValue?.config?.threadGroupConfigMap?.[xpathMd5] || {}; // 施压配置
+  const {
+    duration,
+    targetTps = 3,
+    pressConfig = {},
+    checkValid,
+    afterCalculate,
+  } = props;
 
   /**
    * 计算阶梯递增数据
@@ -33,7 +43,7 @@ export default (props: Props) => {
     ) {
       midData.push([
         (pressConfig.rampUp / pressConfig.steps) * (i + 1),
-        ((pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps) /
+        ((pressConfig.type === 0 ? pressConfig.threadNum : targetTps) /
           pressConfig.steps) *
           (i + 1),
       ]);
@@ -44,8 +54,8 @@ export default (props: Props) => {
         .concat(midData)
         .concat([
           [
-            formValue?.config.duration,
-            pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+            duration,
+            pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
           ],
         ]);
     }
@@ -60,29 +70,21 @@ export default (props: Props) => {
       if (success) {
         const result = data?.value;
         setEstimateFlow(result);
-        form.setFieldValue(parentPath.concat('.estimateFlow'), result);
+        if (typeof afterCalculate === 'function') {
+          afterCalculate(result);
+        }
       }
     }, 500),
     []
   );
 
-  const { estimateFlow: aaa, ...restPressConfig } = pressConfig;
-
   useEffect(() => {
-    Promise.all([
-      form.validate('.config.duration'),
-      form.validate(parentPath.concat('.threadNum')),
-      form.validate(parentPath.concat('.duration')),
-      form.validate(parentPath.concat('.type')),
-      form.validate(parentPath.concat('.mode')),
-      form.validate(parentPath.concat('.rampUp')),
-      form.validate(parentPath.concat('.steps')),
-    ])
-      .then((res) => {
+    checkValid()
+      .then(() => {
         getEstimateFlow({
           concurrenceNum: pressConfig.threadNum,
           pressureTestTime: {
-            time: formValue?.config.duration,
+            time: duration,
             unit: 'm',
           },
           pressureType: pressConfig.type,
@@ -98,37 +100,62 @@ export default (props: Props) => {
       .catch(() => {
         setEstimateFlow(null);
       });
-  }, [formValue?.config?.duration, ...Object.values(restPressConfig)]);
+  }, [duration, ...Object.values(pressConfig)]);
 
   return (
     <div
       style={{
-        border: '1px dashed #979797',
+        border: '1px solid #E5F1F3',
         padding: '5px 20px',
-        backgroundColor: '#fafbfd',
+        backgroundImage:
+          'linear-gradient(118.93deg, #F1F8FA 2.61%, #F8FEFF 100%)',
         marginTop: 8,
       }}
     >
-      <div>
-        流量预估
-        <Tooltip
-          title="流量预估是根据施压配置参数模拟的压力图与预计消耗流量，最终计费以实际施压情况为准"
-          placement="right"
-          trigger="click"
-        >
-          <Icon
-            type="question-circle"
-            style={{ marginLeft: 4, marginRight: 4 }}
-          />
-        </Tooltip>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          流量预估
+          <Tooltip
+            title="流量预估是根据施压配置参数模拟的压力图与预计消耗流量，最终计费以实际施压情况为准"
+            placement="right"
+            trigger="click"
+          >
+            <Icon
+              type="question-circle"
+              style={{ marginLeft: 4, marginRight: 4 }}
+            />
+          </Tooltip>
+        </div>
         <span>预计消耗：</span>
         {estimateFlow ? (
           <span>
             <Statistic
-              style={{ display: 'inline-block' }}
+              style={{
+                display: 'inline-block',
+              }}
               precision={2}
-              suffix="vum"
+              suffix={
+                <span
+                  style={{
+                    fontWeight: 'normal',
+                    color: '#90959A',
+                    fontSize: 12,
+                  }}
+                >
+                  vum
+                </span>
+              }
               value={estimateFlow}
+              valueStyle={{
+                color: '#11BBD5',
+                fontWeight: 700,
+                fontSize: 24,
+              }}
             />
           </span>
         ) : (
@@ -142,11 +169,11 @@ export default (props: Props) => {
             [
               0,
               // 并发模式下取并发数，否则取tps
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
             [
-              formValue?.config.duration,
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              duration,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
           ]}
         />
@@ -158,11 +185,11 @@ export default (props: Props) => {
             [0, 0],
             [
               pressConfig.rampUp,
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
             [
-              formValue?.config.duration,
-              pressConfig.type === 0 ? pressConfig.threadNum : targetConfig.tps,
+              duration,
+              pressConfig.type === 0 ? pressConfig.threadNum : targetTps,
             ],
           ]}
         />
@@ -174,3 +201,5 @@ export default (props: Props) => {
     </div>
   );
 };
+
+export default FlowPreview;
