@@ -12,6 +12,7 @@ import styles from './../index.less';
 import EditJmeterModal from './EditJmeterModal';
 import { fileTypeMap } from '../enum';
 import RelatePlugin from '../components/RelatePlugin';
+import { ButtonProps } from 'antd/lib/button';
 
 interface Props {
   btnText?: string | React.ReactNode;
@@ -31,6 +32,7 @@ interface State {
   form: any;
   loading: boolean;
   required: boolean;
+  okBtnProps: ButtonProps;
 }
 const AddJmeterModal: React.FC<Props> = (props) => {
   const { detailData = {} } = props;
@@ -39,6 +41,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
     form: null as WrappedFormUtils,
     loading: false,
     required: false,
+    okBtnProps: undefined,
   });
 
   const [scriptFileInfo, setScriptFileInfo] = useState(
@@ -108,7 +111,14 @@ const AddJmeterModal: React.FC<Props> = (props) => {
               fileId={row.downloadUrl}
               fileData={row}
               state={state}
-              onSuccess={() => props.onSuccess()}
+              onSuccess={() => {
+                setState({
+                  okBtnProps: {
+                    loading: true,
+                  },
+                });
+                props.onSuccess();
+              }}
             />
           );
         },
@@ -257,6 +267,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
           height: 500,
           overflow: 'auto',
         },
+        okButtonProps: state.okBtnProps,
       }}
       btnProps={{
         type: props.action === 'edit' ? 'primary' : 'link',
