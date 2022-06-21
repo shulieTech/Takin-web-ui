@@ -136,14 +136,18 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
           </Button>
           <Icon
             onClick={() => {
-              setState({
-                searchInputValue: null,
-                isReload: !state.isReload,
-                searchParams: {
-                  current: 0,
-                  pageSize: 10
-                }
+              queryBusinessFlowList({
+                ...state.searchParams,
+                businessFlowName: state.searchInputValue
               });
+              // setState({
+              //   searchInputValue: null,
+              //   isReload: !state.isReload,
+              //   searchParams: {
+              //     current: 0,
+              //     pageSize: 10
+              //   }
+              // });
             }}
             type="redo"
           />
