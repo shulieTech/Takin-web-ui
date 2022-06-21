@@ -22,7 +22,8 @@ const getInitState = () => ({
     pageSize: 10
   },
 
-  searchInputValue: null, // 搜索业务流程
+  searchInputValue: null, // 搜索业务流程仅展示用
+  businessFlowName: null, // 搜索业务流程关键词，仅接口用
   status: undefined,
   loading: false,
   total: 0,
