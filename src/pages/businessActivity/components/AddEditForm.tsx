@@ -14,13 +14,15 @@ import styles from '../index.less';
 import { AddEditActivityModalState } from '../modals/AddEditActivityModal';
 import DomainManageModal from '../modals/DomainManageModal';
 import BusinessActivityService from '../service';
+import { debounce } from 'lodash';
 
 interface AddEditFormProps extends CommonModelState, AddEditActivityModalState {
   setState: (state: Partial<AddEditActivityModalState>) => void;
   isVirtual?: boolean;
+  details: any;
 }
 const AddEditForm: React.FC<AddEditFormProps> = props => {
-  const { setState, app, serviceType, form } = props;
+  const { setState, app, serviceType, form, details = {} } = props;
   const disabled = !props.app;
 
   useEffect(() => {
@@ -28,15 +30,24 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
       queryServiceList();
     }
   }, [app, serviceType]);
-  const queryServiceList = async () => {
+  const queryServiceList = async (inputVal = undefined) => {
     const {
       data: { data, success }
     } = await BusinessActivityService.queryServiceList({
+      serviceName: inputVal,
       applicationName: app,
       type: serviceType
     });
     if (success) {
-      setState({ serviceList: data });
+      // @ts-ignore 如果下拉框列表有分页，详情中的初始值在下拉框中没有，插入这条数据
+      if ((!inputVal) && details.linkId && details.entranceName && !data.some(x => x.value === details.linkId)) {
+        setState({
+          // @ts-ignore
+          serviceList: [{ label: details.entranceName, value: details.linkId }].concat(data)
+        });
+      } else {
+        setState({ serviceList: data });
+      }
     }
   };
   const getFormData = (): FormDataType[] => {
@@ -127,7 +138,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
         label: '应用',
         options: {
           rules: [{ required: true, message: '请选择应用' }],
-          initialValue: props.app
+          initialValue: props.app,
         },
         node: (
           <BusinessSelect
@@ -135,11 +146,11 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
               setState({
                 app: value,
                 appName: options && options.props.children,
-                service: undefined
+                service: undefined,
               });
               form.resetFields([
                 ActivityBean.服务类型,
-                ActivityBean['服务/入口']
+                ActivityBean['服务/入口'],
               ]);
             }}
             url="/application/names"
@@ -149,19 +160,19 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             onLoad={() => setState({ loading: false })}
             dropdownClassName={styles.select}
           />
-        )
+        ),
       },
       {
         key: ActivityBean.服务类型,
         label: '服务类型',
         options: {
           rules: [{ required: true, message: '请选择服务类型' }],
-          initialValue: props.serviceType || 'HTTP'
+          initialValue: props.serviceType || 'HTTP',
         },
         node: (
           <BusinessSelect
             url="/application/entrances/types"
-            onChange={_serviceType => {
+            onChange={(_serviceType) => {
               setState({ serviceType: _serviceType, service: undefined });
               form.resetFields([ActivityBean['服务/入口']]);
             }}
@@ -171,14 +182,14 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             optionFilterProp="children"
             dropdownClassName={styles.select}
           />
-        )
+        ),
       },
       {
         key: ActivityBean['服务/入口'],
         label: '服务',
         options: {
           rules: [{ required: true, message: '请选择服务' }],
-          initialValue: props.service
+          initialValue: props.service,
         },
         node: (
           <CommonSelect
@@ -186,17 +197,47 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             onChange={(service, options: any) => {
               setState({
                 service,
-                serviceName: options && options.props.children
+                serviceName: Array.isArray(options?.props?.children)
+                  ? options?.props?.children[options?.props?.children.length - 1]
+                  : options?.props?.children,
               });
             }}
             placeholder="请选择服务"
             showSearch
+            onSearch={debounce((val) => {
+              queryServiceList(val);
+            }, 500)}
             disabled={disabled}
-            optionFilterProp="children"
+            filterOption={false}
+            // optionFilterProp="children"
             dropdownClassName={styles.select}
+            optionLabelProp="label"
+            onRender={(item, index) => {
+              // 在下拉框中显示restful tag
+              const isRestful =
+                item.label.includes('*') || /\{.*\}/.test(item.label);
+              return (
+                <Select.Option key={item.value} value={item.value} label={item.label}>
+                  {isRestful && (
+                    <span
+                      style={{
+                        color: 'var(--BrandPrimary-500, #3BD9FF)',
+                        backgroundColor: '#EEF8F8',
+                        fontSize: 12,
+                        marginRight: 4,
+                        padding: '2px 4px',
+                      }}
+                    >
+                      Restful
+                    </span>
+                  )}
+                  {item.label}
+                </Select.Option>
+              );
+            }}
           />
-        )
-      }
+        ),
+      },
     ];
 
     const virtualBusinessForm = [
