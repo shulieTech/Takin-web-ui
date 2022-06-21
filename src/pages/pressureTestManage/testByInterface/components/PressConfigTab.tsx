@@ -235,8 +235,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
                           formValues?.pressureConfigRequest?.threadConfig?.rampUp, // 递增时长
                         steps:
                           formValues?.pressureConfigRequest?.threadConfig?.steps, // 递增层数
-                        type: formValues?.pressureConfigRequest?.config
-                          ?.threadGroupConfigMap?.type, // 压力模式 并发或TPS模式
+                        type: formValues?.pressureConfigRequest?.threadConfig?.type, // 压力模式 并发或TPS模式
                         threadNum:
                           formValues?.pressureConfigRequest?.threadConfig?.threadNum, // 最大并发
                         mode: formValues?.pressureConfigRequest?.threadConfig?.mode, //  施压模式: 固定压力值/线性递增/阶梯递增
