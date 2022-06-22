@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Tooltip, Icon, message } from 'antd';
+import React, { useState, useEffect, useContext } from 'react';
+import { Tooltip, Icon, message, Modal } from 'antd';
 import ParamsDrawer from '../modals/Params';
 import BaseDrawer from '../modals/Base';
+import { SenceContext } from '../indexPage';
 
 interface Props {
   detail: any;
@@ -10,6 +11,16 @@ interface Props {
 const Sider = (props: Props) => {
   const { detail } = props;
   const [modalIndex, setModalIndex] = useState(null);
+  const {
+    hasUnsaved,
+    setHasUnsaved,
+    listRefreshKey,
+    setListRefreshKey,
+    detailRefreshKey,
+    editSaveKey,
+    setEditSaveKey,
+  } = useContext(SenceContext);
+
   const checkNew = (callback) => {
     if (!detail.id) {
       message.warn('请先保存场景');
@@ -23,7 +34,21 @@ const Sider = (props: Props) => {
       title: '参数编辑',
       icon: 'code',
       onClick: () => {
-        checkNew(() => setModalIndex(0));
+        checkNew(() => {
+          if (hasUnsaved) {
+            Modal.confirm({
+              title: '提示',
+              content: '您的场景有内容修改，是否先保存？',
+              onOk: async () => {
+                // 保存后才能进参数编辑，不然进参数编辑会刷新详情，导致未保存的数据丢失
+                setEditSaveKey(editSaveKey + 1);
+                setModalIndex(0);
+              },
+            });
+          } else {
+            setModalIndex(0);
+          }
+        });
       },
     },
     {
@@ -38,7 +63,9 @@ const Sider = (props: Props) => {
       icon: 'history',
       onClick: () => {
         checkNew(() =>
-          window.open(`#/pressureTestManage/pressureTestReport?sceneId=${detail.bindSceneId}`)
+          window.open(
+            `#/pressureTestManage/pressureTestReport?sceneId=${detail.bindSceneId}`
+          )
         );
       },
     },
