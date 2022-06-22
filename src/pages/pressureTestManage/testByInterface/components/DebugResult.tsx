@@ -94,6 +94,7 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
   return (
     <Spin spinning={loading}>
       <Collapse
+        defaultActiveKey="debugResultContent"
         expandIcon={({ isActive }) => (
           <Icon
             type="caret-right"
