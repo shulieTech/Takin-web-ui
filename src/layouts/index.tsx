@@ -48,7 +48,7 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
     const {
       data: { data, success },
     } = await services.getTheme();
-    if (success && Object.keys(data)?.length === 0) {
+    if (success && Object.keys(data)?.length > 0) {
       setTheme(data, true);
     }
   };
