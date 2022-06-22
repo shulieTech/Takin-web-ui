@@ -364,6 +364,19 @@
     z-index: 1;
   }
 }
+
+.hover-group {
+  .hover-block, .hover-inline-block {
+    display: none;
+  }
+  &:hover .hover-block {
+    display: block;
+  }
+  &:hover .hover-inline-block {
+    display: inline-block;
+  }
+}
+
 @font-face {
   font-family: 'Digital-7';
   src: url('./assets/fonts/digital-7-mono.ttf') format('truetype');

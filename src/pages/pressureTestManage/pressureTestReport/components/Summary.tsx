@@ -79,7 +79,7 @@ const Summary: React.FC<Props> = props => {
         </Row>
       </Col>
       {data && data.length > 0 && (
-        <BusinessActivityFailList id={id} data={data} />
+        <BusinessActivityFailList id={id} data={data} detailData={detailData}/>
       )}
     </Row>
   );

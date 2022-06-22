@@ -25,6 +25,23 @@ const tenantCodeService = {
     const url = '/sys/pressure/state';
     return httpGet(url, data);
   },
+  async addEnv(data = {}) {
+    const url = '/tenant/env/add';
+    return httpPost(url, data);
+  },
+  // 编辑和新增使用的同一个接口，修改时envCode不可编辑
+  async updateEnv(data = {}) {
+    const url = '/tenant/env/update';
+    return httpPut(url, data);
+  },
+  async deleteEnv(data = {}) {
+    const url = '/tenant/env/delete';
+    return httpDelete(url, data);
+  },
+  async setDefaultEnv(data = {}) {
+    const url = '/tenant/env/default';
+    return httpPut(url, data);
+  },
 };
 
 export default tenantCodeService;

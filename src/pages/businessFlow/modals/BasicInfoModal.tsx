@@ -136,7 +136,10 @@ const BusicInfoModal: React.FC<Props> = props => {
         },
       }}
       btnProps={{
-        type: 'link'
+        type: 'link',
+        style: {
+          marginLeft: 8,
+        },
       }}
       btnText={props.btnText}
       beforeOk={handleSubmit}

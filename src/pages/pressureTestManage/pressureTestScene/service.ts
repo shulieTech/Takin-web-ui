@@ -158,10 +158,17 @@ const PressureTestSceneService = {
     return httpGet(url, data);
   },
   /**
-   * @name 恢复被删除的压测场景
+   * @name 恢复被归档的压测场景
    */
   async scenceRecovery(data) {
     const url = '/scenemanage/recovery';
+    return httpPut(url, data);
+  },
+  /**
+   * @name 归档压测场景
+   */
+  async scenceArchive(data) {
+    const url = '/scenemanage/archive';
     return httpPut(url, data);
   },
 };
