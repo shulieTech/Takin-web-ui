@@ -28,6 +28,7 @@ import styles from '../index.less';
 import renderMenuNode from './MenuNode';
 import TitleNode from './TitleNode';
 import { getTakinAuthority, treeFindPath } from 'src/utils/utils';
+import { encryptStr } from 'src/utils/encrypt';
 
 const { Sider } = Layout;
 
@@ -269,6 +270,8 @@ const EditPasswordModal: React.FC<Props> = (props) => {
         } = await UserService.updatePassword({
           ...values,
           id: localStorage.getItem('troweb-userId'),
+          oldPassword: encryptStr(values.oldPassword),
+          newPassword: encryptStr(values.newPassword),
         });
         if (success) {
           // message.success('成功修改密码');
