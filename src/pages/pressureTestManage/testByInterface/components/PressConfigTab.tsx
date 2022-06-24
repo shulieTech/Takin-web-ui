@@ -112,7 +112,7 @@ const PressConfigTab: React.FC<Props> = (props) => {
                 }}
                 title={
                   <span style={{ color: '--var(--Netural-800, #5A5E62)' }}>
-                    目标RT
+                    目标RT（ms）
                   </span>}
                 x-rules={[
                   {
