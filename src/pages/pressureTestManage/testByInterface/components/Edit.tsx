@@ -5,6 +5,7 @@ import {
   createAsyncFormActions,
   FormEffectHooks,
   FormPath,
+  createEffectHook,
 } from '@formily/antd';
 import {
   Input,
@@ -45,6 +46,7 @@ const EditSence: React.FC<Props> = (props) => {
   const { currentSence } = props;
   const { onFieldInputChange$, onFieldValueChange$ } = FormEffectHooks;
   const actions = useMemo(() => createAsyncFormActions(), []);
+  const refreshEntranceHook$ = createEffectHook('refreshEntrance');
   const [detailLoading, setDetailLoading] = useState(false);
   const [detail, setDetail] = useState({});
   const [saving, setSaving] = useState(false);
@@ -227,35 +229,40 @@ const EditSence: React.FC<Props> = (props) => {
                 state.value === 'GET' ? ['tab-1-3'] : [];
             });
           });
-          // 关联应用入口下拉框查询
+          // 触发关联应用入口下拉框查询
           onFieldValueChange$('*(requestUrl,httpMethod)').subscribe(
-            debounce(async () => {
-              const {
-                values: { requestUrl, httpMethod },
-              } = await actions.getFormState();
-              if (!(requestUrl?.trim() && httpMethod)) {
-                return;
-              }
-              const {
-                data: { success, data = [] },
-              } = await service.searchEntrance({
-                requestUrl,
-                httpMethod,
-                current: 0,
-                pageSize: 20,
-              });
-              if (success) {
-                const apps = data.map((x) => ({
-                  ...x,
-                  label: x.entranceAppName,
-                  value: x.entranceAppName,
-                }));
-                actions.setFieldState('.entranceAppName', (state) => {
-                  state.props.enum = apps;
-                });
-              }
-            }, 500)
+            () => {
+              actions.notify('refreshEntrance', {});
+            }
           );
+          // 关联应用入口下拉框查询
+          refreshEntranceHook$().subscribe(debounce(async () => {
+            const {
+              values: { requestUrl, httpMethod },
+            } = await actions.getFormState();
+            if (!(requestUrl?.trim() && httpMethod)) {
+              return;
+            }
+            const {
+              data: { success, data = [] },
+            } = await service.searchEntrance({
+              requestUrl,
+              httpMethod,
+              current: 0,
+              pageSize: 20,
+            });
+            if (success) {
+              const apps = data.map((x) => ({
+                ...x,
+                label: x.entranceAppName,
+                value: x.entranceAppName,
+              }));
+              actions.setFieldState('.entranceAppName', (state) => {
+                state.props.enum = apps;
+              });
+            }
+          }, 500));
+
           // 计算建议pod数
           if (getTakinAuthority() === 'true') {
             onFieldValueChange$(

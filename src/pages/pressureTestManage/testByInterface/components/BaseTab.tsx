@@ -188,6 +188,10 @@ const BaseTab: React.FC<Props> = (props) => {
                 showSearch: true,
                 // onSearch: searchEntrance,
                 onChange: onEntranceChange,
+                onFocus: () => {
+                  // 触发关联应用入口下拉框查询
+                  actions.notify('refreshEntrance', {});
+                },
               }}
               title={
                 <TipTittle
