@@ -117,7 +117,7 @@ const SiderMenu: React.FC<Props> = (props) => {
 
   const title = (
     <span
-      style={{ color: 'white', display: 'flex' }}
+      style={{ display: 'flex' }}
       onClick={(e) => {
         e.stopPropagation();
         setVisible(true);
@@ -149,7 +149,7 @@ const SiderMenu: React.FC<Props> = (props) => {
       className={`${styles.sider}`}
       style={{
         // paddingTop: venomBasicConfig.fixHeader && venomBasicConfig.headerHeight,
-        backgroundColor: 'var(--BrandPrimary-500)',
+        // backgroundColor: 'var(--BrandPrimary-500)',
       }}
       // onCollapse={}
     >
@@ -196,7 +196,7 @@ const SiderMenu: React.FC<Props> = (props) => {
         >
           <Card className={styles.menuCard}>
             <Meta
-              avatar={<Avatar style={{ backgroundColor: 'white' }} />}
+              avatar={<Avatar style={{ backgroundColor: '#f0f2f5' }} />}
               title={title}
               className={styles.menuMeta}
             />

@@ -224,7 +224,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       <Layout
         className="flex"
         style={{
-          backgroundColor: '#1D2530',
+          // backgroundColor: '#1D2530',
         }}
       >
         {/* <HeaderNode
@@ -236,7 +236,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           <div
             className="h-100p"
             style={{
-              backgroundColor: '#1D2530',
+              // backgroundColor: '#1D2530',
               display: 'flex',
               flexDirection: 'column',
             }}

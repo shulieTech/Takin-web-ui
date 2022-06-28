@@ -61,8 +61,8 @@ const TableNode: React.FC<SearchTableProps> = props => {
       title={renderTitle()}
       className={styles.tableWrap}
       style={{
-        background:
-          'linear-gradient(to bottom, #eeeef8 0%, #ffffff 10%)',
+        // background:
+        //   'linear-gradient(to bottom, #eeeef8 0%, #ffffff 10%)',
         ...(props.tableCardProps && props.tableCardProps.style)
       }}
       {...props.tableCardProps}
