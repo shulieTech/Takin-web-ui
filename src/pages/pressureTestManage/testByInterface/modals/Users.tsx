@@ -47,7 +47,8 @@ const UsersModal: React.FC<Props> = (props) => {
     isQueryOnMount: true,
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
         getList({
