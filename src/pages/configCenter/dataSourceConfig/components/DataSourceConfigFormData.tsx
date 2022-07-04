@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { CommonSelect } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
-import { Button, Col, Icon, Input, message, Row } from 'antd';
+import { Button, Col, Icon, Input, message, Row, Tooltip } from 'antd';
 import DataSourceConfigService from '../service';
 import { trimObj } from 'src/utils/utils';
 
@@ -24,23 +24,23 @@ const getAddDataSourceConfigFormData = (
         return false;
       }
       setState({
-        loading: true
+        loading: true,
       });
       const {
-        data: { success, data }
+        data: { success, data },
       } = await DataSourceConfigService.debugDataSource({ ...trimObj(values) });
       if (success) {
         setState({
           debugStatus: true,
           loading: false,
           debugPassed: data.passed,
-          info: data.passed ? '连接成功！' : data.errorMessage
+          info: data.passed ? '连接成功！' : data.errorMessage,
         });
         return;
       }
       setState({
         loading: false,
-        debugPassed: null
+        debugPassed: null,
       });
     });
   };
@@ -65,11 +65,11 @@ const getAddDataSourceConfigFormData = (
             required: true,
             message: '请输入正确数据源名称',
             max: 20,
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input placeholder="请输入数据源名称，最多20个字符" />
+      node: <Input placeholder="请输入数据源名称，最多20个字符" />,
     },
     {
       key: 'type',
@@ -84,9 +84,9 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: true,
-            message: '请选择数据库类型'
-          }
-        ]
+            message: '请选择数据库类型',
+          },
+        ],
       },
       node: (
         <CommonSelect
@@ -95,11 +95,18 @@ const getAddDataSourceConfigFormData = (
             (dictionaryMap && dictionaryMap.VERIFY_DATASOURCE_TYPE) || []
           }
         />
-      )
+      ),
     },
     {
       key: 'jdbcUrl',
-      label: '数据源地址',
+      label: (
+        <span>
+          数据源地址
+          <Tooltip title="示例：jdbc:mysql://192.168.1.102:3306/easydemo_db">
+            <Icon type="question-circle" style={{ cursor: 'pointer', marginLeft: 4 }}/>
+          </Tooltip>
+        </span>
+      ),
       options: {
         initialValue:
           action === 'edit' ? detailData && detailData.jdbcUrl : undefined,
@@ -107,11 +114,11 @@ const getAddDataSourceConfigFormData = (
           {
             required: true,
             message: '请输入正确数据源地址',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input placeholder="请输入数据源地址（不可重复添加）" />
+      node: <Input placeholder="请输入数据源地址（不可重复添加）" />,
     },
     {
       key: 'username',
@@ -123,11 +130,11 @@ const getAddDataSourceConfigFormData = (
           {
             required: true,
             message: '请输入用户名',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input placeholder="请输入用户名" />
+      node: <Input placeholder="请输入用户名" autoComplete="off"/>,
     },
     {
       key: 'password',
@@ -138,11 +145,13 @@ const getAddDataSourceConfigFormData = (
           {
             required: true,
             message: '请输入密码',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input placeholder="请输入密码" type="password" />
+      node: (
+        <Input placeholder="请输入密码" type="password" autoComplete="off" />
+      ),
     },
     {
       key: 'debugStatus',
@@ -152,9 +161,9 @@ const getAddDataSourceConfigFormData = (
         rules: [
           {
             required: false,
-            message: '保存前请先测试连接有效性'
-          }
-        ]
+            message: '保存前请先测试连接有效性',
+          },
+        ],
       },
       node: (
         <div>
@@ -171,8 +180,8 @@ const getAddDataSourceConfigFormData = (
             </span>
           </div>
         </div>
-      )
-    }
+      ),
+    },
   ];
   return basicFormData;
 };
