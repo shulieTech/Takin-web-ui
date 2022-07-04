@@ -21,14 +21,14 @@ interface Props extends CommonModelState {
   detailData?: any;
   applicationId: string;
 }
-const AddEditDbModal: React.FC<Props> = props => {
+const AddEditDbModal: React.FC<Props> = (props) => {
   const { detailData } = props;
   const [state, setState] = useStateReducer({
     form: null as WrappedFormUtils,
     details: {},
     dbType: null,
     dsType: null,
-    cacheTempValue: null
+    cacheTempValue: null,
   });
   const text = props.id ? '编辑存储影子集群' : '新增存储影子集群';
   const getDetails = async () => {
@@ -37,18 +37,18 @@ const AddEditDbModal: React.FC<Props> = props => {
       return;
     }
     const {
-      data: { data, success }
+      data: { data, success },
     } = await AppManageService.queryDbTableDetail({ id: props.id });
     if (success) {
       setState({
         details: data,
         dbType: data.dbType,
-        dsType: data.dsType
+        dsType: data.dsType,
       });
     }
   };
 
-  const handleCopy = async value => {
+  const handleCopy = async (value) => {
     if (copy(value)) {
       message.success('复制成功');
     } else {
@@ -61,13 +61,13 @@ const AddEditDbModal: React.FC<Props> = props => {
    */
   const queryCacheTemp = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await AppManageService.queryConfig({
-      configCode: 'SHADOW_SERVER'
+      configCode: 'SHADOW_SERVER',
     });
     if (success) {
       setState({
-        cacheTempValue: data
+        cacheTempValue: data,
       });
     }
   };
@@ -77,29 +77,29 @@ const AddEditDbModal: React.FC<Props> = props => {
       form: null as WrappedFormUtils,
       details: {},
       dbType: null,
-      dsType: null
+      dsType: null,
     });
   };
 
   /**
    * @name 切换方案类型
    */
-  const handleChange = async value => {
+  const handleChange = async (value) => {
     setState({
-      dsType: value
+      dsType: value,
     });
   };
   /**
    * @name 切换类型
    */
-  const handleChangeDbType = async value => {
+  const handleChangeDbType = async (value) => {
     state.form.setFieldsValue({
       dsType: null,
-      dbType: value
+      dbType: value,
     });
     setState({
       dbType: value,
-      dsType: null
+      dsType: null,
       //   dbConfig: undefined
     });
   };
@@ -115,11 +115,11 @@ const AddEditDbModal: React.FC<Props> = props => {
             {
               required: true,
               whitespace: true,
-              message: '请选择应用'
-            }
-          ]
+              message: '请选择应用',
+            },
+          ],
         },
-        node: <Input disabled={true} />
+        node: <Input disabled={true} />,
       },
       {
         key: DbBean.类型,
@@ -129,9 +129,9 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请选择类型'
-            }
-          ]
+              message: '请选择类型',
+            },
+          ],
         },
         node: (
           <CommonSelect
@@ -139,17 +139,17 @@ const AddEditDbModal: React.FC<Props> = props => {
             disabled={props.id ? true : false}
             dataSource={[
               { label: '数据库', value: 0 },
-              { label: '缓存(redis)', value: 1 }
+              { label: '缓存(redis)', value: 1 },
             ]}
             onChange={handleChangeDbType}
-            onRender={item => (
+            onRender={(item) => (
               <CommonSelect.Option key={item.value} value={item.value}>
                 {item.label}
               </CommonSelect.Option>
             )}
           />
-        )
-      }
+        ),
+      },
     ];
   };
 
@@ -157,19 +157,29 @@ const AddEditDbModal: React.FC<Props> = props => {
     return [
       {
         key: DbBean.业务数据源地址,
-        label: '业务数据源地址',
+        label: (
+          <span>
+            业务数据源地址
+            <Tooltip title="示例：jdbc:mysql://192.168.1.102:3306/easydemo_db">
+              <Icon
+                type="question-circle"
+                style={{ cursor: 'pointer', marginLeft: 4 }}
+              />
+            </Tooltip>
+          </span>
+        ),
         options: {
           initialValue: state.details[DbBean.业务数据源地址],
           rules: [
             {
               required: true,
               whitespace: true,
-              message: '请输入业务数据源地址'
-            }
-          ]
+              message: '请输入业务数据源地址',
+            },
+          ],
         },
-        node: <Input placeholder="请输入业务数据源地址" />
-      }
+        node: <Input placeholder="请输入业务数据源地址" />,
+      },
     ];
   };
 
@@ -184,12 +194,12 @@ const AddEditDbModal: React.FC<Props> = props => {
             {
               required: true,
               whitespace: true,
-              message: '请输入用户名'
-            }
-          ]
+              message: '请输入用户名',
+            },
+          ],
         },
-        node: <Input placeholder="请输入用户名" />
-      }
+        node: <Input placeholder="请输入用户名" />,
+      },
     ];
   };
 
@@ -203,22 +213,22 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请选择方案类型'
-            }
-          ]
+              message: '请选择方案类型',
+            },
+          ],
         },
         node: (
           <CommonSelect
             placeholder="请选择方案类型"
             disabled={props.id ? true : false}
             dataSource={[{ label: '影子server', value: 2 }]}
-            onRender={item => (
+            onRender={(item) => (
               <CommonSelect.Option key={item.value} value={item.value}>
                 {item.label}
               </CommonSelect.Option>
             )}
           />
-        )
+        ),
       },
       {
         key: DbBean.配置代码,
@@ -239,7 +249,7 @@ const AddEditDbModal: React.FC<Props> = props => {
                       style={{
                         maxHeight: 400,
                         minHeight: 200,
-                        overflow: 'scroll'
+                        overflow: 'scroll',
                       }}
                     >
                       {state.cacheTempValue}
@@ -258,17 +268,17 @@ const AddEditDbModal: React.FC<Props> = props => {
             {
               required: true,
               message: '请输入配置代码',
-              whitespace: true
-            }
-          ]
+              whitespace: true,
+            },
+          ],
         },
         node: (
           <Input.TextArea
             placeholder="请输入配置代码"
             style={{ height: 350 }}
           />
-        )
-      }
+        ),
+      },
     ];
   };
 
@@ -282,9 +292,9 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请选择方案类型'
-            }
-          ]
+              message: '请选择方案类型',
+            },
+          ],
         },
         node: (
           <CommonSelect
@@ -292,17 +302,17 @@ const AddEditDbModal: React.FC<Props> = props => {
             disabled={props.id ? true : false}
             dataSource={[
               { label: '影子库', value: 0 },
-              { label: '影子表', value: 1 }
+              { label: '影子表', value: 1 },
             ]}
             onChange={handleChange}
-            onRender={item => (
+            onRender={(item) => (
               <CommonSelect.Option key={item.value} value={item.value}>
                 {item.label}
               </CommonSelect.Option>
             )}
           />
-        )
-      }
+        ),
+      },
     ];
   };
 
@@ -317,11 +327,11 @@ const AddEditDbModal: React.FC<Props> = props => {
             {
               required: true,
               whitespace: true,
-              message: '请输入数据源地址'
-            }
-          ]
+              message: '请输入数据源地址',
+            },
+          ],
         },
-        node: <Input placeholder="请输入数据源地址" />
+        node: <Input placeholder="请输入数据源地址" />,
       },
       {
         key: DbBean.数据源用户名,
@@ -332,11 +342,11 @@ const AddEditDbModal: React.FC<Props> = props => {
             {
               required: true,
               whitespace: true,
-              message: '请输入用户名'
-            }
-          ]
+              message: '请输入用户名',
+            },
+          ],
         },
-        node: <Input placeholder="请输入用户名" />
+        node: <Input placeholder="请输入用户名" />,
       },
       {
         key: DbBean.密码,
@@ -347,11 +357,11 @@ const AddEditDbModal: React.FC<Props> = props => {
             {
               required: true,
               whitespace: true,
-              message: '请输入密码'
-            }
-          ]
+              message: '请输入密码',
+            },
+          ],
         },
-        node: <Input placeholder="请输入密码" type="password" />
+        node: <Input placeholder="请输入密码" type="password" />,
       },
       {
         key: DbBean.minldle,
@@ -361,9 +371,9 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: false,
-              message: '请输入minldle'
-            }
-          ]
+              message: '请输入minldle',
+            },
+          ],
         },
         node: (
           <InputNumber
@@ -372,7 +382,7 @@ const AddEditDbModal: React.FC<Props> = props => {
             max={100}
             precision={0}
           />
-        )
+        ),
       },
       {
         key: DbBean.maxActive,
@@ -382,9 +392,9 @@ const AddEditDbModal: React.FC<Props> = props => {
           rules: [
             {
               required: false,
-              message: '请输入maxActive'
-            }
-          ]
+              message: '请输入maxActive',
+            },
+          ],
         },
         node: (
           <InputNumber
@@ -393,8 +403,8 @@ const AddEditDbModal: React.FC<Props> = props => {
             max={100}
             precision={0}
           />
-        )
-      }
+        ),
+      },
     ];
   };
 
@@ -409,21 +419,21 @@ const AddEditDbModal: React.FC<Props> = props => {
             {
               required: true,
               message: '请输入表名称',
-              whitespace: true
-            }
-          ]
+              whitespace: true,
+            },
+          ],
         },
         node: (
           <Input.TextArea
             placeholder="请输入表名称，以逗号隔开"
             style={{ height: 300 }}
           />
-        )
-      }
+        ),
+      },
     ];
   };
   const handleSubmit = () => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       state.form.validateFields(async (err, values) => {
         if (err) {
           message.info('请检查表单必填项');
@@ -433,17 +443,17 @@ const AddEditDbModal: React.FC<Props> = props => {
 
         const result = {
           applicationId: props.applicationId,
-          ...values
+          ...values,
         };
 
         const ajaxEvent = props.id
           ? AppManageService.editDbTable({
             ...state.details,
-            ...result
+            ...result,
           })
           : AppManageService.addDbTable(result);
         const {
-          data: { success }
+          data: { success },
         } = await ajaxEvent;
         if (success) {
           message.success(`${text}成功`);
@@ -465,8 +475,8 @@ const AddEditDbModal: React.FC<Props> = props => {
       {
         title: '基本信息',
         formData: getBaseInfoFormData(),
-        span: 24
-      }
+        span: 24,
+      },
     ];
   }
 
@@ -475,31 +485,31 @@ const AddEditDbModal: React.FC<Props> = props => {
       {
         title: '基本信息',
         formData: getBaseInfoFormData().concat(getDbDetailFormData()),
-        span: 24
+        span: 24,
       },
       {
         title: '业务源数据',
         formData: getBusinessFormData(),
-        span: 24
-      }
+        span: 24,
+      },
     ];
     if (state.dsType === 0) {
       dataSource = [
         {
           title: '基本信息',
           formData: getBaseInfoFormData().concat(getDbDetailFormData()),
-          span: 24
+          span: 24,
         },
         {
           title: '业务源数据',
           formData: getBusinessFormData().concat(getUserNameFormData()),
-          span: 24
+          span: 24,
         },
         {
           title: '影子库表信息',
           formData: getBaseFormData(),
-          span: 24
-        }
+          span: 24,
+        },
       ];
     }
     if (state.dsType === 1) {
@@ -507,18 +517,18 @@ const AddEditDbModal: React.FC<Props> = props => {
         {
           title: '基本信息',
           formData: getBaseInfoFormData().concat(getDbDetailFormData()),
-          span: 24
+          span: 24,
         },
         {
           title: '业务源数据',
           formData: getBusinessFormData(),
-          span: 24
+          span: 24,
         },
         {
           title: '影子库表信息',
           formData: getTableFormData(),
-          span: 24
-        }
+          span: 24,
+        },
       ];
     }
   }
@@ -528,8 +538,8 @@ const AddEditDbModal: React.FC<Props> = props => {
       {
         title: '基本信息',
         formData: getBaseInfoFormData().concat(getSessionFormData()),
-        span: 24
-      }
+        span: 24,
+      },
     ];
   }
 
@@ -543,14 +553,14 @@ const AddEditDbModal: React.FC<Props> = props => {
       afterCancel={handleCancle}
     >
       <CustomFormCard
-        getForm={form => setState({ form })}
+        getForm={(form) => setState({ form })}
         dataSource={dataSource}
         commonFormProps={{
           rowNum: 1,
           formItemProps: {
             labelCol: { span: 6 },
-            wrapperCol: { span: 14 }
-          }
+            wrapperCol: { span: 14 },
+          },
         }}
       />
     </CommonModal>

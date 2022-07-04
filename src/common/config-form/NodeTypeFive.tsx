@@ -222,6 +222,7 @@ const NodeTypeFive: React.FC<Props> = props => {
               onChange={e =>
                 handleChangeData(row.id, e.target.value.trim(), 'bizDatabase')
               }
+              placeholder="请输入"
             />
           ) : (
             text
@@ -241,6 +242,7 @@ const NodeTypeFive: React.FC<Props> = props => {
               onChange={e =>
                 handleChangeData(row.id, e.target.value.trim(), 'bizTableName')
               }
+              placeholder="请输入"
             />
           ) : (
             text

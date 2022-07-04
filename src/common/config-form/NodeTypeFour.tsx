@@ -63,6 +63,7 @@ const NodeTypeFour: React.FC<Props> = props => {
               {...props.inputProps}
               onChange={e => handleTransmit({ [keys[1]]: e.target.value })}
               value={state ? state[keys[1]] : undefined}
+              placeholder="请输入"
             />
           </Col>
         )}

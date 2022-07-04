@@ -62,6 +62,7 @@ const NodeTypeThree: React.FC<Props> = props => {
               onChange={value => handleTransmit({ [keys[1]]: value })}
               value={state ? state[keys[1]] : undefined}
               min={0}
+              placeholder="请输入"
             />
           </Col>
         )}

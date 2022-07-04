@@ -17,13 +17,13 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
      * @name 输入框
      */
     case 1:
-      renderNode = <Input />;
+      renderNode = <Input placeholder="请输入"/>;
       break;
     /**
      * @name 输入框（密码）
      */
     case 2:
-      renderNode = <Input type="password" />;
+      renderNode = <Input type="password" placeholder="请输入"/>;
       break;
     /**
      * @name 下拉框、数值输入框
@@ -75,7 +75,7 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
      * @name 文本输入框
      */
     case 5:
-      renderNode = <Input.TextArea autoSize />;
+      renderNode = <Input.TextArea autoSize placeholder="请输入"/>;
       break;
     default:
       break;

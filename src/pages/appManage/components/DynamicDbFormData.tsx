@@ -131,7 +131,17 @@ const DynamicDbFormData = (
         },
         {
           key: DbDetailBean.业务数据源,
-          label: '业务数据源',
+          label: (
+            <span>
+              业务数据源
+              <Tooltip title="示例：jdbc:mysql://192.168.1.102:3306/easydemo_db">
+                <Icon
+                  type="question-circle"
+                  style={{ cursor: 'pointer', marginLeft: 4 }}
+                />
+              </Tooltip>
+            </span>
+          ),
           options: {
             initialValue: detailData && detailData[DbDetailBean.业务数据源],
 
@@ -249,7 +259,7 @@ const DynamicDbFormData = (
                   <div style={{ textAlign: 'right' }}>
                     <a onClick={() => handleCopy(item.tips)}>复制</a>
                   </div>
-                  <div style={{ width: 200, height: 300, overflow: 'scroll' }}>
+                  <div style={{ width: 200, maxHeight: 300, overflow: 'scroll' }}>
                     {item.tips}
                   </div>
                 </div>
@@ -257,7 +267,7 @@ const DynamicDbFormData = (
             }}
           >
             {item.label}
-            <Icon style={{ marginLeft: 4 }} type="question-circle" />
+            <Icon style={{ marginLeft: 4, cursor: 'pointer' }} type="question-circle" />
           </Tooltip>
         ) : (
           item.label

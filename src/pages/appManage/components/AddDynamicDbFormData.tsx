@@ -26,10 +26,10 @@ const getAddDynamicDbFormData = (
   /**
    * @name 切换方案类型
    */
-  const handleChange = async e => {
+  const handleChange = async (e) => {
     setState({
       dsType: e.target.value,
-      dbConfig: undefined
+      dbConfig: undefined,
     });
   };
 
@@ -38,18 +38,18 @@ const getAddDynamicDbFormData = (
    */
   const queryTemplate = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await AppManageService.queryTemplate({
       applicationName: state.form.getFieldsValue().applicationName,
       agentSourceType: state.form.getFieldsValue().middlewareType,
       dsType: state.dsType,
       cacheType: state.cacheType,
       isNewData: true,
-      connectionPool: state.form.getFieldsValue().connectionPool
+      connectionPool: state.form.getFieldsValue().connectionPool,
     });
     if (success) {
       setState({
-        templateData: data || []
+        templateData: data || [],
       });
     }
   };
@@ -61,19 +61,19 @@ const getAddDynamicDbFormData = (
     queryMiddleWareName(options.props.children);
 
     state.form.setFieldsValue({
-      connectionPool: undefined
+      connectionPool: undefined,
     });
     setState({
       dbType: options.props.children,
       middleWareName: undefined,
       middleWareNameData: [],
-      templateData: []
+      templateData: [],
     });
   };
   /**
    * @name 切换中间件名称
    */
-  const handleChangeMiddleWareName = async value => {
+  const handleChangeMiddleWareName = async (value) => {
     if (value) {
       queryType(state.dbType, value);
     }
@@ -81,20 +81,20 @@ const getAddDynamicDbFormData = (
       queryCacheType();
     }
     setState({
-      middleWareName: value
+      middleWareName: value,
     });
   };
   /**
    * @name 切换缓存模式
    */
-  const handleChangeCacheType = async value => {
+  const handleChangeCacheType = async (value) => {
     setState({
       cacheType: value,
       templateData: [],
-      dsType: undefined
+      dsType: undefined,
     });
     state.form.setFieldsValue({
-      dsType: undefined
+      dsType: undefined,
     });
   };
 
@@ -103,11 +103,11 @@ const getAddDynamicDbFormData = (
    */
   const queryCacheType = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await AppManageService.queryCacheType({});
     if (success) {
       setState({
-        cacheTypeData: data || []
+        cacheTypeData: data || [],
       });
     }
   };
@@ -117,34 +117,34 @@ const getAddDynamicDbFormData = (
    */
   const queryType = async (middlewareType, plugName) => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await AppManageService.queryDynamicProgramme({
       middlewareType,
-      plugName
+      plugName,
     });
     if (success) {
       setState({
-        typeRadioData: data
+        typeRadioData: data,
       });
     }
   };
   /**
    * @name 获取中间件名称
    */
-  const queryMiddleWareName = async middlewareType => {
+  const queryMiddleWareName = async (middlewareType) => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await AppManageService.queryMiddleWareName({
-      middlewareType
+      middlewareType,
     });
     if (success) {
       setState({
-        middleWareNameData: data || []
+        middleWareNameData: data || [],
       });
     }
   };
 
-  const handleCopy = async value => {
+  const handleCopy = async (value) => {
     if (copy(value)) {
       message.success('复制成功');
     } else {
@@ -153,7 +153,7 @@ const getAddDynamicDbFormData = (
   };
 
   /** @name 获取表单initialValue */
-  const getFormItemInitialValue = keys => {
+  const getFormItemInitialValue = (keys) => {
     let result = null;
     result =
       state.dbTableDetail.shadowInfo &&
@@ -172,11 +172,11 @@ const getAddDynamicDbFormData = (
           {
             required: true,
             whitespace: true,
-            message: '请选择应用'
-          }
-        ]
+            message: '请选择应用',
+          },
+        ],
       },
-      node: <Input disabled={true} />
+      node: <Input disabled={true} />,
     },
     {
       key: 'middlewareType',
@@ -186,9 +186,9 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请选择类型'
-          }
-        ]
+            message: '请选择类型',
+          },
+        ],
       },
       node: (
         <CommonSelect
@@ -198,13 +198,13 @@ const getAddDynamicDbFormData = (
           onChange={(value, options) =>
             handleChangeMiddleWareType(value, options)
           }
-          onRender={item => (
+          onRender={(item) => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
             </CommonSelect.Option>
           )}
         />
-      )
+      ),
     },
     {
       key: 'connectionPool',
@@ -214,23 +214,23 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请选择中间件名称'
-          }
-        ]
+            message: '请选择中间件名称',
+          },
+        ],
       },
       node: (
         <CommonSelect
           placeholder="请选择中间件名称"
           dataSource={state.middleWareNameData || []}
           onChange={handleChangeMiddleWareName}
-          onRender={item => (
+          onRender={(item) => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
             </CommonSelect.Option>
           )}
         />
-      )
-    }
+      ),
+    },
   ];
 
   const linkFormData = [
@@ -243,27 +243,37 @@ const getAddDynamicDbFormData = (
           {
             required: true,
             message: '请输入业务数据源用户名',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input placeholder="请输入业务数据源用户名" />
+      node: <Input placeholder="请输入业务数据源用户名" />,
     },
     {
       key: DbDetailBean.业务数据源,
-      label: '业务数据源',
+      label: (
+        <span>
+          业务数据源
+          <Tooltip title="示例：jdbc:mysql://192.168.1.102:3306/easydemo_db">
+            <Icon
+              type="question-circle"
+              style={{ cursor: 'pointer', marginLeft: 4 }}
+            />
+          </Tooltip>
+        </span>
+      ),
       options: {
         initialValue: undefined,
         rules: [
           {
             required: true,
             message: '请输入业务数据源',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input placeholder="请输入业务数据源" />
-    }
+      node: <Input placeholder="请输入业务数据源" />,
+    },
   ];
 
   const tempData = `{
@@ -310,11 +320,11 @@ const getAddDynamicDbFormData = (
           {
             required: true,
             message: '请输入业务集群',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input.TextArea autoSize placeholder="请输入业务集群" />
+      node: <Input.TextArea autoSize placeholder="请输入业务集群" />,
     },
     {
       key: DbDetailBean.缓存模式,
@@ -324,23 +334,23 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请选择缓存模式'
-          }
-        ]
+            message: '请选择缓存模式',
+          },
+        ],
       },
       node: (
         <CommonSelect
           placeholder="请选择缓存模式"
           dataSource={state.cacheTypeData || []}
           onChange={handleChangeCacheType}
-          onRender={item => (
+          onRender={(item) => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
             </CommonSelect.Option>
           )}
         />
-      )
-    }
+      ),
+    },
   ];
 
   const dynamicFormData = [
@@ -355,9 +365,9 @@ const getAddDynamicDbFormData = (
         rules: [
           {
             required: true,
-            message: '请选择隔离方案'
-          }
-        ]
+            message: '请选择隔离方案',
+          },
+        ],
       },
       node: (
         <Radio.Group onChange={handleChange}>
@@ -369,8 +379,8 @@ const getAddDynamicDbFormData = (
             );
           })}
         </Radio.Group>
-      )
-    }
+      ),
+    },
   ];
 
   const templeteFormData = state.templateData.map(
@@ -385,7 +395,7 @@ const getAddDynamicDbFormData = (
                 <div style={{ textAlign: 'right' }}>
                   <a onClick={() => handleCopy(item.tips)}>复制</a>
                 </div>
-                <div style={{ width: 200, height: 300, overflow: 'scroll' }}>
+                <div style={{ width: 200, maxHeight: 300, overflow: 'scroll' }}>
                   {item.tips}
                 </div>
               </div>
@@ -393,7 +403,10 @@ const getAddDynamicDbFormData = (
           }}
         >
           {item.label}
-          <Icon style={{ marginLeft: 4 }} type="question-circle" />
+          <Icon
+            style={{ marginLeft: 4, cursor: 'pointer' }}
+            type="question-circle"
+          />
         </Tooltip>
       ) : (
         item.label
@@ -413,15 +426,15 @@ const getAddDynamicDbFormData = (
                 ? 'array'
                 : [3, 7].includes(item.nodeType)
                 ? 'object'
-                : 'string'
-          }
-        ]
+                : 'string',
+          },
+        ],
       },
       formItemProps:
         item.nodeType === 4
           ? { labelCol: { span: 0 }, wrapperCol: { span: 24 } }
           : { labelCol: { span: 8 }, wrapperCol: { span: 14 } },
-      node: getRenderFormNode(item)
+      node: getRenderFormNode(item),
     })
   );
 
@@ -432,7 +445,7 @@ const getAddDynamicDbFormData = (
           ...basicDbFormData,
           ...cacheTypeFormData,
           ...dynamicFormData,
-          ...templeteFormData
+          ...templeteFormData,
         ];
       }
       return [...basicDbFormData, ...cacheTypeFormData];
@@ -442,7 +455,7 @@ const getAddDynamicDbFormData = (
         ...basicDbFormData,
         ...linkFormData,
         ...dynamicFormData,
-        ...templeteFormData
+        ...templeteFormData,
       ];
     }
   }
