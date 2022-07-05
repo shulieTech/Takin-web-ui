@@ -50,6 +50,7 @@ export const EXCLUDED_SECURITY_APIS = [
   '/thirdParty/user',
   '/logout',
   '/tenant',
+  '/tenant/switch',
   '/tenant/env/switch',
   '/link/dictionary',
   '/menu/list',
