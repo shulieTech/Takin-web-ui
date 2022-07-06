@@ -146,7 +146,7 @@ const PressureTestSceneService = {
     const url = '/scene/task/preStop';
     return httpPut(url, data);
   },
-  
+
   async applicationList(data) {
     const url = '/activities/application/list';
     return httpGet(url, data);
@@ -157,6 +157,41 @@ const PressureTestSceneService = {
   async scenceRecovery(data) {
     const url = '/scenemanage/recovery';
     return httpPut(url, data);
+  },
+  /**
+   * @name 复制场景
+   */
+  async copySence(data = {}) {
+    const url = '/scenemanage/copy';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 分享场景
+   */
+  async shareSence(data = {}) {
+    const url = '/scenemanage/share';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 分享场景
+   */
+  async cancelShareSence(data = {}) {
+    const url = '/scenemanage/cancelShareSence';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 共享的压测场景
+   */
+  async sharedSceneList(data = {}) {
+    const url = '/scenemanage/share/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name fork公共场景
+   */
+  async forkScene(data = {}) {
+    const url = '/scenemanage/fork';
+    return httpGet(url, data);
   },
 };
 

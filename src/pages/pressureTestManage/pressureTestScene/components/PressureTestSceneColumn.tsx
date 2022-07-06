@@ -11,6 +11,8 @@ import {
   Popconfirm,
   Popover,
   Modal,
+  Progress,
+  Tooltip,
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
@@ -176,6 +178,47 @@ const getPressureTestSceneColumns = (
     });
   };
 
+  const copySence = async (row) => {
+    const {
+      data: { success },
+    } = await PressureTestSceneService.copySence({
+      id: row.id,
+    });
+    if (success) {
+      message.success('操作成功');
+      setState({
+        isReload: !state.isReload,
+      });
+    }
+  };
+
+  const shareSence = async (row) => {
+    const {
+      data: { success },
+    } = await PressureTestSceneService.shareSence({
+      id: row.id,
+    });
+    if (success) {
+      message.success('操作成功');
+      setState({
+        isReload: !state.isReload,
+      });
+    }
+  };
+  const cancelShareSence = async (row) => {
+    const {
+      data: { success },
+    } = await PressureTestSceneService.cancelShareSence({
+      id: row.id,
+    });
+    if (success) {
+      message.success('操作成功');
+      setState({
+        isReload: !state.isReload,
+      });
+    }
+  };
+
   const columns = [
     {
       ...customColumnProps,
@@ -253,12 +296,27 @@ const getPressureTestSceneColumns = (
       render: (text) => {
         return (
           <Badge
+            status={text === 2 ? 'processing' : 'default'}
             text={
               {
                 '-1': '已归档',
                 0: '待启动',
                 1: '启动中',
-                2: '压测中',
+                2: (
+                  <span>
+                    压测中
+                    <Tooltip title={`进度${75}`}>
+                      <Progress
+                        type="circle"
+                        width={14}
+                        percent={75}
+                        strokeWidth={20}
+                        style={{ marginLeft: 4, cursor: 'pointer' }}
+                        showInfo={false}
+                      />
+                    </Tooltip>
+                  </span>
+                ),
               }[text] || '待启动'
             }
             color={text === 2 ? 'var(--BrandPrimary-500)' : 'var(--Netural-06)'}
@@ -325,6 +383,35 @@ const getPressureTestSceneColumns = (
                 </Link>
               </AuthorityBtn>
             )}
+            <AuthorityBtn
+              isShow={
+                btnAuthority &&
+                btnAuthority.pressureTestManage_pressureTestScene_3_update &&
+                row.canEdit
+              }
+            >
+              <CustomPopconfirm
+                arrowPointAtCenter
+                title="确定复制该场景？"
+                onConfirm={() => copySence(row)}
+              >
+                <a style={{ marginRight: 8 }}>复制</a>
+              </CustomPopconfirm>
+              {row.isShared ? <CustomPopconfirm
+                arrowPointAtCenter
+                title="确定取消分享该场景？"
+                onConfirm={() => cancelShareSence(row)}
+              >
+                <a style={{ marginRight: 8 }}>取消共享</a>
+              </CustomPopconfirm> :
+              <CustomPopconfirm
+                arrowPointAtCenter
+                title="确定分享该场景？"
+                onConfirm={() => shareSence(row)}
+              >
+                <a style={{ marginRight: 8 }}>设为共享</a>
+              </CustomPopconfirm>}
+            </AuthorityBtn>
             {row.status === 0 && (
               <AuthorityBtn
                 isShow={

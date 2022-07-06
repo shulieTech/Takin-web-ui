@@ -1,4 +1,4 @@
-import { Col, message, Modal, Radio, Row, Switch, Button } from 'antd';
+import { Col, message, Modal, Radio, Row, Switch, Button, Tabs } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useCallback, useState } from 'react';
@@ -12,6 +12,7 @@ import PressureTestSceneTableAction from './components/TableAction';
 import styles from './index.less';
 import PressureTestSceneService from './service';
 import { PressureStyle } from './enum';
+import SharedScene from './components/SharedScene';
 
 interface PressureTestSceneProps {
   dictionaryMap?: any;
@@ -223,11 +224,13 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     props.dictionaryMap
   );
 
-  const refHandle = useCallback(ref => setSearchTableRef(ref), []);
+  const refHandle = useCallback((ref) => setSearchTableRef(ref), []);
 
   useEffect(() => {
     // 有定时压测或者非待启动压测时启用定时刷新
-    const needRefresh = searchTableRef?.tableState?.dataSource.some(x => x.isScheduler || x.status !== 0);
+    const needRefresh = searchTableRef?.tableState?.dataSource.some(
+      (x) => x.isScheduler || x.status !== 0
+    );
     if (needRefresh) {
       const { queryList } = searchTableRef;
       const refreshTimer = setInterval(() => {
@@ -238,226 +241,247 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   }, [JSON.stringify(searchTableRef?.tableState?.dataSource)]);
 
   return (
-    <Fragment>
-      <SearchTable
-        ref={refHandle}
-        commonTableProps={{
-          columns 
-        }}
-        commonFormProps={{
-          formData: getPressureTestSceneFormData(state),
-          rowNum: 4
-        }}
-        ajaxProps={{ url: '/scenemanage/list', method: 'GET' }}
-        // searchParams={{ ...state.searchParams }}
-        // onSearch={searchParams => setState({ searchParams })}
-        toggleRoload={state.isReload}
-        tableAction={
-          <PressureTestSceneTableAction state={state} setState={setState} />}
-        datekeys={[
-          {
-            originKey: 'time',
-            separateKey: ['lastPtStartTime', 'lastPtEndTime']
-          }
-        ]}
-      />
-      <Modal
-        title={state.hasMissingData ? '是否要开启数据验证' : '启动压测'}
-        visible={state.missingDataStatus}
-        onOk={() => {
-          handleCheckAndStart(state.sceneId);
-        }}
-        onCancel={() => {
-          setState({
-            missingDataStatus: false,
-            missingDataSwitch: false,
-            sceneId: null
-          });
-        }}
-      >
-        <div
-          style={{
-            color: '#8C8C8C',
-            lineHeight: '22px',
-            fontSize: 14,
-            marginBottom: 10
-          }}
-        >
-          {state.hasMissingData
-            ? '开启数据验证将会产生额外的性能消耗，建议仅在试跑时开启'
-            : ''}
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          {state.dataScriptNum &&
-            state.dataScriptNum.map((item, k) => {
-              return (
-                <p key={k}>
-                  {item.scriptName}数据脚本共{item.scriptSize}，已压测
-                  {item.pressedSize}
-                  ，是否继续压测？
-                </p>
-              );
-            })}
-        </div>
-        <Radio.Group
-          value={state.pressureStyle}
-          onChange={handleChangePressureStyle}
-        >
-          <Radio value={PressureStyle.从头开始压测}>从头开始压测</Radio>
-          <Radio value={PressureStyle.继续压测}>继续压测</Radio>
-        </Radio.Group>
-        {state.hasMissingData && (
-          <Row
-            type="flex"
-            justify="space-between"
-            style={{
-              marginTop: 16,
-              borderTop: '1px solid #F6F6F6',
-              padding: '16px 0',
-              borderBottom: '1px solid #F6F6F6'
+    <Tabs defaultActiveKey="1">
+      <Tabs.TabPane tab="我的场景" key="1">
+        <Fragment>
+          <SearchTable
+            ref={refHandle}
+            commonTableProps={{
+              columns,
+            }}
+            commonFormProps={{
+              formData: getPressureTestSceneFormData(state),
+              rowNum: 4,
+            }}
+            ajaxProps={{ url: '/scenemanage/list', method: 'GET' }}
+            // searchParams={{ ...state.searchParams }}
+            // onSearch={searchParams => setState({ searchParams })}
+            toggleRoload={state.isReload}
+            tableAction={
+              <PressureTestSceneTableAction state={state} setState={setState} />}
+            datekeys={[
+              {
+                originKey: 'time',
+                separateKey: ['lastPtStartTime', 'lastPtEndTime'],
+              },
+            ]}
+          />
+          <Modal
+            title={state.hasMissingData ? '是否要开启数据验证' : '启动压测'}
+            visible={state.missingDataStatus}
+            onOk={() => {
+              handleCheckAndStart(state.sceneId);
+            }}
+            onCancel={() => {
+              setState({
+                missingDataStatus: false,
+                missingDataSwitch: false,
+                sceneId: null,
+              });
             }}
           >
-            <Col style={{ fontSize: 14, color: '#595959' }}>数据验证开关</Col>
-            <Col>
-              <Switch
-                checked={state.missingDataSwitch}
-                onChange={handleChangeMissingDataSwitch}
-              />
-            </Col>
-          </Row>
-        )}
-      </Modal>
-      <Modal
-        title="启动进度"
-        visible={state.visible}
-        footer={null}
-        closable={
-          state.configStatus === 'fail' || state.startStatus === 'fail'
-            ? true
-            : false
-        }
-        bodyStyle={{
-          width: 522,
-          minHeight: 279
-        }}
-        onCancel={() => handleCancel()}
-      >
-        {state.configStatus === 'fail' ? (
-          <div>
-            <p className={styles.modalErrorImg}>
-              <img
-                style={{ width: 50 }}
-                src={require('./../../../assets/config_fail.png')}
-              />
-            </p>
-            <p className={styles.modalFailTitle}>
-              压测配置检测未通过，请调整后重试
-            </p>
-            <div className={styles.modalErrorWrap}>
-              <p className={styles.modalErrorWrapTitle}>异常内容</p>
-              {state.configErrorList &&
-                state.configErrorList.map((item, k) => {
+            <div
+              style={{
+                color: '#8C8C8C',
+                lineHeight: '22px',
+                fontSize: 14,
+                marginBottom: 10,
+              }}
+            >
+              {state.hasMissingData
+                ? '开启数据验证将会产生额外的性能消耗，建议仅在试跑时开启'
+                : ''}
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              {state.dataScriptNum &&
+                state.dataScriptNum.map((item, k) => {
                   return (
                     <p key={k}>
-                      {k + 1}、{item}
+                      {item.scriptName}数据脚本共{item.scriptSize}，已压测
+                      {item.pressedSize}
+                      ，是否继续压测？
                     </p>
                   );
                 })}
             </div>
-          </div>
-        ) : state.startStatus === 'fail' ? (
-          <div>
-            <p className={styles.modalErrorImg}>
-              <img
-                style={{ width: 50 }}
-                src={require('./../../../assets/config_fail.png')}
-              />
-            </p>
-            <p className={styles.modalFailTitle}>启动失败</p>
-            {state.startErrorList &&
-              state.startErrorList.map((item, k) => {
-                return (
-                  <p key={k} className={styles.errorReason}>
-                    {item}
-                  </p>
-                );
-              })}
-          </div>
-        ) : (
-          <div>
-            <Row
-              type="flex"
-              align="middle"
-              justify="center"
-              style={{ marginTop: 24 }}
+            <Radio.Group
+              value={state.pressureStyle}
+              onChange={handleChangePressureStyle}
             >
-              <Col style={{ textAlign: 'center' }}>
-                <p>
-                  <img
-                    style={{ width: 72, marginBottom: 8 }}
-                    src={require(`./../../../assets/${
-                      state.configStatus === 'ready' ||
-                      state.configStatus === 'loading'
-                        ? 'config_ready'
-                        : 'config_success'
-                    }.png`)}
-                  />
-                </p>
-                <span style={{ color: '#474C50' }}>
-                  {state.configStatus === 'success'
-                    ? '压测配置检查无误'
-                    : '压测配置检查中···'}
-                </span>
-              </Col>
-              <Col>
-                <div
-                  style={{
-                    width: 80,
-                    height: 1,
-                    border:
-                      state.configStatus === 'success'
-                        ? '1px dotted #29C7D7'
-                        : '1px dotted #CACED5',
-                    marginBottom: 8,
-                    marginRight: 8
-                  }}
-                />
-              </Col>
-              <Col
+              <Radio value={PressureStyle.从头开始压测}>从头开始压测</Radio>
+              <Radio value={PressureStyle.继续压测}>继续压测</Radio>
+            </Radio.Group>
+            {state.hasMissingData && (
+              <Row
+                type="flex"
+                justify="space-between"
                 style={{
-                  textAlign: 'center'
+                  marginTop: 16,
+                  borderTop: '1px solid #F6F6F6',
+                  padding: '16px 0',
+                  borderBottom: '1px solid #F6F6F6',
                 }}
               >
-                <p>
+                <Col style={{ fontSize: 14, color: '#595959' }}>
+                  数据验证开关
+                </Col>
+                <Col>
+                  <Switch
+                    checked={state.missingDataSwitch}
+                    onChange={handleChangeMissingDataSwitch}
+                  />
+                </Col>
+              </Row>
+            )}
+          </Modal>
+          <Modal
+            title="启动进度"
+            visible={state.visible}
+            footer={null}
+            closable={
+              state.configStatus === 'fail' || state.startStatus === 'fail'
+                ? true
+                : false
+            }
+            bodyStyle={{
+              width: 522,
+              minHeight: 279,
+            }}
+            onCancel={() => handleCancel()}
+          >
+            {state.configStatus === 'fail' ? (
+              <div>
+                <p className={styles.modalErrorImg}>
                   <img
-                    style={{ width: 72, marginBottom: 8 }}
-                    src={require(`./../../../assets/${
-                      state.startStatus === 'ready'
-                        ? 'start_ready'
-                        : state.startStatus === 'loading'
-                        ? 'start_ready'
-                        : 'start_ing'
-                    }.png`)}
+                    style={{ width: 50 }}
+                    src={require('./../../../assets/config_fail.png')}
                   />
                 </p>
-                <span
-                  style={{
-                    color: state.startStatus === 'ready' ? '#E4EAF0' : '#474C50'
-                  }}
+                <p className={styles.modalFailTitle}>
+                  压测配置检测未通过，请调整后重试
+                </p>
+                <div className={styles.modalErrorWrap}>
+                  <p className={styles.modalErrorWrapTitle}>异常内容</p>
+                  {state.configErrorList &&
+                    state.configErrorList.map((item, k) => {
+                      return (
+                        <p key={k}>
+                          {k + 1}、{item}
+                        </p>
+                      );
+                    })}
+                </div>
+              </div>
+            ) : state.startStatus === 'fail' ? (
+              <div>
+                <p className={styles.modalErrorImg}>
+                  <img
+                    style={{ width: 50 }}
+                    src={require('./../../../assets/config_fail.png')}
+                  />
+                </p>
+                <p className={styles.modalFailTitle}>启动失败</p>
+                {state.startErrorList &&
+                  state.startErrorList.map((item, k) => {
+                    return (
+                      <p key={k} className={styles.errorReason}>
+                        {item}
+                      </p>
+                    );
+                  })}
+              </div>
+            ) : (
+              <div>
+                <Row
+                  type="flex"
+                  align="middle"
+                  justify="center"
+                  style={{ marginTop: 24 }}
                 >
-                  {state.startStatus === 'ready' ? '启动压测' : '启动中'}
-                </span>
-              </Col>
-            </Row>
-            {state.startStatus === 'loading' && <div 
-              style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 70 }}
-            >
-              <Button type="danger" onClick={() => cancelLaunch(state.sceneId)}>停止</Button>
-            </div>}
-          </div>
-        )}
-      </Modal>
-    </Fragment>
+                  <Col style={{ textAlign: 'center' }}>
+                    <p>
+                      <img
+                        style={{ width: 72, marginBottom: 8 }}
+                        src={require(`./../../../assets/${
+                          state.configStatus === 'ready' ||
+                          state.configStatus === 'loading'
+                            ? 'config_ready'
+                            : 'config_success'
+                        }.png`)}
+                      />
+                    </p>
+                    <span style={{ color: '#474C50' }}>
+                      {state.configStatus === 'success'
+                        ? '压测配置检查无误'
+                        : '压测配置检查中···'}
+                    </span>
+                  </Col>
+                  <Col>
+                    <div
+                      style={{
+                        width: 80,
+                        height: 1,
+                        border:
+                          state.configStatus === 'success'
+                            ? '1px dotted #29C7D7'
+                            : '1px dotted #CACED5',
+                        marginBottom: 8,
+                        marginRight: 8,
+                      }}
+                    />
+                  </Col>
+                  <Col
+                    style={{
+                      textAlign: 'center',
+                    }}
+                  >
+                    <p>
+                      <img
+                        style={{ width: 72, marginBottom: 8 }}
+                        src={require(`./../../../assets/${
+                          state.startStatus === 'ready'
+                            ? 'start_ready'
+                            : state.startStatus === 'loading'
+                            ? 'start_ready'
+                            : 'start_ing'
+                        }.png`)}
+                      />
+                    </p>
+                    <span
+                      style={{
+                        color:
+                          state.startStatus === 'ready' ? '#E4EAF0' : '#474C50',
+                      }}
+                    >
+                      {state.startStatus === 'ready' ? '启动压测' : '启动中'}
+                    </span>
+                  </Col>
+                </Row>
+                {state.startStatus === 'loading' && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      marginTop: 70,
+                    }}
+                  >
+                    <Button
+                      type="danger"
+                      onClick={() => cancelLaunch(state.sceneId)}
+                    >
+                      停止
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </Modal>
+        </Fragment>
+      </Tabs.TabPane>
+      <Tabs.TabPane tab="与我共享的场景" key="2">
+        <SharedScene />
+      </Tabs.TabPane>
+    </Tabs>
   );
 };
 export default connect(({ common }) => ({ ...common }))(PressureTestScene);
