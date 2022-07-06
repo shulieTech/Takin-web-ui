@@ -10,7 +10,9 @@ import {
   Menu,
   Modal,
   Row,
-  Tooltip
+  Tooltip,
+  Alert,
+  message,
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { connect } from 'dva';
@@ -18,7 +20,7 @@ import {
   CommonSelect,
   ImportFile,
   useCreateContext,
-  useStateReducer
+  useStateReducer,
 } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
@@ -38,6 +40,7 @@ import MatchModal from './modals/MatchModal';
 import ScriptFileManageModal from './modals/ScriptFileManageModal';
 import BusinessFlowService from './service';
 import { businessFlowStatusColorMap, businessFlowStatusMap } from './enum';
+import useDragTable from 'src/components/useDragTable';
 
 interface Props {
   location?: any;
@@ -55,25 +58,37 @@ const getInitState = () => ({
     status: 'loading',
     footerBtnTxt: '取消',
     footerTxt: '业务活动匹配中，请稍后',
-    extraNode: null
+    extraNode: null,
   },
   fileName: null,
   isReload: false,
   isShowDebugModal: false,
   scriptDebugId: undefined, // 脚本调试id
   debugStatus: 0, // 调试状态，0：未开始, 1：通过第二阶段， 2，3：通过第三阶段，4：通过第四阶段,
-  errorInfo: null
+  errorInfo: null,
+  tableDraggable: false,
+  dragedTableSource: undefined,
+  savingSort: false,
 });
-export const BusinessFlowDetailContext = useCreateContext<
-  BusinessFlowDetailState
->();
+export const BusinessFlowDetailContext =
+  useCreateContext<BusinessFlowDetailState>();
 export type BusinessFlowDetailState = ReturnType<typeof getInitState>;
-const BusinessFlowDetail: React.FC<Props> = props => {
+const BusinessFlowDetail: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer(getInitState());
   const { fileModalValues, detailData, threadDetail } = state;
   const { location, dictionaryMap } = props;
   const { query } = location;
   const { id, isAuto } = query;
+
+  const { TableWarpper, tableProps } = useDragTable({
+    dataSource: state.dragedTableSource || state.treeData,
+    draggable: state.tableDraggable,
+    rowKey: 'md5',
+    updateDataSource: (data) =>
+      setState({
+        dragedTableSource: data,
+      }),
+  });
 
   useEffect(() => {
     if (isAuto === 'true') {
@@ -98,7 +113,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
    */
   const queryDetail = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await BusinessFlowService.queryDetail({ id });
     if (success) {
       setState({
@@ -109,7 +124,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           state.threadValue ||
           (data.scriptJmxNodeList &&
             data.scriptJmxNodeList[0] &&
-            data.scriptJmxNodeList[0].value)
+            data.scriptJmxNodeList[0].value),
       });
     }
   };
@@ -119,15 +134,15 @@ const BusinessFlowDetail: React.FC<Props> = props => {
    */
   const queryTreeData = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await BusinessFlowService.queryTreeData({
       id,
-      xpathMd5: state.threadValue
+      xpathMd5: state.threadValue,
     });
     if (success) {
       setState({
         treeData: data.threadScriptJmxNodes,
-        threadDetail: data
+        threadDetail: data,
       });
     }
   };
@@ -143,12 +158,12 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         status: 'loading',
         footerBtnTxt: '取消',
         footerTxt: '业务活动匹配中，请稍后',
-        extraNode: null
+        extraNode: null,
       },
-      fileName: detailData.businessProcessName
+      fileName: detailData.businessProcessName,
     });
     const {
-      data: { success, data }
+      data: { success, data },
     } = await BusinessFlowService.queryMatchProcess({ id });
     if (success) {
       setState({
@@ -164,17 +179,17 @@ const BusinessFlowDetail: React.FC<Props> = props => {
               本次共自动匹配 <span>{data.matchNum}</span> 条API，剩
               <span> {data.unMatchNum} </span>条手动匹配
             </p>
-          )
-        }
+          ),
+        },
       });
       queryDetail();
     }
   };
 
-  const handleChangeThread = value => {
+  const handleChangeThread = (value) => {
     setState({
       threadValue: value,
-      treeData: null
+      treeData: null,
     });
   };
 
@@ -186,7 +201,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
         dataIndex: 'testName',
         ellipsis: true,
         width: 300,
-        render: text => {
+        render: (text) => {
           return (
             <span>
               <Tooltip placement="bottomLeft" title={text}>
@@ -194,34 +209,40 @@ const BusinessFlowDetail: React.FC<Props> = props => {
               </Tooltip>
             </span>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
         title: '入口应用',
         dataIndex: 'businessApplicationName',
-        width: 150
+        width: 150,
       },
       {
         ...customColumnProps,
         title: '入口',
         dataIndex: 'serviceName',
         width: 150,
-        render: text => {
+        render: (text) => {
           return text ? (
             <Tooltip
               placement="bottomLeft"
               title={
                 <div style={{ maxHeight: 300, overflow: 'scroll' }}>{text}</div>}
             >
-              <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+              <div
+                style={{
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                }}
+              >
                 {text}
               </div>
             </Tooltip>
           ) : (
             <span>-</span>
           );
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -238,7 +259,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             );
           }
           return '-';
-        }
+        },
       },
       {
         ...customColumnProps,
@@ -260,7 +281,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 samplerType={row.samplerType}
                 onSuccess={() => {
                   setState({
-                    isReload: !state.isReload
+                    isReload: !state.isReload,
                   });
                 }}
                 businessFlowId={id}
@@ -268,8 +289,8 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             );
           }
           return '-';
-        }
-      }
+        },
+      },
     ];
     return columns;
   };
@@ -278,24 +299,53 @@ const BusinessFlowDetail: React.FC<Props> = props => {
     {
       key: 1,
       imgSrc: 'debug_process_1',
-      name: '应用配置校验'
+      name: '应用配置校验',
     },
     {
       key: 2,
       imgSrc: 'debug_process_2',
-      name: 'JMeter启动校验'
+      name: 'JMeter启动校验',
     },
     {
       key: 3,
       imgSrc: 'debug_process_3',
-      name: '收集数据'
+      name: '收集数据',
     },
     {
       key: 4,
       imgSrc: 'debug_process_4',
-      name: '验证数据'
-    }
+      name: '验证数据',
+    },
   ];
+
+  const saveSortData = async () => {
+    if (!state.dragedTableSource) {
+      message.warn('排序未发生变化');
+      return;
+    }
+    setState({
+      savingSort: true,
+    });
+    const {
+      data: { success },
+    } = await BusinessFlowService.saveFlowTreeSortData({
+      id,
+      xpathMd5: state.threadValue,
+      threadScriptJmxNodes: state.dragedTableSource,
+    }).finally(() => {
+      setState({
+        savingSort: false,
+      });
+    });
+    if (success) {
+      message.success('操作成功');
+      setState({
+        tableDraggable: false,
+        dragedTableSource: undefined,
+        isReload: !state.isReload,
+      });
+    }
+  };
 
   const menu = (
     <Menu>
@@ -316,7 +366,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
           sceneLevel={detailData.sceneLevel}
           onSuccess={() => {
             setState({
-              isReload: !state.isReload
+              isReload: !state.isReload,
             });
           }}
         />
@@ -391,12 +441,13 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                   <ScriptFileManageModal
                     onSuccess={() => {
                       setState({
-                        isReload: !state.isReload
+                        isReload: !state.isReload,
                       });
                     }}
                     id={id}
-                    btnText={`管理文件 ${detailData.relatedFiles &&
-                      detailData.relatedFiles.length}`}
+                    btnText={`管理文件 ${
+                      detailData.relatedFiles && detailData.relatedFiles.length
+                    }`}
                     fileList={detailData.relatedFiles}
                   />
                 </span>
@@ -410,7 +461,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                     onSuccess={() => {
                       setState({
                         isReload: !state.isReload,
-                        threadValue: undefined
+                        threadValue: undefined,
                       });
                     }}
                   />
@@ -449,14 +500,62 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             </span>
           </Row>
           {state.treeData && (
-            <CustomTable
-              rowKey="xpathMd5"
-              columns={getColumns()}
-              size="small"
-              dataSource={state.treeData}
-              defaultExpandAllRows={true}
-              childrenColumnName="children"
-            />
+            <>
+              {state.tableDraggable ? (
+                <Alert
+                  banner
+                  showIcon={false}
+                  style={{ marginTop: 8, textAlign: 'center' }}
+                  message={
+                    <div>
+                      <Button
+                        type="link"
+                        style={{ marginRight: 8 }}
+                        onClick={saveSortData}
+                      >
+                        保存排序
+                      </Button>
+                      <Button
+                        type="link"
+                        style={{ color: '#999' }}
+                        loading={state.savingSort}
+                        onClick={() => {
+                          setState({
+                            tableDraggable: false,
+                            dragedTableSource: undefined,
+                          });
+                          queryTreeData();
+                        }}
+                      >
+                        取消排序
+                      </Button>
+                    </div>
+                  }
+                  type="warning"
+                />
+              ) : (
+                <div style={{ textAlign: 'right' }}>
+                  <Button
+                    onClick={() => {
+                      setState({ tableDraggable: true });
+                    }}
+                  >
+                    排序
+                  </Button>
+                </div>
+              )}
+              <TableWarpper>
+                <CustomTable
+                  rowKey="xpathMd5"
+                  columns={getColumns()}
+                  size="small"
+                  dataSource={state.dragedTableSource || state.treeData}
+                  defaultExpandAllRows={true}
+                  childrenColumnName="children"
+                  {...tableProps}
+                />
+              </TableWarpper>
+            </>
           )}
         </div>
         <ImportFileModal
@@ -469,9 +568,9 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 status: 'loading',
                 footerTxt: null,
                 extraNode: null,
-                footerBtnTxt: null
+                footerBtnTxt: null,
               },
-              visible: false
+              visible: false,
             });
           }}
           fileName={state.fileName}
@@ -490,8 +589,8 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                 status: null,
                 footerTxt: null,
                 extraNode: null,
-                footerBtnTxt: null
-              }
+                footerBtnTxt: null,
+              },
             });
             router.push(`/businessFlow/details?id=${id}`);
             window.history.go(0);
@@ -519,7 +618,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
               isShowDebugModal: false,
               scriptDebugId: undefined,
               debugStatus: 0,
-              errorInfo: null
+              errorInfo: null,
             });
           }}
         >
@@ -551,7 +650,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                               k + 1 <= state.debugStatus) ||
                             state.debugStatus === 4
                               ? '#28C6D7'
-                              : '#D9D9D9'
+                              : '#D9D9D9',
                         }}
                       >
                         <img
@@ -575,7 +674,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                           className={styles.dashedLine}
                           style={{
                             borderColor:
-                              k <= state.debugStatus ? '#28C6D7' : '#D9D9D9'
+                              k <= state.debugStatus ? '#28C6D7' : '#D9D9D9',
                           }}
                         />
                       </Col>

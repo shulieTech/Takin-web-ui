@@ -191,6 +191,13 @@ const BusinessFlowService = {
     const url = '/scriptManage/support/plugin/version';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取插件版本列表
+   */
+  async saveFlowTreeSortData(data = {}) {
+    const url = '/scriptManage/support/flow/sort';
+    return httpPost(url, data);
+  },
 };
 
 export default BusinessFlowService;
