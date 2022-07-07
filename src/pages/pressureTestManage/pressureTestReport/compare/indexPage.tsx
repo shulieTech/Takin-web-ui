@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Spin, Badge } from 'antd';
+import { Table, Spin, Badge, Tooltip } from 'antd';
 import service from '../service';
+import Chart from './components/Chart';
 
 const CompareReport: React.FC = (props) => {
   const { sceneId, reportIds = [] } = props.location.query;
   const [loading, setLoading] = useState(false);
   const [reportList, setReportList] = useState([]);
+  const [chartList, setChartList] = useState([]);
 
   const queryReportDetail = async (id) => {
     const {
@@ -15,28 +17,58 @@ const CompareReport: React.FC = (props) => {
       return data;
     }
   };
+  const queryReportTrend = async (id) => {
+    const {
+      data: { data, success },
+    } = await service.queryLinkChartsInfo({ reportId: id });
+    if (success) {
+      return {
+        id,
+        ...data,
+      };
+    }
+  };
 
   const queryAllReports = async () => {
-    Promise.all(reportIds.map((x) => queryReportDetail(x))).then((res) => {
+    setLoading(true);
+    await Promise.all(reportIds.map((x) => queryReportDetail(x))).then((res) => {
       setReportList(res);
     });
+    await Promise.all(reportIds.map((x) => queryReportTrend(x))).then((res) => {
+      setChartList(res);
+    });
+    setLoading(false);
   };
 
   const columns = [
-    { title: '报告ID', dataIndex: 'id', width: 50, fixed: 'left' },
+    { title: '报告ID', dataIndex: 'id' },
     {
       title: '通过状态',
       dataIndex: 'conclusion',
-      render: (text) => {
+      render: (text, record) => {
         return {
+          0: (
+            <Badge
+              text={<Tooltip title={record.conclusionRemark}>不通过</Tooltip>}
+              status="error"
+            />
+          ),
           1: <Badge text="通过" status="success" />,
-          2: <Badge text="不通过" status="error" />,
         }[text];
       },
     },
     { title: '开始时间', dataIndex: 'startTime' },
     { title: '压测时长', dataIndex: 'testTotalTime' },
-    { title: '消耗流量(vum)', dataIndex: 'amount' },
+    {
+      title: (
+        <span>
+          消耗流量
+          <br />
+          (vum)
+        </span>
+      ),
+      dataIndex: 'amount',
+    },
     { title: '请求总数', dataIndex: 'totalRequest' },
     { title: '最大并发', dataIndex: 'concurrent' },
     { title: '平均并发', dataIndex: 'avgConcurrent' },
@@ -56,6 +88,27 @@ const CompareReport: React.FC = (props) => {
   return (
     <Spin spinning={loading}>
       <div style={{ padding: 16 }}>
+        <div
+          style={{
+            marginBottom: 16,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+            }}
+          >
+            {reportList[0]?.sceneName}
+          </span>
+          <span
+            style={{
+              marginLeft: 16,
+            }}
+          >
+            压测场景 ID：{reportList[0]?.sceneId}
+          </span>
+        </div>
         <Table
           className="show-scroll-bar"
           size="small"
@@ -67,6 +120,8 @@ const CompareReport: React.FC = (props) => {
             x: 'max-content',
           }}
         />
+
+        <Chart data={chartList}/>
       </div>
     </Spin>
   );
