@@ -293,7 +293,7 @@ const getPressureTestSceneColumns = (
       ...customColumnProps,
       title: '状态',
       dataIndex: 'status',
-      render: (text) => {
+      render: (text, record) => {
         return (
           <Badge
             status={text === 2 ? 'processing' : 'default'}
@@ -305,11 +305,11 @@ const getPressureTestSceneColumns = (
                 2: (
                   <span>
                     压测中
-                    <Tooltip title={`进度${75}`}>
+                    <Tooltip title={`进度${record.progress || 0}%`}>
                       <Progress
                         type="circle"
                         width={14}
-                        percent={75}
+                        percent={record.progress || 0}
                         strokeWidth={20}
                         style={{ marginLeft: 4, cursor: 'pointer' }}
                         showInfo={false}

@@ -5,7 +5,8 @@ import { useStateReducer } from 'racc';
 
 import getPressureTestReportColumns from './components/PressureTestReportColumn';
 import getPressureTestReportFormData from './components/PressureTestReportFormData';
-
+import { Button } from 'antd';
+import router from 'umi/router';
 interface PressureTestReportProps {
   location?: { query?: any };
 }
@@ -16,9 +17,11 @@ export interface PressureTestReportState {
     current: string | number;
     pageSize: string | number;
   };
+  batchSelectedKeys: number[];
+  sameScenceId: string | number; // 只能对比选择同一个场景的报告
 }
 
-const PressureTestReport: React.FC<PressureTestReportProps> = props => {
+const PressureTestReport: React.FC<PressureTestReportProps> = (props) => {
   const [state, setState] = useStateReducer<PressureTestReportState>({
     isReload: false,
     searchParams: {
@@ -26,17 +29,65 @@ const PressureTestReport: React.FC<PressureTestReportProps> = props => {
       pageSize: 10,
       ...props.location.query,
     },
+    batchSelectedKeys: [],
+    sameScenceId: undefined,
   });
 
   return (
     <Fragment>
       <SearchTable
+        tableAction={
+          <Button
+            type="primary"
+            disabled={!(state.batchSelectedKeys?.length > 1)}
+            onClick={() => {
+              router.push({
+                pathname: '/pressureTestManage/pressureTestReport/compare',
+                query: {
+                  sceneId: state.sameScenceId,
+                  reportIds: state.batchSelectedKeys,
+                }
+              });
+            }}
+          >
+            报告对比
+          </Button>
+        }
         commonTableProps={{
-          columns: getPressureTestReportColumns(state, setState)
+          rowKey: 'id',
+          columns: getPressureTestReportColumns(state, setState),
+          rowSelection: {
+            type: 'checkbox',
+            // hideDefaultSelections: true,
+            columnTitle: ' ',
+            selectedRowKeys: state.batchSelectedKeys,
+            getCheckboxProps: (record) => {
+              return {
+                disabled: state.sameScenceId
+                  ? record.sceneId !== state.sameScenceId
+                  : false,
+              };
+            },
+            onChange: (selectedKeys, selectedRows) => {
+              if (!state.sameScenceId) {
+                setState({
+                  sameScenceId: selectedRows[0].sceneId,
+                });
+              }
+              if (selectedKeys.length === 0) {
+                setState({
+                  sameScenceId: undefined,
+                });
+              }
+              setState({
+                batchSelectedKeys: selectedKeys.slice(0, 5),
+              });
+            },
+          },
         }}
         commonFormProps={{
           formData: getPressureTestReportFormData(),
-          rowNum: 4
+          rowNum: 4,
         }}
         ajaxProps={{ url: '/report/listReport', method: 'GET' }}
         searchParams={state.searchParams}
@@ -44,8 +95,8 @@ const PressureTestReport: React.FC<PressureTestReportProps> = props => {
         datekeys={[
           {
             originKey: 'time',
-            separateKey: ['startTime', 'endTime']
-          }
+            separateKey: ['startTime', 'endTime'],
+          },
         ]}
       />
     </Fragment>
