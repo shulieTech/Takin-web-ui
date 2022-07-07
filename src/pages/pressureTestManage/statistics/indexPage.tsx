@@ -57,8 +57,12 @@ const PressureStatistics: React.FC = (props) => {
           reportCount: res[1].data.data || {},
           sceneCount: {
             count: res[2].data?.data.total || 0,
-            running: res[2].data?.data?.data?.find(x => x.type === '压测中')?.value || 0,
-            wait: res[2].data?.data?.data?.find(x => x.type === '待启动')?.value || 0,
+            running:
+              res[2].data?.data?.data?.find((x) => x.type === '压测中')
+                ?.value || 0,
+            wait:
+              res[2].data?.data?.data?.find((x) => x.type === '待启动')
+                ?.value || 0,
           },
           scriptCount: res[3].data?.data?.total,
         });
@@ -139,11 +143,13 @@ const PressureStatistics: React.FC = (props) => {
                       text={
                         <span>
                           压测中 {data.sceneCount?.running || 0}（
-                          {(
-                            (data.sceneCount?.running /
-                              data.sceneCount?.count) *
-                            100
-                          ).toFixed(2)}
+                          {data.sceneCount?.count > 0
+                            ? (
+                                (data.sceneCount?.running /
+                                  data.sceneCount?.count) *
+                                100
+                              ).toFixed(2)
+                            : 0}
                           %）
                         </span>
                       }
@@ -155,10 +161,13 @@ const PressureStatistics: React.FC = (props) => {
                       text={
                         <span>
                           待启动 {data.sceneCount?.wait || 0}（
-                          {(
-                            (data.sceneCount?.wait / data.sceneCount?.count) *
-                            100
-                          ).toFixed(2)}
+                          {data.sceneCount?.count > 0
+                            ? (
+                                (data.sceneCount?.wait /
+                                  data.sceneCount?.count) *
+                                100
+                              ).toFixed(2)
+                            : 0}
                           %）
                         </span>
                       }
@@ -184,11 +193,13 @@ const PressureStatistics: React.FC = (props) => {
                       text={
                         <span>
                           通过 {data.reportCount?.success || 0}（
-                          {(
-                            (data.reportCount?.success /
-                              data.reportCount?.count) *
-                            100
-                          ).toFixed(2)}
+                          {data.reportCount?.count > 0
+                            ? (
+                                (data.reportCount?.success /
+                                  data.reportCount?.count) *
+                                100
+                              ).toFixed(2)
+                            : 0}
                           %）
                         </span>
                       }
@@ -200,10 +211,13 @@ const PressureStatistics: React.FC = (props) => {
                       text={
                         <span>
                           不通过 {data.reportCount?.fail || 0}（
-                          {(
-                            (data.reportCount?.fail / data.reportCount?.count) *
-                            100
-                          ).toFixed(2)}
+                          {data.reportCount?.count > 0
+                            ? (
+                                (data.reportCount?.fail /
+                                  data.reportCount?.count) *
+                                100
+                              ).toFixed(2)
+                            : 0}
                           %）
                         </span>
                       }
