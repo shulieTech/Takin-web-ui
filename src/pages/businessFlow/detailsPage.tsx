@@ -41,6 +41,7 @@ import ScriptFileManageModal from './modals/ScriptFileManageModal';
 import BusinessFlowService from './service';
 import { businessFlowStatusColorMap, businessFlowStatusMap } from './enum';
 import useDragTable from 'src/components/useDragTable';
+import { get, cloneDeep, set } from 'lodash';
 
 interface Props {
   location?: any;
@@ -80,15 +81,16 @@ const BusinessFlowDetail: React.FC<Props> = (props) => {
   const { query } = location;
   const { id, isAuto } = query;
 
-  const { TableWarpper, tableProps } = useDragTable({
-    dataSource: state.dragedTableSource || state.treeData,
-    draggable: state.tableDraggable,
-    rowKey: 'md5',
-    updateDataSource: (data) =>
-      setState({
-        dragedTableSource: data,
-      }),
-  });
+  const { TableWarpper, tableProps, dataSourceHasPath, rowKeyMap } =
+    useDragTable({
+      dataSource: state.dragedTableSource || state.treeData,
+      draggable: state.tableDraggable,
+      rowKey: 'xpathMd5',
+      updateDataSource: (data) =>
+        setState({
+          dragedTableSource: data,
+        }),
+    });
 
   useEffect(() => {
     if (isAuto === 'true') {
@@ -193,6 +195,27 @@ const BusinessFlowDetail: React.FC<Props> = (props) => {
     });
   };
 
+  const removeTreeItem = (record) => {
+    const _path = rowKeyMap[record.xpathMd5]?._path; // 示例：[0].children.[0]
+    const _data = cloneDeep(dataSourceHasPath);
+    const parentPath = _path.substring(0, _path.lastIndexOf('[') - 1);
+    const itemIndex = _path.substring(
+      _path.lastIndexOf('[') + 1,
+      _path.length - 1
+    );
+    const parentArr = get(_data, parentPath);
+    if (parentArr.length === 1) {
+      message.warn('需要至少保留一行记录');
+      return;
+    }
+    parentArr.splice(itemIndex, 1);
+
+    set(_data, parentPath, parentArr);
+    setState({
+      dragedTableSource: _data,
+    });
+  };
+
   const getColumns = (): ColumnProps<any>[] => {
     const columns: ColumnProps<any>[] = [
       {
@@ -268,7 +291,11 @@ const BusinessFlowDetail: React.FC<Props> = (props) => {
         width: 150,
         render: (text, row) => {
           if (row.type === 'SAMPLER') {
-            return (
+            return state.tableDraggable ? (
+              <Button type="link" onClick={() => removeTreeItem(row)}>
+                删除
+              </Button>
+            ) : (
               <MatchModal
                 rowDetail={row}
                 btnText="编辑匹配"

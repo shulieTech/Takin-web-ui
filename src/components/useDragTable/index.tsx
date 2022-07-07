@@ -140,6 +140,8 @@ const useDragTable = ({
   };
 
   return {
+    dataSourceHasPath,
+    rowKeyMap,
     TableWarpper: (props) =>
       draggable ? (
         <DndProvider backend={HTML5Backend}>{props.children}</DndProvider>
