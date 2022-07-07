@@ -205,7 +205,7 @@ const BusinessFlowDetail: React.FC<Props> = (props) => {
     );
     const parentArr = get(_data, parentPath);
     if (parentArr.length === 1) {
-      message.warn('需要至少保留一行记录');
+      message.warn('需要至少保留一条记录');
       return;
     }
     parentArr.splice(itemIndex, 1);

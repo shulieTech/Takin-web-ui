@@ -359,6 +359,7 @@ const EditPage = (props) => {
             DatePicker,
             ExcludeApps,
             RadioGroup: Radio.Group,
+            TextArea: Input.TextArea
           }}
           onSubmit={onSubmit}
           effects={() => {
@@ -561,8 +562,8 @@ const EditPage = (props) => {
 
           <FormLayout
             name="step-3"
-            labelCol={4}
-            wrapperCol={10}
+            // labelCol={4}
+            // wrapperCol={10}
             labelAlign={undefined}
             prefixCls={undefined}
           >
@@ -593,6 +594,37 @@ const EditPage = (props) => {
                 flatTreeData: [],
               }}
               default={[]}
+            />
+            <Field
+              name="notifyEmails"
+              title={
+                <TipTittle tips="告警信息将会发送到指定邮箱">
+                  邮件告警
+                </TipTittle>
+              }
+              x-component="TextArea"
+              x-component-props={{
+                placeholder: '请输入邮箱地址，多条数据请用换行分隔',
+                rows: 5,
+              }}
+              x-mega-props={{
+                full: true,
+                labelCol: 24,
+                wrapperCol: 24,
+              }}
+              x-rules={[
+                {
+                  validator: (val) => {
+                    if (val && val.split('\n').length > 0) {
+                      const arr = val.split('\n');
+                      if (arr.some(x => !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(x))) {
+                        return '请输入正确格式的邮箱地址';
+                      }
+                      return '';
+                    }
+                  }
+                }
+              ]}
             />
           </FormLayout>
 
