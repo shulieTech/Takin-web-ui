@@ -23,6 +23,7 @@ import queryString from 'query-string';
 import _ from 'lodash';
 import styles from './indexPage.less';
 import { getThemeByKeyName } from 'src/utils/useTheme';
+import { withRouter } from 'umi';
 import { encryptStr } from 'src/utils/encrypt';
 
 const { TabPane } = Tabs;
@@ -47,7 +48,9 @@ const state = {
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
   const disableTenant = getThemeByKeyName('disableTenant');
-  const usernamePlaceholder = disableTenant ? '请输入账号' : '用户名';
+  const usernamePlaceholder = disableTenant
+    ? '请输入账号'
+    : '<用户名>@<企业别名>，例如： username@shulie';
   return [
     {
       key: 'username',
@@ -110,6 +113,7 @@ const getFormData = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="验证码"
+          autoComplete="off"
         />
       ),
       extra: (
@@ -164,6 +168,7 @@ const getFormDatatre = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="手机验证码"
+          autoComplete="off"
         />
       ),
       extra: (
@@ -223,6 +228,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="手机验证码"
+          autoComplete="off"
         />
       ),
       extra: (
@@ -245,6 +251,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
 };
 declare var serverUrl: string;
 
+@withRouter
 @connect()
 export default class Login extends DvaComponent<Props, State> {
   namespace = 'user';
@@ -426,6 +433,7 @@ export default class Login extends DvaComponent<Props, State> {
         description: '登录成功',
         duration: 1.5,
       });
+
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
@@ -436,6 +444,13 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
+
+      // 支持登录后跳转到指定页面
+      if (this.props.location.query.redirect_uri && data.xCode) {
+        window.location.href = `${this.props.location.query.redirect_uri}?code=${data.xCode}`;
+        return;
+      }
+
       router.push('/');
       return;
     }
@@ -458,6 +473,7 @@ export default class Login extends DvaComponent<Props, State> {
         description: '登录成功',
         duration: 1.5,
       });
+
       localStorage.setItem('troweb-userName', data.name);
       localStorage.setItem('troweb-userId', data.id);
       localStorage.setItem('troweb-role', data.userType);
@@ -468,6 +484,13 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
+
+      // 支持登录后跳转到指定页面
+      if (this.props.location.query.redirect_uri && data.xCode) {
+        window.location.href = `${this.props.location.query.redirect_uri}?code=${data.xCode}`;
+        return;
+      }
+
       router.push('/');
       return;
     }
@@ -490,7 +513,10 @@ export default class Login extends DvaComponent<Props, State> {
   onClick = async (id) => {
     const {
       data: { success, data },
-    } = await UserService.redirect({ thirdPartyId: id });
+    } = await UserService.redirect({
+      thirdPartyId: id,
+      sourceUrl: this.props.location.query.redirect_uri,
+    });
     if (success) {
       window.location.href = data;
     }
