@@ -20,27 +20,6 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
     {
       id: 0,
       title: '全部',
-      children: [
-        {
-          id: 1,
-          title: '订单',
-        },
-        {
-          id: 2,
-          title: '用户',
-          children: [
-            {
-              id: 3,
-              title:
-                '订单1订单1订单1订单1订单1订单1订单1订单1订单1订单1订单1订单1',
-            },
-            {
-              id: 4,
-              title: '用户2',
-            },
-          ],
-        },
-      ],
     },
   ]);
 
