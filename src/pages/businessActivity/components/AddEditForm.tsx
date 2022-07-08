@@ -14,6 +14,7 @@ import styles from '../index.less';
 import { AddEditActivityModalState } from '../modals/AddEditActivityModal';
 import DomainManageModal from '../modals/DomainManageModal';
 import BusinessActivityService from '../service';
+import CategoryTreeSelect from '../components/CategoryTreeSelect';
 
 interface AddEditFormProps extends CommonModelState, AddEditActivityModalState {
   setState: (state: Partial<AddEditActivityModalState>) => void;
@@ -196,6 +197,14 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             dropdownClassName={styles.select}
           />
         )
+      },
+      {
+        key: 'category',
+        label: '分类',
+        options: {
+          initialValue: props.category || 0,
+        },
+        node: <CategoryTreeSelect />
       }
     ];
 

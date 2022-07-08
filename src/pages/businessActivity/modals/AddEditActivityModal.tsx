@@ -13,6 +13,7 @@ import AddEditForm from '../components/AddEditForm';
 import AddEditGraph from '../components/AddEditGraph';
 import BusinessActivityService from '../service';
 import styles from './../index.less';
+
 interface Props {
   id?: string;
   isVirtual?: boolean; // 是否是虚拟业务活动
@@ -32,7 +33,8 @@ const getInitState = () => ({
   businessDomain: undefined,
   form: null as WrappedFormUtils,
   showModal: false,
-  virtualEntrance: null
+  virtualEntrance: null,
+  category: 0,
 });
 const { confirm } = Modal;
 export type AddEditActivityModalState = ReturnType<typeof getInitState>;

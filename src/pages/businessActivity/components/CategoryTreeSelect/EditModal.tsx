@@ -31,7 +31,7 @@ const EditModal: React.FC<Props> = (props) => {
       setSaving(true);
       const {
         data: { success },
-      } = await service[editItem?.id ? 'categoryAdd' : 'categoryUpdate']({
+      } = await service[editItem?.id ? 'categoryUpdate' : 'categoryAdd']({
         ...editItem,
         ...values,
       }).finally(() => {
@@ -63,8 +63,8 @@ const EditModal: React.FC<Props> = (props) => {
     >
       <Form>
         <FormItem label="分类名称" {...formItemLayout}>
-          {getFieldDecorator('name', {
-            initialValue: editItem?.name,
+          {getFieldDecorator('title', {
+            initialValue: editItem?.title,
             rules: [
               { required: true, whitespace: true, message: '请输入分类名称' },
             ],

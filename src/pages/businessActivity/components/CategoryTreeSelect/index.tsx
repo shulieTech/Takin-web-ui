@@ -14,27 +14,28 @@ const { TreeNode } = TreeSelect;
 const CategoryTreeSelect: React.FC<Props> = (props) => {
   const { canEdit = false, ...rest } = props;
   const [editItem, setEditItem] = useState();
+  const [open, setOpen] = useState(false);
 
   const [treeData, setTreeData] = useState([
     {
-      value: 0,
+      id: 0,
       title: '全部',
       children: [
         {
-          value: 1,
+          id: 1,
           title: '订单',
         },
         {
-          value: 2,
+          id: 2,
           title: '用户',
           children: [
             {
-              value: 3,
+              id: 3,
               title:
                 '订单1订单1订单1订单1订单1订单1订单1订单1订单1订单1订单1订单1',
             },
             {
-              value: 4,
+              id: 4,
               title: '用户2',
             },
           ],
@@ -71,11 +72,11 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
 
   const renderNode = (arr) => {
     return arr.map((item) => {
-      const isRoot = item.value === 0;
+      const isRoot = item.id === 0;
       return (
         <TreeNode
-          key={item.value}
-          value={item.value}
+          key={item.id}
+          value={item.id}
           title={
             <div
               style={{
@@ -93,7 +94,7 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
                       <Icon
                         type="edit"
                         onClick={(e) => {
-                          e.preventDefault();
+                          e.stopPropagation();
                           setEditItem(item);
                         }}
                         style={{ marginRight: 8 }}
@@ -104,9 +105,9 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
                     <Icon
                       type="plus-circle"
                       onClick={(e) => {
-                        e.preventDefault();
+                        e.stopPropagation();
                         setEditItem({
-                          parentId: item.value,
+                          parentId: item.id,
                         });
                       }}
                       style={{ marginRight: 8 }}
@@ -132,13 +133,36 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
     });
   };
 
+  const dismissListener = () => {
+    if (open) {
+      setOpen(false);
+    }
+  };
+
   useEffect(() => {
     getTreeData();
   }, []);
 
+  useEffect(() => {
+    if (open) {
+      document.body.addEventListener('click', dismissListener);
+      return () => {
+        document.body.removeEventListener('click', dismissListener);
+      };
+    }
+  }, [open]);
+
   return (
-    <>
-      <TreeSelect placeholder="请选择" {...rest}>
+    <span onClick={(e) => e.stopPropagation()}>
+      <TreeSelect
+        placeholder="请选择"
+        {...rest}
+        open={open}
+        onSelect={() => {
+          setOpen(false);
+        }}
+        onClick={() => setOpen(!open)}
+      >
         {renderNode(treeData)}
       </TreeSelect>
       <EditModal
@@ -151,7 +175,7 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
           setEditItem(null);
         }}
       />
-    </>
+    </span>
   );
 };
 

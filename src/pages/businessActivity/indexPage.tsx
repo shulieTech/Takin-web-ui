@@ -33,6 +33,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
     middlewareCascade: null,
     searchParams: {
       type: '0',
+      category: 0,
     },
     showModal: false,
   });
@@ -109,6 +110,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
             dropdownStyle={{
               overflowY: 'auto',
               width: 240,
+              zIndex: 10,
             }}
           />
         );

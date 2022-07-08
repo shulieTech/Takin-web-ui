@@ -22,14 +22,14 @@ const EnvVarsManage = (props) => {
 
   const formData = [
     {
-      key: 'key',
+      key: 'placeholderKey',
       node: <Input placeholder="搜索名称" />,
     },
   ];
 
   const columns = [
-    { title: '名称', dataIndex: 'key' },
-    { title: '值', dataIndex: 'value' },
+    { title: '名称', dataIndex: 'placeholderKey' },
+    { title: '值', dataIndex: 'placeholderValue' },
     { title: '备注', dataIndex: 'remark' },
     {
       title: '操作',
@@ -70,6 +70,7 @@ const EnvVarsManage = (props) => {
         editItem={editItem}
         cancelCallback={() => setEditItem(null)}
         okCallback={() => {
+          setEditItem(null);
           setTableReload(!tableReload);
         }}
       />

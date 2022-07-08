@@ -63,8 +63,8 @@ const EditVarModal: React.FC<Props> = (props) => {
     >
       <Form>
         <FormItem label="名称" {...formItemLayout}>
-          {getFieldDecorator('key', {
-            initialValue: editItem?.key,
+          {getFieldDecorator('placeholderKey', {
+            initialValue: editItem?.placeholderKey,
             rules: [
               { required: true, whitespace: true, message: '请输入名称' },
               {
@@ -76,8 +76,8 @@ const EditVarModal: React.FC<Props> = (props) => {
           })(<Input placeholder="请输入，以EV_开头" maxLength={30} />)}
         </FormItem>
         <FormItem label="值" {...formItemLayout}>
-          {getFieldDecorator('value', {
-            initialValue: editItem?.value,
+          {getFieldDecorator('placeholderValue', {
+            initialValue: editItem?.placeholderValue,
             rules: [{ required: true, whitespace: true, message: '请输入值' }],
           })(<Input placeholder="请输入" maxLength={200} />)}
         </FormItem>
