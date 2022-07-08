@@ -163,7 +163,7 @@ const PressureTestSceneService = {
    */
   async copySence(data = {}) {
     const url = '/scenemanage/copy';
-    return httpGet(url, data);
+    return httpPost(url, data);
   },
   /**
    * @name 分享场景
@@ -176,7 +176,7 @@ const PressureTestSceneService = {
    * @name 分享场景
    */
   async cancelShareSence(data = {}) {
-    const url = '/scenemanage/cancelShareSence';
+    const url = '/scenemanage/cancelShare';
     return httpGet(url, data);
   },
   /**

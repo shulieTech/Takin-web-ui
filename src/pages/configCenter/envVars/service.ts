@@ -2,19 +2,19 @@ import { httpGet, httpPost, httpPut, httpDelete } from 'src/utils/request';
 
 export default {
   async envVarList(data = {}) {
-    const url = '/envVar/list';
+    const url = '/placeholderManage/list';
     return httpGet(url, data);
   },
   async envVarAdd(data = {}) {
-    const url = '/envVar/add';
+    const url = '/placeholderManage';
     return httpPost(url, data);
   },
   async envVarUpdate(data = {}) {
-    const url = '/envVar/update';
+    const url = '/placeholderManage';
     return httpPut(url, data);
   },
   async envVarDelete(data = {}) {
-    const url = '/envVar/delete';
+    const url = '/placeholderManage';
     return httpDelete(url, data);
   },
 };

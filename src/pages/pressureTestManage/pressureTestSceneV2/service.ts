@@ -202,11 +202,11 @@ const PressureTestSceneService = {
     return httpGet(url, data);
   },
   async versionList(data) {
-    const url = '/v2/activities/version/list';
+    const url = '/c/getVersion';
     return httpGet(url, data);
   },
   async demandList(data) {
-    const url = '/v2/activities/demand/list';
+    const url = '/c/getDemands';
     return httpGet(url, data);
   },
 };

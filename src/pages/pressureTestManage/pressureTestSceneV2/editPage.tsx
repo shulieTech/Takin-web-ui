@@ -83,16 +83,16 @@ const EditPage = (props) => {
       data: { success, data },
     } = await services.versionList({});
     if (success) {
-      setVersionList(data);
+      setVersionList(data?.records || []);
     }
   };
   /**
    * 获取需求下拉列表
    */
-  const getDemandList = async () => {
+  const getDemandList = async ([params]) => {
     const {
       data: { success, data },
-    } = await services.business_activity_flow({});
+    } = await services.demandList(params);
     if (success) {
       setDemandList(data);
     }
@@ -320,6 +320,12 @@ const EditPage = (props) => {
         // }, 200)
       });
     }
+
+    onFieldValueChange$('versionId').subscribe(fieldState => {
+      getDemandList({
+        versionId: fieldState.value
+      });
+    });
   };
 
   /**
@@ -344,7 +350,6 @@ const EditPage = (props) => {
       getBusinessFlowList(),
       getDetailData(),
       getVersionList(),
-      getDemandList(),
     ]).then(() => {
       setDetailLoading(false);
     });
@@ -525,7 +530,7 @@ const EditPage = (props) => {
                 showSearch: true,
               }}
               title="版本"
-              enum={versionList.map((x) => ({
+              enum={(versionList).map((x) => ({
                 label: x.name,
                 value: x.id,
               }))}
@@ -546,7 +551,7 @@ const EditPage = (props) => {
               }}
               title="需求"
               enum={demandList.map((x) => ({
-                label: x.name,
+                label: x.title,
                 value: x.id,
               }))}
             />

@@ -30,6 +30,7 @@ const EnvVarsManage = (props) => {
   const columns = [
     { title: '名称', dataIndex: 'key' },
     { title: '值', dataIndex: 'value' },
+    { title: '备注', dataIndex: 'remark' },
     {
       title: '操作',
       render: (text, record) => {
@@ -62,7 +63,7 @@ const EnvVarsManage = (props) => {
             新增变量
           </Button>}
         commonFormProps={{ formData, rowNum: 6 }}
-        ajaxProps={{ url: '/envVar/list', method: 'GET' }}
+        ajaxProps={{ url: '/placeholderManage/list', method: 'GET' }}
         toggleRoload={tableReload}
       />
       <EditModal
