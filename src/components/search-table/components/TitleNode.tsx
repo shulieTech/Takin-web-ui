@@ -55,6 +55,12 @@ const TitleNode: React.FC<SearchTableProps> = props => {
     });
   };
   const getRenderNode = (item: FilterDataProps): React.ReactNode => {
+    if (item.renderNode) {
+      return item.renderNode({
+        value: state.searchParams[item.key],
+        onChange: v => handleChange(v, item)
+      });
+    }
     let node: React.ReactNode = null;
     if (!item.dataSource) {
       return null;

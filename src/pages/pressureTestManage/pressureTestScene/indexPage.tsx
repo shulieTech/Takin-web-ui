@@ -478,7 +478,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           </Modal>
         </Fragment>
       </Tabs.TabPane>
-      <Tabs.TabPane tab="与我共享的场景" key="2">
+      <Tabs.TabPane tab="公共场景" key="2">
         <SharedScene />
       </Tabs.TabPane>
     </Tabs>

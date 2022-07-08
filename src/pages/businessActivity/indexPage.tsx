@@ -7,6 +7,8 @@ import getFormData from './components/SearchNode';
 import TableAction from './components/TableAction';
 import getColumns from './components/TableNode';
 import BusinessActivityService from './service';
+import CategoryTreeSelect from './components/CategoryTreeSelect';
+import styles from './index.less';
 
 interface SystemFlowProps extends CommonModelState {
   location?: any;
@@ -30,7 +32,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
     searchParamss: props.location.query,
     middlewareCascade: null,
     searchParams: {
-      type: '0'
+      type: '0',
     },
     showModal: false,
   });
@@ -77,7 +79,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
     {
       dataSource: props.dictionaryMap.link_level,
       key: 'linkLevel',
-      label: '级别'
+      label: '级别',
     },
     {
       // dataSource: props.dictionaryMap.domain,
@@ -93,6 +95,25 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
         { label: '虚拟', value: 1 },
       ],
     },
+    {
+      key: 'category',
+      label: '分类',
+      renderNode: (prop) => {
+        return (
+          <CategoryTreeSelect
+            canEdit
+            className={styles['no-border-tree-select']}
+            value={prop.value}
+            onChange={prop.onChange}
+            style={{ width: 240 }}
+            dropdownStyle={{
+              overflowY: 'auto',
+              width: 240,
+            }}
+          />
+        );
+      },
+    },
     // {
     //   dataSource: [
     //     { label: '正常', value: '0' },
@@ -107,7 +128,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
   useEffect(() => {
     // 获取业务域列表
     window.g_app._store.dispatch({
-      type: 'common/getDomains'
+      type: 'common/getDomains',
     });
   }, []);
 

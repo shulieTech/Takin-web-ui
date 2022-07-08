@@ -44,4 +44,5 @@ export interface FilterDataProps {
   checkboxGroupProps?: CheckboxGroupProps;
   radioGroupProps?: RadioGroupProps;
   hideAllOption?: boolean;
+  renderNode?: (props: any) => React.ReactNode;
 }

@@ -201,6 +201,14 @@ const PressureTestSceneService = {
     const url = '/v2/activities/application/list';
     return httpGet(url, data);
   },
+  async versionList(data) {
+    const url = '/v2/activities/version/list';
+    return httpGet(url, data);
+  },
+  async demandList(data) {
+    const url = '/v2/activities/demand/list';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestSceneService;

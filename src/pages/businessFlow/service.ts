@@ -195,7 +195,7 @@ const BusinessFlowService = {
    * @name 获取插件版本列表
    */
   async saveFlowTreeSortData(data = {}) {
-    const url = '/scriptManage/support/flow/sort';
+    const url = '/businessFlow/scene/saveThreadGroup';
     return httpPost(url, data);
   },
 };

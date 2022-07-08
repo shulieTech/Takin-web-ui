@@ -42,6 +42,8 @@ const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
   const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
+  const [versionList, setVersionList] = useState([]);
+  const [demandList, setDemandList] = useState([]);
   const [flatTreeData, setFlatTreeData] = useState([]);
   const [initialValue, setInitialValue] = useState({});
   const [detailLoading, setDetailLoading] = useState(false);
@@ -71,6 +73,28 @@ const EditPage = (props) => {
     } = await services.business_activity_flow({});
     if (success) {
       setBusinessFlowList(data);
+    }
+  };
+  /**
+   * 获取版本下拉列表
+   */
+  const getVersionList = async () => {
+    const {
+      data: { success, data },
+    } = await services.versionList({});
+    if (success) {
+      setVersionList(data);
+    }
+  };
+  /**
+   * 获取需求下拉列表
+   */
+  const getDemandList = async () => {
+    const {
+      data: { success, data },
+    } = await services.business_activity_flow({});
+    if (success) {
+      setDemandList(data);
     }
   };
 
@@ -283,7 +307,10 @@ const EditPage = (props) => {
               setFieldState('config.podNum', (podState) => {
                 podState.props['x-component-props'].addonAfter = (
                   <Button>
-                    建议Pod数: {data?.min !== data?.max ? `${data?.min}-${data?.max}` : data?.min || '-'}
+                    建议Pod数:{' '}
+                    {data?.min !== data?.max
+                      ? `${data?.min}-${data?.max}`
+                      : data?.min || '-'}
                   </Button>
                 );
               });
@@ -313,15 +340,20 @@ const EditPage = (props) => {
 
   useEffect(() => {
     setDetailLoading(true);
-    Promise.all([getBusinessFlowList(), getDetailData()]).then(() => {
+    Promise.all([
+      getBusinessFlowList(),
+      getDetailData(),
+      getVersionList(),
+      getDemandList(),
+    ]).then(() => {
       setDetailLoading(false);
     });
   }, []);
-  
+
   // 清除编辑时详情数据中前面业务流程的带来的目标数据
   const filteredInitialValue = cloneDeep(initialValue);
-  Object.keys(filteredInitialValue?.goal || {}).forEach(x => {
-    if (!flatTreeData.some(y => y.xpathMd5 === x)) {
+  Object.keys(filteredInitialValue?.goal || {}).forEach((x) => {
+    if (!flatTreeData.some((y) => y.xpathMd5 === x)) {
       delete filteredInitialValue.goal[x];
     }
   });
@@ -359,7 +391,7 @@ const EditPage = (props) => {
             DatePicker,
             ExcludeApps,
             RadioGroup: Radio.Group,
-            TextArea: Input.TextArea
+            TextArea: Input.TextArea,
           }}
           onSubmit={onSubmit}
           effects={() => {
@@ -478,6 +510,45 @@ const EditPage = (props) => {
                 treeData: [],
                 loading: false,
               }}
+            />
+            <Field
+              name="versionId"
+              type="number"
+              x-component="Select"
+              x-component-props={{
+                placeholder: '请选择',
+                filterOption: (inputValue, option) => {
+                  return inputValue
+                    ? option.props?.title?.includes(inputValue)
+                    : true;
+                },
+                showSearch: true,
+              }}
+              title="版本"
+              enum={versionList.map((x) => ({
+                label: x.name,
+                value: x.id,
+              }))}
+            />
+            <Field
+              name="demandIds"
+              type="number"
+              x-component="Select"
+              x-component-props={{
+                placeholder: '请选择',
+                filterOption: (inputValue, option) => {
+                  return inputValue
+                    ? option.props?.title?.includes(inputValue)
+                    : true;
+                },
+                showSearch: true,
+                multiple: true,
+              }}
+              title="需求"
+              enum={demandList.map((x) => ({
+                label: x.name,
+                value: x.id,
+              }))}
             />
           </FormLayout>
 
@@ -617,13 +688,20 @@ const EditPage = (props) => {
                   validator: (val) => {
                     if (val && val.split('\n').length > 0) {
                       const arr = val.split('\n');
-                      if (arr.some(x => !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(x))) {
+                      if (
+                        arr.some(
+                          (x) =>
+                            !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(
+                              x
+                            )
+                        )
+                      ) {
                         return '请输入正确格式的邮箱地址';
                       }
                       return '';
                     }
-                  }
-                }
+                  },
+                },
               ]}
             />
           </FormLayout>
@@ -678,15 +756,13 @@ const EditPage = (props) => {
               <Field
                 name="excludedApplicationIds"
                 title={
-                  <TipTittle
-                    tips="可控制参与压测的应用范围。不参与压测的应用可忽略，忽略的应用将不进行启动校验。请确保这些应用的安全性！"
-                  >
+                  <TipTittle tips="可控制参与压测的应用范围。不参与压测的应用可忽略，忽略的应用将不进行启动校验。请确保这些应用的安全性！">
                     应用范围控制
                   </TipTittle>
                 }
                 x-component="ExcludeApps"
                 x-component-props={{
-                  flowId: ''
+                  flowId: '',
                 }}
               />
             </Field>
@@ -718,19 +794,21 @@ const EditPage = (props) => {
                   >
                     上一步
                   </Button>
-                  {!(isLastStep && readOnly) && <Button
-                    type={isLastStep ? 'primary' : undefined}
-                    loading={saving}
-                    onClick={() => {
-                      if (isLastStep) {
-                        actions.submit();
-                      } else {
-                        actions.dispatch(FormStep.ON_FORM_STEP_NEXT);
-                      }
-                    }}
-                  >
-                    {isLastStep ? '保存' : '下一步'}
-                  </Button>}
+                  {!(isLastStep && readOnly) && (
+                    <Button
+                      type={isLastStep ? 'primary' : undefined}
+                      loading={saving}
+                      onClick={() => {
+                        if (isLastStep) {
+                          actions.submit();
+                        } else {
+                          actions.dispatch(FormStep.ON_FORM_STEP_NEXT);
+                        }
+                      }}
+                    >
+                      {isLastStep ? '保存' : '下一步'}
+                    </Button>
+                  )}
                   {/* <Button
                     onClick={() =>
                       actions.getFormState((state) => console.log(state.values))
