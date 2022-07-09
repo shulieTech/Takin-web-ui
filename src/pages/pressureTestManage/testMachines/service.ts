@@ -6,19 +6,19 @@ export default {
     return httpGet(url, data);
   },
   async machineAdd(data = {}) {
-    const url = '/machine/add';
+    const url = '/testMachine/add';
     return httpPost(url, data);
   },
   async machineUpdate(data = {}) {
-    const url = '/machine/update';
+    const url = '/testMachine/update';
     return httpPut(url, data);
   },
   async machineDelete(data = {}) {
-    const url = '/machine/delete';
+    const url = '/testMachine/delete';
     return httpDelete(url, data);
   },
   async toggleEngine(data = {}) {
-    const url = '/machine/toggle';
+    const url = '/testMachine/toggle';
     return httpDelete(url, data);
   },
 };
