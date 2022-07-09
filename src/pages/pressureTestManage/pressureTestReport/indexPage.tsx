@@ -62,10 +62,10 @@ const PressureTestReport: React.FC<PressureTestReportProps> = (props) => {
             columnTitle: ' ',
             selectedRowKeys: state.batchSelectedKeys,
             getCheckboxProps: (record) => {
+              const isDiffrentScene = state.sameScenceId ? record.sceneId !== state.sameScenceId : false;
+              const isSelected = state.batchSelectedKeys.includes(record.id);
               return {
-                disabled: state.sameScenceId
-                  ? record.sceneId !== state.sameScenceId
-                  : false,
+                disabled: isDiffrentScene || (!isSelected && state.batchSelectedKeys.length > 4),
               };
             },
             onChange: (selectedKeys, selectedRows) => {
