@@ -120,6 +120,14 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
             ))}
           </Select>
         )
+      },
+      {
+        key: 'category',
+        label: '分类',
+        options: {
+          initialValue: props.category || 0,
+        },
+        node: <CategoryTreeSelect />
       }
     ];
     const businessForm = [
@@ -198,14 +206,6 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
           />
         )
       },
-      {
-        key: 'category',
-        label: '分类',
-        options: {
-          initialValue: props.category || 0,
-        },
-        node: <CategoryTreeSelect />
-      }
     ];
 
     const virtualBusinessForm = [

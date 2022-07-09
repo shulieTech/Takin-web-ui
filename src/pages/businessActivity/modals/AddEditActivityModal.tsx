@@ -62,7 +62,8 @@ const AddEditActivityModal: React.FC<Props> = props => {
         isCore: data.isCore,
         link_level: data.link_level,
         businessDomain: data.businessDomain,
-        virtualEntrance: data.virtualEntrance
+        virtualEntrance: data.virtualEntrance,
+        category: data.category || 0,
       });
     }
   };
