@@ -239,7 +239,7 @@ const AddEditDbModal: React.FC<Props> = props => {
                       style={{
                         maxHeight: 400,
                         minHeight: 200,
-                        overflow: 'scroll'
+                        overflow: 'auto'
                       }}
                     >
                       {state.cacheTempValue}

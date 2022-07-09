@@ -180,7 +180,7 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
           <div
             style={{
               position: 'relative',
-              overflow: 'scroll',
+              overflow: 'auto',
               paddingBottom: 50,
               height: document.body.offsetHeight - 250
             }}

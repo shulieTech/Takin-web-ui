@@ -351,7 +351,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   return JSON.stringify(state.detailData) !== '{}' &&
     JSON.stringify(state.chartsInfo) !== '{}' &&
     state.detailData.taskStatus === 2 ? (
-    <div id="page" style={{ overflow: 'scroll' }}>
+    <div id="page" style={{ overflow: 'auto' }}>
       {hasMissingData === 1 && (
         <div style={{ padding: '16px 16px 0px', position: 'relative' }}>
           <Alert

@@ -477,7 +477,7 @@ const Admin: React.FC<AdminProps> = props => {
                     title="详情"
                     content={
                       <div
-                        style={{ width: 180, height: 280, overflowY: 'scroll' }}
+                        style={{ width: 180, height: 280, overflowY: 'auto' }}
                       >
                         <p>{state.errorMsg}</p>
                       </div>

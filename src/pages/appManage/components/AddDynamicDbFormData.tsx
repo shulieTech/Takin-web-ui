@@ -292,7 +292,7 @@ const getAddDynamicDbFormData = (
                 <div style={{ textAlign: 'right' }}>
                   <a onClick={() => handleCopy(tempData)}>复制</a>
                 </div>
-                <div style={{ width: 200, height: 300, overflow: 'scroll' }}>
+                <div style={{ width: 200, height: 300, overflow: 'auto' }}>
                   {tempData}
                 </div>
               </div>
@@ -384,7 +384,7 @@ const getAddDynamicDbFormData = (
                 <div style={{ textAlign: 'right' }}>
                   <a onClick={() => handleCopy(item.tips)}>复制</a>
                 </div>
-                <div style={{ width: 200, height: 300, overflow: 'scroll' }}>
+                <div style={{ width: 200, height: 300, overflow: 'auto' }}>
                   {item.tips}
                 </div>
               </div>

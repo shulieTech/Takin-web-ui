@@ -104,10 +104,10 @@ const MissingDataListModal: React.FC<Props> = props => {
       btnText={props.btnText}
       onClick={() => handleClick()}
     >
-      <div style={{ height: 600, overflowY: 'scroll' }}>
+      <div style={{ height: 600, overflowY: 'auto' }}>
         <div
           className={styles.missingDataWrap}
-          style={{ height: 600, overflowY: 'scroll', marginTop: 16 }}
+          style={{ height: 600, overflowY: 'auto', marginTop: 16 }}
         >
           <Collapse
             defaultActiveKey={['0']}

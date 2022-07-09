@@ -109,7 +109,7 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
       style={{
         marginTop: 16,
         height: 'calc(100% - 100px)',
-        overflow: 'scroll'
+        overflow: 'auto'
       }}
     >
       <Row
@@ -248,14 +248,14 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
         style={{
           position: 'relative',
           height: 'calc(100% - 55px)',
-          overflow: 'scroll'
+          overflow: 'auto'
         }}
       >
         <div
           style={{
             position: 'relative',
             height: 'calc(100% - 30px)',
-            overflow: 'scroll'
+            overflow: 'auto'
           }}
         >
           <CustomTable

@@ -101,7 +101,7 @@ const getMockListColumns = (
               content={
                 <div
                   className={styles.agentIds}
-                  style={{ width: 280, height: 288, overflow: 'scroll' }}
+                  style={{ width: 280, height: 288, overflow: 'auto' }}
                 >
                   {text &&
                     text.map((item, k) => {

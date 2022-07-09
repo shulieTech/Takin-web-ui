@@ -42,7 +42,7 @@ const ContentNode: React.FC = props => {
           marginRight: '8px',
           marginTop: '8px',
           borderRadius: '4px 4px 0 0',
-          overflow: 'scroll'
+          overflow: 'auto'
         }}
       >
         {props.children}

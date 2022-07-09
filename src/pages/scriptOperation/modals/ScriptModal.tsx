@@ -217,7 +217,7 @@ const ScriptModal: React.FC<Props> = props => {
       btnText={props.btnText}
       beforeOk={handleSubmit}
     >
-      <div style={{ height: '500px', overflow: 'scroll' }}>
+      <div style={{ height: '500px', overflow: 'auto' }}>
         <Form onSubmit={handleSubmit} {...formItemProps}>
           <Card title="基础信息" bordered={false}>
             <Form.Item

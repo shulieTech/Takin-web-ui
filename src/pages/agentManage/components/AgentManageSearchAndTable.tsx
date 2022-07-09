@@ -108,7 +108,7 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
       style={{
         position: 'relative',
         height: 'calc(100%)',
-        overflow: 'scroll'
+        overflow: 'auto'
       }}
     >
       <Row
@@ -199,14 +199,14 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
           style={{
             position: 'relative',
             height: 'calc(100% - 75px)',
-            overflow: 'scroll'
+            overflow: 'auto'
           }}
         >
           <div
             style={{
               position: 'relative',
               height: 'calc(100% - 30px)',
-              overflow: 'scroll'
+              overflow: 'auto'
             }}
           >
             <CustomTable

@@ -110,7 +110,7 @@ const AgentVersin: React.FC<Props> = props => {
       onCancel={handleCancel}
       destroyOnClose
     >
-      <div style={{ height: '550px', overflow: 'scroll' }}>
+      <div style={{ height: '550px', overflow: 'auto' }}>
         <Form onSubmit={handleOk} {...formItemProps}>
           <Card title="基础信息">
             <Form.Item

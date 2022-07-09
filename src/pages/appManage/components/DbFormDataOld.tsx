@@ -284,7 +284,7 @@ const getDbFormDataOld = (
                     style={{
                       maxHeight: 400,
                       minHeight: 200,
-                      overflow: 'scroll'
+                      overflow: 'auto'
                     }}
                   >
                     {state.dsType === 2

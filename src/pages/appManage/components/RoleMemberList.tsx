@@ -205,7 +205,7 @@ const RoleMemberList: React.FC<Props> = props => {
           initDataSource={state.initDataSource}
         />
       </div>
-      <div style={{ height: 485, overflowY: 'scroll' }}>
+      <div style={{ height: 485, overflowY: 'auto' }}>
         <CustomTable
           rowKey="id"
           rowSelection={{

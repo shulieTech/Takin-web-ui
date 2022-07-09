@@ -56,7 +56,7 @@ const RequestDetailList: React.FC<Props> = props => {
             <Tooltip
               placement="bottomLeft"
               title={
-                <div style={{ maxHeight: 300, overflow: 'scroll' }}>
+                <div style={{ maxHeight: 300, overflow: 'auto' }}>
                   <div style={{ textAlign: 'right' }}>
                     <a onClick={() => handleCopy(text)}>复制</a>
                   </div>
@@ -80,7 +80,7 @@ const RequestDetailList: React.FC<Props> = props => {
             <Tooltip
               placement="bottomLeft"
               title={
-                <div style={{ maxHeight: 300, overflow: 'scroll' }}>
+                <div style={{ maxHeight: 300, overflow: 'auto' }}>
                   <div style={{ textAlign: 'right' }}>
                     <a onClick={() => handleCopy(text)}>复制</a>
                   </div>
