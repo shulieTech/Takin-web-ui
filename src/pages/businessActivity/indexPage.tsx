@@ -146,6 +146,15 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
       filterData={filterData}
       tableAction={<TableAction state={state} setState={setState} />}
       toggleRoload={state.isReload}
+      onTabReset={params => {
+        // fix 重置时分类被置空
+        setState({
+          searchParams: {
+            ...params,
+            category: 0,
+          }
+        });
+      }}
     />
   );
 };
