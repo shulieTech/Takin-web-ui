@@ -83,13 +83,13 @@ const TestMachineManage = (props) => {
       render: (text, record) => {
         return (
           <>
-            <Button
+            {/* <Button
               type="link"
               onClick={() => setEditItem(record)}
               style={{ marginRight: 8 }}
             >
               编辑
-            </Button>
+            </Button> */}
             <Popconfirm title="确定删除？" onConfirm={() => deleteItem(record)}>
               <Button type="link" style={{ marginRight: 8 }}>
                 删除
