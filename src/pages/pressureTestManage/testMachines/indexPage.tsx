@@ -83,7 +83,7 @@ const TestMachineManage = (props) => {
           <>
             <Button
               type="link"
-              onClick={() => setEditItem({})}
+              onClick={() => setEditItem(record)}
               style={{ marginRight: 8 }}
             >
               编辑
@@ -91,9 +91,8 @@ const TestMachineManage = (props) => {
             <Popconfirm
               title="确定删除？"
               onConfirm={() => deleteItem(record)}
-              style={{ marginRight: 8 }}
             >
-              <Button type="link">删除</Button>
+              <Button type="link" style={{ marginRight: 8 }}>删除</Button>
             </Popconfirm>
             <Popconfirm
               title={`确定${
@@ -101,7 +100,7 @@ const TestMachineManage = (props) => {
               }该机器的压力引擎？`}
               onConfirm={() => toggleEngine(record)}
             >
-              <Button type="link">
+              <Button type="link" style={{ marginRight: 8 }}>
                 {record.status === 0 ? '启动' : '停用'}压力引擎
               </Button>
             </Popconfirm>
