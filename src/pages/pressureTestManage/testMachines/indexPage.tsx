@@ -62,10 +62,12 @@ const TestMachineManage = (props) => {
       title: '压测引擎状态',
       dataIndex: 'status',
       render: (text, record) => {
-        return {
-          0: <Badge status="default" text="未部署" />,
-          1: <Badge status="success" text="已部署" />,
-        }[text];
+        return (
+          <Badge
+            status={text === 'Ready' ? 'success' : 'default'}
+            text={text}
+          />
+        );
       },
     },
     // { title: '用户名', dataIndex: 'username' },
@@ -88,20 +90,19 @@ const TestMachineManage = (props) => {
             >
               编辑
             </Button>
-            <Popconfirm
-              title="确定删除？"
-              onConfirm={() => deleteItem(record)}
-            >
-              <Button type="link" style={{ marginRight: 8 }}>删除</Button>
+            <Popconfirm title="确定删除？" onConfirm={() => deleteItem(record)}>
+              <Button type="link" style={{ marginRight: 8 }}>
+                删除
+              </Button>
             </Popconfirm>
             <Popconfirm
               title={`确定${
-                record.status === 0 ? '启动' : '停用'
+                record.status === 0 ? '启用' : '停用'
               }该机器的压力引擎？`}
               onConfirm={() => toggleEngine(record)}
             >
               <Button type="link" style={{ marginRight: 8 }}>
-                {record.status === 0 ? '启动' : '停用'}压力引擎
+                {record.status === 0 ? '启用' : '停用'}压力引擎
               </Button>
             </Popconfirm>
           </>
