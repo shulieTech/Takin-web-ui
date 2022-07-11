@@ -2,7 +2,7 @@ import { httpGet, httpPost, httpPut, httpDelete } from 'src/utils/request';
 
 export default {
   async machineList(data = {}) {
-    const url = '/pressureMachine';
+    const url = '/pressureMachine/list';
     return httpGet(url, data);
   },
   async machineAdd(data = {}) {

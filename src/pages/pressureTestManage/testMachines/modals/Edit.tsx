@@ -21,6 +21,8 @@ const EditMachineModal: React.FC<Props> = (props) => {
     ...rest
   } = props;
 
+  const isEdit = !!editItem?.name; //  没有id，使用name为标识
+
   const [saving, setSaving] = useState(false);
 
   const saveItem = async () => {
@@ -31,7 +33,7 @@ const EditMachineModal: React.FC<Props> = (props) => {
       setSaving(true);
       const {
         data: { success },
-      } = await service[editItem?.id ? 'machineUpdate' : 'machineAdd']({
+      } = await service[isEdit ? 'machineUpdate' : 'machineAdd']({
         ...editItem,
         ...values,
       }).finally(() => {
@@ -51,7 +53,7 @@ const EditMachineModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      title={`${editItem?.id ? '编辑' : '新增'}测试机器`}
+      title={`${isEdit ? '编辑' : '新增'}测试机器`}
       visible={!!editItem}
       destroyOnClose
       onOk={saveItem}
@@ -63,7 +65,7 @@ const EditMachineModal: React.FC<Props> = (props) => {
     >
       <Form>
         <FormItem label="机器名称" {...formItemLayout}>
-          {getFieldDecorator('name', {
+          {getFieldDecorator(isEdit ? 'updateName' : 'name', {
             initialValue: editItem?.name,
             rules: [
               { required: true, whitespace: true, message: '请输入机器名称' },

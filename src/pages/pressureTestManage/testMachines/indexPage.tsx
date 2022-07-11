@@ -68,14 +68,14 @@ const TestMachineManage = (props) => {
         }[text];
       },
     },
-    { title: '用户名', dataIndex: 'username' },
-    {
-      title: '密码',
-      dataIndex: 'password',
-      render: (text) => {
-        return <PwdTd text={text} />;
-      },
-    },
+    // { title: '用户名', dataIndex: 'username' },
+    // {
+    //   title: '密码',
+    //   dataIndex: 'password',
+    //   render: (text) => {
+    //     return <PwdTd text={text} />;
+    //   },
+    // },
     {
       title: '操作',
       render: (text, record) => {
@@ -116,13 +116,14 @@ const TestMachineManage = (props) => {
         commonTableProps={{
           columns,
           size: 'small',
+          rowKey: 'name',
         }}
         tableAction={
           <Button type="primary" onClick={() => setEditItem({})}>
             新增测试机器
           </Button>}
         commonFormProps={{ formData, rowNum: 6 }}
-        ajaxProps={{ url: '/machine/list', method: 'GET' }}
+        ajaxProps={{ url: '/pressureMachine/list', method: 'GET' }}
         toggleRoload={tableReload}
       />
       <EditModal
