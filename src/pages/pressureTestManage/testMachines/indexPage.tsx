@@ -27,7 +27,7 @@ const TestMachineManage = (props) => {
     const {
       data: { success },
     } = await service.machineDelete({
-      id: record.id,
+      name: record.name,
     });
     if (success) {
       message.success('操作成功');
@@ -37,8 +37,8 @@ const TestMachineManage = (props) => {
   const toggleEngine = async (record) => {
     const {
       data: { success },
-    } = await service[record.status === 0 ? 'enableEngine' : 'disableEngine']({
-      id: record.id,
+    } = await service[record.status === 'Ready' ? 'disableEngine' : 'enableEngine']({
+      name: record.name,
     });
     if (success) {
       message.success('操作成功');
@@ -97,12 +97,12 @@ const TestMachineManage = (props) => {
             </Popconfirm>
             <Popconfirm
               title={`确定${
-                record.status === 0 ? '启用' : '停用'
+                record.status === 'Ready' ? '停用' : '启用'
               }该机器的压力引擎？`}
               onConfirm={() => toggleEngine(record)}
             >
               <Button type="link" style={{ marginRight: 8 }}>
-                {record.status === 0 ? '启用' : '停用'}压力引擎
+                {record.status === 'Ready' ? '停用' : '启用'}压力引擎
               </Button>
             </Popconfirm>
           </>
