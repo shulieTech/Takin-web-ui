@@ -123,7 +123,7 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
       },
       {
         key: 'category',
-        label: '分类',
+        label: '归属文件夹',
         options: {
           initialValue: props.category || 0,
         },

@@ -36,7 +36,7 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
     e.stopPropagation();
     Modal.confirm({
       title: '提示',
-      content: '确定删除该分类？',
+      content: '确定删除该文件夹？',
       onOk: async () => {
         const {
           data: { success },
@@ -80,7 +80,7 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
                       />
                     </Tooltip>
                   )}
-                  <Tooltip title="添加子分类">
+                  <Tooltip title="添加子文件夹">
                     <Icon
                       type="plus-circle"
                       onClick={(e) => {

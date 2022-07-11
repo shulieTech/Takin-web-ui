@@ -16,6 +16,7 @@ import { ChangeStatus } from '../enum';
 import AddEditActivityModal from '../modals/AddEditActivityModal';
 import MissingDataScriptModal from '../modals/MissingDataScriptModal';
 import BusinessActivityService from '../service';
+import ChangeCategoryModal from '../modals/ChangeCategoryModal';
 
 const getColumns = (
   systemFlowState,
@@ -70,8 +71,9 @@ const getColumns = (
       title: '业务域',
       dataIndex: 'businessDomain',
       render: (text) =>
-        text ? (props.domains?.find((item) => +item.value === +text) || {})
-            .label || '-'
+        text
+          ? (props.domains?.find((item) => +item.value === +text) || {})
+              .label || '-'
           : '-',
     },
     // {
@@ -121,7 +123,7 @@ const getColumns = (
                   menuCode="BUSINESS_ACTIVITY"
                   onSccuess={() => {
                     setSystemFlowState({
-                      isReload: !systemFlowState.isReload
+                      isReload: !systemFlowState.isReload,
                     });
                   }}
                 />
@@ -191,6 +193,22 @@ const getColumns = (
               businessActivityId={row.activityId}
             />
           </span>
+          <AuthorityBtn
+            isShow={
+              btnAuthority &&
+              btnAuthority.businessActivity_3_update &&
+              row.canEdit
+            }
+          >
+            <ChangeCategoryModal
+              record={row}
+              okCallback={() => {
+                setSystemFlowState({
+                  isReload: !systemFlowState.isReload,
+                });
+              }}
+            />
+          </AuthorityBtn>
         </Fragment>
       ),
     },

@@ -51,7 +51,7 @@ const EditModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      title={`${editItem?.id ? '编辑' : '新增'}分类`}
+      title={`${editItem?.id ? '编辑' : '新增'}文件夹`}
       visible={!!editItem}
       destroyOnClose
       onOk={saveItem}
@@ -62,11 +62,11 @@ const EditModal: React.FC<Props> = (props) => {
       {...rest}
     >
       <Form>
-        <FormItem label="分类名称" {...formItemLayout}>
+        <FormItem label="文件夹名称" {...formItemLayout}>
           {getFieldDecorator('title', {
             initialValue: editItem?.title,
             rules: [
-              { required: true, whitespace: true, message: '请输入分类名称' },
+              { required: true, whitespace: true, message: '请输入文件夹名称' },
             ],
           })(<Input placeholder="请输入" maxLength={30} />)}
         </FormItem>

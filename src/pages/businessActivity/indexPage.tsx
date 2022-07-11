@@ -98,7 +98,7 @@ const SystemFlow: React.FC<SystemFlowProps> = (props) => {
     },
     {
       key: 'category',
-      label: '分类',
+      label: '归属文件夹',
       renderNode: (prop) => {
         return (
           <CategoryTreeSelect
