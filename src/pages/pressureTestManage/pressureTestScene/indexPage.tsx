@@ -241,7 +241,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   }, [JSON.stringify(searchTableRef?.tableState?.dataSource)]);
 
   return (
-    <Tabs defaultActiveKey="1">
+    <Tabs defaultActiveKey="1" destroyInactiveTabPane>
       <Tabs.TabPane tab="我的场景" key="1">
         <Fragment>
           <SearchTable

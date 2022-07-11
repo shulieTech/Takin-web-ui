@@ -37,9 +37,8 @@ const TestMachineManage = (props) => {
   const toggleEngine = async (record) => {
     const {
       data: { success },
-    } = await service.toggleEngine({
+    } = await service[record.status === 0 ? 'enableEngine' : 'disableEngine']({
       id: record.id,
-      status: record.status === 0 ? 1 : 0,
     });
     if (success) {
       message.success('操作成功');
@@ -56,7 +55,9 @@ const TestMachineManage = (props) => {
 
   const columns = [
     { title: '机器名称', dataIndex: 'name' },
-    { title: '机器IP', dataIndex: 'ip' },
+    { title: '机器IP', dataIndex: 'nodeIp' },
+    { title: 'cpu', dataIndex: 'cpu' },
+    { title: 'memory', dataIndex: 'memory' },
     {
       title: '压测引擎状态',
       dataIndex: 'status',

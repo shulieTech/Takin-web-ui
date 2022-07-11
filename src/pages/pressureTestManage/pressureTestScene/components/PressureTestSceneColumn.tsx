@@ -196,7 +196,7 @@ const getPressureTestSceneColumns = (
     const {
       data: { success },
     } = await PressureTestSceneService.shareSence({
-      id: row.id,
+      sceneManageId: row.id,
     });
     if (success) {
       message.success('操作成功');
@@ -209,7 +209,7 @@ const getPressureTestSceneColumns = (
     const {
       data: { success },
     } = await PressureTestSceneService.cancelShareSence({
-      id: row.id,
+      sceneManageId: row.id,
     });
     if (success) {
       message.success('操作成功');
@@ -397,7 +397,7 @@ const getPressureTestSceneColumns = (
               >
                 <a style={{ marginRight: 8 }}>复制</a>
               </CustomPopconfirm>
-              {row.isShared ? <CustomPopconfirm
+              {row.hasGlobalScene ? <CustomPopconfirm
                 arrowPointAtCenter
                 title="确定取消分享该场景？"
                 onConfirm={() => cancelShareSence(row)}

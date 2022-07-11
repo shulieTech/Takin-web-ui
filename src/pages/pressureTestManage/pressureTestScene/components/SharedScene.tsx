@@ -21,7 +21,7 @@ const ShareSenceManage: React.FC<Props> = (props) => {
 
   const formData = [
     {
-      key: 'sceneName',
+      key: 'name',
       label: '',
       node: <Input placeholder="压测场景名称" />,
     },
@@ -41,50 +41,16 @@ const ShareSenceManage: React.FC<Props> = (props) => {
 
   const columns = [
     {
+      title: 'ID',
+      dataIndex: 'id',
+    },
+    {
       title: '压测场景名称',
       dataIndex: 'sceneName',
     },
     {
-      title: '标签',
-      dataIndex: 'tag',
-      render: (text, row) => {
-        return (
-          <div className={styles.tagsWrap}>
-            {text && text.length > 1 ? (
-              <span>
-                <span className={styles.circleTag}>
-                  {text[0] && text[0].tagName}
-                </span>
-                <Popover
-                  placement="bottom"
-                  trigger="click"
-                  title="标签"
-                  content={
-                    <div className={styles.tags}>
-                      {text.map((item, k) => {
-                        return (
-                          <p key={k}>
-                            {item.tagName} <Divider />
-                          </p>
-                        );
-                      })}
-                    </div>}
-                >
-                  <a className={styles.circleTag} style={{ marginLeft: 8 }}>
-                    ...
-                  </a>
-                </Popover>
-              </span>
-            ) : text && text.length === 1 ? (
-              <a className={styles.circleTag} style={{ marginLeft: 8 }}>
-                {text[0] && text[0].tagName}
-              </a>
-            ) : (
-              <span> - </span>
-            )}
-          </div>
-        );
-      },
+      title: '创建时间',
+      dataIndex: 'createTime',
     },
     {
       title: '操作',
@@ -124,7 +90,7 @@ const ShareSenceManage: React.FC<Props> = (props) => {
           formData,
           rowNum: 4,
         }}
-        ajaxProps={{ url: '/scenemanage/list', method: 'GET' }}
+        ajaxProps={{ url: '/globalscenemanage/list', method: 'GET' }}
         datekeys={[
           {
             originKey: 'time',

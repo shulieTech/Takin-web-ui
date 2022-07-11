@@ -169,29 +169,29 @@ const PressureTestSceneService = {
    * @name 分享场景
    */
   async shareSence(data = {}) {
-    const url = '/scenemanage/share';
-    return httpGet(url, data);
+    const url = '/globalscenemanage/sceneToGlobal';
+    return httpPost(url, data);
   },
   /**
-   * @name 分享场景
+   * @name 取消分享场景
    */
   async cancelShareSence(data = {}) {
-    const url = '/scenemanage/cancelShare';
-    return httpGet(url, data);
+    const url = '/globalscenemanage/cancelSceneToGlobal';
+    return httpPost(url, data);
   },
   /**
    * @name 共享的压测场景
    */
   async sharedSceneList(data = {}) {
-    const url = '/scenemanage/share/list';
+    const url = '/globalscenemanage/list';
     return httpGet(url, data);
   },
   /**
    * @name fork公共场景
    */
   async forkScene(data = {}) {
-    const url = '/scenemanage/fork';
-    return httpGet(url, data);
+    const url = '/globalscenemanage/globalToScene';
+    return httpPost(url, data);
   },
 };
 
