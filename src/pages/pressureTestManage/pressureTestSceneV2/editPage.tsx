@@ -430,6 +430,10 @@ const EditPage = (props) => {
                 x-component-props={{
                   placeholder: '请输入',
                   maxLength: 30,
+                  readOnly: !!sceneId,
+                  style: {
+                    backgroundColor: !!sceneId ? '#f7f8f9' : undefined
+                  }
                 }}
                 title="压测场景名称"
                 x-rules={[
@@ -453,6 +457,7 @@ const EditPage = (props) => {
                       : true;
                   },
                   showSearch: true,
+                  disabled: !!sceneId,
                 }}
                 x-rules={[
                   {
