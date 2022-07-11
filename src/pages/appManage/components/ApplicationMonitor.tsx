@@ -247,6 +247,7 @@ const ApplicationMonitor: React.FC<Props> = (props) => {
               }
               onChange={serviceNameChange}
               dataSource={state.serviceNameList}
+              dropdownMatchSelectWidth={false}
             />
           </Col>
           <Col span={4}>

@@ -23,7 +23,7 @@ export const getRenderFormNode = (node: TempleteType): React.ReactNode => {
      * @name 输入框（密码）
      */
     case 2:
-      renderNode = <Input type="password" placeholder="请输入"/>;
+      renderNode = <Input type="password" placeholder="请输入" autoComplete="new-password"/>;
       break;
     /**
      * @name 下拉框、数值输入框
