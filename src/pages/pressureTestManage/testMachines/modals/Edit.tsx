@@ -72,42 +72,44 @@ const EditMachineModal: React.FC<Props> = (props) => {
             ],
           })(<Input placeholder="示例：压力机1" maxLength={30} />)}
         </FormItem>
-        <FormItem label="机器IP" {...formItemLayout}>
-          {getFieldDecorator('ip', {
-            initialValue: editItem?.ip,
-            rules: [
-              { required: true, whitespace: true, message: '请输入机器IP' },
-              {
-                pattern:
-                  /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/,
-                message: '请输入正确格式的IP地址',
-              },
-            ],
-          })(<Input placeholder="示例：192.168.8.8" maxLength={30} />)}
-        </FormItem>
-        <FormItem label="用户名" {...formItemLayout}>
-          {getFieldDecorator('username', {
-            initialValue: editItem?.username,
-            rules: [
-              { required: true, whitespace: true, message: '请输入用户名' },
-            ],
-          })(
-            <Input placeholder="需root权限" maxLength={30} autoComplete="new-password" />
-          )}
-        </FormItem>
-        <FormItem label="密码" {...formItemLayout}>
-          {getFieldDecorator('password', {
-            initialValue: editItem?.password,
-            rules: [{ required: true, whitespace: true, message: '请输入密码' }],
-          })(
-            <Input
-              placeholder="请输入"
-              maxLength={100}
-              type="password"
-              autoComplete="new-password"
-            />
-          )}
-        </FormItem>
+        {!isEdit && <>
+          <FormItem label="机器IP" {...formItemLayout}>
+            {getFieldDecorator('nodeIp', {
+              initialValue: editItem?.nodeIp,
+              rules: [
+                { required: true, whitespace: true, message: '请输入机器IP' },
+                {
+                  pattern:
+                    /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/,
+                  message: '请输入正确格式的IP地址',
+                },
+              ],
+            })(<Input placeholder="示例：192.168.8.8" maxLength={30} />)}
+          </FormItem>
+          <FormItem label="用户名" {...formItemLayout}>
+            {getFieldDecorator('username', {
+              initialValue: editItem?.username,
+              rules: [
+                { required: true, whitespace: true, message: '请输入用户名' },
+              ],
+            })(
+              <Input placeholder="需root权限" maxLength={30} autoComplete="new-password" />
+            )}
+          </FormItem>
+          <FormItem label="密码" {...formItemLayout}>
+            {getFieldDecorator('password', {
+              initialValue: editItem?.password,
+              rules: [{ required: true, whitespace: true, message: '请输入密码' }],
+            })(
+              <Input
+                placeholder="请输入"
+                maxLength={100}
+                type="password"
+                autoComplete="new-password"
+              />
+            )}
+          </FormItem>
+        </>}
       </Form>
     </Modal>
   );
