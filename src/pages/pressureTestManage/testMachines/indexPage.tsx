@@ -3,6 +3,7 @@ import { message, Button, Input, Popconfirm, Badge, Icon } from 'antd';
 import SearchTable from 'src/components/search-table';
 import service from './service';
 import EditModal from './modals/Edit';
+import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 
 const PwdTd = (props) => {
   const { text } = props;
@@ -22,23 +23,38 @@ const PwdTd = (props) => {
 const TestMachineManage = (props) => {
   const [tableReload, setTableReload] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [syncing, setSyncing] = useState(false);
 
   const deleteItem = async (record) => {
     const {
       data: { success },
     } = await service.machineDelete({
-      name: record.name,
+      id: record.id,
     });
     if (success) {
       message.success('操作成功');
       setTableReload(!tableReload);
     }
   };
+
   const toggleEngine = async (record) => {
     const {
       data: { success },
-    } = await service[record.status === 'Ready' ? 'disableEngine' : 'enableEngine']({
-      name: record.name,
+    } = await service[record.status === 2 ? 'disableEngine' : 'enableEngine']({
+      id: record.id,
+    });
+    if (success) {
+      message.success('操作成功');
+      setTableReload(!tableReload);
+    }
+  };
+
+  const machineSync = async () => {
+    setSyncing(true);
+    const {
+      data: { success },
+    } = await service.machineSync().finally(() => {
+      setSyncing(false);
     });
     if (success) {
       message.success('操作成功');
@@ -48,29 +64,37 @@ const TestMachineManage = (props) => {
 
   const formData = [
     {
-      key: 'name',
+      key: 'machineName',
       node: <Input placeholder="搜索机器名称" />,
     },
   ];
 
   const columns = [
-    { title: '机器名称', dataIndex: 'name' },
-    { title: '机器IP', dataIndex: 'nodeIp' },
-    { title: 'cpu', dataIndex: 'cpu' },
-    { title: 'memory', dataIndex: 'memory' },
+    { title: '机器名称', dataIndex: 'machineName' },
+    { title: '机器IP', dataIndex: 'machineIp' },
+    { title: 'cpu', dataIndex: 'cpu', render: (text) => text || '-' },
+    { title: 'memory', dataIndex: 'memory', render: (text) => text || '-' },
+    { title: '创建时间', dataIndex: 'createTime' },
     {
-      title: '压测引擎状态',
+      title: '部署状态',
       dataIndex: 'status',
       render: (text, record) => {
         return (
           <Badge
-            status={text === 'Ready' ? 'success' : 'default'}
-            text={text}
+            status={text === 2 ? 'success' : 'default'}
+            text={{ 0: '未部署', 2: '已部署' }[text]}
           />
         );
       },
     },
-    // { title: '用户名', dataIndex: 'username' },
+    {
+      title: '压测引擎状态',
+      dataIndex: 'engineStatus',
+      render: (text, record) => {
+        return text || '-';
+      },
+    },
+    // { title: '用户名', dataIndex: 'userName' },
     // {
     //   title: '密码',
     //   dataIndex: 'password',
@@ -83,28 +107,30 @@ const TestMachineManage = (props) => {
       render: (text, record) => {
         return (
           <>
-            {/* <Button
+            <Button
               type="link"
               onClick={() => setEditItem(record)}
               style={{ marginRight: 8 }}
             >
               编辑
-            </Button> */}
+            </Button>
             <Popconfirm title="确定删除？" onConfirm={() => deleteItem(record)}>
               <Button type="link" style={{ marginRight: 8 }}>
                 删除
               </Button>
             </Popconfirm>
-            <Popconfirm
-              title={`确定${
-                record.status === 'Ready' ? '停用' : '启用'
-              }该机器的压力引擎？`}
-              onConfirm={() => toggleEngine(record)}
-            >
-              <Button type="link" style={{ marginRight: 8 }}>
-                {record.status === 'Ready' ? '停用' : '启用'}压力引擎
-              </Button>
-            </Popconfirm>
+            {[0, 2].includes(record.status) && (
+              <Popconfirm
+                title={`确定${
+                  record.status === 2 ? '卸载' : '部署'
+                }该节点机器？`}
+                onConfirm={() => toggleEngine(record)}
+              >
+                <Button type="link" style={{ marginRight: 8 }}>
+                  {record.status === 2 ? '卸载' : '部署'}节点
+                </Button>
+              </Popconfirm>
+            )}
           </>
         );
       },
@@ -116,12 +142,24 @@ const TestMachineManage = (props) => {
         commonTableProps={{
           columns,
           size: 'small',
-          rowKey: 'name',
+          rowKey: 'id',
         }}
         tableAction={
-          <Button type="primary" onClick={() => setEditItem({})}>
-            新增测试机器
-          </Button>}
+          <>
+            <Button
+              type="primary"
+              style={{ marginRight: 8 }}
+              ghost
+              loading={syncing}
+              onClick={() => machineSync()}
+            >
+              同步
+            </Button>
+            <Button type="primary" onClick={() => setEditItem({})}>
+              新增测试机器
+            </Button>
+          </>
+        }
         commonFormProps={{ formData, rowNum: 6 }}
         ajaxProps={{ url: '/pressureMachine/list', method: 'GET' }}
         toggleRoload={tableReload}
@@ -130,6 +168,7 @@ const TestMachineManage = (props) => {
         editItem={editItem}
         cancelCallback={() => setEditItem(null)}
         okCallback={() => {
+          setEditItem(null);
           setTableReload(!tableReload);
         }}
       />

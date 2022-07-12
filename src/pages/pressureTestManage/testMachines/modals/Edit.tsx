@@ -21,7 +21,7 @@ const EditMachineModal: React.FC<Props> = (props) => {
     ...rest
   } = props;
 
-  const isEdit = !!editItem?.name; //  没有id，使用name为标识
+  const isEdit = !!editItem?.id;
 
   const [saving, setSaving] = useState(false);
 
@@ -65,16 +65,16 @@ const EditMachineModal: React.FC<Props> = (props) => {
     >
       <Form>
         <FormItem label="机器名称" {...formItemLayout}>
-          {getFieldDecorator(isEdit ? 'updateName' : 'name', {
-            initialValue: editItem?.name,
+          {getFieldDecorator('machineName', {
+            initialValue: editItem?.machineName,
             rules: [
               { required: true, whitespace: true, message: '请输入机器名称' },
             ],
           })(<Input placeholder="示例：压力机1" maxLength={30} />)}
         </FormItem>
         <FormItem label="机器IP" {...formItemLayout}>
-          {getFieldDecorator('nodeIp', {
-            initialValue: editItem?.nodeIp,
+          {getFieldDecorator('machineIp', {
+            initialValue: editItem?.machineIp,
             rules: [
               { required: true, whitespace: true, message: '请输入机器IP' },
               {
@@ -92,39 +92,35 @@ const EditMachineModal: React.FC<Props> = (props) => {
             />
           )}
         </FormItem>
-        {!isEdit && (
-          <>
-            <FormItem label="用户名" {...formItemLayout}>
-              {getFieldDecorator('username', {
-                initialValue: editItem?.username,
-                rules: [
-                  { required: true, whitespace: true, message: '请输入用户名' },
-                ],
-              })(
-                <Input
-                  placeholder="需root权限"
-                  maxLength={30}
-                  autoComplete="new-password"
-                />
-              )}
-            </FormItem>
-            <FormItem label="密码" {...formItemLayout}>
-              {getFieldDecorator('password', {
-                initialValue: editItem?.password,
-                rules: [
-                  { required: true, whitespace: true, message: '请输入密码' },
-                ],
-              })(
-                <Input
-                  placeholder="请输入"
-                  maxLength={100}
-                  type="password"
-                  autoComplete="new-password"
-                />
-              )}
-            </FormItem>
-          </>
-        )}
+        <FormItem label="用户名" {...formItemLayout}>
+          {getFieldDecorator('userName', {
+            initialValue: editItem?.userName,
+            rules: [
+              { required: true, whitespace: true, message: '请输入用户名' },
+            ],
+          })(
+            <Input
+              placeholder="需root权限"
+              maxLength={30}
+              autoComplete="new-password"
+            />
+          )}
+        </FormItem>
+        <FormItem label="密码" {...formItemLayout}>
+          {getFieldDecorator('password', {
+            initialValue: editItem?.password,
+            rules: [
+              { required: !isEdit, whitespace: true, message: '请输入密码' },
+            ],
+          })(
+            <Input
+              placeholder={isEdit ?  '不填为不修改原密码' : '请输入'}
+              maxLength={100}
+              type="password"
+              autoComplete="new-password"
+            />
+          )}
+        </FormItem>
       </Form>
     </Modal>
   );

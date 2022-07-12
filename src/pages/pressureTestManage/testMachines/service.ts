@@ -1,4 +1,9 @@
+import { Modal } from 'antd';
 import { httpGet, httpPost, httpPut, httpDelete } from 'src/utils/request';
+
+const customConfig = {
+  errorHandle: (msg) => Modal.error({ title: '出错了', content: msg }),
+};
 
 export default {
   async machineList(data = {}) {
@@ -16,6 +21,10 @@ export default {
   async machineDelete(data = {}) {
     const url = '/pressureMachine';
     return httpDelete(url, data);
+  },
+  async machineSync(data = {}) {
+    const url = '/pressureMachine/syncMachine';
+    return httpGet(url, data, customConfig);
   },
   async enableEngine(data = {}) {
     const url = '/pressureMachine/enable';

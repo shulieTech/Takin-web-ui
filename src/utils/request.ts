@@ -196,6 +196,7 @@ export default function request(options: AxiosRequestConfig) {
 export function errorProcess(response: BaseResponse) {
   const { status, data, config, headers } = response;
   const statusFilter = config.headers.statusFilter;
+  const errorHandle: ((msg: string) => any) = config.errorHandle || message.error;
   const takinAuthority = headers['takin-authority'];
   const takinTenantAuthority = headers['takin-tenant-authority'];
   localStorage.setItem('takinAuthority', takinAuthority);
@@ -207,24 +208,24 @@ export function errorProcess(response: BaseResponse) {
       case 'blacklist':
         if (!statusFilter.list.find(item => +item === +status)) {
           if (data && data.error.msg) {
-            message.error(data.error.msg);
+            errorHandle(data.error.msg);
             return response;
           }
           const errorMsg = getErrorMessage(status);
           if (errorMsg) {
-            message.error(`错误代码：${status} ，${errorMsg}`);
+            errorHandle(`错误代码：${status} ，${errorMsg}`);
           }
         }
         break;
       case 'whitelist':
         if (statusFilter.list.find(item => +item === +status)) {
           if (data && data.error.msg) {
-            message.error(data.error.msg);
+            errorHandle(data.error.msg);
             return response;
           }
           const errorMsg = getErrorMessage(status);
           if (errorMsg) {
-            message.error(`错误代码：${status} ，${errorMsg}`);
+            errorHandle(`错误代码：${status} ，${errorMsg}`);
           }
         }
         break;
@@ -233,12 +234,12 @@ export function errorProcess(response: BaseResponse) {
     }
   } else {
     if (data && data.error && !data.success) {
-      message.error(data.error.msg);
+      errorHandle(data.error.msg);
       return response;
     }
     const errorMsg = getErrorMessage(status);
     if (errorMsg) {
-      message.error(`错误代码：${status} ，${errorMsg}`);
+      errorHandle(`错误代码：${status} ，${errorMsg}`);
     }
   }
 
