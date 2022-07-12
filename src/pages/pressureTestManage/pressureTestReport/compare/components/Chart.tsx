@@ -8,9 +8,9 @@ const Chart = (props) => {
   const yAxis = [];
   const series = [];
 
-  const maxTime = Math.max(...data.map(x => x.time?.length));
+  const maxTime = Math.max(...data.map((x) => x.time?.length));
   // 不同报告的压测时间不同，使用压测时间最长的为准，并使用5s为间隔
-  const timeArr = Array.from({ length: maxTime }).map((x, i) =>  i * 5);
+  const timeArr = Array.from({ length: maxTime }).map((x, i) => i * 5);
 
   const seriesConfig = [
     {
@@ -38,7 +38,7 @@ const Chart = (props) => {
   seriesConfig.forEach((x, i) => {
     grid.push({
       height: 180,
-      top: 260 * i + 80
+      top: 260 * i + 80,
     });
     xAxis.push({
       type: 'category',
@@ -86,7 +86,7 @@ const Chart = (props) => {
       name: x.name,
     });
 
-    data.forEach(y => {
+    data.forEach((y) => {
       series.push({
         type: 'line',
         showSymbol: true,
@@ -124,19 +124,51 @@ const Chart = (props) => {
           axisPointer: {
             animation: false,
           },
-          // formatter: (val) => {
-          //   let str = `${val[0]?.axisValue} <br>`;
-          //   let mutiSeriAdded = false;
-          //   val.forEach((x) => {
-          //     if (!(x.seriesName === '并发数' && mutiSeriAdded)) {
-          //       str += `${x.marker} ${x.seriesName} ${x.value}<br>`;
-          //     }
-          //     if (x.seriesName === '并发数') {
-          //       mutiSeriAdded = true;
-          //     }
-          //   });
-          //   return str;
-          // },
+          formatter: (val) => {
+            const tableMap = {};
+            val.forEach((x) => {
+              tableMap[x.seriesName] = tableMap[x.seriesName] || {};
+              tableMap[x.seriesName].id = `${x.marker} ${x.seriesName}`;
+              tableMap[x.seriesName][seriesConfig[x.axisIndex].name] = x.value;
+            });
+            const tableList = Object.values(tableMap);
+            let str = `${val[0]?.axisValue} <br>`;
+            str += `<table style="color: #fff; font-size: 12px;" border="1">
+              <thead>
+                <tr>
+                  <th style="font-weight: normal;padding: 0 4px;">id</th>
+                ${seriesConfig
+                  .map(
+                    (x) =>
+                      `<th style="font-weight: normal;padding: 0 4px;">${x.name}</th>`
+                  )
+                  .join('')}
+                </tr>
+              </thead>
+              <tbody>
+              ${tableList
+                .map(
+                  (x) =>
+                    `<tr>
+                      <td style="padding: 0 4px;">${x.id}</td>
+                      ${seriesConfig
+                        .map(
+                          (y) => `<td style="padding: 0 4px;">${x[y.name]}</td>`
+                        )
+                        .join('')}
+                    </tr>`
+                )
+                .join('')}
+              </tbody>
+            </table>`;
+            // val.forEach((x) => {
+            //   str += `${x.marker} ${x.seriesName} ${seriesConfig[x.axisIndex].name} ${x.value}<br>`;
+            // });
+            return str;
+          },
+        },
+        axisPointer: {
+          link: { xAxisIndex: 'all' },
         },
       }}
     />
