@@ -89,7 +89,7 @@ const EditPage = (props) => {
   /**
    * 获取需求下拉列表
    */
-  const getDemandList = async ([params]) => {
+  const getDemandList = async (params) => {
     const {
       data: { success, data },
     } = await services.demandList(params);
@@ -326,6 +326,10 @@ const EditPage = (props) => {
         versionId: fieldState.value
       });
     });
+
+    onFieldInputChange$('versionId').subscribe(fieldState => {
+      setFieldState('demandIds', state => state.value = []);
+    });
   };
 
   /**
@@ -552,7 +556,7 @@ const EditPage = (props) => {
                     : true;
                 },
                 showSearch: true,
-                multiple: true,
+                mode: 'multiple',
               }}
               title="需求"
               enum={demandList.map((x) => ({
