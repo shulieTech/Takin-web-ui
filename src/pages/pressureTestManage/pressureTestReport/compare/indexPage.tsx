@@ -31,9 +31,11 @@ const CompareReport: React.FC = (props) => {
 
   const queryAllReports = async () => {
     setLoading(true);
-    await Promise.all(reportIds.map((x) => queryReportDetail(x))).then((res) => {
-      setReportList(res);
-    });
+    await Promise.all(reportIds.map((x) => queryReportDetail(x))).then(
+      (res) => {
+        setReportList(res);
+      }
+    );
     await Promise.all(reportIds.map((x) => queryReportTrend(x))).then((res) => {
       setChartList(res);
     });
@@ -68,17 +70,30 @@ const CompareReport: React.FC = (props) => {
         </span>
       ),
       dataIndex: 'amount',
+      render: (text) => text || 0,
     },
-    { title: '请求总数', dataIndex: 'totalRequest' },
-    { title: '最大并发', dataIndex: 'concurrent' },
-    { title: '平均并发', dataIndex: 'avgConcurrent' },
+    {
+      title: '请求总数',
+      dataIndex: 'totalRequest',
+      render: (text) => text || 0,
+    },
+    { title: '最大并发', dataIndex: 'concurrent', render: (text) => text || 0 },
+    {
+      title: '平均并发',
+      dataIndex: 'avgConcurrent',
+      render: (text) => text || 0,
+    },
     {
       title: '实际/目标TPS',
-      render: (text, record) => `${record.avgTps}/${record.tps}`,
+      render: (text, record) => `${record.avgTps || 0}/${record.tps}`,
     },
-    { title: '平均RT(ms)', dataIndex: 'avgRt' },
-    { title: '成功率(%)', dataIndex: 'successRate' },
-    { title: 'SA(%)', dataIndex: 'sa' },
+    { title: '平均RT(ms)', dataIndex: 'avgRt', render: (text) => text || 0 },
+    {
+      title: '成功率(%)',
+      dataIndex: 'successRate',
+      render: (text) => text || 0,
+    },
+    { title: 'SA(%)', dataIndex: 'sa', render: (text) => text || 0 },
   ];
 
   useEffect(() => {
@@ -121,7 +136,7 @@ const CompareReport: React.FC = (props) => {
           }}
         />
 
-        <Chart data={chartList}/>
+        <Chart data={chartList} />
       </div>
     </Spin>
   );
