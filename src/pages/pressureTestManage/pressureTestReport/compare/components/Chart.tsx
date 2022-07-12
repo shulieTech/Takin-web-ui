@@ -133,7 +133,7 @@ const Chart = (props) => {
             });
             const tableList = Object.values(tableMap);
             let str = `${val[0]?.axisValue} <br>`;
-            str += `<table style="color: #fff; font-size: 12px;" border="1">
+            str += `<table style="color: #fff; font-size: 12px;border-collapse: collapse;" border="1" bordercolor="#888">
               <thead>
                 <tr>
                   <th style="font-weight: normal;padding: 0 4px;">id</th>
