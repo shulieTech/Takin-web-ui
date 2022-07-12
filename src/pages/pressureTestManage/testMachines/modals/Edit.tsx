@@ -70,7 +70,14 @@ const EditMachineModal: React.FC<Props> = (props) => {
             rules: [
               { required: true, whitespace: true, message: '请输入机器名称' },
             ],
-          })(<Input placeholder="示例：压力机1" maxLength={30} />)}
+          })(
+            <Input
+              placeholder="示例：压力机1"
+              maxLength={30}
+              readOnly={isEdit}
+              style={{ backgroundColor: isEdit ? '#f7f8f9' : undefined }}
+            />
+          )}
         </FormItem>
         <FormItem label="机器IP" {...formItemLayout}>
           {getFieldDecorator('machineIp', {
@@ -114,7 +121,7 @@ const EditMachineModal: React.FC<Props> = (props) => {
             ],
           })(
             <Input
-              placeholder={isEdit ?  '不填为不修改原密码' : '请输入'}
+              placeholder={isEdit ? '不填为不修改原密码' : '请输入'}
               maxLength={100}
               type="password"
               autoComplete="new-password"
