@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { message, Button, Input, Popconfirm } from 'antd';
+import { message, Button, Input, Popconfirm, Tooltip } from 'antd';
 import SearchTable from 'src/components/search-table';
 import service from './service';
 import EditModal from './modals/Edit';
@@ -30,7 +30,29 @@ const EnvVarsManage = (props) => {
   const columns = [
     { title: '名称', dataIndex: 'placeholderKey' },
     { title: '值', dataIndex: 'placeholderValue' },
-    { title: '备注', dataIndex: 'remark' },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+      render: (text) => {
+        return text ? (
+          <Tooltip title={text}>
+            <div
+              style={{
+                display: 'inline-block',
+                maxWidth: 200,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {text}
+            </div>
+          </Tooltip>
+        ) : (
+          '-'
+        );
+      },
+    },
     {
       title: '操作',
       render: (text, record) => {
@@ -38,7 +60,7 @@ const EnvVarsManage = (props) => {
           <>
             <Button
               type="link"
-              onClick={() => setEditItem({})}
+              onClick={() => setEditItem(record)}
               style={{ marginRight: 8 }}
             >
               编辑
