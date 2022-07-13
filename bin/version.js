@@ -8,7 +8,9 @@ fs.writeFileSync(filePath, '');
 exec(
   `git branch --show-current > ${filePath} && git log -n 1 >> ${filePath}`,
   (err, stdout, stderr) => {
-    if (!err) {
+    if (err) {
+      console.log(err);
+    } else {
       console.log(`git版本信息已写入到：${filePath}`);
     }
   }
