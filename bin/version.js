@@ -1,7 +1,7 @@
 const { exec } = require('child_process');
 const fs = require('fs');
 
-const filePath = './dist/version.log';
+const filePath = './dist/version.html';
 
 fs.writeFileSync(filePath, '');
 
