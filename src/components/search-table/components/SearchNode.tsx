@@ -2,7 +2,7 @@
  * @name
  * @author MingShined
  */
-import { Col, Row } from 'antd';
+import { Col, Row, Icon } from 'antd';
 import { CommonForm, separateArrayToKey } from 'racc';
 import React, { useContext } from 'react';
 import ToolTipIcon from 'src/common/tooltip-icon';
@@ -81,7 +81,7 @@ const SearchNode: React.FC<SearchTableProps> = props => {
     >
       <Col
         style={{ width: 50, lineHeight: '40px' }}
-        className={props.theme === 'dark' && 'ft-white'}
+        // className={props.theme === 'dark' && 'ft-white'}
       >
         搜索：
       </Col>
@@ -95,13 +95,15 @@ const SearchNode: React.FC<SearchTableProps> = props => {
               style: { marginLeft: -8 }
             },
             shrinkNode: (
-              <ToolTipIcon
-                iconName="shrink_icon"
-                imgStyle={{ ...shrinkIconStyle, transform: 'rotate(-180deg)' }}
-              />
+              // <ToolTipIcon
+              //   iconName="shrink_icon"
+              //   imgStyle={{ ...shrinkIconStyle, transform: 'rotate(-180deg)' }}
+              // />
+              <Icon type="down" />
             ),
             expandNode: (
-              <ToolTipIcon iconName="shrink_icon" imgStyle={shrinkIconStyle} />
+              // <ToolTipIcon iconName="shrink_icon" imgStyle={shrinkIconStyle} />
+              <Icon type="down" rotate={180} />
             )
           }}
           {...props.commonFormProps}

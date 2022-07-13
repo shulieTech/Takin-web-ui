@@ -50,14 +50,15 @@ const TitleNode: React.FC<Props> = props => {
             venomBasicConfig.theme === 'dark'
               ? 'var(--BrandPrimary-500)'
               : '#fff',
-          color: venomBasicConfig.theme === 'dark' ? '#fff' : '#1890ff',
+          // color: venomBasicConfig.theme === 'dark' ? '#fff' : '#1890ff',
           boxShadow:
             venomBasicConfig.theme === 'light' && '1px 1px 0 0 #e8e8e8',
-          borderBottom: '1px solid var(--BrandPrimary-500)'
+          // borderBottom: '1px solid var(--BrandPrimary-500)'
         }}
       >
         <div className={styles.titleName}>
-          <img width={30} src={require('./../../assets/takin_logo.png')} />
+          {/* <img width={30} src={require('./../../assets/takin_logo.png')} /> */}
+          <span className="iconfont icon-Logo" style={{ fontSize: 30, color: 'var(--BrandPrimary-500)' }}/>
 
           {!props.collapsedStatus && (
             <span className={styles.logoName}>Takin</span>
