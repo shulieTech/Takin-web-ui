@@ -6,7 +6,7 @@ const filePath = './dist/version.log';
 fs.writeFileSync(filePath, '');
 
 exec(
-  `git branch --show-current > ${filePath} && git log -n 1 >> ${filePath}`,
+  `git rev-parse --abbrev-ref HEAD > ${filePath} && git log -n 1 >> ${filePath}`,
   (err, stdout, stderr) => {
     if (err) {
       console.log(err);
