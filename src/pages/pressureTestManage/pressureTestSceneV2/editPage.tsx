@@ -360,7 +360,11 @@ const EditPage = (props) => {
   }, []);
 
   // 清除编辑时详情数据中前面业务流程的带来的目标数据
-  const filteredInitialValue = cloneDeep(initialValue);
+  const filteredInitialValue = {
+    ...cloneDeep(initialValue),
+    versionId: initialValue.versionId || undefined,
+    demandIds: initialValue.demandIds || [],
+  };
   Object.keys(filteredInitialValue?.goal || {}).forEach((x) => {
     if (!flatTreeData.some((y) => y.xpathMd5 === x)) {
       delete filteredInitialValue.goal[x];
