@@ -1,12 +1,12 @@
 const { exec } = require('child_process');
 const fs = require('fs');
 
-const filePath = './dist/version.html';
+const filePath = './dist/git.json';
 
 fs.writeFileSync(filePath, '');
 
 exec(
-  `git rev-parse --abbrev-ref HEAD > ${filePath} && git log -n 1 >> ${filePath}`,
+  `branchName=$(git rev-parse --abbrev-ref HEAD); commitId=$(git rev-parse HEAD);commitTime=; echo "{\\"branchName\\": \\"$branchName\\", \\"commitId\\": \\"$commitId\\", \\"deployTime\\": \\"$(date)\\" }" > ${filePath}`,
   (err, stdout, stderr) => {
     if (err) {
       console.log(err);

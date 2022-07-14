@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { message, Button, Input, Popconfirm, Badge, Icon } from 'antd';
+import { message, Button, Input, Popconfirm, Badge, Icon, Modal } from 'antd';
 import SearchTable from 'src/components/search-table';
 import service from './service';
 import EditModal from './modals/Edit';
@@ -38,15 +38,21 @@ const TestMachineManage = (props) => {
   };
 
   const toggleEngine = async (record) => {
-    const {
-      data: { success },
-    } = await service[record.status === 2 ? 'disableEngine' : 'enableEngine']({
-      id: record.id,
+    Modal.confirm({
+      title: '提示',
+      content: `确定${record.status === 2 ? '卸载' : '部署'}该节点？`,
+      onOk: async () => {
+        const {
+          data: { success },
+        } = await service[record.status === 2 ? 'disableEngine' : 'enableEngine']({
+          id: record.id,
+        });
+        if (success) {
+          message.success('操作成功');
+          setTableReload(!tableReload);
+        }
+      }
     });
-    if (success) {
-      message.success('操作成功');
-      setTableReload(!tableReload);
-    }
   };
 
   const machineSync = async () => {
@@ -120,16 +126,9 @@ const TestMachineManage = (props) => {
               </Button>
             </Popconfirm>
             {[0, 2].includes(record.status) && (
-              <Popconfirm
-                title={`确定${
-                  record.status === 2 ? '卸载' : '部署'
-                }该节点机器？`}
-                onConfirm={() => toggleEngine(record)}
-              >
-                <Button type="link" style={{ marginRight: 8 }}>
-                  {record.status === 2 ? '卸载' : '部署'}节点
-                </Button>
-              </Popconfirm>
+              <Button type="link" style={{ marginRight: 8 }} onClick={() => toggleEngine(record)}>
+              {record.status === 2 ? '卸载' : '部署'}节点
+            </Button>
             )}
           </>
         );
