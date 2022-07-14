@@ -6,10 +6,19 @@ import RequestDetailModal from '../modals/RequestDetailModal';
 import { message, Tooltip } from 'antd';
 import copy from 'copy-to-clipboard';
 import AssertModal from 'src/pages/scriptManage/modals/AssertModal';
-import Header from 'src/common/header/Header';
+
 interface Props {
   dataSource: any;
   reportId?: string;
+  requestListQueryParams?: {
+    current: number;
+    pageSize: number;
+    startTime?: number;
+    endTime?: number;
+    sortField?: string;
+    sortType?: 'desc' | 'asc';
+  };
+  requestSearch: (params: any) => void;
 }
 interface State {
   data: any;
@@ -97,12 +106,24 @@ const RequestDetailList: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '总耗时（ms）',
-        dataIndex: 'totalRt'
+        dataIndex: 'totalRt',
+        sorter: true,
+        sortOrder:
+          props.requestListQueryParams?.sortField === 'cost' &&
+          props.requestListQueryParams?.sortType
+            ? `${props.requestListQueryParams?.sortType}end`
+            : false,
       },
       {
         ...customColumnProps,
         title: '开始时间',
-        dataIndex: 'startTime'
+        dataIndex: 'startTime',
+        sorter: true,
+        sortOrder:
+          props.requestListQueryParams?.sortField === 'startDate' &&
+          props.requestListQueryParams?.sortType
+            ? `${props.requestListQueryParams?.sortType}end`
+            : false,
       },
       {
         ...customColumnProps,
@@ -138,15 +159,33 @@ const RequestDetailList: React.FC<Props> = props => {
     ];
   };
   return (
-    <Fragment>
-      <Header title="请求流量明细" />
-      <CommonTable
-        size="small"
-        style={{ marginTop: 8 }}
-        columns={getRequestListColumns()}
-        dataSource={props.dataSource ? props.dataSource : []}
-      />
-    </Fragment>
+    <CommonTable
+      size="small"
+      style={{ marginTop: 8 }}
+      columns={getRequestListColumns()}
+      dataSource={props.dataSource ? props.dataSource : []}
+      onChange={(pagination, filters, sorter) => {
+        const sortKeyMap = {
+          totalRt: 'cost',
+          startTime: 'startDate',
+        };
+        const sortOrderMap = {
+          ascend: 'asc',
+          descend: 'desc',
+        };
+        props.requestSearch({
+          current: 0,
+          sortField:
+            sorter.columnKey && sorter.order
+              ? sortKeyMap[sorter.columnKey]
+              : undefined,
+          sortType:
+            sorter.columnKey && sorter.order
+              ? sortOrderMap[sorter.order]
+              : undefined,
+        });
+      }}
+    />
   );
 };
 export default RequestDetailList;

@@ -37,3 +37,12 @@ export const FLOW_TYPE_ENUM = {
   PRESSURE_MEASUREMENT: '压测流量',
   BUSINESS: '业务流量',
 };
+
+// 帮助文档地址
+export const DOC_HELP_URL =
+'https://shulietech.feishu.cn/docs/doccnlEBVRq7HF4ToSJ9jMIzLaf';
+// 升级文档地址
+export const DOC_UPDATE_URL =
+'https://shulietech.feishu.cn/docs/doccnvTvNxzVrH29Xvm60l7kgHc#';
+// 用户反馈地址
+export const DOC_FEEDBACK_URL = 'https://shulietech.feishu.cn/share/base/shrcn2DDo2jITnVJyDLHJ4mWpJf';

@@ -28,6 +28,10 @@ import styles from './index.less';
 import PressureTestReportService from './service';
 import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
 import { GraphData } from '@antv/g6';
+import CommonHeader from 'src/common/header/Header';
+import RequestFlowQueryForm from './components/RequestFlowQueryForm';
+import moment from 'moment';
+import BusinessActivityTree, { getFirstTreeNodeByFilter } from './components/BusinessActivityTree';
 
 interface State {
   isReload?: boolean;
@@ -43,6 +47,17 @@ interface State {
   stopReasons: any;
   graphData?: GraphData;
   tenantList: any;
+  requestListQueryParams: {
+    current?: number;
+    pageSize?: number;
+    startTime?: number;
+    // endTime?: number;
+    sortField?: string;
+    sortType?: 'desc' | 'asc';
+    methodName?: string;
+    serviceName?: string;
+  };
+  defaultTreeSelectedKey?: string;
 }
 
 interface Props {
@@ -71,6 +86,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
     startTime: null,
     stopReasons: null,
     tenantList: [],
+    requestListQueryParams: {},
   });
 
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
@@ -90,21 +106,22 @@ const PressureTestLive: React.FC<Props> = (props) => {
     reFresh();
     queryLiveDetail(id);
     queryLiveChartsInfo(id, state.tabKey);
-    queryRequestList({
-      startTime:
-        state.startTime &&
-        Date.parse(
-          new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-        ) !== 0 &&
-        !isNaN(
-          Date.parse(
-            new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-          )
-        )
-          ? Date.parse(state.startTime && state.startTime.replace(/-/g, '/'))
-          : null,
-      sceneId: id,
-    });
+    queryRequestList();
+    // queryRequestList({
+    //   startTime:
+    //     state.startTime &&
+    //     Date.parse(
+    //       new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+    //     ) !== 0 &&
+    //     !isNaN(
+    //       Date.parse(
+    //         new Date(state.startTime && state.startTime.replace(/-/g, '/'))
+    //       )
+    //     )
+    //       ? Date.parse(state.startTime && state.startTime.replace(/-/g, '/'))
+    //       : null,
+    //   sceneId: id,
+    // });
     if (ticker % 2 === 0) {
       // 10秒刷新一次链路图
       // queryReportGraphInfo(id, state.tabKey);
@@ -188,7 +205,25 @@ const PressureTestLive: React.FC<Props> = (props) => {
         tabList: data,
         tabKey: data && data[0].xpathMd5,
         selectedTreeNode: data?.[0],
+        defaultTreeSelectedKey: data?.[0].xpathMd5,
       });
+
+      // 递归默认选中第一个节点
+      // const firstTreeNode = getFirstTreeNodeByFilter(data, (node) => !!node.identification);
+
+      // if (firstTreeNode) {
+      //   const [methodName, serviceName] = firstTreeNode?.identification?.split('|') || [];
+      //   setState({
+      //     defaultTreeSelectedKey: firstTreeNode?.xpathMd5,
+      //     requestListQueryParams: {
+      //       ...state.requestListQueryParams,
+      //       methodName,
+      //       serviceName,
+      //     }
+      //   });
+
+      // }
+      
     }
   };
 
@@ -212,13 +247,23 @@ const PressureTestLive: React.FC<Props> = (props) => {
   /**
    * @name 获取压测实况请求流量列表
    */
-  const queryRequestList = async (value) => {
+  const queryRequestList = async (value = {}) => {
+    const newValue = {
+      ...state.requestListQueryParams,
+      ...value,
+      startTime: moment(state.detailData.startTime).valueOf(),
+      // timeRange: [moment().subtract(5, 'second').valueOf(), moment().valueOf()],
+    };
+    setState({
+      requestListQueryParams: newValue,
+    });
     const {
       data: { success, data },
     } = await PressureTestReportService.queryRequestList({
-      ...value,
       current: 0,
       pageSize: 50,
+      ...newValue,
+      sceneId: id,
     });
     if (success) {
       setState({
@@ -420,10 +465,74 @@ const PressureTestLive: React.FC<Props> = (props) => {
     {
       title: '请求流量明细',
       component: (
-        <RequestDetailList
-          dataSource={state.requestList ? state.requestList : []}
-          reportId={detailData.id}
-        />
+        <>
+          <CommonHeader title="请求流量明细" />
+          <div
+            style={{
+              display: 'flex',
+              marginTop: 16,
+            }}
+          >
+            <div className={styles.leftSelected}>
+              <BusinessActivityTree
+                tabList={state.tabList}
+                defaultSelectedKey={state.defaultTreeSelectedKey}
+                // checkNodeDisabled={node => !node.identification}
+                onChange={(key, e) => {
+                  let result = {
+                    // serviceName: undefined,
+                    // methodName: undefined,
+                    xpathMd5: undefined,
+                    current: 0,
+                  };
+                  if (e.selected) {
+                    // const [methodName, serviceName] =
+                    //   e?.node?.props?.dataRef?.identification?.split('|') || [];
+                    result = {
+                      // methodName,
+                      // serviceName,
+                      xpathMd5: key,
+                      current: 0,
+                    };
+                  }
+                  queryRequestList(result);
+                  // setState({
+                  //   requestListQueryParams: {
+                  //     ...state.requestListQueryParams,
+                  //     ...result,
+                  //   },
+                  // });
+                }}
+              />
+            </div>
+            <div
+              className={styles.riskMachineList}
+              style={{ position: 'relative', paddingLeft: 16 }}
+            >
+              <RequestFlowQueryForm
+                reportId={state.detailData?.id}
+                // disabledKeys={['timeRange']}
+                // defaultQuery={{
+                //   timeRange: state.requestListQueryParams.timeRange,
+                // }}
+                onSubmit={(values) => {
+                  queryRequestList({
+                    ...values,
+                    current: 0,
+                  });
+                }}
+              />
+              <RequestDetailList
+                requestListQueryParams={state.requestListQueryParams}
+                dataSource={state.requestList ? state.requestList : []}
+                reportId={detailData.id}
+                requestSearch={(params) => {
+                  queryRequestList(params);
+                }}
+              />
+            </div>
+          </div>
+        </>
       ),
     },
   ];

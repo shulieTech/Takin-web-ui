@@ -21,11 +21,15 @@ const SearchTable = (props: SearchTableProps, ref) => {
   const [state, setState] = useStateReducer(getInitState());
 
   // 转发内部的一些属性及方法
-  useImperativeHandle(ref, () => ({
-    queryList,
-    tableState: state,
-    setTableState: setState,
-  }), [state]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      queryList,
+      tableState: state,
+      setTableState: setState,
+    }),
+    [state]
+  );
 
   useEffect(() => {
     if (!state.flag && props.searchParams) {
@@ -34,7 +38,7 @@ const SearchTable = (props: SearchTableProps, ref) => {
     setState({
       searchParams: { ...state.searchParams },
       checkedKeys: [],
-      checkedRows: []
+      checkedRows: [],
     });
     // setState({ searchParams: { ...state.searchParams, current: 0 } });
     queryList(true);
@@ -46,11 +50,11 @@ const SearchTable = (props: SearchTableProps, ref) => {
     }
     const searchParams = {
       ...getInitState().searchParams,
-      ...props.searchParams
+      ...props.searchParams,
     };
     setState({
       searchParams,
-      flag: true
+      flag: true,
     });
   }, [props.searchParams]);
 
@@ -73,7 +77,7 @@ const SearchTable = (props: SearchTableProps, ref) => {
     const getSearchParams = { ...state.searchParams };
     window._search_table_params = getSearchParams; // 某些情况下外部需要获取页码信息
 
-    Object.keys(getSearchParams).forEach(item => {
+    Object.keys(getSearchParams).forEach((item) => {
       if (typeof getSearchParams[item] === 'string') {
         getSearchParams[item] = getSearchParams[item].trim();
       }
@@ -82,13 +86,18 @@ const SearchTable = (props: SearchTableProps, ref) => {
       }
     });
 
+    let finnalParams = filterSearchParams(getSearchParams);
+    if (typeof props.beforeSearch === 'function') {
+      finnalParams = props.beforeSearch(finnalParams);
+    }
+
     const ajaxEvent =
       method === 'GET'
-        ? httpGet(url, filterSearchParams(getSearchParams))
-        : httpPost(url, filterSearchParams(getSearchParams));
+        ? httpGet(url, finnalParams)
+        : httpPost(url, finnalParams);
     const {
       data: { data, success },
-      total
+      total,
     } = await ajaxEvent;
     if (props.onSearch) {
       props.onSearch(state.searchParams, data);
@@ -99,7 +108,7 @@ const SearchTable = (props: SearchTableProps, ref) => {
         dataSource: data,
         loading: false,
         // checkedKeys: reload ? [] : state.checkedKeys,
-        flag: true
+        flag: true,
       });
     } else {
       setState({

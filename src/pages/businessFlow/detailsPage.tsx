@@ -154,7 +154,8 @@ const BusinessFlowDetail: React.FC<Props> = (props) => {
    */
   const queryMatchProcess = async () => {
     setState({
-      visible: true,
+      // visible: true,
+      visible: false, // 不显示解析中的弹窗
       fileModalValues: {
         fileTitle: '业务活动匹配',
         status: 'loading',

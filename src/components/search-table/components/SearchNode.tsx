@@ -69,9 +69,10 @@ const SearchNode: React.FC<SearchTableProps> = props => {
 
     // 新的重置逻辑
     const defaultSearchParams = getInitState().searchParams;
-    setState({ searchParams: defaultSearchParams });
     if (props.onTabReset) {
       props.onTabReset(defaultSearchParams);
+    } else {
+      setState({ searchParams: defaultSearchParams });
     }
   };
   return (

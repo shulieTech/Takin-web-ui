@@ -169,6 +169,7 @@ const RootDirectory: React.FC<Props> = props => {
           确认编辑
         </Button>,
       ]}
+      destroyOnClose
     >
       <Form onSubmit={handleOk} {...formItemProps}>
         <Form.Item

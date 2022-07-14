@@ -1,4 +1,4 @@
-import { InputNumber, message, Tabs, Tooltip, Tree } from 'antd';
+import { InputNumber, message } from 'antd';
 import { CommonModal } from 'racc';
 import React, { useState, useEffect, ReactNode } from 'react';
 import { TestMode } from '../../pressureTestScene/enum';
@@ -6,6 +6,7 @@ import PressureTestReportService from '../service';
 import styles from './../index.less';
 import LineCharts from './LineCharts';
 // import GraphNode from 'src/components/g6-graph/GraphNode';
+import BusinessActivityTree from './BusinessActivityTree';
 
 interface Props {
   tabList?: any[];
@@ -31,13 +32,14 @@ const LinkCharts: React.FC<Props> = (props) => {
   // 旧版的压测模式pressureType在detailData里，新版的混合场景压测在tree的节点数据里
   const isOldVersionTpsTest =
     state.detailData.pressureType === TestMode.TPS模式;
-  const isMutiTpsTest = state.selectedTreeNode?.pressureType === TestMode.TPS模式;
+  const isMutiTpsTest =
+    state.selectedTreeNode?.pressureType === TestMode.TPS模式;
   const xpathMd5ForOldTpsTest = 'all';
 
   const handleChangeTab = (value, e) => {
-    if (value[0]) {
+    if (value) {
       setState({
-        tabKey: value[0],
+        tabKey: value,
         selectedTreeNode: e?.node?.props?.dataRef,
       });
     }
@@ -86,42 +88,6 @@ const LinkCharts: React.FC<Props> = (props) => {
     }
   }, [state.selectedTreeNode?.xpathMd5]);
 
-  const renderTreeNodes = (data) => {
-    return (
-      data &&
-      data.map((item) => {
-        if (item.children && item.children.length) {
-          return (
-            <Tree.TreeNode
-              title={
-                <Tooltip title={item.testName} placement="right">
-                  <span>{item.testName}</span>
-                </Tooltip>}
-              key={item.xpathMd5}
-              dataRef={item}
-              treeDefaultExpandAll={true}
-              style={{ color: '#fff', width: 100 }}
-            >
-              {renderTreeNodes(item.children)}
-            </Tree.TreeNode>
-          );
-        }
-        return (
-          <Tree.TreeNode
-            style={{ color: '#fff' }}
-            key={item.xpathMd5}
-            dataRef={item}
-            title={
-              <Tooltip title={item.testName} placement="right">
-                <span>{item.testName}</span>
-              </Tooltip>}
-            children={item.children}
-          />
-        );
-      })
-    );
-  };
-
   return (
     <div
       style={{
@@ -130,15 +96,11 @@ const LinkCharts: React.FC<Props> = (props) => {
       }}
     >
       <div className={styles.leftSelected}>
-        {state.tabList && state.tabList.length > 0 && (
-          <Tree
-            onSelect={handleChangeTab}
-            defaultExpandAll
-            defaultSelectedKeys={[state.tabKey]}
-          >
-            {renderTreeNodes(state.tabList)}
-          </Tree>
-        )}
+        <BusinessActivityTree
+          tabList={state.tabList}
+          defaultSelectedKey={state.tabKey}
+          onChange={handleChangeTab}
+        />
       </div>
       <div className={styles.riskMachineList} style={{ position: 'relative' }}>
         {props.isLive && (isOldVersionTpsTest || isMutiTpsTest) && (
