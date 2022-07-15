@@ -7,7 +7,8 @@
     "test": "umi test",
     "lint:test": "tslint -c tslint.json -p tsconfig.json",
     "lint:fix": "tslint -p tsconfig.json --fix",
-    "precommit": "npm run lint:test"
+    "precommit": "npm run lint:test",
+    "postbuild": "node ./bin/version.js"
   },
   "devDependencies": {
     "@types/antd": "^1.0.0",
