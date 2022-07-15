@@ -83,7 +83,7 @@ const ShadowConsumer: React.FC<Props> = props => {
           className: styles.consumerTable,
           bodyStyle: {
             height: document.body.offsetHeight - 300,
-            overflow: 'scroll',
+            overflow: 'auto',
             paddingBottom: 84
           }
         }}

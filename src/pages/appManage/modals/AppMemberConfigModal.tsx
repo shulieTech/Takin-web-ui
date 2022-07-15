@@ -75,7 +75,7 @@ const AppMemberConfigModal: React.FC<Props> = props => {
       btnText={props.btnText}
       onClick={() => handleClick()}
     >
-      <Row type="flex" style={{ height: 700, overflow: 'scroll' }}>
+      <Row type="flex" style={{ height: 700, overflow: 'auto' }}>
         <div className={styles.leftSelected}>
           {roleList &&
             roleList.map((item, key) => {

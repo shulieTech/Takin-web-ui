@@ -413,7 +413,7 @@ const StepB = (state, setState, props): FormCardMultipleDataSourceBean => {
     return (
       <div
         className={styles.linkDetailTable}
-        style={{ width: 800, height: 400, overflowY: 'scroll' }}
+        style={{ width: 800, height: 400, overflowY: 'auto' }}
       >
         <CommonTable
           // bordered={false}
@@ -612,7 +612,7 @@ const StepB = (state, setState, props): FormCardMultipleDataSourceBean => {
           >
             <div
               className={styles.linkListLeft}
-              style={{ minWidth: 500, overflow: 'scroll', width: '70%' }}
+              style={{ minWidth: 500, overflow: 'auto', width: '70%' }}
             >
               {state.treeData.length === 0 && (
                 <Button
@@ -624,7 +624,7 @@ const StepB = (state, setState, props): FormCardMultipleDataSourceBean => {
               )}
               <div className={styles.customTree}>
                 {state.treeData && state.treeData.length > 0 && (
-                  <Tree style={{ overflow: 'scroll' }} defaultExpandAll>
+                  <Tree style={{ overflow: 'auto' }} defaultExpandAll>
                     {renderTreeNodes(state.treeData)}
                   </Tree>
                 )}

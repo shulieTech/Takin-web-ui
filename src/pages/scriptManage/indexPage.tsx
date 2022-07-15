@@ -199,7 +199,7 @@ const ScriptManage: React.FC<ScriptManageProps> = (props) => {
       >
         {(!state.scriptDebugId && state.debugStatus !== 0) ||
         state.debugStatus === 5 ? (
-          <div style={{ height: 400, overflow: 'scroll' }}>
+          <div style={{ height: 400, overflow: 'auto' }}>
             {state.errorInfo &&
               state.errorInfo.map((item, k) => {
                 return (

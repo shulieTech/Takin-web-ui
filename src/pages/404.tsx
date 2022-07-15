@@ -67,7 +67,7 @@ const NotFoundAndChildPage = withRouter((props) => {
         height: '100%',
         backgroundColor: '#fff',
         borderRadius: '4px 4px 0 0',
-        overflow: 'scroll',
+        overflow: 'auto',
         border: 'none',
       }}
     />

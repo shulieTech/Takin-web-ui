@@ -127,7 +127,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
               <Tooltip
                 placement="bottomLeft"
                 title={
-                  <div style={{ maxHeight: 300, overflow: 'scroll' }}>
+                  <div style={{ maxHeight: 300, overflow: 'auto' }}>
                     <div style={{ textAlign: 'right' }}>
                       <a
                         onClick={() => handleCopy(`${row.methodName}/${text}`)}
@@ -206,7 +206,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
             <Tooltip
               placement="bottomLeft"
               title={
-                <div style={{ maxHeight: 300, overflow: 'scroll' }}>
+                <div style={{ maxHeight: 300, overflow: 'auto' }}>
                   <div style={{ textAlign: 'right' }}>
                     <a onClick={() => handleCopy(text)}>复制</a>
                   </div>
@@ -257,7 +257,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
             <Tooltip
               placement="bottomLeft"
               title={
-                <div style={{ maxHeight: 300, overflow: 'scroll' }}>
+                <div style={{ maxHeight: 300, overflow: 'auto' }}>
                   <div style={{ textAlign: 'right' }}>
                     <a onClick={() => handleCopy(text)}>复制</a>
                   </div>
@@ -429,7 +429,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       onClick={() => handleClick()}
     >
       <div
-        style={{ height: document.body.clientHeight - 200, overflow: 'scroll' }}
+        style={{ height: document.body.clientHeight - 200, overflow: 'auto' }}
       >
         <div style={{ marginBottom: 26 }}>
           <div style={{ lineHeight: '32px', marginBottom: 8 }}>

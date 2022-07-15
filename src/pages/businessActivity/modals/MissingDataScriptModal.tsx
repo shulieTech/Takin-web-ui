@@ -141,7 +141,7 @@ const MissingDataScriptModal: React.FC<Props> = (props) => {
       />
       <div
         className={styles.missingDataWrap}
-        style={{ height: 600, overflowY: 'scroll', marginTop: 16 }}
+        style={{ height: 600, overflowY: 'auto', marginTop: 16 }}
       >
         <Collapse
           defaultActiveKey={['0']}
