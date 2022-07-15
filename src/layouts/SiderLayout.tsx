@@ -223,6 +223,11 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   const disableTenant = getThemeByKeyName('disableTenant');
 
+  // 有此参数的时候只显示主体内容
+  if (location.query?.bare === '1') {
+    return children;
+  }
+
   return (
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}

@@ -122,6 +122,11 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
             disabled={disabledKeys.includes('traceId')}
           />
         ),
+        colProps: {
+          md: 12,
+          xs: 12,
+          sm: 12
+        }
       },
       // {
       //   key: 'appName',
@@ -187,6 +192,11 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
             ]}
           />
         ),
+        colProps: {
+          md: 12,
+          xs: 12,
+          sm: 12
+        }
       },
       {
         key: 'request',
@@ -197,11 +207,21 @@ const RequestFlowQueryForm: React.FC<Props> = (props) => {
             disabled={disabledKeys.includes('request')}
           />
         ),
+        colProps: {
+          md: 12,
+          xs: 12,
+          sm: 12
+        }
       },
       {
         key: 'costRange',
         label: '',
         node: <CostRange />,
+        colProps: {
+          md: 12,
+          xs: 12,
+          sm: 12
+        }
       },
     ];
   };
