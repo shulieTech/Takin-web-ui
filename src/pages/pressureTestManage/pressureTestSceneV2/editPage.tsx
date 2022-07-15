@@ -322,9 +322,11 @@ const EditPage = (props) => {
     }
 
     onFieldValueChange$('versionId').subscribe(fieldState => {
-      getDemandList({
-        versionId: fieldState.value
-      });
+      if (fieldState.value) {
+        getDemandList({
+          versionId: fieldState.value,
+        });
+      }
     });
 
     onFieldInputChange$('versionId').subscribe(fieldState => {
