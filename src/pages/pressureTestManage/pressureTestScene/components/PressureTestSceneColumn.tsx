@@ -11,6 +11,7 @@ import {
   Popconfirm,
   Popover,
   Modal,
+  Tag,
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
@@ -194,6 +195,13 @@ const getPressureTestSceneColumns = (
       ...customColumnProps,
       title: '压测场景名称',
       dataIndex: 'sceneName',
+    },
+    {
+      ...customColumnProps,
+      title: '来源',
+      render: (text, record) => {
+        return <Tag style={{ marginRight: 8 }}>{record.configId ? 'Takin' : 'Jmeter'}</Tag>;
+      }
     },
     {
       ...customColumnProps,

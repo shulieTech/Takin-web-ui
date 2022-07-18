@@ -280,7 +280,7 @@ const BaseTab: React.FC<Props> = (props) => {
               x-component="TextArea"
               x-component-props={{
                 placeholder: `若接口已接入探针，此处回自动扫描数据。若未接入探针，您也可以手动填写\n以 Key/Value 形式填写， 多对 Key/Value 用换行表示，如 :\nkey1:value1\nkey2:value2`,
-                maxLength: 500,
+                // maxLength: 500,
                 rows: 10,
               }}
               x-rules={[textRule]}
@@ -343,7 +343,7 @@ const BaseTab: React.FC<Props> = (props) => {
               x-component="TextArea"
               x-component-props={{
                 placeholder: `请输入不同键值对（Key/Value）以 JSON 格式填写，如：\n{“userId”:12,”userName”:”Shulie”}`,
-                maxLength: 500,
+                // maxLength: 500,
                 rows: 10,
               }}
               x-rules={[textRule]}

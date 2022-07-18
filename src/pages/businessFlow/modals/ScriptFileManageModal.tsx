@@ -69,7 +69,7 @@ const ScriptFileManageModal: React.FC<Props> = props => {
      * @name 判断是否是可接受类型
      */
     function isAcceptType(ext) {
-      return ['jar', 'csv', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'xls', 'xlsx'].indexOf(ext.toLowerCase()) !== -1;
+      return ['jar', 'csv', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'xls', 'xlsx', 'js'].indexOf(ext.toLowerCase()) !== -1;
     }
 
     setState({

@@ -336,6 +336,7 @@ const ScriptFileUpload = (
                   'gif',
                   'xls',
                   'xlsx',
+                  'js',
                 ]),
             }}
             fileName="file"
