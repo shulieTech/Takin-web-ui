@@ -120,7 +120,7 @@ const NodeManageListOld: React.FC<Props> = props => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 200 }}
+        // style={{ height: document.body.clientHeight - 200 }}
       >
         <Row
           type="flex"

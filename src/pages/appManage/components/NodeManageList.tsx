@@ -219,7 +219,7 @@ const NodeManageList: React.FC<Props> = props => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 200 }}
+        // style={{ height: document.body.clientHeight - 200 }}
       >
         <CustomAlert
           types={state.errorMsg ? 'error' : 'info'}

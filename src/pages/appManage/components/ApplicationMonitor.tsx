@@ -230,7 +230,7 @@ const ApplicationMonitor: React.FC<Props> = (props) => {
     <Fragment>
       <div
         className={styles.tableWrap}
-        style={{ height: document.body.clientHeight - 200 }}
+        // style={{ height: document.body.clientHeight - 200 }}
       >
         <Row type="flex" style={{ marginBottom: 20, marginTop: 20 }}>
           <Col span={4}>
@@ -325,7 +325,7 @@ const ApplicationMonitor: React.FC<Props> = (props) => {
             detailData
           )}
           dataSource={state.List ? state.List : []}
-          scroll={{ x: 1500 }}
+          scroll={{ x: 'max-content' }}
         />
       </div>
       <div

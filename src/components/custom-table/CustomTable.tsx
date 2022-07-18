@@ -17,14 +17,14 @@ const CustomTable: React.FC<Props> = props => {
       className={styles.customTable}
       locale={{
         emptyText: (
-          <div>
+          <div style={{ padding: '32px 0' }}>
             <img width={144} src={require('./../../assets/emptyData.png')} />
             <p
               style={{
                 fontSize: 20,
                 color: 'var(--Netural-14)',
                 fontWeight: 600,
-                marginTop: 32
+                marginTop: 32,
               }}
             >
               暂无数据

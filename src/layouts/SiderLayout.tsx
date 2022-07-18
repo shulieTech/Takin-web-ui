@@ -239,7 +239,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       />
       {state.request && (
         <Layout
-          className="flex"
+          className="flex h-100p"
           style={{
             backgroundColor: '#1D2530',
           }}
@@ -251,11 +251,12 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
            /> */}
           <ConfigProvider getPopupContainer={() => popupDom.current}>
             <div
-              className="h-100p"
               style={{
+                flex: 1,
                 backgroundColor: '#1D2530',
                 display: 'flex',
                 flexDirection: 'column',
+                overflow: 'auto',
               }}
               ref={popupDom}
             >

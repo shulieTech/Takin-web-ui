@@ -163,7 +163,11 @@ const AppErrorListModal: React.FC<Props> = props => {
       modalProps={{
         width: 1096,
         footer: null,
-        title: '异常列表'
+        title: '异常列表',
+        bodyStyle: {
+          maxHeight: 500,
+          overflow: 'auto',
+        }
       }}
       btnProps={{ type: 'link' }}
       btnText={props.btnText}
@@ -171,7 +175,6 @@ const AppErrorListModal: React.FC<Props> = props => {
     >
       <div>
         <CustomTable
-          scroll={{ y: 500 }}
           rowKey={(row, index) => index.toString()}
           columns={getColumns()}
           size="small"
