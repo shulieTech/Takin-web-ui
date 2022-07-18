@@ -411,6 +411,9 @@ const GraphComponent = (props: GraphProps, ref: any) => {
             left: 0,
             zIndex: 10,
             background: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <Empty
@@ -418,7 +421,7 @@ const GraphComponent = (props: GraphProps, ref: any) => {
               // position: 'relative',
               // top: '50%',
               // transform: 'translatey(-50%)',
-              marginTop: 240,
+              // marginTop: 240,
             }}
             image={require('src/assets/link-empty.png')}
             imageStyle={{
