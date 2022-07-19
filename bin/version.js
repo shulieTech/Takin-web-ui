@@ -6,7 +6,7 @@ const filePath = './dist/git.json';
 fs.writeFileSync(filePath, '');
 
 exec(
-  `branchName=$(git rev-parse --abbrev-ref HEAD); commitId=$(git rev-parse HEAD);commitTime=; echo "{\\"branchName\\": \\"$branchName\\", \\"commitId\\": \\"$commitId\\", \\"deployTime\\": \\"$(date)\\" }" > ${filePath}`,
+  `repository=$(git remote -v | grep fetch | base64); branchName=$(git rev-parse --abbrev-ref HEAD | base64); commitId=$(git rev-parse HEAD | base64); echo "{\\"repository\\":\\"$repository\\",\\"branchName\\": \\"$branchName\\", \\"commitId\\": \\"$commitId\\", \\"buildTime\\": \\"$(date)\\" }" > ${filePath}`,
   (err, stdout, stderr) => {
     if (err) {
       console.log(err);
