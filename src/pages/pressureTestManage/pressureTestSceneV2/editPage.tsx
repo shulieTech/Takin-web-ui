@@ -34,6 +34,7 @@ import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 import { cloneDeep, debounce } from 'lodash';
 import moment from 'moment';
+import { CronSelctComponent } from 'src/components/cron-selector/CronSelect';
 
 const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
   FormEffectHooks;
@@ -405,6 +406,7 @@ const EditPage = (props) => {
             Switch,
             DatePicker,
             ExcludeApps,
+            CronSelctComponent,
             RadioGroup: Radio.Group,
             TextArea: Input.TextArea,
           }}
@@ -428,7 +430,7 @@ const EditPage = (props) => {
           <FormLayout
             name="step-1"
             labelCol={4}
-            wrapperCol={10}
+            wrapperCol={16}
             prefixCls={undefined}
             labelAlign={undefined}
           >
@@ -518,6 +520,18 @@ const EditPage = (props) => {
                         ? '启动时间需晚于当前时间'
                         : '';
                     },
+                  },
+                ]}
+              />
+              <Field
+                name="cronTime"
+                type="string"
+                x-component="CronSelctComponent"
+                title="执行周期"
+                x-rules={[
+                  {
+                    required: true,
+                    message: '请选择执行周期',
                   },
                 ]}
               />
