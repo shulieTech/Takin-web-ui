@@ -8,6 +8,7 @@ interface CronSelectProps {
   onChange?: (value: string) => void;
 }
 
+// cron选择器，官方版本不兼容antd 3.x，这里用官方2.1.0源码做了魔改，交互上有一定差异
 // 汉化参考 https://github.com/xrutayisire/react-js-cron/blob/master/src/locale.ts
 const LOCALE_ZH_CN: DefaultLocale = {
   everyText: '每',

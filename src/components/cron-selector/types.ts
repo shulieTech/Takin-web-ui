@@ -190,7 +190,7 @@ export interface Locale {
   prefixMonths?: string;
   prefixMonthDays?: string;
   prefixWeekDays?: string;
-  prefixWeekDaysForMonthAndYearPeriod?: string;
+  prefixWeekDaysForMonthAndYearPeriod?: string | ReactNode;
   prefixHours?: string;
   prefixMinutes?: string;
   prefixMinutesForHourPeriod?: string;

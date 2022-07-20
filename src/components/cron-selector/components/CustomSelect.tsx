@@ -7,6 +7,8 @@ import { classNames, sort } from '../utils';
 import { parsePartArray, partToString, formatValue } from '../converter';
 import '../styles.less';
 
+// antd 3.x版本的select不支持options和onClear等属性
+
 const CustomSelect = (props: CustomSelectProps) => {
   const {
     value,
@@ -251,11 +253,11 @@ const CustomSelect = (props: CustomSelectProps) => {
       mode={
         mode === 'single' && !periodicityOnDoubleClick ? undefined : 'multiple'
       }
-      allowClear={!readOnly}
+      // allowClear={!readOnly}
       virtual={false}
       defaultOpen={readOnly ? false : undefined}
       value={stringValue}
-      onClear={onClear}
+      // onClear={onClear}
       tagRender={renderTag}
       className={internalClassName}
       dropdownClassName={dropdownClassNames}
