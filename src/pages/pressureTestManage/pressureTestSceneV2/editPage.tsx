@@ -484,7 +484,7 @@ const EditPage = (props) => {
                   value: x.id,
                 }))}
               />
-              <Field
+              {/* <Field
                 name="isScheduler"
                 type="boolean"
                 x-component="Switch"
@@ -496,6 +496,30 @@ const EditPage = (props) => {
                     condition: '{{ $self.value }}',
                   },
                 ]}
+              /> */}
+              <Field
+                name="isScheduler"
+                type="boolean"
+                x-component="RadioGroup"
+                title="执行方式"
+                enum={[
+                  { label: '手动', value: 0 },
+                  { label: '定时', value: 1 },
+                  { label: '周期', value: 2 },
+                ]}
+                default={0}
+                x-linkages={[
+                  {
+                    type: 'value:visible',
+                    target: '.executeTime',
+                    condition: '{{ $self.value === 1 }}',
+                  },
+                  {
+                    type: 'value:visible',
+                    target: '.cronTime',
+                    condition: '{{ $self.value === 2 }}',
+                  },
+                ]}
               />
               <Field
                 name="executeTime"
@@ -503,7 +527,7 @@ const EditPage = (props) => {
                 x-component="DatePicker"
                 title="启动时间"
                 x-component-props={{
-                  style: { width: '100%' },
+                  style: { width: 240 },
                   showTime: { format: 'HH:mm' },
                   format: 'YYYY-MM-DD HH:mm',
                   disabledDate: (currentDate) =>
