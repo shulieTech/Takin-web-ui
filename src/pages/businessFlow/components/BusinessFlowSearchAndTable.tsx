@@ -24,7 +24,7 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
   useEffect(() => {
     queryBusinessFlowList({
       ...state.searchParams,
-      businessFlowName: state.searchInputValue
+      businessFlowName: state.businessFlowName
     });
   }, [state.isReload, state.searchParams.current, state.searchParams.pageSize]);
 
@@ -100,9 +100,10 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
           <Search
             placeholder="搜索业务流程"
             enterButton
-            onSearch={() =>
+            onSearch={(val) =>
               setState({
                 isReload: !state.isReload,
+                businessFlowName: val,
                 searchParams: {
                   pageSize: state.searchParams.pageSize,
                   current: 0
@@ -124,6 +125,7 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
             onClick={() => {
               setState({
                 searchInputValue: null,
+                businessFlowName: null,
                 isReload: !state.isReload,
                 searchParams: {
                   current: 0,
@@ -138,7 +140,7 @@ const BusinessFlowSearchAndTable: React.FC<Props> = props => {
             onClick={() => {
               queryBusinessFlowList({
                 ...state.searchParams,
-                businessFlowName: state.searchInputValue
+                businessFlowName: state.businessFlowName
               });
               // setState({
               //   searchInputValue: null,
