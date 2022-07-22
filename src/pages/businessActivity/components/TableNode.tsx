@@ -2,7 +2,7 @@
  * @name
  * @author chuxu
  */
-import { Badge, Button, Popconfirm, Tooltip } from 'antd';
+import { Badge, Button, message, Popconfirm, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import React, { Fragment } from 'react';
@@ -33,19 +33,21 @@ const getColumns = (
       data: { success, data },
     } = await BusinessActivityService.deleteSystemFlow(activityId);
     if (success) {
+      message.success('操作成功');
       setSystemFlowState({
         isReload: !systemFlowState.isReload,
       });
     }
   };
   /**
-   * @name 删除,刷新列表
+   * @name 复制
    */
   const handleCopy = async (activityId) => {
     const {
       data: { success, data },
     } = await BusinessActivityService.copyActivity({ activityId });
     if (success) {
+      message.success('操作成功');
       setSystemFlowState({
         isReload: !systemFlowState.isReload,
       });
