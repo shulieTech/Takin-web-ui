@@ -38,6 +38,19 @@ const getColumns = (
       });
     }
   };
+  /**
+   * @name 删除,刷新列表
+   */
+  const handleCopy = async (activityId) => {
+    const {
+      data: { success, data },
+    } = await BusinessActivityService.copyActivity({ activityId });
+    if (success) {
+      setSystemFlowState({
+        isReload: !systemFlowState.isReload,
+      });
+    }
+  };
 
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
@@ -208,6 +221,17 @@ const getColumns = (
                 });
               }}
             />
+          </AuthorityBtn>
+          <AuthorityBtn isShow={btnAuthority?.businessActivity_2_create}>
+            <Popconfirm
+              title="确定复制？"
+              cancelText="取消"
+              onConfirm={() => handleCopy(row.activityId)}
+            >
+              <Button style={{ marginLeft: 8 }} type="link">
+                复制
+              </Button>
+            </Popconfirm>
           </AuthorityBtn>
         </Fragment>
       ),

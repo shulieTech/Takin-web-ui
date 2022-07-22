@@ -335,6 +335,13 @@ const BusinessActivityService = {
     const url = '/domain/delete';
     return httpDelete(url, {}, { params });
   },
+  /**
+   * @name 删除业务域
+   */
+  async copyActivity(data = {}) {
+    const url = '/activities/copy';
+    return httpPost(url, data);
+  },
 };
 
 export default BusinessActivityService;
