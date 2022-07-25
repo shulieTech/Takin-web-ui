@@ -19,8 +19,8 @@ const PressureStatistics: React.FC = (props) => {
     startTime: moment()
       .subtract(7, 'days')
       .startOf('day')
-      .format('YYYY-MM-DD: HH:mm:ss'),
-    endTime: moment().endOf('day').format('YYYY-MM-DD: HH:mm:ss'),
+      .format('YYYY-MM-DD HH:mm:ss'),
+    endTime: moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'),
   });
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
@@ -108,10 +108,10 @@ const PressureStatistics: React.FC = (props) => {
                   ? {
                     startTime: val[0]
                         .startOf('day')
-                        .format('YYYY-MM-DD: HH:mm:ss'),
+                        .format('YYYY-MM-DD HH:mm:ss'),
                     endTime: val[1]
                         .endOf('day')
-                        .format('YYYY-MM-DD: HH:mm:ss'),
+                        .format('YYYY-MM-DD HH:mm:ss'),
                   }
                   : {
                     startTime: undefined,
