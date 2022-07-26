@@ -519,14 +519,6 @@ const EditPage = (props) => {
                     target: '.cronTime',
                     condition: '{{ $self.value === 2 }}',
                   },
-                  {
-                    type: 'value:state',
-                    target: '.cronTime',
-                    condition: '{{ $self.value === 2 && !$target.value }}',
-                    state: {
-                      value: '* * * * *'
-                    } 
-                  },
                 ]}
               />
               <Field
@@ -566,6 +558,7 @@ const EditPage = (props) => {
                     message: '请选择执行周期',
                   },
                 ]}
+                default="* * * * *"
               />
             </Field>
             <Field
