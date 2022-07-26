@@ -519,6 +519,14 @@ const EditPage = (props) => {
                     target: '.cronTime',
                     condition: '{{ $self.value === 2 }}',
                   },
+                  {
+                    type: 'value:state',
+                    target: '.cronTime',
+                    condition: '{{ $self.value === 2 && !$target.value }}',
+                    state: {
+                      value: '* * * * *'
+                    } 
+                  },
                 ]}
               />
               <Field
