@@ -499,7 +499,7 @@ const EditPage = (props) => {
               /> */}
               <Field
                 name="isScheduler"
-                type="boolean"
+                type="number"
                 x-component="RadioGroup"
                 title="执行方式"
                 enum={[
