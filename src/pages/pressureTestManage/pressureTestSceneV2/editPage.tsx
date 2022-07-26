@@ -516,7 +516,7 @@ const EditPage = (props) => {
                   },
                   {
                     type: 'value:visible',
-                    target: '.cronTime',
+                    target: '.executeCorn',
                     condition: '{{ $self.value === 2 }}',
                   },
                 ]}
@@ -548,7 +548,7 @@ const EditPage = (props) => {
                 ]}
               />
               <Field
-                name="cronTime"
+                name="executeCorn"
                 type="string"
                 x-component="CronSelctComponent"
                 title="执行周期"
