@@ -17,4 +17,8 @@ export default {
     const url = '/businessActivity/category/delete';
     return httpDelete(url, data);
   },
+  async categoryMove(data = {}) {
+    const url = '/businessActivity/category/move';
+    return httpPut(url, data);
+  },
 };

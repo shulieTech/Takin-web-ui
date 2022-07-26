@@ -11,6 +11,8 @@ interface Props extends TreeSelectProps<string | string[]> {
 
 const { TreeNode } = TreeSelect;
 
+let freezOpen = false;
+
 const CategoryTreeSelect: React.FC<Props> = (props) => {
   const { canEdit = false, ...rest } = props;
   const [editItem, setEditItem] = useState();
@@ -30,6 +32,74 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
     if (success) {
       setTreeData(data);
     }
+  };
+
+  const copyItem = (e, item) => {
+    e.stopPropagation();
+    Modal.confirm({
+      title: '提示',
+      content: '确定复制该文件夹？',
+      onOk: async () => {
+        const {
+          data: { success },
+        } = await service.categoryAdd({
+          title: `${item.title}_COPY`,
+          parentId: item.parentId,
+        });
+        if (success) {
+          message.success('操作成功');
+          getTreeData();
+        }
+      },
+    });
+  };
+
+  const moveItem = (e, item) => {
+    e.stopPropagation();
+    freezOpen = true;
+    let targetId;
+    Modal.confirm({
+      title: `移动${item.title}到`,
+      icon: null,
+      content: (
+        <div>
+          <CategoryTreeSelect
+            canEdit={false}
+            onChange={(x) => (targetId = x)}
+            style={{ width: '100%' }}
+            treeDefaultExpandAll
+          />
+        </div>
+      ),
+      onCancel: () => {
+        freezOpen = false;
+      },
+      onOk: async () => {
+        if (targetId === undefined) {
+          message.warn('请选择目标文件夹');
+          return Promise.reject();
+        }
+        if (targetId === item.parentId) {
+          message.warn('已经在该文件夹');
+          return Promise.reject();
+        }
+        if (targetId === item.id) {
+          message.warn('不能移动到本身');
+          return Promise.reject();
+        }
+        const {
+          data: { success },
+        } = await service.categoryMove({
+          from: item.id,
+          to: targetId,
+        });
+        if (success) {
+          message.success('操作成功');
+          freezOpen = false;
+          getTreeData();
+        }
+      },
+    });
   };
 
   const deleteItem = (e, item) => {
@@ -93,13 +163,33 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
                     />
                   </Tooltip>
                   {!isRoot && (
-                    <Tooltip title="删除">
-                      <Icon
-                        type="minus-circle"
-                        onClick={(e) => deleteItem(e, item)}
-                        style={{ marginRight: 8 }}
-                      />
-                    </Tooltip>
+                    <>
+                      <Tooltip title="复制文件夹">
+                        <Icon
+                          type="copy"
+                          onClick={(e) => {
+                            copyItem(e, item);
+                          }}
+                          style={{ marginRight: 8 }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="移动文件夹">
+                        <Icon
+                          type="to-top"
+                          onClick={(e) => {
+                            moveItem(e, item);
+                          }}
+                          style={{ marginRight: 8 }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="删除">
+                        <Icon
+                          type="delete"
+                          onClick={(e) => deleteItem(e, item)}
+                          style={{ marginRight: 8 }}
+                        />
+                      </Tooltip>
+                    </>
                   )}
                 </span>
               )}
@@ -113,7 +203,7 @@ const CategoryTreeSelect: React.FC<Props> = (props) => {
   };
 
   const dismissListener = () => {
-    if (open) {
+    if (open && !freezOpen) {
       setOpen(false);
     }
   };
