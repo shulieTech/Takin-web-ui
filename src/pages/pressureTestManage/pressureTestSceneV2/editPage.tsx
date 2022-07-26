@@ -61,6 +61,10 @@ const EditPage = (props) => {
       } = await services.getSenceDetailV2({ sceneId });
       if (success) {
         setInitialValue(data);
+        // 手动触发一次数据变动，不然isScheduler的联动初始化的时候无法触发
+        actions.setFieldState('basicInfo', state => {
+          state.value = data?.basicInfo;
+        });
       }
     }
   };
@@ -507,7 +511,6 @@ const EditPage = (props) => {
                   { label: '定时', value: 1 },
                   { label: '周期', value: 2 },
                 ]}
-                default={0}
                 x-linkages={[
                   {
                     type: 'value:visible',
@@ -516,10 +519,11 @@ const EditPage = (props) => {
                   },
                   {
                     type: 'value:visible',
-                    target: '.executeCorn',
+                    target: '.executeCron',
                     condition: '{{ $self.value === 2 }}',
                   },
                 ]}
+                default={0}
               />
               <Field
                 name="executeTime"
@@ -548,7 +552,7 @@ const EditPage = (props) => {
                 ]}
               />
               <Field
-                name="executeCorn"
+                name="executeCron"
                 type="string"
                 x-component="CronSelctComponent"
                 title="执行周期"
