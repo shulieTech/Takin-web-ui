@@ -64,6 +64,7 @@ const ChangeCategoryModal = (props: Props) => {
           ...values,
           applicationId: detail.applicationName,
           value: detail.linkId,
+          optType: 'move',
         })
         .finally(() => {
           setSaving(false);
