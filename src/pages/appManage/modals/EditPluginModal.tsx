@@ -103,8 +103,8 @@ const EditPluginModal: React.FC<Props> = props => {
             <Radio value="-1">与业务key一致</Radio>
             <Radio value="1">
               <InputNumber
-                min={1}
-                precision={0}
+                min={0}
+                // precision={0}
                 style={{ width: 100 }}
                 onChange={handleChangeConfigValue}
                 value={state.configValue}
