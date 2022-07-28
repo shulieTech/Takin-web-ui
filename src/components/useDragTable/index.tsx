@@ -3,7 +3,7 @@ import { DndProvider, DragSource, DropTarget } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import update from 'immutability-helper';
 import styles from './index.less';
-import { set } from 'lodash';
+import { get, set } from 'lodash';
 import { message } from 'antd';
 
 let dragingIndex = -1;
@@ -125,6 +125,10 @@ const useDragTable = ({
     // }).data;
     const getParentPath = (pathStr: string) =>
       pathStr.substring(0, pathStr.lastIndexOf('.'));
+    const getPathIndex = (pathStr: string) => {
+      return JSON.parse(pathStr.substring(pathStr.lastIndexOf('.') + 1))[0]
+      ;
+    };
     const newDataSource = dataSource.concat();
     if (
       !canCrossLevel &&
@@ -132,9 +136,22 @@ const useDragTable = ({
     ) {
       message.warn('不支持跨层级拖拽');
       return;
-    } 
-    set(newDataSource, dragRowData._path, hoverRowData);
-    set(newDataSource, hoverRowData._path, dragRowData);
+    }
+    const parentPath = getParentPath(dragRowData._path);
+    const parentArr = get(newDataSource, parentPath);
+    const dragIndex = getPathIndex(dragRowData._path);
+    const dropIndex = getPathIndex(hoverRowData._path);
+
+    // set(newDataSource, dragRowData._path, hoverRowData);
+    // set(newDataSource, hoverRowData._path, dragRowData);
+    parentArr.splice(dropIndex, 0, dragRowData);
+    if (dragIndex > dropIndex) {
+      parentArr.splice(dragIndex + 1, 1);
+    } else {
+      parentArr.splice(dragIndex, 1);
+    }
+
+    set(newDataSource, parentPath, parentArr);
     
     updateDataSource(newDataSource);
   };
