@@ -305,7 +305,7 @@ const BusinessActivityPressureTestDetailModal: React.FC<Props> = props => {
       btnText={props.btnText}
       onClick={() => handleClick()}
     >
-      <div style={{ height: 700, overflow: 'scroll' }}>
+      <div style={{ height: 700, overflow: 'auto' }}>
         {state.data && (
           <CustomTable
             rowKey="uuid"

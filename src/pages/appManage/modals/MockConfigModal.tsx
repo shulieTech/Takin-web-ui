@@ -230,7 +230,7 @@ const MockConfigModal: React.FC<Props> = props => {
                       <a onClick={() => handleCopy(state.configValue)}>复制</a>
                     </div>
                     <div
-                      style={{ width: 250, height: 400, overflow: 'scroll' }}
+                      style={{ width: 250, height: 400, overflow: 'auto' }}
                     >
                       {state.configValue}
                     </div>
@@ -250,7 +250,7 @@ const MockConfigModal: React.FC<Props> = props => {
                       <a onClick={() => handleCopy(state.mockValues)}>复制</a>
                     </div>
                     <div
-                      style={{ width: 270, height: 300, overflow: 'scroll' }}
+                      style={{ width: 270, height: 300, overflow: 'auto' }}
                     >
                       <p>支持json串和基础类型的固定值返回</p>
                       <p>{`json示例：{"code": 200, "data": "test", "msg": ""}`}</p>

@@ -92,14 +92,14 @@ const AppManageDetail: React.FC<Props> = props => {
   return (
     <Fragment>
       {JSON.stringify(state.detailData) !== '{}' ? (
-        <div style={{ overflowY: 'hidden', height: '100%' }}>
+        <div style={{ height: '100%' }}>
           {/* <BasePageLayout> */}
           <div
             style={{
               padding: 20,
-              height: '100%',
+              // height: '100%',
               // border: '1px solid red',
-              overflowY: 'hidden'
+              // overflowY: 'hidden'
             }}
           >
             <AppDetailHeader

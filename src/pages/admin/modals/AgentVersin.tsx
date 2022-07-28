@@ -214,7 +214,7 @@ const AgentVersin: React.FC<Props> = props => {
       <div
         style={{
           height: '550px',
-          overflow: 'scroll',
+          overflow: 'auto',
         }}
       >
         <Form onSubmit={onSubmit} {...formItemProps}>

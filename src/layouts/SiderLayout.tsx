@@ -223,6 +223,11 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   const disableTenant = getThemeByKeyName('disableTenant');
 
+  // 有此参数的时候只显示主体内容
+  if (location.query?.bare === '1') {
+    return children;
+  }
+
   return (
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
@@ -234,7 +239,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       />
       {state.request && (
         <Layout
-          className="flex"
+          className="flex h-100p"
           style={{
             backgroundColor: '#1D2530',
           }}
@@ -246,11 +251,12 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
            /> */}
           <ConfigProvider getPopupContainer={() => popupDom.current}>
             <div
-              className="h-100p"
               style={{
+                flex: 1,
                 backgroundColor: '#1D2530',
                 display: 'flex',
                 flexDirection: 'column',
+                overflow: 'auto',
               }}
               ref={popupDom}
             >

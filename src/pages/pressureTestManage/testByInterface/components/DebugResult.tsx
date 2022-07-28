@@ -305,6 +305,8 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
                                             style={{
                                               color:
                                                 'var(--Netural-850, #414548)',
+                                              whiteSpace: 'normal',
+                                              wordBreak: 'break-all',
                                             }}
                                           >
                                             {v}
@@ -321,7 +323,13 @@ const DebugResult: React.FC<IFieldMergeState> = (props) => {
                                   key="Body"
                                   style={{ borderBottom: 'none' }}
                                 >
-                                  <div style={{ paddingLeft: 16 }}>
+                                  <div
+                                    style={{
+                                      paddingLeft: 16,
+                                      whiteSpace: 'normal',
+                                      wordBreak: 'break-all',
+                                    }}
+                                  >
                                     {requestBody}
                                   </div>
                                 </Panel>

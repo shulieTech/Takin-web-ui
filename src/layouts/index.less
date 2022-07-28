@@ -16,6 +16,7 @@
   font-size: 15px;
   display: flex;
   align-items: center;
+  color: #fff;
 
   .logoImg {
     height: 14px;
@@ -109,6 +110,9 @@
 }
 
 .sider {
+  :global(.ant-menu-root)::-webkit-scrollbar {
+    display: none;
+  }
   box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
   overflow-x: hidden;
   // padding-top: 50px;

@@ -104,7 +104,7 @@ const AgentManageBottom: React.FC<Props> = props => {
         style={{
           height: 'calc(100% - 35px)',
           position: 'relative',
-          overflow: 'scroll'
+          overflow: 'auto'
         }}
       >
         <AgentManageSearchAndTable />

@@ -95,7 +95,7 @@ const getAgentManageColumns = (state, setState): ColumnProps<any>[] => {
                   title="详情"
                   content={
                     <div
-                      style={{ width: 360, height: 280, overflowY: 'scroll' }}
+                      style={{ width: 360, height: 280, overflowY: 'auto' }}
                     >
                       <Button
                         type="link"
@@ -144,7 +144,7 @@ const getAgentManageColumns = (state, setState): ColumnProps<any>[] => {
                   title="详情"
                   content={
                     <div
-                      style={{ width: 360, height: 280, overflowY: 'scroll' }}
+                      style={{ width: 360, height: 280, overflowY: 'auto' }}
                     >
                       <Button
                         type="link"

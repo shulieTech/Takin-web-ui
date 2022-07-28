@@ -10,6 +10,7 @@ const FilesTable = (props: IFieldMergeState) => {
   const {
     uploadAction = service.uploadFile,
     uploadChildren,
+    uploadTip,
     fileFiledName = 'file',
     acceptExts,
     maxSize,
@@ -121,6 +122,7 @@ const FilesTable = (props: IFieldMergeState) => {
             </span>
             {maxSize > 0 && <span>（不超过{getSizeStr(maxSize)}）</span>}
             <br />
+            {uploadTip && <div>{uploadTip}</div>}
           </div>
         )}
       </Upload>

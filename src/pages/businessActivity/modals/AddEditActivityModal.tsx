@@ -203,7 +203,7 @@ const AddEditActivityModal: React.FC<Props> = props => {
         title: `${id ? '编辑' : '新增'}${isVirtual ? '虚拟' : ''}业务活动`,
         width: '95%',
         centered: true,
-        bodyStyle: { minHeight: 500, overflow: 'scroll' },
+        bodyStyle: { minHeight: 500, overflow: 'auto' },
         style: { top: 15 },
         destroyOnClose: true
       }}

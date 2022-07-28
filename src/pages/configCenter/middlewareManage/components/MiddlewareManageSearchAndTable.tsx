@@ -153,7 +153,7 @@ const MiddlewareManageSearchAndTable: React.FC<Props> = props => {
         position: 'relative',
         height: 'calc(100%)',
         // border: '1px solid purple',
-        overflow: 'scroll'
+        overflow: 'auto'
       }}
     >
       <Row
@@ -287,14 +287,14 @@ const MiddlewareManageSearchAndTable: React.FC<Props> = props => {
           style={{
             position: 'relative',
             height: 'calc(100% - 75px)',
-            overflow: 'scroll'
+            overflow: 'auto'
           }}
         >
           <div
             style={{
               position: 'relative',
               height: 'calc(100% - 30px)',
-              overflow: 'scroll'
+              overflow: 'auto'
             }}
           >
             <CustomTable

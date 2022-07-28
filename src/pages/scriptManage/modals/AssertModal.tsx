@@ -50,7 +50,7 @@ const AssertModal: React.FC<Props> = props => {
       btnText={props.btnText}
       btnProps={{ type: 'link' }}
     >
-      <div style={{ maxHeight: 400, overflow: 'scroll' }}>
+      <div style={{ maxHeight: 400, overflow: 'auto' }}>
         <CustomTable
           columns={getColumns()}
           dataSource={props.dataSource || []}

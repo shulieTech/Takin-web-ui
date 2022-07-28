@@ -108,8 +108,8 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
       className={commonStyles.borders}
       style={{
         marginTop: 16,
-        height: 'calc(100% - 100px)',
-        overflow: 'scroll'
+        // height: 'calc(100% - 100px)',
+        // overflow: 'auto'
       }}
     >
       <Row
@@ -247,15 +247,15 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
       <div
         style={{
           position: 'relative',
-          height: 'calc(100% - 55px)',
-          overflow: 'scroll'
+          // height: 'calc(100% - 55px)',
+          // overflow: 'auto'
         }}
       >
         <div
           style={{
             position: 'relative',
-            height: 'calc(100% - 30px)',
-            overflow: 'scroll'
+            // height: 'calc(100% - 30px)',
+            // overflow: 'auto'
           }}
         >
           <CustomTable
@@ -263,23 +263,25 @@ const ErrorLogSearchAndTable: React.FC<Props> = props => {
             loading={state.loading}
             columns={getErrorLogColumns(state, setState)}
             dataSource={state.dataSource || []}
-            style={{ paddingBottom: 30 }}
+            // style={{ paddingBottom: 30 }}
           />
         </div>
         <div
           style={{
-            position: 'absolute',
+            // position: 'absolute',
             padding: '8px 16px',
-            bottom: 0,
-            right: 0,
+            marginTop: 10,
+            // bottom: 0,
+            // right: 0,
             width: '100%',
-            background: '#fff'
+            background: '#fff',
+            textAlign: 'right',
           }}
         >
           <Pagination
-            style={{
-              float: 'right'
-            }}
+            // style={{
+            //   float: 'right'
+            // }}
             total={state.total}
             current={state.searchParams.current + 1}
             pageSize={state.searchParams.pageSize}

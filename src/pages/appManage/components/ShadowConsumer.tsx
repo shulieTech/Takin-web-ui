@@ -82,9 +82,9 @@ const ShadowConsumer: React.FC<Props> = props => {
           columns: getColumns(state, setState, props),
           className: styles.consumerTable,
           bodyStyle: {
-            height: document.body.offsetHeight - 300,
-            overflow: 'scroll',
-            paddingBottom: 84
+            // height: document.body.offsetHeight - 300,
+            overflow: 'auto',
+            // paddingBottom: 84
           }
         }}
         theme="light"

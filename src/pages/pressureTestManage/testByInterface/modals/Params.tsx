@@ -231,6 +231,11 @@ const Params: React.FC<Props> = (props) => {
                         marginBottom: 16,
                       },
                     },
+                    uploadTip: (
+                      <span style={{ color: '#999' }}>
+                        上传的csv数据文件必须添加列title，将识别为参数名
+                      </span>
+                    ),
                   }}
                   // x-rules={[{ required: true, message: '请上传文件' }]}
                 />

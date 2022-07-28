@@ -134,7 +134,7 @@ const AppAccess: React.FC<Props> = props => {
             });
           }}
         >
-          <div style={{ height: 500, overflow: 'scroll' }}>
+          <div style={{ height: 500, overflow: 'auto' }}>
             <StepLineInfo />
           </div>
         </Modal>

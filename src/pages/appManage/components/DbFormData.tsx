@@ -168,7 +168,7 @@ const getDbFormData = (state, id, setState, detailData): FormDataType[] => {
                     style={{
                       maxHeight: 400,
                       minHeight: 200,
-                      overflow: 'scroll'
+                      overflow: 'auto'
                     }}
                   >
                     {state.dsType === 2
