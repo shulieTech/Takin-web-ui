@@ -67,6 +67,16 @@ const NodeTypeFour: React.FC<Props> = props => {
             />
           </Col>
         )}
+        {/* TODO 组件可扩展性较差，只支持2个下拉选项，这里只能硬编码处理了，value为3的时候，后面这个显示为普通输入框 */}
+        {state[keys[0]] === '3' && (
+          <Col>
+            <Input
+              onChange={e => handleTransmit({ [keys[1]]: e.target.value })}
+              value={state ? state[keys[1]] : undefined}
+              placeholder="请输入"
+            />
+          </Col>
+        )}
       </Row>
     </Fragment>
   );
