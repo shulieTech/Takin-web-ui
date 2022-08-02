@@ -70,7 +70,7 @@ const TestMachineManage = (props) => {
 
   const formData = [
     {
-      key: 'machineName',
+      key: 'name',
       node: <Input placeholder="搜索机器名称" />,
     },
   ];
