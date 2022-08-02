@@ -171,6 +171,13 @@ const PressureTestSceneService = {
     const url = '/scenemanage/archive';
     return httpPut(url, data);
   },
+  /**
+   * @name 场景启动机器信息
+   */
+  async queryMachineForScene(data) {
+    const url = '/scenemanage/machine';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestSceneService;

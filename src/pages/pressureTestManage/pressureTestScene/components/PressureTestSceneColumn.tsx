@@ -122,7 +122,6 @@ const getPressureTestSceneColumns = (
     if (success) {
       setState({
         sceneId: row.id,
-        missingDataStatus: true,
         hasMissingData: data,
         startedScence: {
           scenceInfo: row,
@@ -146,10 +145,52 @@ const getPressureTestSceneColumns = (
     }
   };
 
+  /**
+   * @name 查询场景启动机器信息
+   */
+  const queryMachineForScene = async (sceneId) => {
+    const {
+      data: { data, success },
+    // } = await PressureTestSceneService.queryMachineForScene({ id: sceneId });
+    } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId });
+    if (success) {
+      let defaultMachine = [];
+      const list = data.list || [{ type: 1, id: 2, name: 'k8s_name_1' }, { type: 0, id: 1, name: 'k8s_name_2' }];
+      if (data.lastStartMachine) {
+        // 使用上次启动的机器
+        data.lastStartMachine.forEach(x => {
+          if (list.some(y => y.id === x)) {
+            defaultMachine.push(x);
+          }
+        });
+      } else if (list.find(x => x.type === 1)) {
+        // 使用私网机器
+        defaultMachine = [list.find(x => x.type === 1).id];
+      } else {
+        // 使用公网机器
+        defaultMachine = [list.find(x => x.type === 0).id];
+      }
+      setState({
+        machine: defaultMachine,
+        machineList: list,
+      });
+    }
+  };
+
   const handleClickStart = async (row) => {
     const { id: sceneId } = row;
-    queryHasMissingDataScript(row);
-    queryDataScriptNum(sceneId);
+    const msg = message.loading('正在检查配置', 0);
+    setState({
+      missingDataStatus: true,
+    });
+    Promise.all([
+      queryHasMissingDataScript(row),
+      queryDataScriptNum(sceneId),
+      queryMachineForScene(sceneId),
+    ]).finally(() => {
+      msg();
+    });
+    
   };
 
   const handleCloseTiming = async (sceneId: number) => {
