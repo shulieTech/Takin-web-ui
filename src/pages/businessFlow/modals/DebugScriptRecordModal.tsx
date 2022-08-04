@@ -7,6 +7,8 @@ import CustomTable from 'src/components/custom-table';
 import EmptyNode from 'src/common/empty-node';
 import ScriptManageService from '../service';
 import { Link } from 'umi';
+import downloadFile from 'src/utils/downloadFile';
+
 interface Props {
   btnText?: string | React.ReactNode;
   id: number;
@@ -77,6 +79,10 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
     });
   };
 
+  const downloadJtl = (row) => {
+    downloadFile(row.jtlPath, `调试记录-${row.id}.zip`);
+  };
+
   const getColumns = (): ColumnProps<any>[] => {
     return [
       {
@@ -115,11 +121,14 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
         dataIndex: 'action',
         render: (text, row) => {
           return (
-            <Link
-              to={`/scriptManage/scriptDebugDetail?id=${row.id}&reportId=${row.cloudReportId}`}
-            >
-              调试详情
-            </Link>
+            <>
+              <Link
+                to={`/scriptManage/scriptDebugDetail?id=${row.id}&reportId=${row.cloudReportId}`}
+              >
+                调试详情
+              </Link>
+              {row.jtlPath && <a onClick={() => downloadJtl(row)} style={{ marginLeft: 8 }}>下载jtl</a>}
+            </>
           );
         }
       }
