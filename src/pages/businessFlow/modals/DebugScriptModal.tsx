@@ -24,7 +24,7 @@ interface Props extends CommonModelState {
 const DebugScriptModal: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer({
     form: null as WrappedFormUtils,
-    machine: undefined,
+    machineId: undefined,
     machineList: [],
   });
   const { id, scriptDeployId } = props;
@@ -33,29 +33,25 @@ const DebugScriptModal: React.FC<Props> = (props) => {
   /**
    * @name 查询启动机器列表
    */
-  const queryMachineForScene = async () => {
+  const queryTestMachine = async () => {
     const {
       data: { data, success },
-      // } = await PressureTestSceneService.queryMachineForScene({ id: sceneId });
-    } = await BusinessFlowService.queryDetail({ id: 2280 });
+      } = await BusinessFlowService.queryTestMachine({ });
     if (success) {
-      let defaultMachine;
-      const list = data.list || [
-        { type: 1, id: 2, name: 'k8s_name_1' },
-        { type: 0, id: 1, name: 'k8s_name_2' },
-      ];
-      if (data.lastStartMachine) {
+      let defaultMachine = undefined;
+      const list = data.list || [{ type: 1, id: 2, name: 'k8s_name_1' }, { type: 0, id: 1, name: 'k8s_name_2' }];
+      if (data.lastStartMachineId && list.some(y => y.id === data.lastStartMachineId)) {
         // 使用上次启动的机器
-        defaultMachine = data.lastStartMachine;
-      } else if (list.find((x) => x.type === 1)) {
+        defaultMachine = data.lastStartMachineId;
+      } else if (list.find(x => x.type === 1)) {
         // 使用私网机器
-        defaultMachine = list.find((x) => x.type === 1).id;
+        defaultMachine = list.find(x => x.type === 1 && !x.disabled)?.id;
       } else {
         // 使用公网机器
-        defaultMachine = list.find((x) => x.type === 0).id;
+        defaultMachine = list.find(x => x.type === 0  && !x.disabled)?.id;
       }
       setState({
-        machine: defaultMachine,
+        machineId: defaultMachine,
         machineList: list,
       });
     }
@@ -193,7 +189,7 @@ const DebugScriptModal: React.FC<Props> = (props) => {
         ),
       },
       {
-        key: 'machine',
+        key: 'machineId',
         label: '压力机',
         options: {
           rules: [
@@ -206,7 +202,7 @@ const DebugScriptModal: React.FC<Props> = (props) => {
         node: (
           <Radio.Group>
             {state.machineList?.map((x) => (
-              <Radio key={x.id} value={x.id}>
+              <Radio key={x.id} value={x.id} disabled={!!x.disabled}>
                 ({{ 0: '公', 1: '私' }[x.type]}网){x.name}
               </Radio>
             ))}
@@ -218,9 +214,9 @@ const DebugScriptModal: React.FC<Props> = (props) => {
 
   useEffect(() => {
     state?.form?.setFieldsValue({
-      machine: state.machine,
+      machineId: state.machineId,
     });
-  }, [state.machine, state.form]);
+  }, [state.machineId, state.form]);
 
   return (
     <CommonModal
@@ -233,7 +229,7 @@ const DebugScriptModal: React.FC<Props> = (props) => {
       }}
       btnText={props.btnText}
       btnProps={{ type: 'default' }}
-      onClick={queryMachineForScene}
+      onClick={queryTestMachine}
     >
       <CustomAlert
         message

@@ -172,9 +172,9 @@ const PressureTestSceneService = {
     return httpPut(url, data);
   },
   /**
-   * @name 场景启动机器信息
+   * @name 查询机器列表
    */
-  async queryMachineForScene(data) {
+  async queryTestMachine(data) {
     const url = '/scenemanage/machine';
     return httpGet(url, data);
   },

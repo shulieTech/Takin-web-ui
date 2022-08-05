@@ -1,4 +1,4 @@
-import { Col, message, Modal, Radio, Row, Switch, Button, Checkbox } from 'antd';
+import { Col, message, Modal, Radio, Row, Switch, Button } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useCallback, useState } from 'react';
@@ -41,7 +41,7 @@ export interface PressureTestSceneState {
   tagReloadKey: number;
   startedScence: any;
   machineList: any;
-  machine: (string | number | boolean) [];
+  machineId: string | number;
 }
 const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   const [state, setState] = useStateReducer<PressureTestSceneState>({
@@ -73,7 +73,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     tagReloadKey: 1,
     startedScence: null,
     machineList: null,
-    machine: [],
+    machineId: undefined,
   });
 
   const [searchTableRef, setSearchTableRef] = useState<any>();
@@ -142,7 +142,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
    * @name 启动检查并开启压测
    */
   const handleCheckAndStart = async (scenceInfo) => {
-    if (!(Array.isArray(state.machine) && state.machine.length > 0)) {
+    if (!state.machineId) {
       message.warning('请选择压力来源');
       return;
     }
@@ -214,7 +214,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
       isReload: !state.isReload,
       pressureStyle: PressureStyle.继续压测,
       machineList: null,
-      machine: [],
+      machineId: undefined,
     });
   };
 
@@ -293,7 +293,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             missingDataSwitch: false,
             sceneId: null,
             machineList: null,
-            machine: [],
+            machineId: undefined,
           });
         }}
       >
@@ -351,21 +351,21 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
         {/* 机器选择 */}
         <div style={{ padding: '24px 0' }}>
           <div style={{ marginBottom: 16 }}>请选择压力来源</div>
-          <Checkbox.Group 
-            value={state.machine}
-            onChange={val => {
+          <Radio.Group 
+            value={state.machineId}
+            onChange={e => {
               setState({
-                machine: val,
+                machineId: e.target.value,
               });
             }}
           >
               {
                 state.machineList?.map(x => 
-                <Checkbox key={x.id} value={x.id}>
+                <Radio key={x.id} value={x.id} disabled={!!x.disabled}>
                   ({{ 0: '公', 1: '私' }[x.type]}网){x.name}
-                </Checkbox>)
+                </Radio>)
               }
-          </Checkbox.Group>
+          </Radio.Group>
         </div>
       </Modal>
       {/* <Modal
@@ -524,7 +524,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             ...state.startedScence,
             leakSqlEnable: state.missingDataSwitch,
             continueRead: state.pressureStyle,
-            machine: state.machine,
+            machineId: state.machineId,
           }}
         />
       )}

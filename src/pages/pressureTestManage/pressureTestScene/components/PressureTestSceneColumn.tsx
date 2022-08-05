@@ -151,27 +151,22 @@ const getPressureTestSceneColumns = (
   const queryMachineForScene = async (sceneId) => {
     const {
       data: { data, success },
-    // } = await PressureTestSceneService.queryMachineForScene({ id: sceneId });
-    } = await PressureTestSceneService.queryHasMissingDataScript({ sceneId });
+    } = await PressureTestSceneService.queryTestMachine({ sceneId });
     if (success) {
-      let defaultMachine = [];
+      let defaultMachine = undefined;
       const list = data.list || [{ type: 1, id: 2, name: 'k8s_name_1' }, { type: 0, id: 1, name: 'k8s_name_2' }];
-      if (data.lastStartMachine) {
+      if (data.lastStartMachineId && list.some(y => y.id === data.lastStartMachineId)) {
         // 使用上次启动的机器
-        data.lastStartMachine.forEach(x => {
-          if (list.some(y => y.id === x)) {
-            defaultMachine.push(x);
-          }
-        });
+        defaultMachine = data.lastStartMachineId;
       } else if (list.find(x => x.type === 1)) {
         // 使用私网机器
-        defaultMachine = [list.find(x => x.type === 1).id];
+        defaultMachine = list.find(x => x.type === 1 && !x.disabled)?.id;
       } else {
         // 使用公网机器
-        defaultMachine = [list.find(x => x.type === 0).id];
+        defaultMachine = list.find(x => x.type === 0  && !x.disabled)?.id;
       }
       setState({
-        machine: defaultMachine,
+        machineId: defaultMachine,
         machineList: list,
       });
     }
