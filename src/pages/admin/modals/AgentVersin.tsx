@@ -266,7 +266,7 @@ const AgentVersin: React.FC<Props> = props => {
                         style={{ color: 'rgba(0,0,0,0.43)', marginTop: '10px', display: 'inline-block' }}
                       >
                         请上传新版本的探针包文件(仅支持.zip)
-                      <p>可联系移动云人员获取</p>
+                      <p>可联系数列人员获取</p>
                       </span>
                     </span>
                   </p>

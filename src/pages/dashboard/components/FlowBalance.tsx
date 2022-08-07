@@ -44,7 +44,7 @@ const FlowBalance: React.FC<Props> = props => {
         </p>
         <Row type="flex" align="middle" style={{ marginTop: 16 }}>
           <Col>
-            <Tooltip title="请联系移动云对接人员充值" placement="bottom">
+            <Tooltip title="请联系数列对接人员充值" placement="bottom">
               <Button type="primary">充值</Button>
             </Tooltip>
           </Col>
@@ -57,7 +57,7 @@ const FlowBalance: React.FC<Props> = props => {
                   <p>
                     消耗流量=平均并发（VU）*实际压测时长（M），压测时长小于1分钟时，按1分钟计费。
                   </p>
-                  <p>余额不足时无法发起压测，请联系移动云人员进行充值。</p>
+                  <p>余额不足时无法发起压测，请联系数列人员进行充值。</p>
                 </div>
               }
             >

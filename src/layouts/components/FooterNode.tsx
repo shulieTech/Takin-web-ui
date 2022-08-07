@@ -13,7 +13,7 @@ const FooterNode: React.FC = props => {
       className="ft-ct"
       style={{ background: venomBasicConfig.footerBg }}
     >
-      <p>Copyright@ {new Date().getFullYear()} 移动云</p>
+      <p>Copyright@ {new Date().getFullYear()} 数列</p>
     </Footer>
   );
 };
