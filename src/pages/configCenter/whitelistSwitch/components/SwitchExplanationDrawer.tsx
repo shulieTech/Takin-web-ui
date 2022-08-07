@@ -42,7 +42,7 @@ const SwitchExplanationDrawer: React.FC<Props> = props => {
         <p className={styles.txts}>
           开启白名单校验后仅白名单内的接口可被压测流量调用
         </p>
-        <h4 className={styles.h4}>如有疑问，请向数列人员咨询</h4>
+        <h4 className={styles.h4}>如有疑问，请向移动云人员咨询</h4>
       </div>
     </CommonDrawer>
   );
