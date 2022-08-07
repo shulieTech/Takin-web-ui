@@ -76,7 +76,7 @@ const SwitchExplanationDrawer: React.FC<Props> = props => {
             04.「压测总开关」在操作执行过程中，如出现的异常，必须将所有问题处理完毕后，才能进行后续操作。
           </p>
         </p>
-        <h4 className={styles.h4}>如有疑问，请向数列人员咨询</h4>
+        <h4 className={styles.h4}>如有疑问，请向移动云人员咨询</h4>
       </div>
     </CommonDrawer>
   );
