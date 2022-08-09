@@ -202,8 +202,8 @@ const EditSence: React.FC<Props> = (props) => {
       (async () => {
         const { machineId: defaultMachineId, machineList = [] } =
           await PressureTestSceneService.queryTestMachine({
-            id: detail.id,
-            type: 2,
+            id: pressStartedBindSenceId,
+            type: 0,
           });
         setMachineId(defaultMachineId);
         let selectedMachineId;
