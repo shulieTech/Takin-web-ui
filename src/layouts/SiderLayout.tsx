@@ -49,11 +49,11 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     if (success) {
       if (!data.errorMessage) {
         if (data.thirdPartyIsCallback === 0) {
-          notification.success({
-            message: '通知',
-            description: '登录成功',
-            duration: 1.5
-          });
+          // notification.success({
+          //   message: '通知',
+          //   description: '登录成功',
+          //   duration: 1.5
+          // });
           localStorage.setItem('troweb-userName', data.name);
           localStorage.setItem('troweb-userId', data.id);
           localStorage.setItem('troweb-role', data.userType);
