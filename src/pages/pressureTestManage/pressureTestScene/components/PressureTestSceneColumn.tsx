@@ -151,14 +151,14 @@ const getPressureTestSceneColumns = (
   const queryMachineForScene = async (sceneId) => {
     const {
       data: { data, success },
-    } = await PressureTestSceneService.queryTestMachine({ sceneId });
+    } = await PressureTestSceneService.queryTestMachine({ sceneId, type: 0 });
     if (success) {
       let defaultMachine = undefined;
-      const list = data.list || [{ type: 1, id: 2, name: 'k8s_name_1' }, { type: 0, id: 1, name: 'k8s_name_2' }];
+      const list = data.list || [];
       if (data.lastStartMachineId && list.some(y => y.id === data.lastStartMachineId)) {
         // 使用上次启动的机器
         defaultMachine = data.lastStartMachineId;
-      } else if (list.find(x => x.type === 1)) {
+      } else if (list.find(x => x.type === 1 && !x.disabled)) {
         // 使用私网机器
         defaultMachine = list.find(x => x.type === 1 && !x.disabled)?.id;
       } else {
