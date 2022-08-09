@@ -36,7 +36,7 @@ const DebugScriptModal: React.FC<Props> = (props) => {
   const queryTestMachine = async () => {
     const {
       data: { data, success },
-      } = await BusinessFlowService.queryTestMachine({ id, scriptDeployId, type: 1 });
+      } = await BusinessFlowService.queryTestMachine({ id : scriptDeployId, type: 1 });
     if (success) {
       let defaultMachine = undefined;
       const list = data.list || [];

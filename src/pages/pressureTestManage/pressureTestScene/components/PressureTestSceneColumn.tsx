@@ -151,7 +151,7 @@ const getPressureTestSceneColumns = (
   const queryMachineForScene = async (sceneId) => {
     const {
       data: { data, success },
-    } = await PressureTestSceneService.queryTestMachine({ sceneId, type: 0 });
+    } = await PressureTestSceneService.queryTestMachine({ id: sceneId, type: 0 });
     if (success) {
       let defaultMachine = undefined;
       const list = data.list || [];
