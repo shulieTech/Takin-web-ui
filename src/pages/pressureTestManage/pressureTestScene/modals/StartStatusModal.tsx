@@ -87,6 +87,7 @@ const StartStatusModal: React.FC<Props> = (props) => {
     } = await services.scenceStartPreCheck({
       resourceId,
       sceneId: scenceInfo.id,
+      ...restStartScenceInfo,
     });
     if (success) {
       setCanCancel(true);

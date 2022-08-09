@@ -20,7 +20,7 @@ import {
   FormMegaLayout,
   FormSlot,
 } from '@formily/antd-components';
-import { Button, message, Spin, Icon, Modal } from 'antd';
+import { Button, message, Spin, Icon, Modal, Radio as AntRadio } from 'antd';
 import NumberPicker from '../../pressureTestSceneV2/components/NumberPicker';
 import service from '../service';
 import BaseTab from './BaseTab';
@@ -37,6 +37,7 @@ import { debounce } from 'lodash';
 import Guide from './Guide';
 import AntSelect from './AntSelect';
 import { textRule } from '../rules';
+import PressureTestSceneService from '../../../pressureTestManage/pressureTestScene/service';
 
 interface Props {
   currentSence: any;
@@ -61,6 +62,7 @@ const EditSence: React.FC<Props> = (props) => {
   } = useContext(SenceContext);
   const [pressStartedBindSenceId, setPressStartedBindSenceId] = useState(null);
   const [tabKey, setTabKey] = useState('tab-1');
+  const [machineId, setMachineId] = useState();
   let timer;
 
   const getDetail = async (id) => {
@@ -194,6 +196,49 @@ const EditSence: React.FC<Props> = (props) => {
     }
   }, [detailRefreshKey]);
 
+  useEffect(() => {
+    if (pressStartedBindSenceId) {
+      // 启动前先选择机器
+      (async () => {
+        const { machineId: defaultMachineId, machineList = [] } =
+          await PressureTestSceneService.queryTestMachine({
+            id: detail.id,
+            type: 2,
+          });
+        setMachineId(defaultMachineId);
+        let selectedMachineId;
+        Modal.confirm({
+          title: '选择机器',
+          icon: null,
+          content: (
+            <AntRadio.Group
+              defaultValue={selectedMachineId}
+              onChange={(e) => (selectedMachineId = e.target.value)}
+            >
+              {machineList?.map((x) => (
+                <AntRadio key={x.id} value={x.id} disabled={!!x.disabled}>
+                  ({{ 0: '公', 1: '私' }[x.type]}网){x.name}
+                </AntRadio>
+              ))}
+            </AntRadio.Group>
+          ),
+          onOk: () => {
+            if (!selectedMachineId) {
+              message.warn('请选择机器');
+              return Promise.reject();
+            } 
+            setMachineId(selectedMachineId);
+            
+          },
+          onCancel: () => {
+            setPressStartedBindSenceId(null);
+            setMachineId(undefined);
+          }
+        });
+      })();
+    }
+  }, [pressStartedBindSenceId]);
+
   return (
     <Spin spinning={detailLoading} wrapperClassName="spin-full">
       <SchemaForm
@@ -230,38 +275,38 @@ const EditSence: React.FC<Props> = (props) => {
             });
           });
           // 触发关联应用入口下拉框查询
-          onFieldValueChange$('*(requestUrl,httpMethod)').subscribe(
-            () => {
-              actions.notify('refreshEntrance', {});
-            }
-          );
+          onFieldValueChange$('*(requestUrl,httpMethod)').subscribe(() => {
+            actions.notify('refreshEntrance', {});
+          });
           // 关联应用入口下拉框查询
-          refreshEntranceHook$().subscribe(debounce(async () => {
-            const {
-              values: { requestUrl, httpMethod },
-            } = await actions.getFormState();
-            if (!(requestUrl?.trim() && httpMethod)) {
-              return;
-            }
-            const {
-              data: { success, data = [] },
-            } = await service.searchEntrance({
-              requestUrl,
-              httpMethod,
-              current: 0,
-              pageSize: 20,
-            });
-            if (success) {
-              const apps = data.map((x) => ({
-                ...x,
-                label: x.entranceAppName,
-                value: x.entranceAppName,
-              }));
-              actions.setFieldState('.entranceAppName', (state) => {
-                state.props.enum = apps;
+          refreshEntranceHook$().subscribe(
+            debounce(async () => {
+              const {
+                values: { requestUrl, httpMethod },
+              } = await actions.getFormState();
+              if (!(requestUrl?.trim() && httpMethod)) {
+                return;
+              }
+              const {
+                data: { success, data = [] },
+              } = await service.searchEntrance({
+                requestUrl,
+                httpMethod,
+                current: 0,
+                pageSize: 20,
               });
-            }
-          }, 500));
+              if (success) {
+                const apps = data.map((x) => ({
+                  ...x,
+                  label: x.entranceAppName,
+                  value: x.entranceAppName,
+                }));
+                actions.setFieldState('.entranceAppName', (state) => {
+                  state.props.enum = apps;
+                });
+              }
+            }, 500)
+          );
 
           // 计算建议pod数
           if (getTakinAuthority() === 'true') {
@@ -339,9 +384,7 @@ const EditSence: React.FC<Props> = (props) => {
                   style={{ marginRight: 16 }}
                   onClick={saveSence}
                   loading={saving}
-                  disabled={
-                    ![0, undefined].includes(detail.pressureStatus)
-                  }
+                  disabled={![0, undefined].includes(detail.pressureStatus)}
                 >
                   保存场景
                 </Button>
@@ -392,13 +435,15 @@ const EditSence: React.FC<Props> = (props) => {
           </FormSlot>
         </LayoutBox>
       </SchemaForm>
-      {pressStartedBindSenceId && (
+      {pressStartedBindSenceId && machineId && (
         <StartStatusModal
           visible
           onCancel={() => {
             setPressStartedBindSenceId(null);
+            setMachineId(undefined);
           }}
           startedScence={{
+            machineId,
             scenceInfo: {
               id: pressStartedBindSenceId,
               sceneName: detail.name,

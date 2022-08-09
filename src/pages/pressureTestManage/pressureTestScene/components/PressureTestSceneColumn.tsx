@@ -145,33 +145,6 @@ const getPressureTestSceneColumns = (
     }
   };
 
-  /**
-   * @name 查询场景启动机器信息
-   */
-  const queryMachineForScene = async (sceneId) => {
-    const {
-      data: { data, success },
-    } = await PressureTestSceneService.queryTestMachine({ id: sceneId, type: 0 });
-    if (success) {
-      let defaultMachine = undefined;
-      const list = data.list || [];
-      if (data.lastStartMachineId && list.some(y => y.id === data.lastStartMachineId)) {
-        // 使用上次启动的机器
-        defaultMachine = data.lastStartMachineId;
-      } else if (list.find(x => x.type === 1 && !x.disabled)) {
-        // 使用私网机器
-        defaultMachine = list.find(x => x.type === 1 && !x.disabled)?.id;
-      } else {
-        // 使用公网机器
-        defaultMachine = list.find(x => x.type === 0  && !x.disabled)?.id;
-      }
-      setState({
-        machineId: defaultMachine,
-        machineList: list,
-      });
-    }
-  };
-
   const handleClickStart = async (row) => {
     const { id: sceneId } = row;
     const msg = message.loading('正在检查配置', 0);
@@ -181,7 +154,11 @@ const getPressureTestSceneColumns = (
     Promise.all([
       queryHasMissingDataScript(row),
       queryDataScriptNum(sceneId),
-      queryMachineForScene(sceneId),
+      // 查询启动机器列表
+      PressureTestSceneService.queryTestMachine({ id: sceneId, type: 0 })
+      .then((res) => {
+        setState(res);
+      }),
     ]).finally(() => {
       msg();
     });

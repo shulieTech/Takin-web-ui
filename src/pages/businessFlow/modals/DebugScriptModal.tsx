@@ -12,6 +12,7 @@ import CustomAlert from 'src/common/custom-alert/CustomAlert';
 import { CommonModelState } from 'src/models/common';
 import { router } from 'umi';
 import BusinessFlowService from '../service';
+import PressureTestSceneService from '../../pressureTestManage/pressureTestScene/service';
 
 interface Props extends CommonModelState {
   id: string;
@@ -29,33 +30,6 @@ const DebugScriptModal: React.FC<Props> = (props) => {
   });
   const { id, scriptDeployId } = props;
   const text = '脚本调试';
-
-  /**
-   * @name 查询启动机器列表
-   */
-  const queryTestMachine = async () => {
-    const {
-      data: { data, success },
-      } = await BusinessFlowService.queryTestMachine({ id, type: 1 });
-    if (success) {
-      let defaultMachine = undefined;
-      const list = data.list || [];
-      if (data.lastStartMachineId && list.some(y => y.id === data.lastStartMachineId)) {
-        // 使用上次启动的机器
-        defaultMachine = data.lastStartMachineId;
-      } else if (list.find(x => x.type === 1 && !x.disabled)) {
-        // 使用私网机器
-        defaultMachine = list.find(x => x.type === 1 && !x.disabled)?.id;
-      } else {
-        // 使用公网机器
-        defaultMachine = list.find(x => x.type === 0  && !x.disabled)?.id;
-      }
-      setState({
-        machineId: defaultMachine,
-        machineList: list,
-      });
-    }
-  };
 
   const handleSubmit = () => {
     return new Promise(async (resolve) => {
@@ -229,7 +203,12 @@ const DebugScriptModal: React.FC<Props> = (props) => {
       }}
       btnText={props.btnText}
       btnProps={{ type: 'default' }}
-      onClick={queryTestMachine}
+      onClick={() => {
+        // 查询启动机器列表
+        PressureTestSceneService.queryTestMachine({ id, scriptDeployId, type: 1 }).then(res => {
+          setState(res);
+        });
+      }}
     >
       <CustomAlert
         message
