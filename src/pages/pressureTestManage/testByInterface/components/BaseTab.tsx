@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useLayoutEffect } from 'react';
 import { SchemaMarkupField as Field, IFormAsyncActions } from '@formily/antd';
 import { FormTab, FormMegaLayout, FormSlot } from '@formily/antd-components';
-import { Button, Radio as AntRadio, Modal, message } from 'antd';
+import { Button } from 'antd';
 import TipTittle from '../../pressureTestSceneV2/components/TipTittle';
 import DebugModal from '../modals/Debug';
 // import service from '../service';
@@ -10,7 +10,6 @@ import styles from '../index.less';
 import LayoutBox from './LayoutBox';
 import { connect } from 'dva';
 import { textRule } from '../rules';
-import PressureTestSceneService from '../../../pressureTestManage/pressureTestScene/service';
 
 interface Props {
   actions: IFormAsyncActions;
@@ -56,41 +55,7 @@ const BaseTab: React.FC<Props> = (props) => {
     const res = await actions.validate('.requestUrl');
     if (res?.errors.length === 0) {
       const { values } = await actions.getFormState();
-      const { machineId: defaultMachineId, machineList = [] } =
-        await PressureTestSceneService.queryTestMachine({
-          id: detail.id,
-          type: 2,
-        });
-      let selectedMachineId = defaultMachineId;
-      Modal.confirm({
-        title: '选择机器',
-        icon: null,
-        content: (
-          <AntRadio.Group
-            defaultValue={selectedMachineId}
-            onChange={(e) => (selectedMachineId = e.target.value)}
-          >
-            {machineList?.map((x) => (
-              <AntRadio key={x.id} value={x.id} disabled={!!x.disabled}>
-                ({{ 0: '公', 1: '私' }[x.type]}网){x.name}
-              </AntRadio>
-            ))}
-          </AntRadio.Group>
-        ),
-        onOk: () => {
-          if (!selectedMachineId) {
-            message.warn('请选择机器');
-            return Promise.reject();
-          }
-          setDebugInput({
-            ...values,
-            machineId: selectedMachineId,
-          });
-        },
-        onCancel: () => {
-          setDebugInput(null);
-        },
-      });
+      setDebugInput(values);
     }
   };
 
