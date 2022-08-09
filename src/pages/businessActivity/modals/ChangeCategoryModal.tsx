@@ -58,8 +58,7 @@ const ChangeCategoryModal = (props: Props) => {
       setSaving(true);
       const {
         data: { success },
-      } = await service
-        .updateSystemProcess({
+      } = await service[detail.businessType === 1 ? 'editVirtualBusinessActivity' : 'updateSystemProcess']({
           ...detail,
           ...values,
           applicationId: detail.applicationName,
