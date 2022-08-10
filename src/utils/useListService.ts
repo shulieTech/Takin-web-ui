@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { get, isArray } from 'lodash';
 
 interface Props {
   service: (params: any) => Promise<any>;
   defaultQuery?: any;
-  isQueryOnQueryChange?: boolean;
+  isQueryOnMount?: boolean;
   afterSearchCallback?: (res: any) => void;
+  dataListPath?: string;
 }
 
 const useListService = (props: Props) => {
   const {
     service,
     defaultQuery = {},
-    isQueryOnQueryChange = true,
+    isQueryOnMount = true,
     afterSearchCallback,
+    dataListPath,
   } = props;
 
   const [query, setQuery] = useState(defaultQuery);
@@ -27,24 +30,35 @@ const useListService = (props: Props) => {
   const getList = async (params = {}) => {
     setLoading(true);
     const newQuery = { ...query, ...params };
-    const res = await service(newQuery);
-    const {
-      data: { success, data },
-      headers: { 'x-total-count': totalCount },
-    } = res;
-    setLoading(false);
-    if (success) {
-      setQuery(newQuery);
-      setList(data.list);
-      setTotal(totalCount || data.count);
-    }
-    if (typeof afterSearchCallback === 'function') {
-      afterSearchCallback(res);
+    try {
+      const res = await service(newQuery);
+      const {
+        data: { success, data },
+        headers: { 'x-total-count': totalCount },
+      } = res;
+
+      if (success) {
+        setQuery(newQuery);
+        if (dataListPath && Array.isArray(get(data, dataListPath))) {
+          setList(get(data, dataListPath));
+        } else if (Array.isArray(data.list)) {
+          setList(data.list);
+        } else if (Array.isArray(data)) {
+          setList(data);
+        }
+        setTotal(totalCount || data.count || data.total);
+      }
+      if (typeof afterSearchCallback === 'function') {
+        afterSearchCallback(res);
+      }
+      return res;
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (isQueryOnQueryChange) {
+    if (isQueryOnMount) {
       getList(query);
     }
   }, []);
@@ -54,6 +68,7 @@ const useListService = (props: Props) => {
     setQuery,
     list,
     getList,
+    setList,
     resetList,
     total,
     loading,

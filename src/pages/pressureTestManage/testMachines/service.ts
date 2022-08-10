@@ -34,4 +34,12 @@ export default {
     const url = '/pressureMachine/disable';
     return httpPost(url, data);
   },
+  async suiteList(data = {}) {
+    const url = '/pressureMachine/list';
+    return httpGet(url, data);
+  },
+  async deployToBenchmark(data = {}) {
+    const url = '/pressureMachine/list';
+    return httpPost(url, data);
+  },
 };

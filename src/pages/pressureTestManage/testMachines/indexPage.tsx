@@ -4,6 +4,7 @@ import SearchTable from 'src/components/search-table';
 import service from './service';
 import EditModal from './modals/Edit';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
+import DeployToBenchmarkModal from './modals/DeployToBenchmark';
 
 const PwdTd = (props) => {
   const { text } = props;
@@ -23,6 +24,7 @@ const PwdTd = (props) => {
 const TestMachineManage = (props) => {
   const [tableReload, setTableReload] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [benchmarkDeployItem, setBenchmarkDeployItem] = useState(null);
   const [syncing, setSyncing] = useState(false);
 
   const deleteItem = async (record) => {
@@ -40,7 +42,15 @@ const TestMachineManage = (props) => {
   const toggleEngine = async (record) => {
     Modal.confirm({
       title: '提示',
-      content: `确定${record.status === 2 ? '卸载' : '部署'}该节点？`,
+      content:
+        record.status === 2 ? (
+          '确定卸载该节点？'
+        ) : (
+          <span>
+            <b>部署前请初始化k8s相关基础环境，否则会部署失败</b>
+            ，确定部署该节点？
+          </span>
+        ),
       onOk: async () => {
         const {
           data: { success },
@@ -51,7 +61,7 @@ const TestMachineManage = (props) => {
           message.success('操作成功');
           setTableReload(!tableReload);
         }
-      }
+      },
     });
   };
 
@@ -126,10 +136,21 @@ const TestMachineManage = (props) => {
               </Button>
             </Popconfirm>
             {[0, 2].includes(record.status) && (
-              <Button type="link" style={{ marginRight: 8 }} onClick={() => toggleEngine(record)}>
-              {record.status === 2 ? '卸载' : '部署'}节点
-            </Button>
+              <Button
+                type="link"
+                style={{ marginRight: 8 }}
+                onClick={() => toggleEngine(record)}
+              >
+                {record.status === 2 ? '卸载' : '部署'}节点
+              </Button>
             )}
+            <Button
+              type="link"
+              style={{ marginRight: 8 }}
+              onClick={() => setBenchmarkDeployItem(record)}
+            >
+              一键部署到benchmark
+            </Button>
           </>
         );
       },
@@ -169,6 +190,16 @@ const TestMachineManage = (props) => {
         okCallback={() => {
           setEditItem(null);
           setTableReload(!tableReload);
+        }}
+      />
+      <DeployToBenchmarkModal
+        machine={benchmarkDeployItem}
+        okCallback={() => {
+          setBenchmarkDeployItem(null);
+          setTableReload(!!tableReload);
+        }}
+        cancelCallback={() => {
+          setBenchmarkDeployItem(null);
         }}
       />
     </>

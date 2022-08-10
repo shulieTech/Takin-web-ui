@@ -25,7 +25,7 @@ const ServiceCustomTable = (props: Props, ref) => {
       pageSize: 10,
       ...defaultQuery,
     },
-    isQueryOnQueryChange: false,
+    isQueryOnMount: false,
   });
 
   const { list, loading, total, query, getList } = serviceOptions;
