@@ -124,7 +124,7 @@ export interface RequestParams {
   payload?: any;
 }
 
-const getUrl = (url: string, options: any) => {
+export const getUrl = (url: string, options: any = {}) => {
   if (EXCLUDED_SECURITY_APIS.includes(url)) {
     // 不走安全中心域名的接口
     return `${options?.domain || serverUrl}${url}`;

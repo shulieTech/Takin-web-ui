@@ -10,6 +10,8 @@ import { FormItemProps } from 'antd/lib/form';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import CustomTable from 'src/components/custom-table';
 import moment from 'moment';
+import { getUrl } from 'src/utils/request';
+
 const InputGroup = Input.Group;
 const { Option } = Select;
 declare var serverUrl: string;
@@ -147,7 +149,7 @@ const Admin: React.FC<AdminProps> = props => {
           >
             <a
               onClick={e => e.stopPropagation()}
-              href={`${serverUrl}/fast/agent/access/download?version=${record.version}`}
+              href={getUrl(`/fast/agent/access/download?version=${record.version}`)}
               download
             >
               下载
