@@ -187,12 +187,12 @@ const PressureTestSceneService = {
       ) {
         // 使用上次启动的机器
         defaultMachine = data.lastStartMachineId;
-      } else if (list.find((x) => x.type === 1 && !x.disabled)) {
+      } else if (list.find((x) => x.type === '1' && !x.disabled)) {
         // 使用私网机器
-        defaultMachine = list.find((x) => x.type === 1 && !x.disabled)?.id;
+        defaultMachine = list.find((x) => x.type === '1' && !x.disabled)?.id;
       } else {
         // 使用公网机器
-        defaultMachine = list.find((x) => x.type === 0 && !x.disabled)?.id;
+        defaultMachine = list.find((x) => x.type === '0' && !x.disabled)?.id;
       }
       return {
         machineId: defaultMachine,
