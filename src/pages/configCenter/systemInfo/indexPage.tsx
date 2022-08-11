@@ -83,7 +83,9 @@ const SystemInfo: React.FC<EntryRuleProps> = (props) => {
       version: JSON.stringify(json),
     });
     if (success) {
-      setFileList(data.itemVos);
+      const arr = data.itemVos;
+      arr?.[0]?.dataMap?.引擎包下载 = <a href="/takin-web/api/tenant/engine/download">下载</a>;
+      setFileList(arr);
     }
   };
 
