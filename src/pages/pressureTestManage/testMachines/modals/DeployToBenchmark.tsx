@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { message, Modal, Input } from 'antd';
+import { message, Modal, Input, Alert, Tooltip } from 'antd';
 import service from '../service';
 import ServiceCustomTable from 'src/components/service-custom-table';
 
@@ -17,28 +17,44 @@ const DeployToBenchmark: React.FC<Props> = (props) => {
   const columns = [
     {
       title: '支持组件',
-      dataIndex: 'machineName',
+      dataIndex: 'suite',
     },
     {
-      title: '适合产品',
-      dataIndex: '',
+      title: '适用产品',
+      dataIndex: 'suiteDescribe',
+      render: (text) => {
+        return (
+          <Tooltip title={text}>
+            <div
+              style={{
+                whiteSpace: 'nowrap',
+                maxWidth: 200,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {text || '-'}
+            </div>
+          </Tooltip>
+        );
+      },
     },
   ];
 
   const handleSubmit = async () => {
-    if (selectedSuites) {
-      message.warn('请选择组件');
+    if (!(Array.isArray(selectedSuites) && selectedSuites.length > 0)) {
+      message.warn('请选择命令');
       return;
     }
     const {
       data: { success },
     } = await service.deployToBenchmark({
-      selectedSuites,
-      machineId: machine.id,
+      benchmarkSuiteId: selectedSuites[0]?.id,
+      benchmarkSuiteName: selectedSuites[0]?.suite,
+      id: machine.id,
     });
     if (success) {
       message.success('操作成功');
-      // TODO 显示进度
       okCallback();
     }
   };
@@ -58,9 +74,18 @@ const DeployToBenchmark: React.FC<Props> = (props) => {
       }}
       {...rest}
     >
-      <div style={{ marginBottom: 16 }}>
-        请提前确认xx以上环境，如果不符合环境要求，部署不成功
-      </div>
+      <Alert
+        style={{ marginBottom: 16 }}
+        showIcon
+        type="info"
+        message={
+          <span>
+            请确认系统环境为centos7.6+，否则存在部署失败的风险！
+            <br />
+            部署时系统会自动上传组件docker镜像至对应服务器，请耐心等待。
+          </span>
+        }
+      />
       <div>
         <Input.Search
           onSearch={(val) =>
@@ -69,7 +94,7 @@ const DeployToBenchmark: React.FC<Props> = (props) => {
               suite: val,
             })
           }
-          placeholder="搜索名称"
+          placeholder="搜索组件名称"
           style={{
             width: 240,
             marginBottom: 8,
@@ -85,7 +110,7 @@ const DeployToBenchmark: React.FC<Props> = (props) => {
         rowSelection={{
           type: 'radio',
           onChange: (selectKeys, selectRows) => {
-            setSelectedSuites(selectKeys);
+            setSelectedSuites(selectRows);
           },
         }}
       />

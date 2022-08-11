@@ -1,23 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { message, Button, Input, Popconfirm, Badge, Icon, Modal } from 'antd';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  message,
+  Button,
+  Input,
+  Popconfirm,
+  Badge,
+  Spin,
+  Modal,
+  Popover,
+  Tooltip,
+  Alert,
+} from 'antd';
 import SearchTable from 'src/components/search-table';
 import service from './service';
 import EditModal from './modals/Edit';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import DeployToBenchmarkModal from './modals/DeployToBenchmark';
 
-const PwdTd = (props) => {
-  const { text } = props;
-  const [show, setShow] = useState(false);
+const DeployStatus = (prop) => {
+  const { record } = prop;
+  const [processDesc, setProcessDesc] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const getProcess = async () => {
+    setLoading(true);
+    const {
+      data: { success, data },
+    } = await service
+      .deployProgress({
+        id: record.id,
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    if (success) {
+      setProcessDesc(data);
+    }
+  };
+
   return (
-    <>
-      <span>{show ? text : '*****'}</span>
-      <Icon
-        style={{ marginLeft: 4 }}
-        type={show ? 'eye-invisible' : 'eye'}
-        onClick={() => setShow(!show)}
-      />
-    </>
+    <Popover
+      content={<Spin spinning={loading}>{processDesc}</Spin>}
+      onVisibleChange={(visible) => {
+        if (visible) {
+          getProcess();
+        }
+      }}
+    >
+      <a>部署中</a>
+    </Popover>
   );
 };
 
@@ -26,6 +57,9 @@ const TestMachineManage = (props) => {
   const [editItem, setEditItem] = useState(null);
   const [benchmarkDeployItem, setBenchmarkDeployItem] = useState(null);
   const [syncing, setSyncing] = useState(false);
+  const [searchTableRef, setSearchTableRef] = useState<any>();
+
+  const refHandle = useCallback((ref) => setSearchTableRef(ref), []);
 
   const deleteItem = async (record) => {
     const {
@@ -47,8 +81,23 @@ const TestMachineManage = (props) => {
           '确定卸载该节点？'
         ) : (
           <span>
-            <b>部署前请初始化k8s相关基础环境，否则会部署失败</b>
-            ，确定部署该节点？
+            <Alert
+              style={{ marginBottom: 8 }}
+              type="info"
+              message={
+                <span>
+                  请提前初始化k8s node节点，再进行一键部署，否则安装失败，详情见
+                  <a
+                    href="https://shulietech.feishu.cn/wiki/wikcnY8BTN5L8fcuB5CjAUEPZEb"
+                    target="_blank"
+                  >
+                    操作手册
+                  </a>
+                  ，
+                </span>
+              }
+            />
+            确定部署该节点？
           </span>
         ),
       onOk: async () => {
@@ -98,26 +147,56 @@ const TestMachineManage = (props) => {
         return (
           <Badge
             status={text === 2 ? 'success' : 'default'}
-            text={{ 0: '未部署', 2: '已部署' }[text]}
+            text={
+              {
+                0: '未部署',
+                1: <DeployStatus record={record} />,
+                2: '已部署',
+              }[text]
+            }
           />
         );
       },
     },
     {
-      title: '压测引擎状态',
+      title: '可用状态',
       dataIndex: 'engineStatus',
       render: (text, record) => {
         return text || '-';
       },
     },
-    // { title: '用户名', dataIndex: 'userName' },
-    // {
-    //   title: '密码',
-    //   dataIndex: 'password',
-    //   render: (text) => {
-    //     return <PwdTd text={text} />;
-    //   },
-    // },
+    {
+      title: '部署类型',
+      dataIndex: 'deployType',
+      render: (text, record) => {
+        return (
+          <span>
+            {text || '-'}
+            {record.benchmarkSuiteName ? `(${record.benchmarkSuiteName})` : ''}
+          </span>
+        );
+      },
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+      render: (text) => {
+        return (
+          <Tooltip title={text}>
+            <div
+              style={{
+                whiteSpace: 'nowrap',
+                maxWidth: 200,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {text || '-'}
+            </div>
+          </Tooltip>
+        );
+      },
+    },
     {
       title: '操作',
       width: 'max-content',
@@ -171,9 +250,25 @@ const TestMachineManage = (props) => {
       },
     },
   ];
+
+  useEffect(() => {
+    // 有部署中状态，定时刷新列表
+    const needRefresh = searchTableRef?.tableState?.dataSource.some(
+      (x) => x.status === 1
+    );
+    if (needRefresh) {
+      const { queryList } = searchTableRef;
+      const refreshTimer = setInterval(() => {
+        queryList();
+      }, 10000);
+      return () => clearInterval(refreshTimer);
+    }
+  }, [JSON.stringify(searchTableRef?.tableState?.dataSource)]);
+
   return (
     <>
       <SearchTable
+        ref={refHandle}
         commonTableProps={{
           columns,
           size: 'small',

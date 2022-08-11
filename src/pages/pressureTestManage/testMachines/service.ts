@@ -35,11 +35,15 @@ export default {
     return httpPost(url, data);
   },
   async suiteList(data = {}) {
-    const url = '/pressureMachine/list';
+    const url = '/pressureMachine/benchmarkSuiteList';
     return httpGet(url, data);
   },
   async deployToBenchmark(data = {}) {
-    const url = '/pressureMachine/list';
+    const url = '/pressureMachine/benchmarkEnable';
     return httpPost(url, data);
+  },
+  async deployProgress(data = {}) {
+    const url = '/pressureMachine/deployProgress';
+    return httpGet(url, data);
   },
 };

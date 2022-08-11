@@ -128,6 +128,11 @@ const EditMachineModal: React.FC<Props> = (props) => {
             />
           )}
         </FormItem>
+        <FormItem label="备注" {...formItemLayout}>
+          {getFieldDecorator('remark', {
+            initialValue: editItem?.remark,
+          })(<Input.TextArea placeholder="请输入" maxLength={200} />)}
+        </FormItem>
       </Form>
     </Modal>
   );
