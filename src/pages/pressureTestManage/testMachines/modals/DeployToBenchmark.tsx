@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { message, Modal } from 'antd';
+import React, { useState, useRef } from 'react';
+import { message, Modal, Input } from 'antd';
 import service from '../service';
 import ServiceCustomTable from 'src/components/service-custom-table';
 
@@ -12,6 +12,7 @@ interface Props {
 const DeployToBenchmark: React.FC<Props> = (props) => {
   const { machine, okCallback, cancelCallback, ...rest } = props;
   const [selectedSuites, setSelectedSuites] = useState(undefined);
+  const tableRef = useRef();
 
   const columns = [
     {
@@ -60,7 +61,23 @@ const DeployToBenchmark: React.FC<Props> = (props) => {
       <div style={{ marginBottom: 16 }}>
         请提前确认xx以上环境，如果不符合环境要求，部署不成功
       </div>
+      <div>
+        <Input.Search
+          onSearch={(val) =>
+            tableRef?.current?.getList({
+              current: 0,
+              suite: val,
+            })
+          }
+          placeholder="搜索名称"
+          style={{
+            width: 240,
+            marginBottom: 8,
+          }}
+        />
+      </div>
       <ServiceCustomTable
+        ref={tableRef}
         size="small"
         rowKey="id"
         service={service.suiteList}

@@ -120,6 +120,8 @@ const TestMachineManage = (props) => {
     // },
     {
       title: '操作',
+      width: 'max-content',
+      fixed: 'right',
       render: (text, record) => {
         return (
           <>
@@ -135,22 +137,35 @@ const TestMachineManage = (props) => {
                 删除
               </Button>
             </Popconfirm>
-            {[0, 2].includes(record.status) && (
+            {record.status === 2 && (
               <Button
                 type="link"
                 style={{ marginRight: 8 }}
                 onClick={() => toggleEngine(record)}
               >
-                {record.status === 2 ? '卸载' : '部署'}节点
+                卸载节点
               </Button>
             )}
-            <Button
-              type="link"
-              style={{ marginRight: 8 }}
-              onClick={() => setBenchmarkDeployItem(record)}
-            >
-              一键部署到benchmark
-            </Button>
+            {record.status === 0 && (
+              <>
+                <Button
+                  type="link"
+                  style={{ marginRight: 8 }}
+                  onClick={() => toggleEngine(record)}
+                >
+                  takin发压机部署
+                </Button>
+              </>
+            )}
+            {record.status === 0 && (
+              <Button
+                type="link"
+                style={{ marginRight: 8 }}
+                onClick={() => setBenchmarkDeployItem(record)}
+              >
+                基准测试测试机部署
+              </Button>
+            )}
           </>
         );
       },
@@ -163,6 +178,9 @@ const TestMachineManage = (props) => {
           columns,
           size: 'small',
           rowKey: 'id',
+          scroll: {
+            x: 'max-content',
+          },
         }}
         tableAction={
           <>
