@@ -5,11 +5,11 @@ import {
   Input,
   Popconfirm,
   Badge,
-  Spin,
   Modal,
   Popover,
   Tooltip,
   Alert,
+  Steps,
 } from 'antd';
 import SearchTable from 'src/components/search-table';
 import service from './service';
@@ -19,33 +19,21 @@ import DeployToBenchmarkModal from './modals/DeployToBenchmark';
 
 const DeployStatus = (prop) => {
   const { record } = prop;
-  const [processDesc, setProcessDesc] = useState();
-  const [loading, setLoading] = useState(false);
-
-  const getProcess = async () => {
-    setLoading(true);
-    const {
-      data: { success, data },
-    } = await service
-      .deployProgress({
-        id: record.id,
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    if (success) {
-      setProcessDesc(data);
-    }
-  };
 
   return (
     <Popover
-      content={<Spin spinning={loading}>{processDesc}</Spin>}
-      onVisibleChange={(visible) => {
-        if (visible) {
-          getProcess();
-        }
-      }}
+      placement="right"
+      content={
+        <Steps
+          direction="vertical"
+          size="small"
+          current={record.currentProgressIndex || 0}
+        >
+          {(record.deployProgressList || []).map((x) => {
+            return <Steps.Step key={x} title={x} />;
+          })}
+        </Steps>
+      }
     >
       <a>部署中</a>
     </Popover>
@@ -108,7 +96,9 @@ const TestMachineManage = (props) => {
         });
         if (success) {
           message.success('操作成功');
-          setTableReload(!tableReload);
+          setTimeout(() => {
+            setTableReload(!tableReload);
+          }, 1000);
         }
       },
     });
@@ -146,7 +136,13 @@ const TestMachineManage = (props) => {
       render: (text, record) => {
         return (
           <Badge
-            status={text === 2 ? 'success' : 'default'}
+            status={
+              {
+                0: 'default',
+                1: 'processing',
+                2: 'success',
+              }[text]
+            }
             text={
               {
                 0: '未部署',
@@ -211,11 +207,16 @@ const TestMachineManage = (props) => {
             >
               编辑
             </Button>
-            <Popconfirm title="确定删除？" onConfirm={() => deleteItem(record)}>
-              <Button type="link" style={{ marginRight: 8 }}>
-                删除
-              </Button>
-            </Popconfirm>
+            {record.status !== 1 && (
+              <Popconfirm
+                title="确定删除？"
+                onConfirm={() => deleteItem(record)}
+              >
+                <Button type="link" style={{ marginRight: 8 }}>
+                  删除
+                </Button>
+              </Popconfirm>
+            )}
             {record.status === 2 && (
               <Button
                 type="link"
