@@ -34,6 +34,20 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const popupDom = useRef(null);
   useEffect(() => {
     if (queryString.parse(location.search).flag) {
+      // 第三方登录之前清缓存
+      localStorage.removeItem('troweb-role');
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('troweb-userName');
+      localStorage.removeItem('full-link-token');
+      localStorage.removeItem('trowebUserResource');
+      localStorage.removeItem('trowebBtnResource');
+      localStorage.removeItem('auth-cookie');
+      localStorage.removeItem('troweb-expire');
+      localStorage.removeItem('trowebUserMenu');
+      localStorage.removeItem('takinAuthority');
+      localStorage.removeItem('Access-Token');
+      localStorage.removeItem('isSuper');
+      
       thirdPartylogin();
     } else {
       setState({ request: true });
