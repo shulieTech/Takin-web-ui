@@ -2,7 +2,7 @@
  * @name 基础布局Layout
  * @author MingShined
  */
-import { ConfigProvider, Layout, Modal, notification, Alert } from 'antd';
+import { ConfigProvider, Layout, Modal, notification, Spin } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { useEffect, useRef } from 'react';
@@ -22,18 +22,22 @@ import { getThemeByKeyName } from 'src/utils/useTheme';
 
 declare var window: any;
 let path = '';
-interface SiderLayoutProps extends Basic.BaseProps, AppModelState { }
+interface SiderLayoutProps extends Basic.BaseProps, AppModelState {}
 
 const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const [state, setState] = useStateReducer({
     collapsedStatus: false,
-    request: false
+    request: false,
   });
 
   const pathname: string | any = props.location.pathname;
   const popupDom = useRef(null);
+
+  const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl, bare, ...restParams } =
+    props.location.query || queryString.parse(window.location.search) || {};
+
   useEffect(() => {
-    if (queryString.parse(location.search).flag) {
+    if (thirdPartyLoginFlag) {
       // 第三方登录之前清缓存
       localStorage.removeItem('troweb-role');
       localStorage.removeItem('isAdmin');
@@ -47,7 +51,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       localStorage.removeItem('takinAuthority');
       localStorage.removeItem('Access-Token');
       localStorage.removeItem('isSuper');
-      
+
       thirdPartylogin();
     } else {
       setState({ request: true });
@@ -56,9 +60,10 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   const thirdPartylogin = async () => {
     const {
-      data: { success, data }
+      data: { success, data },
     } = await UserService.thirdPartylogin({
-      flag: queryString.parse(location.search).flag
+      flag: thirdPartyLoginFlag,
+      ...restParams,
     });
     if (success) {
       if (!data.errorMessage) {
@@ -78,6 +83,13 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           localStorage.setItem('full-link-token', data.xToken);
           localStorage.setItem('troweb-expire', data.expire);
           localStorage.removeItem('Access-Token');
+
+          // 支持登录后跳转到指定页面
+          if (redirectUrl && data.xCode) {
+            window.location.href = `${redirectUrl}?code=${data.xCode}`;
+            return;
+          }
+
           setState({ request: true });
         }
       } else {
@@ -103,7 +115,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     //   });
     // }
     window.g_app._store.dispatch({
-      type: 'user/troLogout'
+      type: 'user/troLogout',
     });
   };
 
@@ -228,9 +240,20 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   // 有此参数的时候只显示主体内容
   if (location.query?.bare === '1') {
-    return children;
+    return state.request ? (
+      children
+    ) : (
+      <Spin
+        style={{
+          display: 'flex',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      />
+    );
   }
-  
+
   return (
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
