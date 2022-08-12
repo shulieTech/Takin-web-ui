@@ -86,7 +86,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
           // 支持登录后跳转到指定页面
           if (redirectUrl && data.xCode) {
-            window.location.href = `${redirectUrl}?code=${data.xCode}`;
+            window.location.href = `${redirectUrl}${redirectUrl.indexOf('?') > -1 ? '&' : '?'}code=${data.xCode}`;
             return;
           }
 
