@@ -310,7 +310,9 @@ const TestMachineManage = (props) => {
         machine={benchmarkDeployItem}
         okCallback={() => {
           setBenchmarkDeployItem(null);
-          setTableReload(!!tableReload);
+          setTimeout(() => {
+            setTableReload(!tableReload);
+          }, 1000);
         }}
         cancelCallback={() => {
           setBenchmarkDeployItem(null);
