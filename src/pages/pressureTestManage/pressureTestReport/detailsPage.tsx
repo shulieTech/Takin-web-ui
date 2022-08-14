@@ -62,14 +62,20 @@ const PressureTestReportDetail: React.FC<Props> = props => {
   const [isDownloadingReport, setIsDownloadingReport] = useState(false);
 
   useEffect(() => {
-    queryReportBusinessActivity(id);
+    if (id) {  
+      queryReportBusinessActivity(id);
+    }
+    
   }, []);
 
   useEffect(() => {
-    queryReportDetail(id);
-    // queryReportBusinessActivity(id);
-    queryReportCount(id);
-    queryRequestCount(id);
+    if (id) {
+      queryReportDetail(id);
+      // queryReportBusinessActivity(id);
+      queryReportCount(id);
+      queryRequestCount(id);
+    }
+    
   }, [state.isReload]);
 
   const tenantList = async (s) => {
