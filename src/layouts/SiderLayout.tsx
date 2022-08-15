@@ -28,6 +28,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const [state, setState] = useStateReducer({
     collapsedStatus: false,
     request: false,
+    needRedirectToMenu: true, // 是否要根据菜单重定向到第一个能访问的页面
   });
 
   const pathname: string | any = props.location.pathname;
@@ -37,6 +38,10 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   useEffect(() => {
     if (getUrlParams().flag) {
+      setState({
+        request: false,
+        needRedirectToMenu: false,
+      });
       // 第三方登录之前清缓存
       localStorage.removeItem('troweb-role');
       localStorage.removeItem('isAdmin');
@@ -52,15 +57,16 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       localStorage.removeItem('isSuper');
       thirdPartylogin();
     } else {
-      setState({ request: true });
+      setState({
+        request: true,
+        needRedirectToMenu: true,
+      });
     }
   }, [window.location.href]);
 
   const thirdPartylogin = async () => {
     const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl, bare, ...restParams } = getUrlParams();
-    setState({
-      request: false,
-    });
+    
     const {
       data: { success, data },
     } = await UserService.thirdPartylogin({
@@ -176,7 +182,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       } = await UserService.queryMenuList({});
       if (success) {
         localStorage.setItem('trowebUserMenu', JSON.stringify(data));
-        router.push(getPath(data));
+        if (state.needRedirectToMenu) {
+          router.push(getPath(data));
+        }
       }
     }
   };
@@ -198,7 +206,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
         localStorage.setItem('troweb-expire', headers['x-expire']);
       }
       const menus = JSON.parse(localStorage.getItem('trowebUserMenu'));
-      router.push(menus && getPath(menus));
+      if (state.needRedirectToMenu) {
+        router.push(menus && getPath(menus));
+      }
     }
   };
 
