@@ -54,7 +54,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     } else {
       setState({ request: true });
     }
-  }, [getUrlParams().flag]);
+  }, [window.location.href]);
 
   const thirdPartylogin = async () => {
     const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl, bare, ...restParams } = getUrlParams();
