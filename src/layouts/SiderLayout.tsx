@@ -51,9 +51,6 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       localStorage.removeItem('takinAuthority');
       localStorage.removeItem('Access-Token');
       localStorage.removeItem('isSuper');
-      setState({
-        request: false,
-      });
       thirdPartylogin();
     } else {
       setState({ request: true });
@@ -61,6 +58,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   }, [thirdPartyLoginFlag]);
 
   const thirdPartylogin = async () => {
+    setState({
+      request: false,
+    });
     const {
       data: { success, data },
     } = await UserService.thirdPartylogin({
@@ -88,15 +88,16 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
           // 支持登录后跳转到指定页面
           if (redirectUrl) {
-            window.location.href = redirectUrl;
-            // return;
+            window.location.repalce(redirectUrl);
           }
           // if (redirectUrl && data.xCode) {
           //   window.location.href = `${redirectUrl}${redirectUrl.indexOf('?') > -1 ? '&' : '?'}code=${data.xCode}`;
           //   return;
           // }
 
-          setState({ request: true });
+          setTimeout(() => {
+            setState({ request: true });
+          }, 300);
         }
       } else {
         Modal.error({
