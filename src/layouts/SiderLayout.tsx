@@ -62,7 +62,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
         needRedirectToMenu: true,
       });
     }
-  }, [window.location.href]);
+  }, [getUrlParams().flag]);
 
   const thirdPartylogin = async () => {
     const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl, bare, ...restParams } = getUrlParams();
