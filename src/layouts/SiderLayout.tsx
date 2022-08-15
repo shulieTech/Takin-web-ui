@@ -58,7 +58,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     } else {
       setState({ request: true });
     }
-  }, [window.location.href]);
+  }, [thirdPartyLoginFlag]);
 
   const thirdPartylogin = async () => {
     const {
