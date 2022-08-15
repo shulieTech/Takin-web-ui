@@ -33,11 +33,10 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   const pathname: string | any = props.location.pathname;
   const popupDom = useRef(null);
 
-  const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl, bare, ...restParams } =
-    props.location.query || queryString.parse(window.location.search) || {};
+  const getUrlParams = () => props.location.query || queryString.parse(window.location.search) || {};
 
   useEffect(() => {
-    if (thirdPartyLoginFlag) {
+    if (getUrlParams().flag) {
       // 第三方登录之前清缓存
       localStorage.removeItem('troweb-role');
       localStorage.removeItem('isAdmin');
@@ -55,9 +54,10 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     } else {
       setState({ request: true });
     }
-  }, [thirdPartyLoginFlag]);
+  }, [getUrlParams().flag]);
 
   const thirdPartylogin = async () => {
+    const { flag: thirdPartyLoginFlag, sourceUrl: redirectUrl, bare, ...restParams } = getUrlParams();
     setState({
       request: false,
     });
@@ -88,16 +88,13 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
           // 支持登录后跳转到指定页面
           if (redirectUrl) {
-            window.location.repalce(redirectUrl);
+            window.location.href = redirectUrl;
           }
           // if (redirectUrl && data.xCode) {
           //   window.location.href = `${redirectUrl}${redirectUrl.indexOf('?') > -1 ? '&' : '?'}code=${data.xCode}`;
-          //   return;
           // }
 
-          setTimeout(() => {
-            setState({ request: true });
-          }, 300);
+          setState({ request: true });
         }
       } else {
         Modal.error({
