@@ -272,11 +272,11 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
     >
-      <SiderMenu
+      {state.request && <SiderMenu
         collapsedStatus={state.collapsedStatus}
         onCollapse={handlerCollapsed}
         location={location}
-      />
+      />}
       <Layout
         className="flex"
         style={{
