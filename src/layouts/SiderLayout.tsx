@@ -84,18 +84,17 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
           localStorage.setItem('troweb-expire', data.expire);
           localStorage.removeItem('Access-Token');
 
-          setState({ request: true });
-
           // 支持登录后跳转到指定页面
           if (redirectUrl) {
             window.location.href = redirectUrl;
-            return;
+            // return;
           }
           // if (redirectUrl && data.xCode) {
           //   window.location.href = `${redirectUrl}${redirectUrl.indexOf('?') > -1 ? '&' : '?'}code=${data.xCode}`;
           //   return;
           // }
 
+          setState({ request: true });
         }
       } else {
         Modal.error({
