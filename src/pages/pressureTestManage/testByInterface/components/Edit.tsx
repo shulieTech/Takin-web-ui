@@ -205,14 +205,13 @@ const EditSence: React.FC<Props> = (props) => {
             id: detail.id,
             type: 2,
           });
-        setMachineId(defaultMachineId);
-        let selectedMachineId;
+        let selectedMachineId = defaultMachineId;
         Modal.confirm({
           title: '选择机器',
           icon: null,
           content: (
             <AntRadio.Group
-              defaultValue={selectedMachineId}
+              defaultValue={defaultMachineId}
               onChange={(e) => (selectedMachineId = e.target.value)}
             >
               {machineList?.map((x) => (
