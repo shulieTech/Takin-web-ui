@@ -29,6 +29,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     collapsedStatus: false,
     request: false,
     needRedirectToMenu: true, // 是否要根据菜单重定向到第一个能访问的页面
+    menuReady: !!JSON.parse(localStorage.getItem('trowebUserMenu')), 
   });
 
   const pathname: string | any = props.location.pathname;
@@ -182,6 +183,9 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       } = await UserService.queryMenuList({});
       if (success) {
         localStorage.setItem('trowebUserMenu', JSON.stringify(data));
+        setState({
+          menuReady: true,
+        });
         if (state.needRedirectToMenu) {
           router.push(getPath(data));
         }
@@ -272,7 +276,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     <Layout
       className={venomBasicConfig.fixSider ? 'flex flex-1 h-100p' : 'mh-100p'}
     >
-      {state.request && <SiderMenu
+      {state.menuReady && <SiderMenu
         collapsedStatus={state.collapsedStatus}
         onCollapse={handlerCollapsed}
         location={location}
