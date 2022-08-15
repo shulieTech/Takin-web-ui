@@ -51,12 +51,14 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       localStorage.removeItem('takinAuthority');
       localStorage.removeItem('Access-Token');
       localStorage.removeItem('isSuper');
-
+      setState({
+        request: false,
+      });
       thirdPartylogin();
     } else {
       setState({ request: true });
     }
-  }, []);
+  }, [window.location.href]);
 
   const thirdPartylogin = async () => {
     const {
