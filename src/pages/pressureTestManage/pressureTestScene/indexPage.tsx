@@ -40,6 +40,8 @@ export interface PressureTestSceneState {
   dataScriptNum: any[];
   tagReloadKey: number;
   startedScence: any;
+  machineList: any;
+  machineId: string | number;
 }
 const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
   const [state, setState] = useStateReducer<PressureTestSceneState>({
@@ -70,6 +72,8 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     dataScriptNum: null, // 数据脚本数
     tagReloadKey: 1,
     startedScence: null,
+    machineList: null,
+    machineId: undefined,
   });
 
   const [searchTableRef, setSearchTableRef] = useState<any>();
@@ -138,6 +142,10 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
    * @name 启动检查并开启压测
    */
   const handleCheckAndStart = async (scenceInfo) => {
+    if (!state.machineId) {
+      message.warning('请选择压力来源');
+      return;
+    }
     setState({
       visible: true,
       // configStatus: 'loading',
@@ -205,6 +213,8 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
       missingDataSwitch: false,
       isReload: !state.isReload,
       pressureStyle: PressureStyle.继续压测,
+      machineList: null,
+      machineId: undefined,
     });
   };
 
@@ -282,6 +292,8 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             missingDataStatus: false,
             missingDataSwitch: false,
             sceneId: null,
+            machineList: null,
+            machineId: undefined,
           });
         }}
       >
@@ -336,6 +348,25 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             </Col>
           </Row>
         )}
+        {/* 机器选择 */}
+        <div style={{ padding: '24px 0' }}>
+          <div style={{ marginBottom: 16 }}>请选择压力来源</div>
+          <Radio.Group 
+            value={state.machineId}
+            onChange={e => {
+              setState({
+                machineId: e.target.value,
+              });
+            }}
+          >
+              {
+                state.machineList?.map(x => 
+                <Radio key={x.id} value={x.id} disabled={!!x.disabled}>
+                  ({{ 0: '公', 1: '私' }[x.type]}网){x.name}
+                </Radio>)
+              }
+          </Radio.Group>
+        </div>
       </Modal>
       {/* <Modal
         title="启动进度"
@@ -493,6 +524,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             ...state.startedScence,
             leakSqlEnable: state.missingDataSwitch,
             continueRead: state.pressureStyle,
+            machineId: state.machineId,
           }}
         />
       )}

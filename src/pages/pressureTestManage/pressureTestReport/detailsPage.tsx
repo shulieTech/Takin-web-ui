@@ -1,4 +1,14 @@
-import { Alert, Button, Col, Dropdown, Icon, Menu, Row, Statistic } from 'antd';
+import {
+  Alert,
+  Button,
+  Col,
+  Dropdown,
+  Icon,
+  Menu,
+  Popover,
+  Row,
+  Statistic,
+} from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useState } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
@@ -379,7 +389,26 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           下载压测报告
         </Button>
       )}
-      {detailData?.hasJtl && (
+      { detailData?.hasJtl && detailData.ptlPath && (
+        <Popover
+          title="Jtl文件路径"
+          content={
+            <div>
+              {detailData.ptlPath.map((x) => (
+                <div key={x} style={{ marginBottom: 8 }}>
+                  {x}
+                </div>
+              ))}
+            </div>
+          }
+        >
+          <Button style={{ marginRight: 8 }}>
+            Jtl文件路径
+            <Icon type="question-circle" />
+          </Button>
+        </Popover>
+      )}
+      { detailData?.hasJtl && !detailData.ptlPath && (
         <Button
           type="primary"
           ghost

@@ -23,7 +23,7 @@ import AddTagsModal from '../modals/AddTagsModal';
 import ScriptManageService from '../service';
 import styles from './../index.less';
 
-import request from 'src/utils/request';
+import request, { getUrl } from 'src/utils/request';
 import DebugScriptModal from '../modals/DebugScriptModal';
 import DebugScriptRecordModal from '../modals/DebugScriptRecordModal';
 import { getTakinAuthority } from 'src/utils/utils';
@@ -74,7 +74,7 @@ const getScriptManageColumns = (
 
   const downloadFile = async (filePath, fileName) => {
     const { data, status, headers } = await request({
-      url: `${serverUrl}/file/downloadFileByPath?filePath=${filePath}`,
+      url: getUrl(`/file/downloadFileByPath?filePath=${filePath}`),
       responseType: 'blob',
       headers: {
         'x-token': localStorage.getItem('full-link-token'),
@@ -107,7 +107,7 @@ const getScriptManageColumns = (
    */
   const handleDownloadFile = async (Id, fileName) => {
     const { data, status, headers } = await request({
-      url: `${serverUrl}/file/download?filePath=${Id}`,
+      url: getUrl(`/file/download?filePath=${Id}`),
       responseType: 'blob',
       headers: {
         'x-token': localStorage.getItem('full-link-token'),

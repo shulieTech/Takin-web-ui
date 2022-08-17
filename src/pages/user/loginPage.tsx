@@ -17,7 +17,7 @@ import React, { Fragment } from 'react';
 import Loading from 'src/common/loading';
 import DvaComponent from 'src/components/basic-component/DvaComponent';
 import UserService from 'src/services/user';
-import request from 'src/utils/request';
+import request, { getUrl } from 'src/utils/request';
 import router from 'umi/router';
 import queryString from 'query-string';
 import _ from 'lodash';
@@ -400,7 +400,7 @@ export default class Login extends DvaComponent<Props, State> {
 
   queryCode = async () => {
     const { data, status, headers } = await request({
-      url: `${serverUrl}/verification/code`,
+      url: getUrl(`/verification/code`),
       responseType: 'blob',
       headers: {
         'Access-Token': localStorage.getItem('Access-Token'),

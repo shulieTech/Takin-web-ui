@@ -188,15 +188,22 @@ const EnvHeader: React.FC<Props> = (props) => {
         justifyContent: 'space-between',
       }}
     >
-      <span
-        style={{
-          marginLeft: '35%',
-          color: 'var(--FunctionalAlert-900)',
-          fontSize: '20px',
-        }}
-      >
-        {desc}
-      </span>
+      <Tooltip title={desc}>
+        <span
+          style={{
+            color: 'var(--FunctionalAlert-900)',
+            fontSize: 20,
+            flex: 1,
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            padding: '0 30px',
+          }}
+        >
+          {desc}
+        </span>
+      </Tooltip>
       <span>
         {isAdmin && (
           <Button style={{ marginRight: 8 }} onClick={() => setEnvEdit({})}>

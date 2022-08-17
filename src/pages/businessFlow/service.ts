@@ -191,6 +191,13 @@ const BusinessFlowService = {
     const url = '/scriptManage/support/plugin/version';
     return httpGet(url, data);
   },
+  /**
+   * @name 查询机器列表
+   */
+  async queryTestMachine(data) {
+    const url = '/scenemanage/machine';
+    return httpGet(url, data);
+  },
 };
 
 export default BusinessFlowService;

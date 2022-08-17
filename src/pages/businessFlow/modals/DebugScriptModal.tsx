@@ -2,16 +2,17 @@
  * @name
  * @author chuxu
  */
-import { Input, InputNumber, message } from 'antd';
+import { Input, InputNumber, message, Radio } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { connect } from 'dva';
 import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CustomAlert from 'src/common/custom-alert/CustomAlert';
 import { CommonModelState } from 'src/models/common';
 import { router } from 'umi';
 import BusinessFlowService from '../service';
+import PressureTestSceneService from '../../pressureTestManage/pressureTestScene/service';
 
 interface Props extends CommonModelState {
   id: string;
@@ -21,15 +22,17 @@ interface Props extends CommonModelState {
   setState?: (value) => void;
   scriptDeployId?: string;
 }
-const DebugScriptModal: React.FC<Props> = props => {
+const DebugScriptModal: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer({
-    form: null as WrappedFormUtils
+    form: null as WrappedFormUtils,
+    machineId: undefined,
+    machineList: [],
   });
   const { id, scriptDeployId } = props;
   const text = '脚本调试';
 
   const handleSubmit = () => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       state.form.validateFields(async (err, values) => {
         if (err) {
           message.info('请检查表单必填项');
@@ -43,29 +46,29 @@ const DebugScriptModal: React.FC<Props> = props => {
         }
 
         props.setState({
-          isShowDebugModal: true
+          isShowDebugModal: true,
         });
         resolve(true);
 
         // 开始调试
         const {
-          data: { success, data, error }
+          data: { success, data, error },
         } = await BusinessFlowService.startDebug({
           ...values,
-          scriptDeployId
+          scriptDeployId,
         });
         if (success) {
           if (!data.scriptDebugId) {
             props.setState({
               errorInfo: data.errorMessages,
-              debugStatus: 5
+              debugStatus: 5,
             });
             return;
           }
 
           props.setState({
             scriptDebugId: data.scriptDebugId,
-            debugStatus: 0
+            debugStatus: 0,
           });
           startDebug(data.scriptDebugId);
         }
@@ -76,9 +79,9 @@ const DebugScriptModal: React.FC<Props> = props => {
   /**
    * @name 开启调试
    */
-  const startDebug = async scriptDebugId => {
+  const startDebug = async (scriptDebugId) => {
     const {
-      data: { data, success }
+      data: { data, success },
     } = await BusinessFlowService.queryScriptDebugDetail({ scriptDebugId });
     if (success && data.status === 5 && data.failedType >= 20) {
       router.push(`/scriptManage/scriptDebugDetail?id=${scriptDebugId}`);
@@ -87,13 +90,13 @@ const DebugScriptModal: React.FC<Props> = props => {
     if (success && data.status === 5) {
       props.setState({
         errorInfo: [data.remark],
-        debugStatus: data.status
+        debugStatus: data.status,
       });
       return;
     }
     if (success && data.status === 4) {
       props.setState({
-        debugStatus: data.status
+        debugStatus: data.status,
       });
       setTimeout(() => {
         router.push(`/scriptManage/scriptDebugDetail?id=${scriptDebugId}`);
@@ -101,7 +104,7 @@ const DebugScriptModal: React.FC<Props> = props => {
       return;
     }
     props.setState({
-      debugStatus: data.status
+      debugStatus: data.status,
     });
     setTimeout(() => {
       startDebug(scriptDebugId);
@@ -118,9 +121,9 @@ const DebugScriptModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请选择调试请求条数'
-            }
-          ]
+              message: '请选择调试请求条数',
+            },
+          ],
         },
         node: (
           <CommonSelect
@@ -129,10 +132,10 @@ const DebugScriptModal: React.FC<Props> = props => {
               { label: '10', value: '10' },
               { label: '100', value: '100' },
               { label: '1000', value: '1000' },
-              { label: '10000', value: '10000' }
+              { label: '10000', value: '10000' },
             ]}
           />
-        )
+        ),
       },
       {
         key: 'concurrencyNum',
@@ -142,9 +145,9 @@ const DebugScriptModal: React.FC<Props> = props => {
           rules: [
             {
               required: true,
-              message: '请选择并发数'
-            }
-          ]
+              message: '请选择并发数',
+            },
+          ],
         },
         node: (
           <CommonSelect
@@ -154,13 +157,40 @@ const DebugScriptModal: React.FC<Props> = props => {
               { label: '10', value: '10' },
               { label: '20', value: '20' },
               { label: '50', value: '50' },
-              { label: '100', value: '100' }
+              { label: '100', value: '100' },
             ]}
           />
-        )
-      }
+        ),
+      },
+      {
+        key: 'machineId',
+        label: '压力机',
+        options: {
+          rules: [
+            {
+              required: true,
+              message: '请选择压力机',
+            },
+          ],
+        },
+        node: (
+          <Radio.Group>
+            {state.machineList?.map((x) => (
+              <Radio key={x.id} value={x.id} disabled={!!x.disabled}>
+                ({{ 0: '公', 1: '私' }[x.type]}网){x.name}
+              </Radio>
+            ))}
+          </Radio.Group>
+        ),
+      },
     ];
   };
+
+  useEffect(() => {
+    state?.form?.setFieldsValue({
+      machineId: state.machineId,
+    });
+  }, [state.machineId, state.form]);
 
   return (
     <CommonModal
@@ -169,10 +199,16 @@ const DebugScriptModal: React.FC<Props> = props => {
         title: text,
         width: 720,
         destroyOnClose: true,
-        okText: '开始调试'
+        okText: '开始调试',
       }}
       btnText={props.btnText}
       btnProps={{ type: 'default' }}
+      onClick={() => {
+        // 查询启动机器列表
+        PressureTestSceneService.queryTestMachine({ id, scriptDeployId, type: 1 }).then(res => {
+          setState(res);
+        });
+      }}
     >
       <CustomAlert
         message
@@ -185,7 +221,7 @@ const DebugScriptModal: React.FC<Props> = props => {
         rowNum={1}
         formItemProps={{ labelCol: { span: 4 }, wrapperCol: { span: 14 } }}
         btnProps={{ isResetBtn: false, isSubmitBtn: false }}
-        getForm={form => setState({ form })}
+        getForm={(form) => setState({ form })}
         formData={getFormData()}
       />
     </CommonModal>

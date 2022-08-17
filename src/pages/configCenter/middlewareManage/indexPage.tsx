@@ -8,7 +8,7 @@ import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import { MainPageLayout } from 'src/components/page-layout';
-import request from 'src/utils/request';
+import request, { getUrl } from 'src/utils/request';
 import { isEmpty, MapBtnAuthority } from 'src/utils/utils';
 import commonStyles from '../../../../custom.less';
 import MiddlewareManageBottom from './components/MiddlewareManageBottom';
@@ -195,7 +195,7 @@ const MiddlewareManage: React.FC<Props> = props => {
 
   const downloadFile = async fileName => {
     const { data, status, headers } = await request({
-      url: `${serverUrl}/application/middlewareSummary/export`,
+      url: getUrl(`/application/middlewareSummary/export`),
       responseType: 'blob',
       headers: {
         'x-token': localStorage.getItem('full-link-token'),

@@ -171,6 +171,35 @@ const PressureTestSceneService = {
     const url = '/scenemanage/archive';
     return httpPut(url, data);
   },
+  /**
+   * @name 查询机器列表
+   * 这个服务会被多个地方调用
+   */
+  async queryTestMachine(params) {
+    const url = '/scenemanage/machine';
+    const { data: { success, data } } = await httpGet(url, params);
+    if (success) {
+      let defaultMachine = undefined;
+      const list = data.list || [];
+      if (
+        data.lastStartMachineId &&
+        list.some((y) => y.id === data.lastStartMachineId)
+      ) {
+        // 使用上次启动的机器
+        defaultMachine = data.lastStartMachineId;
+      } else if (list.find((x) => x.type === '1' && !x.disabled)) {
+        // 使用私网机器
+        defaultMachine = list.find((x) => x.type === '1' && !x.disabled)?.id;
+      } else {
+        // 使用公网机器
+        defaultMachine = list.find((x) => x.type === '0' && !x.disabled)?.id;
+      }
+      return {
+        machineId: defaultMachine,
+        machineList: list,
+      };
+    }
+  },
 };
 
 export default PressureTestSceneService;

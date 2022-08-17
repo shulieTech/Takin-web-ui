@@ -122,7 +122,6 @@ const getPressureTestSceneColumns = (
     if (success) {
       setState({
         sceneId: row.id,
-        missingDataStatus: true,
         hasMissingData: data,
         startedScence: {
           scenceInfo: row,
@@ -148,8 +147,22 @@ const getPressureTestSceneColumns = (
 
   const handleClickStart = async (row) => {
     const { id: sceneId } = row;
-    queryHasMissingDataScript(row);
-    queryDataScriptNum(sceneId);
+    const msg = message.loading('正在检查配置', 0);
+    setState({
+      missingDataStatus: true,
+    });
+    Promise.all([
+      queryHasMissingDataScript(row),
+      queryDataScriptNum(sceneId),
+      // 查询启动机器列表
+      PressureTestSceneService.queryTestMachine({ id: sceneId, type: 0 })
+      .then((res) => {
+        setState(res);
+      }),
+    ]).finally(() => {
+      msg();
+    });
+    
   };
 
   const handleCloseTiming = async (sceneId: number) => {

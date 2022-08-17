@@ -4,7 +4,7 @@ import { AppAccessContext } from '../indexPage';
 import CardTitle from './CardTitle';
 import styles from './../index.less';
 import moment from 'moment';
-import request from 'src/utils/request';
+import request, { getUrl } from 'src/utils/request';
 
 interface Props {
   state: any;
@@ -15,7 +15,7 @@ const SecondContent: React.FC<Props> = props => {
   const { state, setState } = props;
   const downloadFile = async fileName => {
     const { data, status, headers } = await request({
-      url: `${serverUrl}/fast/agent/access/installScript/download`,
+      url: getUrl(`/fast/agent/access/installScript/download`),
       responseType: 'blob',
       headers: {
         'x-token': localStorage.getItem('full-link-token'),

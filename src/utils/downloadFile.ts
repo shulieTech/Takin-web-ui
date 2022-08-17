@@ -1,10 +1,10 @@
-import request from 'src/utils/request';
+import request, { getUrl } from 'src/utils/request';
 
 declare var window;
 
 export default async (filePath, fileName) => {
   const { data, status, headers } = await request({
-    url: `${window.serverUrl}/file/download?filePath=${filePath}`,
+    url: getUrl(`/file/download?filePath=${filePath}`),
     responseType: 'blob',
     headers: {
       'x-token': localStorage.getItem('full-link-token'),
