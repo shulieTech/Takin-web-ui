@@ -169,7 +169,7 @@ const EnvHeader: React.FC<Props> = props => {
           </Button>
         </Dropdown>
 
-        <Dropdown
+        {isSuper === '1' && <Dropdown
           overlay={
             <Menu>
               {envList?.map((x, ind) => (
@@ -194,7 +194,7 @@ const EnvHeader: React.FC<Props> = props => {
             {envList[index]?.envName}
             <Icon type="down" />
           </Button>
-        </Dropdown>
+        </Dropdown>}
         {isSuper === '1' && (
           <AddTenantModal
             btnText="新增租户"
