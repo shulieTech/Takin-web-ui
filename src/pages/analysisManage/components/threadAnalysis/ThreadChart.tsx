@@ -101,7 +101,7 @@ const ThreadChart: React.FC<Props> = ({
             const keys = Object.keys(data);
             return {
               name: labelMap[keys[1]],
-              value: data.threadCount || `${data.cpuRate}%`
+              value: data.threadCount || (data.cpuRate ? `${data.cpuRate}%` : 0),
             };
           },
           crosshairs: {
