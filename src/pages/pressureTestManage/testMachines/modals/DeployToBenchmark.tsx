@@ -61,7 +61,7 @@ const DeployToBenchmark: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      title="一键部署到benchmark"
+      title="一键部署benchmark组件"
       visible={!!machine}
       onOk={handleSubmit}
       onCancel={cancelCallback}
