@@ -3,24 +3,22 @@ import { Layout } from 'antd';
 import Introduce from './components/Introduce';
 import List from './components/List';
 
-export const PrepareContext = createContext({
-  currentId: undefined,
-});
+export const PrepareContext = createContext(null);
 
 export default (props) => {
-  const state = useContext(PrepareContext);
+  const [currentLink, setCurrentLink] = useState(null);
   return (
-    <PrepareContext.Provider value={{ currentId: undefined }}>
+    <PrepareContext.Provider value={{ currentLink, setCurrentLink }}>
       <Layout>
         <Layout.Sider
           width={260}
           theme="light"
           style={{ borderRight: '1px solid var(--Netural-100, #EEF0F2)' }}
         >
-          <List/>
+          <List />
         </Layout.Sider>
         <Layout.Content style={{ background: '#fff' }}>
-          {!state.currentId ? <Introduce /> : <div>11</div>}
+          {!currentLink ? <Introduce /> : <div>11</div>}
         </Layout.Content>
       </Layout>
     </PrepareContext.Provider>

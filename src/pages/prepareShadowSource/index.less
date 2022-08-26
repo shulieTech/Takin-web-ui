@@ -67,3 +67,27 @@
     border-radius: 100%;
   }
 }
+
+.link-item {
+  padding: 16px;
+  border-right: 4px solid transparent;
+  border-bottom: 1px solid var(--Netural-75, #f7f8fa);
+  cursor: pointer;
+  &.active {
+    background-color: var(--Netural-75, #f7f8fa);
+    border-right-color: var(--BrandPrimary-500, #0fbbd5);
+  }
+  .icon-chuan {
+    display: inline-block;
+    width: 14px;
+    margin-right: 8px;
+    color: #fff;
+    line-height: 14px;
+    text-align: center;
+    background-color: var(--BrandPrimary-500, #0fbbd5);
+    border-radius: 4px;
+    &::before {
+      content: '串';
+    }
+  }
+}
