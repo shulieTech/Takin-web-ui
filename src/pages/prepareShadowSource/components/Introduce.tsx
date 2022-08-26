@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Tooltip, Row, Col } from 'antd';
 import styles from '../index.less';
 import classNames from 'classnames';
+import { PrepareContext } from '../indexPage';
 
 export default (props) => {
+  const { currentLink, setCurrentLink } = useContext(PrepareContext);
   const [activeKey, setActiveKey] = useState(0);
   return (
     <div style={{ padding: 32 }}>
@@ -34,9 +36,7 @@ export default (props) => {
           整体效率提升50%
         </div>
         <div>
-          <Button type="primary">
-            创建链路
-          </Button>
+          <Button type="primary" onClick={() => setCurrentLink({})}>创建链路</Button>
         </div>
       </div>
 

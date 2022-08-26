@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Layout } from 'antd';
 import Introduce from './components/Introduce';
 import List from './components/List';
+import EditLinkModal from './modals/EditLinkModal';
 
 export const PrepareContext = createContext(null);
 
@@ -18,7 +19,11 @@ export default (props) => {
           <List />
         </Layout.Sider>
         <Layout.Content style={{ background: '#fff' }}>
-          {!currentLink ? <Introduce /> : <div>11</div>}
+          {!currentLink?.id ? <Introduce /> : <div>11</div>}
+          <EditLinkModal
+            detail={currentLink}
+            cancelCallback={() => setCurrentLink(undefined)}
+          />
         </Layout.Content>
       </Layout>
     </PrepareContext.Provider>

@@ -30,7 +30,13 @@ export default (props) => {
           />
         </Tooltip>
         <span className="flt-rt">
-          <Button size="small" style={{ width: 24, padding: 0 }}>
+          <Button
+            size="small"
+            style={{ width: 24, padding: 0 }}
+            onClick={() => {
+              setCurrentLink({});
+            }}
+          >
             <Icon type="plus" />
           </Button>
         </span>

@@ -91,3 +91,27 @@
     }
   }
 }
+
+.card-checkbox {
+  position: relative;
+  padding: 24px;
+  border: 1px solid var(--Netural-100, #eef0f2);
+  border-radius: 4px;
+  .icon-checked {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    display: none;
+    color: var(--BrandPrimary-500, #0fbbd5);
+    font-size: 24px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  &.checked {
+    border-color: var(--BrandPrimary-500, #0fbbd5);
+    .icon-checked {
+      display: block;
+    }
+  }
+}
