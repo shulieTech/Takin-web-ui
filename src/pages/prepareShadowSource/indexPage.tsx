@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Layout } from 'antd';
 import Introduce from './components/Introduce';
 import List from './components/List';
-import EditLinkModal from './modals/EditLinkModal';
+import SelectTypeModal from './modals/SelectTypeModal';
 
 export const PrepareContext = createContext(null);
 
@@ -20,7 +20,7 @@ export default (props) => {
         </Layout.Sider>
         <Layout.Content style={{ background: '#fff' }}>
           {!currentLink?.id ? <Introduce /> : <div>11</div>}
-          <EditLinkModal
+          <SelectTypeModal
             detail={currentLink}
             cancelCallback={() => setCurrentLink(undefined)}
           />
