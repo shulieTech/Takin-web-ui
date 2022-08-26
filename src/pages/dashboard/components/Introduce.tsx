@@ -5,7 +5,7 @@ import styles from '../index.less';
 
 export default (props) => {
   return (
-    <Link to="">
+    <Link to="/prepareShadowSource">
       <div className={styles['introduce-guide']}>
         <div style={{ display: 'inline-block' }}>
           <div
@@ -35,6 +35,7 @@ export default (props) => {
             <span className={styles.divider} />
             效率提升50%
           </div>
+          <br/>
           <div
             style={{
               color: 'var(--Netural-990, #25282A)',
