@@ -38,6 +38,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
       visible={!!detail}
       onCancel={cancelCallback}
       onOk={handleSubmit}
+      okText="保存"
       width={1180}
     >
       <Form>

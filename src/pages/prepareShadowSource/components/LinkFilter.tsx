@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Input } from 'antd';
+import { Table, Select, Input, Pagination, Icon } from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
+import { debounce } from 'lodash';
 
 interface Props {
   value: any;
@@ -11,8 +12,12 @@ interface Props {
 export default (props: Props) => {
   const { value, onChange } = props;
 
-  const { list: appList } = useListService({
-    service: service.getLinkList,
+  const {
+    list: appList,
+    getList: getAppList,
+    loading: appLoading,
+  } = useListService({
+    service: service.appList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
@@ -53,7 +58,6 @@ export default (props: Props) => {
               style={{
                 fontSize: 12,
                 color: 'var(--Netural-600, #90959A)',
-                fontWeight: 700,
                 marginRight: 12,
                 cursor: 'pointer',
               }}
@@ -70,40 +74,56 @@ export default (props: Props) => {
     {
       render: (text, record, index) => {
         return (
-          <div>
-            <div style={{ display: 'flex' }}>
-              <span
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Icon
+              type="delete"
+              theme="filled"
+              style={{
+                color: 'var(--BrandPrimary-500, #0FBBD5)',
+                marginRight: 18,
+                fontSize: 16,
+              }}
+            />
+            <div style={{ flex: 1 }}>
+              <div
                 style={{
-                  fontSize: 12,
-                  color: 'var(--Netural-900, #303336)',
-                  fontWeight: 700,
-                  marginRight: 12,
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: 8,
                 }}
               >
-                GET
-              </span>
-              <div className="truncate" style={{ flex: 1 }}>
-                <Input
-                  value={record.name}
-                  onChange={(e) => {
-                    const val = Array.isArray(value) ? value.concat() : [];
-                    val[index].name = e.target.value;
-                    onChange(val);
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: 'var(--Netural-900, #303336)',
+                    marginRight: 12,
                   }}
-                />
+                >
+                  GET
+                </span>
+                <div className="truncate" style={{ flex: 1 }}>
+                  <Input
+                    value={record.name}
+                    onChange={(e) => {
+                      const val = Array.isArray(value) ? value.concat() : [];
+                      val[index].name = e.target.value;
+                      onChange(val);
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-            <div
-              className="truncate"
-              style={{
-                fontSize: 12,
-                color: 'var(--Netural-600, #90959A)',
-                fontWeight: 700,
-                marginRight: 12,
-                cursor: 'pointer',
-              }}
-            >
-              https://ip:port/uentrance/interf/issue/query
+              <div
+                className="truncate"
+                style={{
+                  fontSize: 12,
+                  color: 'var(--Netural-600, #90959A)',
+                  fontWeight: 700,
+                  marginRight: 12,
+                  cursor: 'pointer',
+                }}
+              >
+                https://ip:port/uentrance/interf/issue/query
+              </div>
             </div>
           </div>
         );
@@ -122,80 +142,153 @@ export default (props: Props) => {
           flex: 1,
           border: '1px solid var(--Netural-300, #DBDFE3)',
           marginRight: 12,
-          padding: 24,
+          height: 540,
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <div>
-          应用：
-          <Select
-            placeholder="请选择"
-            style={{ width: 210, marginRight: 24 }}
-            allowClear
-            onChange={(val) =>
-              getList({
-                appId: val,
-                current: 0,
-              })
-            }
-          >
-            {appList.map((x) => (
-              <Select.Option key={x.id} value={x.id}>
-                {x.name}
-              </Select.Option>
-            ))}
-          </Select>
-          <Input.Search
-            placeholder="搜索接口"
-            style={{ width: 228 }}
-            onSearch={(val) =>
-              getList({
-                name: val,
-                current: 0,
-              })
-            }
+        <div style={{ flex: 1, padding: 24 }}>
+          <div style={{ marginBottom: 24 }}>
+            应用：
+            <Select
+              placeholder="请选择"
+              style={{ width: 210, marginRight: 24 }}
+              allowClear
+              onChange={(val) =>
+                getList({
+                  appId: val,
+                  current: 0,
+                })
+              }
+              showSearch
+              filterOption={false}
+              loading={appLoading}
+              onSearch={debounce(
+                (val) => getAppList({ current: 0, applicationName: val }),
+                300
+              )}
+            >
+              {appList.map((x) => (
+                <Select.Option key={x.id} value={x.id}>
+                  {x.applicationName}
+                </Select.Option>
+              ))}
+            </Select>
+            <Input.Search
+              placeholder="搜索接口"
+              style={{ width: 228 }}
+              onSearch={(val) =>
+                getList({
+                  name: val,
+                  current: 0,
+                })
+              }
+            />
+          </div>
+          <Table
+            showHeader={false}
+            columns={leftColmuns}
+            rowKey="id"
+            loading={loading}
+            dataSource={list}
+            rowSelection={{
+              getCheckboxProps: (record) => {
+                return {
+                  checked:
+                    Array.isArray(value) &&
+                    value.some((x) => x.id === record.id),
+                };
+              },
+            }}
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  const val = Array.isArray(value) ? value : [];
+                  const index = val.findIndex((x) => x.id === record.id);
+                  if (index > -1) {
+                    val.splice(index, 1);
+                  } else {
+                    val.push(record);
+                  }
+                  onChange(val);
+                },
+              };
+            }}
+            pagination={false}
           />
         </div>
-        <Table
-          showHeader={false}
-          columns={leftColmuns}
-          rowKey="id"
-          loading={loading}
-          dataSource={list}
-          rowSelection={{
-            getCheckboxProps: (record) => {
-              return {
-                checked:
-                  Array.isArray(value) && value.some((x) => x.id === record.id),
-              };
-            },
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '16px 24px',
+            borderTop: '1px solid var(--Netural-100, #EEF0F2)',
           }}
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                const val = Array.isArray(value) ? value : [];
-                if (!val.some((x) => x.id === record.id)) {
-                  val.push(record);
-                  onChange(val);
-                }
-              },
-            };
-          }}
-        />
+        >
+          <Pagination
+            simple
+            current={query.current + 1}
+            total={total}
+            pageSize={query.pageSize}
+            onChange={(current, pageSize) =>
+              getList({ pageSize, current: current + 1 })
+            }
+            style={{ flex: 1 }}
+          />
+          <span style={{ lineHeight: 1 }}>
+            总计: <b>{total}</b> 条
+          </span>
+        </div>
       </div>
       <div
         style={{
           flex: 1,
           border: '1px solid var(--Netural-300, #DBDFE3)',
           marginLeft: 12,
-          padding: 24,
+          height: 540,
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <Table
-          columns={rightColumns}
-          rowKey="id"
-          dataSource={value}
-          showHeader={false}
-        />
+        <div style={{ flex: 1, padding: 24 }}>
+          <div
+            style={{
+              paddingBottom: 24,
+              color: 'var(--Netural-500, #AEB2B7)',
+              fontSize: 16,
+            }}
+          >
+            已选数据
+          </div>
+          <Table
+            columns={rightColumns}
+            rowKey="id"
+            dataSource={value}
+            showHeader={false}
+          />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '16px 24px',
+            borderTop: '1px solid var(--Netural-100, #EEF0F2)',
+          }}
+        >
+          <Pagination
+            simple
+            current={1}
+            total={Array.isArray(value) ? value.length : 0}
+            pageSize={10}
+            // onChange={(current, pageSize) =>
+
+            // }
+            style={{ flex: 1 }}
+          />
+          <span style={{ lineHeight: 1 }}>
+            总计: <b>{Array.isArray(value) ? value.length : 0}</b> 条
+          </span>
+        </div>
       </div>
     </div>
   );

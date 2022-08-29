@@ -15,4 +15,11 @@ export default {
     const url = '/interfaceperformance/config/query';
     return httpPost(url, data);
   },
+  /**
+   * @name 应用下拉列表
+   */
+  async appList(data = {}) {
+    const url = '/application/center/list/dictionary';
+    return httpGet(url, data);
+  },
 };
