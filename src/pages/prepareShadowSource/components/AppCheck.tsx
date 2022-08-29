@@ -16,6 +16,7 @@ import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
+import Help from './Help';
 
 const { Option } = Select;
 
@@ -315,7 +316,12 @@ export default (props) => {
         </div>
       </div>
       <div style={{ flex: 1 }}>
-        <Table columns={columns} dataSource={list} pagination={false} />
+        <Table
+          columns={columns}
+          dataSource={list}
+          pagination={false}
+          loading={loading}
+        />
       </div>
       <div
         style={{
@@ -326,21 +332,7 @@ export default (props) => {
         }}
       >
         <div style={{ flex: 1 }}>
-          <Tooltip title="222">
-            <Icon
-              type="info-circle"
-              style={{ marginLeft: 8, cursor: 'pointer' }}
-            />
-          </Tooltip>
-          <span
-            style={{
-              textDecorationLine: 'underline',
-              cursor: 'pointer',
-            }}
-          >
-            「 链路资源准备 」如何使用？
-          </span>
-          <Divider type="vertical" style={{ height: 24, margin: '0 36px' }} />
+          <Help showBanner={false} />
           <span>
             识别应用：<b>24</b>
           </span>

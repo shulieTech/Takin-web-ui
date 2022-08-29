@@ -4,7 +4,12 @@ import styles from '../index.less';
 import classNames from 'classnames';
 import { PrepareContext } from '../indexPage';
 
-export default (props) => {
+interface Props {
+  showAddBtn?: boolean;
+}
+
+export default (props: Props) => {
+  const { showAddBtn = true } = props;
   const { currentLink, setCurrentLink } = useContext(PrepareContext);
   const [activeKey, setActiveKey] = useState(0);
   return (
@@ -35,9 +40,13 @@ export default (props) => {
           <span className={styles.divider} />
           整体效率提升50%
         </div>
-        <div>
-          <Button type="primary" onClick={() => setCurrentLink({})}>创建链路</Button>
-        </div>
+        {showAddBtn && (
+          <div>
+            <Button type="primary" onClick={() => setCurrentLink({})}>
+              创建链路
+            </Button>
+          </div>
+        )}
       </div>
 
       <div>
