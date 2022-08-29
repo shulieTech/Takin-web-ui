@@ -15,10 +15,23 @@ import { PrepareContext } from '../indexPage';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
+import { debounce } from 'lodash';
 
 const { Option } = Select;
 
 export default (props) => {
+  const {
+    list: appList,
+    getList: getAppList,
+    loading: appLoading,
+  } = useListService({
+    service: service.appList,
+    defaultQuery: {
+      current: 0,
+      pageSize: 10,
+    },
+  });
+
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.getLinkList,
     defaultQuery: {
@@ -26,7 +39,7 @@ export default (props) => {
       pageSize: 10,
       type: '',
       status: '',
-      entry: '',
+      entry: undefined,
     },
     // isQueryOnMount: false,
   });
@@ -212,8 +225,50 @@ export default (props) => {
                     current: 0,
                   })
                 }
+                dropdownMatchSelectWidth={false}
+                showSearch
+                filterOption={false}
+                placeholder="搜索入口URL"
+                onSearch={debounce(
+                  (val) => getAppList({ current: 0, applicationName: val }),
+                  300
+                )}
+                optionLabelProp="label"
               >
-                <Option value="">全部</Option>
+                {appList.map((x) => {
+                  return (
+                    <Option
+                      value={x.id}
+                      key={x.id}
+                      style={{
+                        border: '1px solid #F7F8FA',
+                      }}
+                      label="https://ip:port/uentrance/interf/issue/biopsy-sequence"
+                    >
+                      <div
+                        style={{
+                          color: 'var(--Netural-900, #303336)',
+                          fontWeight: 500,
+                          marginBottom: 8,
+                        }}
+                        className="truncate"
+                      >
+                        <span style={{ marginRight: 8, fontWeight: 700 }}>
+                          GET
+                        </span>
+                        凭证申领信息查询
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: 'var(--Netural-600, #90959A)',
+                        }}
+                      >
+                        https://ip:port/uentrance/interf/issue/biopsy-sequence
+                      </div>
+                    </Option>
+                  );
+                })}
               </Select>
             </span>
             <span style={{ marginRight: 24 }}>
