@@ -11,6 +11,10 @@ interface Props {
 
 export default (props: Props) => {
   const { value, onChange } = props;
+  const [rightPage, setRightPage] = useState({
+    current: 1,
+    pageSize: 10,
+  });
 
   const {
     list: appList,
@@ -82,6 +86,15 @@ export default (props: Props) => {
                 color: 'var(--BrandPrimary-500, #0FBBD5)',
                 marginRight: 18,
                 fontSize: 16,
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                const val = Array.isArray(value) ? value.concat() : [];
+                const valIndex = val.findIndex((x) => x.id === record.id);
+                if (valIndex > -1) {
+                  val.splice(valIndex, 1);
+                  onChange(val);
+                }
               }}
             />
             <div style={{ flex: 1 }}>
@@ -96,6 +109,7 @@ export default (props: Props) => {
                   style={{
                     fontSize: 12,
                     color: 'var(--Netural-900, #303336)',
+                    fontWeight: 700,
                     marginRight: 12,
                   }}
                 >
@@ -106,8 +120,11 @@ export default (props: Props) => {
                     value={record.name}
                     onChange={(e) => {
                       const val = Array.isArray(value) ? value.concat() : [];
-                      val[index].name = e.target.value;
-                      onChange(val);
+                      const valIndex = val.findIndex((x) => x.id === record.id);
+                      if (valIndex > -1) {
+                        val[valIndex].name = e.target.value;
+                        onChange(val);
+                      }
                     }}
                   />
                 </div>
@@ -117,7 +134,6 @@ export default (props: Props) => {
                 style={{
                   fontSize: 12,
                   color: 'var(--Netural-600, #90959A)',
-                  fontWeight: 700,
                   marginRight: 12,
                   cursor: 'pointer',
                 }}
@@ -263,8 +279,11 @@ export default (props: Props) => {
           <Table
             columns={rightColumns}
             rowKey="id"
-            dataSource={value}
+            dataSource={(value || []).slice(
+              (rightPage.current - 1) * rightPage.pageSize
+            )}
             showHeader={false}
+            pagination={false}
           />
         </div>
         <div
@@ -275,14 +294,18 @@ export default (props: Props) => {
             borderTop: '1px solid var(--Netural-100, #EEF0F2)',
           }}
         >
+          {/* 前端分页 */}
           <Pagination
             simple
-            current={1}
+            current={rightPage.current}
             total={Array.isArray(value) ? value.length : 0}
-            pageSize={10}
-            // onChange={(current, pageSize) =>
-
-            // }
+            pageSize={rightPage.pageSize}
+            onChange={(current, pageSize) =>
+              setRightPage({
+                current,
+                pageSize,
+              })
+            }
             style={{ flex: 1 }}
           />
           <span style={{ lineHeight: 1 }}>

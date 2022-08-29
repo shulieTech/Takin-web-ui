@@ -4,10 +4,12 @@ import { PrepareContext } from '../indexPage';
 import DataIsolateGuide from './DataIsolateGuide';
 import DataSourceMode from './DataSourceMode';
 import AppMode from './AppMode';
+import EditDataSource from '../modals/EditDataSource';
 
 export default (props) => {
   const [showGuide, setShowGuide] = useState(false);
   const [mode, setMode] = useState(0);
+  const [editedDataSource, setEditedDataSource] = useState(undefined);
 
   if (showGuide) {
     return <DataIsolateGuide />;
@@ -77,7 +79,12 @@ export default (props) => {
           <Tooltip title="333">
             <Icon type="info-circle" style={{ cursor: 'pointer' }} />
           </Tooltip>
-          <Button style={{ marginLeft: 24 }}>新增数据源</Button>
+          <Button
+            style={{ marginLeft: 24 }}
+            onClick={() => setEditedDataSource({})}
+          >
+            新增数据源
+          </Button>
           <Button style={{ marginLeft: 24 }}>导入隔离配置</Button>
           <Button type="primary" style={{ marginLeft: 24 }}>
             导出待配置项
@@ -86,6 +93,14 @@ export default (props) => {
       </div>
       {mode === 0 && <DataSourceMode />}
       {mode === 1 && <AppMode />}
+      <EditDataSource
+        detail={editedDataSource}
+        okCallback={() => {
+          // TODO 刷新列表
+          setEditedDataSource(undefined);
+        }}
+        cancelCallback={() => setEditedDataSource(undefined)}
+      />
     </div>
   );
 };
