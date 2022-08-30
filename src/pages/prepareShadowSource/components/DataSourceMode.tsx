@@ -17,6 +17,7 @@ import Help from './Help';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
+import TableInfo from './TableInfo';
 import { debounce } from 'lodash';
 
 const { Option } = Select;
@@ -84,7 +85,7 @@ const DropdowTable = (props) => {
             fixed: 'right',
             align: 'right',
             render: (text) => {
-              return <Switch checked={text === 1} size="small"/>;
+              return <Switch checked={text === 1} size="small" />;
             },
           },
         ]}
@@ -95,6 +96,7 @@ const DropdowTable = (props) => {
 };
 
 export default (props) => {
+  const [editedDataSource, setEditDataSource] = useState(undefined);
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.getLinkList,
     defaultQuery: {
@@ -126,7 +128,7 @@ export default (props) => {
               }}
             >
               <span
-                className="iconfont icon-huancun1"
+                className="iconfont icon-shujuku"
                 style={{
                   fontSize: 18,
                   color: 'var(--Netural-1000, #141617)',
@@ -188,7 +190,12 @@ export default (props) => {
             <Dropdown overlay={<DropdowTable />}>
               <a style={{ marginLeft: 32 }}>查看24个应用</a>
             </Dropdown>
-            <a style={{ marginLeft: 32 }}>编辑</a>
+            <a
+              style={{ marginLeft: 32 }}
+              onClick={() => setEditDataSource(record)}
+            >
+              编辑
+            </a>
           </span>
         );
       },
@@ -277,6 +284,10 @@ export default (props) => {
           <span style={{ marginLeft: 40 }}>负责人：朱七七</span>
         </div>
       </div>
+      <TableInfo
+        detail={editedDataSource}
+        cancelCallback={() => setEditDataSource(undefined)}
+      />
     </>
   );
 };

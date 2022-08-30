@@ -16,7 +16,7 @@ import Help from './Help';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
-import { debounce, filter } from 'lodash';
+import { debounce } from 'lodash';
 
 const { Option } = Select;
 
