@@ -9,6 +9,8 @@ import {
   Input,
   Select,
   Tag,
+  Switch,
+  Dropdown,
 } from 'antd';
 import { PrepareContext } from '../indexPage';
 import Help from './Help';
@@ -18,6 +20,79 @@ import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
 
 const { Option } = Select;
+
+const DropdowTable = (props) => {
+  const defaultList = [
+    {
+      id: 1,
+      applicationName: '门店-无清单团单-发版',
+      status: 0,
+    },
+    {
+      id: 2,
+      applicationName: '门店-无清单团单-发版',
+      status: 1,
+    },
+    {
+      id: 3,
+      applicationName: '门店-无清单团单-发版',
+      status: 2,
+    },
+  ];
+  const [list, setList] = useState(defaultList);
+
+  const filterList = (e) => {
+    if (e.target.value && e.target.value.trim()) {
+      setList(
+        list.filter(
+          (x) => x.applicationName.indexOf(e.target.value.trim()) > -1
+        )
+      );
+    } else {
+      setList(defaultList);
+    }
+  };
+  return (
+    <div
+      style={{
+        width: 320,
+        padding: 8,
+        background: '#fff',
+        boxShadow:
+          '0px 4px 14px rgba(68, 68, 68, 0.1), 0px 2px 6px rgba(68, 68, 68, 0.1)',
+      }}
+    >
+      <Input.Search
+        placeholder="搜索应用"
+        style={{
+          marginBottom: 8,
+        }}
+        onChange={filterList}
+      />
+      <Table
+        size="middle"
+        rowKey="id"
+        dataSource={list}
+        columns={[
+          {
+            title: '应用',
+            dataIndex: 'applicationName',
+          },
+          {
+            title: '是否加入压测范围',
+            dataIndex: 'status',
+            fixed: 'right',
+            align: 'right',
+            render: (text) => {
+              return <Switch checked={text === 1} size="small"/>;
+            },
+          },
+        ]}
+        pagination={false}
+      />
+    </div>
+  );
+};
 
 export default (props) => {
   const { list, loading, total, query, getList, resetList } = useListService({
@@ -110,7 +185,9 @@ export default (props) => {
         return (
           <span>
             <a>删除</a>
-            <a style={{ marginLeft: 32 }}>查看24个应用</a>
+            <Dropdown overlay={<DropdowTable />}>
+              <a style={{ marginLeft: 32 }}>查看24个应用</a>
+            </Dropdown>
             <a style={{ marginLeft: 32 }}>编辑</a>
           </span>
         );

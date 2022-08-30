@@ -9,15 +9,90 @@ import {
   Input,
   Select,
   Tag,
+  Dropdown,
 } from 'antd';
 import { PrepareContext } from '../indexPage';
 import Help from './Help';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
-import { debounce } from 'lodash';
+import { debounce, filter } from 'lodash';
 
 const { Option } = Select;
+
+const DropdowTable = (props) => {
+  const defaultList = [
+    {
+      id: 1,
+      interface: 'jdbc:mysql://192.168.100.252：3306/easydemo_dbl',
+      status: 0,
+    },
+    {
+      id: 2,
+      interface: 'jdbc:mysql://192.168.100.252：3306/easydemo_dbl',
+      status: 1,
+    },
+    {
+      id: 3,
+      interface: 'jdbc:mysql://192.168.100.252：3306/easydemo_dbl',
+      status: 2,
+    },
+  ];
+  const [list, setList] = useState(defaultList);
+
+  const filterList = (e) => {
+    if (e.target.value && e.target.value.trim()) {
+      setList(
+        list.filter((x) => x.interface.indexOf(e.target.value.trim()) > -1)
+      );
+    } else {
+      setList(defaultList);
+    }
+  };
+  return (
+    <div
+      style={{
+        width: 475,
+        padding: 8,
+        background: '#fff',
+        boxShadow:
+          '0px 4px 14px rgba(68, 68, 68, 0.1), 0px 2px 6px rgba(68, 68, 68, 0.1)',
+      }}
+    >
+      <Input.Search
+        placeholder="搜索数据源"
+        style={{
+          marginBottom: 8,
+        }}
+        onChange={filterList}
+      />
+      <Table
+        size="middle"
+        showHeader={false}
+        rowKey="id"
+        dataSource={list}
+        columns={[
+          {
+            dataIndex: 'interface',
+          },
+          {
+            dataIndex: 'status',
+            width: 20,
+            fixed: 'right',
+            render: (text) => {
+              return {
+                0: <StatusDot />,
+                1: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+                2: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
+              }[text];
+            },
+          },
+        ]}
+        pagination={false}
+      />
+    </div>
+  );
+};
 
 export default (props) => {
   const { list, loading, total, query, getList, resetList } = useListService({
@@ -80,12 +155,15 @@ export default (props) => {
     },
     {
       title: '所属数据源',
+      align: 'right',
       render: (text, record) => {
         return (
           <div style={{ textAlign: 'right' }}>
             divjdbc:mysql://192.168.100.252：3306/
-            <div>
-              <a>共3个</a>
+            <div style={{ marginTop: 8 }}>
+              <Dropdown overlay={<DropdowTable />}>
+                <a>共3个</a>
+              </Dropdown>
             </div>
           </div>
         );
