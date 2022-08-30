@@ -153,12 +153,18 @@ const getAddDynamicDbFormData = (
   };
 
   /** @name 获取表单initialValue */
-  const getFormItemInitialValue = (keys) => {
+  const getFormItemInitialValue = (keys, nodeType) => {
     let result = null;
     result =
       state.dbTableDetail.shadowInfo &&
       JSON.parse(state.dbTableDetail.shadowInfo) &&
       JSON.parse(state.dbTableDetail.shadowInfo)[keys];
+    
+    // 兼容处理shadowPwd nodeType为2，期望value格式是shadowPwd:xxxx，但是实际却是shadowPwd:{context:xxx}这种格式
+    if ([1, 2].includes(nodeType) && result?.context) {
+      result = result.context;
+    }
+
     return result;
   };
 
@@ -415,7 +421,7 @@ const getAddDynamicDbFormData = (
         initialValue:
           item.nodeType === 4
             ? state.dbTableDetail && state.dbTableDetail.tables
-            : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key),
+            : getFormItemInitialValue(item.nodeInfo ? [item.key] : item.key, item.nodeType),
         rules: [
           {
             required: item.required ? true : false,
