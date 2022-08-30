@@ -59,13 +59,20 @@ const DynamicDbFormData = (
   };
 
   /** @name 获取表单initialValue */
-  const getFormItemInitialValue = keys => {
-    let result = null;
-    result =
-      state.dbTableDetail.shadowInfo &&
-      JSON.parse(state.dbTableDetail.shadowInfo) &&
-      JSON.parse(state.dbTableDetail.shadowInfo)[keys];
-    return result;
+  const getFormItemInitialValue = (keys) => {
+    // let result = null;
+    // result =
+    //   state.dbTableDetail.shadowInfo &&
+    //   JSON.parse(state.dbTableDetail.shadowInfo) &&
+    //   JSON.parse(state.dbTableDetail.shadowInfo)[keys];
+    // return result;
+    
+    // 兼容有些数据value是保存在context里
+    if (state.dbTableDetail.shadowInfo) {
+      const obj = JSON.parse(state.dbTableDetail.shadowInfo)[keys];
+      return obj?.context || obj;
+    }
+    return undefined;
   };
 
   const handleCopy = async value => {
