@@ -4,6 +4,7 @@ import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
 import StatusDot from './StatusDot';
+import Help from './Help';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -125,6 +126,7 @@ export default (props) => {
       </div>
       {step === 0 && <AppCheck />}
       {step === 1 && <DataIsloate />}
+      <Help/>
     </div>
   );
 };

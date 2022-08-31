@@ -207,35 +207,13 @@ export default (props) => {
           </Button>
         </div>
       </div>
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, overflow: 'auto' }}>
         <Table
           columns={columns}
           dataSource={list}
           pagination={false}
           loading={loading}
         />
-      </div>
-      <div
-        style={{
-          padding: '8px 32px',
-          borderTop: '1px solid #F7F8FA',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <Help showBanner={false} />
-          <span>
-            识别应用：<b>24</b>
-          </span>
-          <span style={{ marginLeft: 32 }}>
-            正常： <b>24</b>
-          </span>
-        </div>
-        <div>
-          <span>检测时间：3 分钟前</span>
-          <span style={{ marginLeft: 40 }}>负责人：朱七七</span>
-        </div>
       </div>
     </>
   );

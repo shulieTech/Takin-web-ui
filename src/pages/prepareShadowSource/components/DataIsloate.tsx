@@ -76,6 +76,7 @@ export default (props) => {
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
+        overflow: 'hidden',
       }}
     >
       <div

@@ -18,7 +18,6 @@ import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
-import Help from './Help';
 import EditAgentCount from './EditAgentCount';
 
 const { Option } = Select;
@@ -169,7 +168,14 @@ export default (props) => {
   ];
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}
+    >
       <div
         style={{
           padding: '16px 32px',
@@ -319,35 +325,13 @@ export default (props) => {
           </div>
         </div>
       </div>
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, overflow: 'auto' }}>
         <Table
           columns={columns}
           dataSource={list}
           pagination={false}
           loading={loading}
         />
-      </div>
-      <div
-        style={{
-          padding: '8px 32px',
-          borderTop: '1px solid #F7F8FA',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <Help showBanner={false} />
-          <span>
-            识别应用：<b>24</b>
-          </span>
-          <span style={{ marginLeft: 32 }}>
-            正常： <b>24</b>
-          </span>
-        </div>
-        <div>
-          <span>检测时间：3 分钟前</span>
-          <span style={{ marginLeft: 40 }}>负责人：朱七七</span>
-        </div>
       </div>
     </div>
   );

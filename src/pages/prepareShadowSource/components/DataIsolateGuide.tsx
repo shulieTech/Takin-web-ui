@@ -217,22 +217,6 @@ export default (props) => {
           </div>
         </div>
       </div>
-      <div
-        style={{
-          padding: '8px 32px',
-          borderTop: '1px solid #F7F8FA',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <Help showBanner={false} />
-          <span>暂无数据源</span>
-        </div>
-        <div>
-          <span style={{ marginLeft: 40 }}>负责人：朱七七</span>
-        </div>
-      </div>
     </div>
   );
 };
