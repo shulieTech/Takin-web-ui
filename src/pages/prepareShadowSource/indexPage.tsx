@@ -8,9 +8,17 @@ import Detail from './components/Detail';
 export const PrepareContext = createContext(null);
 
 export default (props) => {
-  const [currentLink, setCurrentLink] = useState(null);
+  const [prepareState, setFullPrepareState] = useState({
+    currentLink: null,
+  });
+  const setPrepareState = (particalState) => {
+    setFullPrepareState({
+      ...prepareState,
+      ...particalState,
+    });
+  };
   return (
-    <PrepareContext.Provider value={{ currentLink, setCurrentLink }}>
+    <PrepareContext.Provider value={{ prepareState, setPrepareState }}>
       <Layout>
         <Layout.Sider
           width={260}
@@ -20,10 +28,10 @@ export default (props) => {
           <List />
         </Layout.Sider>
         <Layout.Content style={{ background: '#fff' }}>
-          {!currentLink?.id ? <Introduce /> : <Detail/>}
+          {!prepareState.currentLink?.id ? <Introduce /> : <Detail />}
           <SelectTypeModal
-            detail={currentLink}
-            cancelCallback={() => setCurrentLink(undefined)}
+            detail={prepareState.currentLink}
+            cancelCallback={() => setPrepareState({ currentLink: null })}
           />
         </Layout.Content>
       </Layout>

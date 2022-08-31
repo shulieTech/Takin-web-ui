@@ -11,7 +11,7 @@ interface Props {
 
 export default (props: Props) => {
   const { showAddBtn = true } = props;
-  const { currentLink, setCurrentLink } = useContext(PrepareContext);
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [activeKey, setActiveKey] = useState(0);
 
   const list = [
@@ -138,7 +138,10 @@ export default (props: Props) => {
         </div>
         {showAddBtn && (
           <div>
-            <Button type="primary" onClick={() => setCurrentLink({})}>
+            <Button
+              type="primary"
+              onClick={() => setPrepareState({ currentLink: {} })}
+            >
               创建链路
             </Button>
           </div>

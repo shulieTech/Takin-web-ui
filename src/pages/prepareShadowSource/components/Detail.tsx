@@ -6,7 +6,7 @@ import DataIsloate from './DataIsloate';
 import StatusDot from './StatusDot';
 
 export default (props) => {
-  const { currentLink, setCurrentLink } = useContext(PrepareContext);
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [step, setStep] = useState(0);
   const activeStepStyle = {
     color: '#fff',

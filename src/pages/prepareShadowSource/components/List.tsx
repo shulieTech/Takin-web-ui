@@ -8,7 +8,7 @@ import styles from '../index.less';
 import { LINK_STATUS } from '../contants';
 
 export default (props) => {
-  const { currentLink, setCurrentLink } = useContext(PrepareContext);
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const { list, loading, total, query, getList } = useListService({
     service: service.getLinkList,
     defaultQuery: {
@@ -34,7 +34,7 @@ export default (props) => {
             size="small"
             style={{ width: 24, padding: 0 }}
             onClick={() => {
-              setCurrentLink({});
+              setPrepareState({ currentLink: {} });
             }}
           >
             <Icon type="plus" />
@@ -77,10 +77,11 @@ export default (props) => {
               <div
                 key={x.id}
                 className={classNames(styles['link-item'], {
-                  [styles.active]: x.id === parseInt(currentLink?.id, 10),
+                  [styles.active]:
+                    x.id === parseInt(prepareState.currentLink?.id, 10),
                 })}
                 onClick={() => {
-                  setCurrentLink(x);
+                  setPrepareState({ currentLink: x });
                 }}
               >
                 <div style={{ display: 'flex' }}>
