@@ -5,8 +5,8 @@ import useListService from 'src/utils/useListService';
 import { debounce } from 'lodash';
 
 interface Props {
-  value: any;
-  onChange: (val: any) => void;
+  value?: any;
+  onChange?: (val: any) => void;
 }
 
 export default (props: Props) => {
@@ -93,7 +93,9 @@ export default (props: Props) => {
                 const valIndex = val.findIndex((x) => x.id === record.id);
                 if (valIndex > -1) {
                   val.splice(valIndex, 1);
-                  onChange(val);
+                  if (onChange) {
+                    onChange(val);
+                  }
                 }
               }}
             />
@@ -123,7 +125,9 @@ export default (props: Props) => {
                       const valIndex = val.findIndex((x) => x.id === record.id);
                       if (valIndex > -1) {
                         val[valIndex].name = e.target.value;
-                        onChange(val);
+                        if (onChange) {
+                          onChange(val);
+                        }
                       }
                     }}
                   />
@@ -226,7 +230,9 @@ export default (props: Props) => {
                   } else {
                     val.push(record);
                   }
-                  onChange(val);
+                  if (onChange) {
+                    onChange(val);
+                  }
                 },
               };
             }}

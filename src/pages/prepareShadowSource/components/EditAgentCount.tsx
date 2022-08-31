@@ -23,7 +23,7 @@ export default Form.create()((prop) => {
   };
 
   return isEditing ? (
-    <span>
+    <span style={{ whiteSpace: 'nowrap' }}>
       <Tooltip title={errorStr}>
         <Icon
           type="info-circle"

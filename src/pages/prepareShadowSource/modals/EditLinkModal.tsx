@@ -10,9 +10,10 @@ interface EditLinkModalProps {
   form?: WrappedFormUtils;
   detail: any;
   cancelCallback: () => void;
+  canEditLink: boolean;
 }
 const EditLinkModal = (props: EditLinkModalProps) => {
-  const { detail, cancelCallback, form } = props;
+  const { detail, cancelCallback, canEditLink = true, form } = props;
   const { getFieldDecorator, validateFields } = form;
 
   const handleSubmit = () => {
@@ -39,7 +40,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
       onCancel={cancelCallback}
       onOk={handleSubmit}
       okText="保存"
-      width={1180}
+      width={canEditLink ? 1180 : 630}
     >
       <Form>
         <Form.Item label="链路名称">
@@ -65,20 +66,55 @@ const EditLinkModal = (props: EditLinkModalProps) => {
             </span>
           }
         >
-          {getFieldDecorator('links', {
-            initialValue: detail?.links,
-            rules: [
-              {
-                validator: (rule, val, callback) => {
-                  if (Array.isArray(val) && val.length > 0) {
-                    callback();
-                  } else {
-                    callback('请选择链路');
-                  }
+          {canEditLink
+            ? getFieldDecorator('links', {
+              initialValue: detail?.links,
+              rules: [
+                {
+                  validator: (rule, val, callback) => {
+                    if (Array.isArray(val) && val.length > 0) {
+                      callback();
+                    } else {
+                      callback('请选择链路');
+                    }
+                  },
                 },
-              },
-            ],
-          })(<LinkFilter />)}
+              ],
+            })(<LinkFilter />)
+            : [1, 2].map((x) => {
+              return (
+                  <div style={{ marginBottom: 16 }} key={x}>
+                    <div style={{ lineHeight: 1.5 }}>
+                      <div style={{ display: 'flex' }}>
+                        <span
+                          style={{
+                            fontSize: 12,
+                            color: 'var(--Netural-900, #303336)',
+                            fontWeight: 700,
+                            marginRight: 12,
+                          }}
+                        >
+                          GET
+                        </span>
+                        <div className="truncate" style={{ flex: 1 }}>
+                          撤回消息
+                        </div>
+                      </div>
+                      <div
+                        className="truncate"
+                        style={{
+                          fontSize: 12,
+                          color: 'var(--Netural-600, #90959A)',
+                          marginRight: 12,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        https://ip:port/uentrance/interf/issue/query
+                      </div>
+                    </div>
+                  </div>
+              );
+            })}
         </Form.Item>
       </Form>
     </Modal>
