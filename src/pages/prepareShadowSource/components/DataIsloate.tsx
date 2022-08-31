@@ -1,18 +1,68 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Alert, Divider, Icon, Button, Tooltip } from 'antd';
+import {
+  Alert,
+  Divider,
+  Icon,
+  Button,
+  Tooltip,
+  Modal,
+  Radio,
+  message,
+} from 'antd';
 import { PrepareContext } from '../indexPage';
 import DataIsolateGuide from './DataIsolateGuide';
 import DataSourceMode from './DataSourceMode';
 import AppMode from './AppMode';
 import EditDataSource from '../modals/EditDataSource';
+import service from '../service';
+import styles from '../index.less';
 
 export default (props) => {
   const [showGuide, setShowGuide] = useState(false);
   const [mode, setMode] = useState(0);
   const [editedDataSource, setEditedDataSource] = useState(undefined);
 
+  const setIsolatePlan = () => {
+    let val;
+    Modal.confirm({
+      className: styles['modal-tight'],
+      width: 640,
+      icon: null,
+      content: (
+        <div>
+          <div
+            style={{
+              fontSize: 20,
+              color: 'var(--Netural-990, #25282A)',
+              borderBottom: '1px solid var(--Netural-100, #EEF0F2)',
+              paddingBottom: 30,
+              lineHeight: 1,
+            }}
+          >
+            设置隔离方案
+          </div>
+          <div style={{ padding: 24 }}>
+            <Radio.Group defaultValue={val} onChange={(value) => (val = value)}>
+              <Radio value={1}>影子库</Radio>
+              <Radio value={2}>影子表</Radio>
+              <Radio value={3}>影子库/表</Radio>
+            </Radio.Group>
+          </div>
+        </div>
+      ),
+      okText: '确认设置',
+      onOk: async () => {
+        if (!val) {
+          message.warn('请选择隔离方案');
+          return Promise.reject();
+        }
+        // TODO 变更隔离方式
+      },
+    });
+  };
+
   if (showGuide) {
-    return <DataIsolateGuide />;
+    return <DataIsolateGuide setIsolatePlan={setIsolatePlan} />;
   }
 
   const activeModeSwitchStyle = {
@@ -80,7 +130,9 @@ export default (props) => {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div>
             隔离方式：影子库
-            <a style={{ marginLeft: 16 }}>设置</a>
+            <a style={{ marginLeft: 16 }} onClick={setIsolatePlan}>
+              设置
+            </a>
           </div>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           <Tooltip title="333">

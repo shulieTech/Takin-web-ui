@@ -90,7 +90,7 @@ export default (props: Props) => {
     },
     {
       title: '操作',
-      dataIndex: 'status',
+      dataIndex: '',
       render: (text, record) => {
         return <a>删除</a>;
       },

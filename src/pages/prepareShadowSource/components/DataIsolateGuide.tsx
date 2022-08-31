@@ -7,6 +7,10 @@ import img2 from 'src/assets/data-isolate-2.png';
 import img3 from 'src/assets/data-isolate-3.png';
 import img4 from 'src/assets/data-isolate-4.png';
 
+interface Props {
+  setIsolatePlan: () => void;
+}
+
 export default (props) => {
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -17,10 +21,12 @@ export default (props) => {
           display: 'flex',
         }}
       >
-        <div style={{ flex: 1 }}/>
+        <div style={{ flex: 1 }} />
         <div>
           隔离方式：影子库
-          <a style={{ marginLeft: 16 }}>设置</a>
+          <a style={{ marginLeft: 16 }} onClick={props.setIsolatePlan}>
+            设置
+          </a>
         </div>
       </div>
       <div style={{ flex: 1, padding: '64px 90px' }}>
@@ -71,7 +77,7 @@ export default (props) => {
                 与团队沟通后，需先进行影子库、影子表的选择
               </div>
               <div>
-                <Button type="primary" ghost>
+                <Button type="primary" ghost onClick={props.setIsolatePlan}>
                   立即设置
                 </Button>
               </div>
