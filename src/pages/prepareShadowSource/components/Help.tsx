@@ -11,7 +11,6 @@ export default (props) => {
         borderTop: '1px solid #F7F8FA',
         display: 'flex',
         alignItems: 'center',
-        marginTop: 16,
       }}
     >
       <div style={{ flex: 1 }}>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Alert,
   Divider,
   Icon,
   Button,
@@ -168,171 +167,134 @@ export default (props) => {
   ];
 
   return (
-    <div
-      style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}
-    >
+    <>
       <div
         style={{
+          display: 'flex',
+          alignItems: 'center',
           padding: '16px 32px',
-          borderBottom: '1px solid #F7F8FA',
         }}
       >
-        <Alert
-          style={{
-            backgroundColor: 'var(--Netural-75, #F7F8FA)',
-            color: 'var(--Netural-800, #5A5E62)',
-            border: '1px solid var(--Netural-200, #E5E8EC)',
-            marginBottom: 24,
-          }}
-          closable
-          message={
-            <span>
-              <Icon
-                type="check-square"
-                theme="filled"
-                style={{
-                  color: 'var(--Brandprimary-500, #11bbd5)',
-                  marginRight: 8,
-                }}
-              />
-              Takin已为该链路梳理出13个应用，请尽快检查各应用节点总数是否正确
-            </span>
-          }
-        />
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flex: 1 }}>
-            <Input.Search
-              placeholder="搜索应用"
-              onSearch={(val) =>
+        <div style={{ flex: 1 }}>
+          <Input.Search
+            placeholder="搜索应用"
+            onSearch={(val) =>
+              getList({
+                name: val,
+                current: 0,
+              })
+            }
+            style={{
+              width: 260,
+            }}
+          />
+          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+          <span style={{ marginRight: 24 }}>
+            入口：
+            <Select
+              style={{ width: 114 }}
+              value={query.entry}
+              onChange={(val) =>
                 getList({
-                  name: val,
+                  entry: val,
                   current: 0,
                 })
               }
-              style={{
-                width: 260,
-              }}
-            />
-            <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-            <span style={{ marginRight: 24 }}>
-              入口：
-              <Select
-                style={{ width: 114 }}
-                value={query.entry}
-                onChange={(val) =>
-                  getList({
-                    entry: val,
-                    current: 0,
-                  })
-                }
-                dropdownMatchSelectWidth={false}
-                showSearch
-                filterOption={false}
-                placeholder="搜索入口URL"
-                onSearch={debounce(
-                  (val) => getAppList({ current: 0, applicationName: val }),
-                  300
-                )}
-                optionLabelProp="label"
-                allowClear
-              >
-                {appList.map((x) => {
-                  return (
-                    <Option
-                      value={x.id}
-                      key={x.id}
-                      style={{
-                        border: '1px solid #F7F8FA',
-                      }}
-                      label="https://ip:port/uentrance/interf/issue/biopsy-sequence"
-                    >
-                      <div
-                        style={{
-                          color: 'var(--Netural-900, #303336)',
-                          fontWeight: 500,
-                          marginBottom: 8,
-                        }}
-                        className="truncate"
-                      >
-                        <span style={{ marginRight: 8, fontWeight: 700 }}>
-                          GET
-                        </span>
-                        凭证申领信息查询
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: 'var(--Netural-600, #90959A)',
-                        }}
-                      >
-                        https://ip:port/uentrance/interf/issue/biopsy-sequence
-                      </div>
-                    </Option>
-                  );
-                })}
-              </Select>
-            </span>
-            <span style={{ marginRight: 24 }}>
-              状态：
-              <Select
-                style={{ width: 114 }}
-                value={query.status}
-                onChange={(val) =>
-                  getList({
-                    status: val,
-                    current: 0,
-                  })
-                }
-              >
-                <Option value="">全部</Option>
-              </Select>
-            </span>
-            <span>
-              <Checkbox
-                style={{ marginRight: 8 }}
-                checked={query.type === 1}
-                onChange={(e) =>
-                  getList({
-                    type: e.target.checked ? 1 : 0,
-                  })
-                }
-              >
-                不在压测范围
-              </Checkbox>
-            </span>
-          </div>
-          <div>
-            <Button type="link" onClick={resetList} disabled={loading}>
-              重置
-            </Button>
-            <Button
-              style={{ width: 32, padding: 0, marginLeft: 32 }}
-              onClick={() => getList()}
-              disabled={loading}
+              dropdownMatchSelectWidth={false}
+              showSearch
+              filterOption={false}
+              placeholder="搜索入口URL"
+              onSearch={debounce(
+                (val) => getAppList({ current: 0, applicationName: val }),
+                300
+              )}
+              optionLabelProp="label"
+              allowClear
             >
-              <Icon type="sync" spin={loading} />
-            </Button>
-          </div>
+              {appList.map((x) => {
+                return (
+                  <Option
+                    value={x.id}
+                    key={x.id}
+                    style={{
+                      border: '1px solid #F7F8FA',
+                    }}
+                    label="https://ip:port/uentrance/interf/issue/biopsy-sequence"
+                  >
+                    <div
+                      style={{
+                        color: 'var(--Netural-900, #303336)',
+                        fontWeight: 500,
+                        marginBottom: 8,
+                      }}
+                      className="truncate"
+                    >
+                      <span style={{ marginRight: 8, fontWeight: 700 }}>
+                        GET
+                      </span>
+                      凭证申领信息查询
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: 'var(--Netural-600, #90959A)',
+                      }}
+                    >
+                      https://ip:port/uentrance/interf/issue/biopsy-sequence
+                    </div>
+                  </Option>
+                );
+              })}
+            </Select>
+          </span>
+          <span style={{ marginRight: 24 }}>
+            状态：
+            <Select
+              style={{ width: 114 }}
+              value={query.status}
+              onChange={(val) =>
+                getList({
+                  status: val,
+                  current: 0,
+                })
+              }
+            >
+              <Option value="">全部</Option>
+            </Select>
+          </span>
+          <span>
+            <Checkbox
+              style={{ marginRight: 8 }}
+              checked={query.type === 1}
+              onChange={(e) =>
+                getList({
+                  type: e.target.checked ? 1 : 0,
+                })
+              }
+            >
+              不在压测范围
+            </Checkbox>
+          </span>
+        </div>
+        <div>
+          <Button type="link" onClick={resetList} disabled={loading}>
+            重置
+          </Button>
+          <Button
+            style={{ width: 32, padding: 0, marginLeft: 32 }}
+            onClick={() => getList()}
+            disabled={loading}
+          >
+            <Icon type="sync" spin={loading} />
+          </Button>
         </div>
       </div>
-      <div style={{ flex: 1, overflow: 'auto' }}>
-        <Table
-          columns={columns}
-          dataSource={list}
-          pagination={false}
-          loading={loading}
-        />
-      </div>
-    </div>
+      <Table
+        columns={columns}
+        dataSource={list}
+        pagination={false}
+        loading={loading}
+      />
+    </>
   );
 };

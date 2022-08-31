@@ -70,15 +70,7 @@ export default (props) => {
   };
 
   return (
-    <div
-      style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
+    <>
       <div
         style={{
           padding: '16px 32px',
@@ -161,6 +153,6 @@ export default (props) => {
         }}
         cancelCallback={() => setEditedDataSource(undefined)}
       />
-    </div>
+    </>
   );
 };

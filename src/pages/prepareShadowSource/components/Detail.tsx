@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Divider, Icon, Button, Dropdown } from 'antd';
+import { Divider, Icon, Button, Dropdown, Alert } from 'antd';
 import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
@@ -9,9 +9,20 @@ import Help from './Help';
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [step, setStep] = useState(0);
+  const commonStepStyle = {
+    display: 'flex',
+    minWidth: 132,
+    padding: '8px 22px',
+    borderRadius: 100,
+    cursor: 'pointer',
+    border: '1px solid var(--BrandPrimary-500, #11bbd5)',
+    backgroundColor: '#F2FDFF',
+  };
   const activeStepStyle = {
     color: '#fff',
     backgroundColor: 'var(--BrandPrimary-500, #11bbd5)',
+    boxShadow:
+      '0px 8px 24px rgba(136, 136, 136, 0.1), 0px 6px 14px rgba(136, 136, 136, 0.3)',
   };
 
   const dropDownContent = <div>1111</div>;
@@ -26,31 +37,9 @@ export default (props) => {
         }}
       >
         <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-          <span
-            className="truncate"
-            style={{
-              color: 'var(--Netural-990, #25282A)',
-              fontWeight: 600,
-              fontSize: 16,
-            }}
-          >
-            用户组-发送消息
-          </span>
-          <Divider type="vertical" style={{ height: 24, margin: '0 32px' }} />
-          <span>
-            <StatusDot style={{ marginRight: 8 }} />
-            未开始
-          </span>
-          <a style={{ margin: '0 32px' }}>编辑链路</a>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
           <div
             style={{
-              display: 'flex',
-              minWidth: 132,
-              padding: '8px 22px',
-              borderRadius: 100,
-              cursor: 'pointer',
+              ...commonStepStyle,
               ...(step === 0 ? activeStepStyle : {}),
             }}
             onClick={() => setStep(0)}
@@ -59,7 +48,7 @@ export default (props) => {
               style={{
                 fontSize: 30,
                 fontWeight: 200,
-                color: step === 0 ? '#fff' : 'var(--Netural-900, #303336)',
+                color: step === 0 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
                 marginRight: 8,
                 lineHeight: 1,
               }}
@@ -70,7 +59,7 @@ export default (props) => {
               <span
                 style={{
                   fontWeight: 600,
-                  color: step === 0 ? '#fff' : 'var(--Netural-900, #303336)',
+                  color: step === 0 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
                 }}
               >
                 应用检查
@@ -84,11 +73,7 @@ export default (props) => {
           />
           <div
             style={{
-              display: 'flex',
-              minWidth: 132,
-              padding: '8px 22px',
-              borderRadius: 100,
-              cursor: 'pointer',
+              ...commonStepStyle,
               ...(step === 1 ? activeStepStyle : {}),
             }}
             onClick={() => setStep(1)}
@@ -97,7 +82,7 @@ export default (props) => {
               style={{
                 fontSize: 30,
                 fontWeight: 200,
-                color: step === 1 ? '#fff' : 'var(--Netural-900, #303336)',
+                color: step === 1 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
                 marginRight: 8,
                 lineHeight: 1,
               }}
@@ -108,7 +93,7 @@ export default (props) => {
               <span
                 style={{
                   fontWeight: 600,
-                  color: step === 1 ? '#fff' : 'var(--Netural-900, #303336)',
+                  color: step === 1 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
                 }}
               >
                 数据隔离
@@ -116,6 +101,25 @@ export default (props) => {
               <div style={{ fontSize: 12, marginTop: 4 }}>未开始</div>
             </div>
           </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <a style={{ margin: '0 32px' }}>编辑链路</a>
+          <span>
+            <StatusDot style={{ marginRight: 8 }} />
+            未开始
+          </span>
+          <Divider type="vertical" style={{ height: 24, margin: '0 32px' }} />
+
+          <span
+            className="truncate"
+            style={{
+              color: 'var(--Netural-990, #25282A)',
+              fontWeight: 600,
+              fontSize: 16,
+            }}
+          >
+            用户组-发送消息
+          </span>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           <Dropdown overlay={dropDownContent}>
             <Button style={{ width: 32, padding: 0 }}>
@@ -124,9 +128,43 @@ export default (props) => {
           </Dropdown>
         </div>
       </div>
-      {step === 0 && <AppCheck />}
-      {step === 1 && <DataIsloate />}
-      <Help/>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        <Alert
+          style={{
+            backgroundColor: 'var(--Netural-75, #F7F8FA)',
+            color: 'var(--Netural-800, #5A5E62)',
+            border: '1px solid var(--Netural-200, #E5E8EC)',
+            margin: '16px 32px',
+          }}
+          closable
+          message={
+            <span>
+              <Icon
+                type="check-square"
+                theme="filled"
+                style={{
+                  color: 'var(--Brandprimary-500, #11bbd5)',
+                  marginRight: 8,
+                }}
+              />
+              Takin已为该链路梳理出13个应用，请尽快检查各应用节点总数是否正确
+            </span>
+          }
+        />
+        <div style={{ flex: 1, overflow: 'auto', paddingBottom: 16 }}>
+          {step === 0 && <AppCheck />}
+          {step === 1 && <DataIsloate />}
+        </div>
+      </div>
+
+      <Help />
     </div>
   );
 };

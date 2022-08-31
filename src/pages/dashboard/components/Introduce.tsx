@@ -16,6 +16,16 @@ export default (props) => {
             }}
           >
             新压测方式指引
+            <span
+              style={{
+                marginLeft: 16,
+                fontSize: 13,
+                fontWeight: 'normal',
+                color: 'var(--Brandprimary-500, #0FBBD5)',
+              }}
+            >
+              点击进入
+            </span>
           </div>
           <div
             style={{
@@ -35,7 +45,7 @@ export default (props) => {
             <span className={styles.divider} />
             效率提升50%
           </div>
-          <br/>
+          <br />
           <div
             style={{
               color: 'var(--Netural-990, #25282A)',
