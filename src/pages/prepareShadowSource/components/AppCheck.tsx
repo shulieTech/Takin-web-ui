@@ -10,6 +10,8 @@ import {
   Checkbox,
   Tooltip,
   Switch,
+  InputNumber,
+  Form,
 } from 'antd';
 import { PrepareContext } from '../indexPage';
 import useListService from 'src/utils/useListService';
@@ -17,6 +19,7 @@ import service from '../service';
 import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
 import Help from './Help';
+import EditAgentCount from './EditAgentCount';
 
 const { Option } = Select;
 
@@ -119,7 +122,7 @@ export default (props) => {
           </Tooltip>
         </span>
       ),
-      dataIndex: '',
+      dataIndex: 'plan',
       render: (text, record) => {
         return text || '-';
       },
@@ -138,7 +141,7 @@ export default (props) => {
       ),
       dataIndex: '',
       render: (text, record) => {
-        return text || '-';
+        return <EditAgentCount record={record} />;
       },
     },
     {
