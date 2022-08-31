@@ -11,6 +11,8 @@ import {
   createAsyncFormActions,
 } from '@formily/antd';
 import { Input, Select, Password } from '@formily/antd-components';
+import useListService from 'src/utils/useListService';
+import service from '../service';
 
 interface Props {
   detail: any;
@@ -21,6 +23,14 @@ interface Props {
 export default (props: Props) => {
   const { detail, okCallback, cancelCallback, ...rest } = props;
   const actions = useMemo(createAsyncFormActions, []);
+
+  const { list: middlewareList, loading: middlewareListLoading } =
+    useListService({
+      service: service.middlewareList,
+      defaultQuery: {
+        middlewareType: '连接池',
+      },
+    });
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -44,6 +54,7 @@ export default (props: Props) => {
         maxHeight: '60vh',
         overflow: 'auto',
       }}
+      destroyOnClose
       {...rest}
     >
       <Form
@@ -53,24 +64,22 @@ export default (props: Props) => {
         wrapperCol={18}
       >
         <FormItem
-          name="aaa"
+          name="connectionPool"
           title="中间件名称"
           component={Select}
-          dataSource={[
-            { label: 'visible', value: true },
-            { label: 'hidden', value: false },
-          ]}
+          dataSource={middlewareList}
           props={{
             placeholder: '请选择',
+            loading: middlewareListLoading,
           }}
           rules={[{ required: true, message: '请选择中间件' }]}
         />
         <FormItem
-          name="bbb"
+          name="url"
           title={
             <span>
               业务数据源
-              <Tooltip title="1111">
+              <Tooltip title="示例：jdbc:mysql://192.168.1.102:3306/easydemo_db">
                 <Icon
                   type="info-circle"
                   style={{ marginLeft: 4, cursor: 'pointer' }}
@@ -94,7 +103,7 @@ export default (props: Props) => {
           props={{ maxLength: 25, placeholder: '请输入' }}
         />
         <FormItem
-          name="shadowDb"
+          name="shadowUrl"
           title="影子数据源"
           component={Input}
           rules={[
@@ -103,7 +112,7 @@ export default (props: Props) => {
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
         <FormItem
-          name="shwodowUsername"
+          name="shadowUserName"
           title="影子数据源用户名"
           component={Input}
           rules={[
@@ -116,7 +125,7 @@ export default (props: Props) => {
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
         <FormItem
-          name="shwadowPwd"
+          name="shadowPwd"
           title="影子数据源密码"
           component={Password}
           rules={[
@@ -133,14 +142,14 @@ export default (props: Props) => {
           }}
         />
         <FormItem
-          name="drive"
+          name="driverClassName"
           title="驱动"
           component={Input}
           rules={[{ required: true, whitespace: true, message: '请输入驱动' }]}
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
         <FormItem
-          name="app"
+          name="apps"
           title="关联应用"
           component={Select}
           rules={[{ required: true, message: '请选择关联应用' }]}

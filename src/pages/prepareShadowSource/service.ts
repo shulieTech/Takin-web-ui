@@ -22,4 +22,11 @@ export default {
     const url = '/application/center/list/dictionary';
     return httpGet(url, data);
   },
+  /**
+   * @name 中间件下拉列表
+   */
+  async middlewareList(data = {}) {
+    const url = '/v2/link/ds/support/name/new';
+    return httpGet(url, data);
+  },
 };

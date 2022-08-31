@@ -238,6 +238,7 @@ export default (props) => {
                   300
                 )}
                 optionLabelProp="label"
+                allowClear
               >
                 {appList.map((x) => {
                   return (
