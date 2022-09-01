@@ -400,7 +400,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
     },
     {
       label: '网络耗时',
-      value: `${state.totalRt - state.totalCost}ms`,
+      value: `${Math.max(state.totalRt - state.totalCost, 0)}ms`,
     },
     {
       label: '接口耗时',
