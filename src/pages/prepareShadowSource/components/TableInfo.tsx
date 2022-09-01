@@ -195,6 +195,7 @@ export default (props: Props) => {
         </div>
       </div>
       <Table
+        size="small"
         columns={columns}
         dataSource={list}
         pagination={false}

@@ -67,7 +67,7 @@ const DropdowTable = (props) => {
         onChange={filterList}
       />
       <Table
-        size="middle"
+        size="small"
         showHeader={false}
         rowKey="id"
         dataSource={list}
@@ -213,6 +213,7 @@ export default (props) => {
           dataSource={list}
           pagination={false}
           loading={loading}
+          size="small"
         />
       </div>
     </>

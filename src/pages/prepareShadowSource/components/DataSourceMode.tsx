@@ -71,7 +71,7 @@ const DropdowTable = (props) => {
         onChange={filterList}
       />
       <Table
-        size="middle"
+        size="small"
         rowKey="id"
         dataSource={list}
         columns={[
@@ -183,6 +183,7 @@ export default (props) => {
     },
     {
       title: '操作',
+      align: 'right',
       render: (text, record) => {
         return (
           <span>
@@ -260,6 +261,7 @@ export default (props) => {
           dataSource={list}
           pagination={false}
           loading={loading}
+          size="small"
         />
       </div>
       <TableInfo

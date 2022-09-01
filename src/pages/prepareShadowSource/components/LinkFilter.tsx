@@ -206,6 +206,7 @@ export default (props: Props) => {
             />
           </div>
           <Table
+            size="small"
             showHeader={false}
             columns={leftColmuns}
             rowKey="id"
@@ -283,6 +284,7 @@ export default (props: Props) => {
             已选数据
           </div>
           <Table
+            size="small"
             columns={rightColumns}
             rowKey="id"
             dataSource={(value || []).slice(

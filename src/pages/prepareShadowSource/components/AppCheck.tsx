@@ -294,6 +294,7 @@ export default (props) => {
         dataSource={list}
         pagination={false}
         loading={loading}
+        size="small"
       />
     </>
   );

@@ -5,6 +5,7 @@ import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
 import StatusDot from './StatusDot';
 import Help from './Help';
+import styles from '../index.less';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -27,7 +28,10 @@ export default (props) => {
 
   const dropDownContent = <div>1111</div>;
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+      className={styles['detail-box']}
+    >
       <div
         style={{
           padding: '16px 32px',
