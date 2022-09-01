@@ -208,7 +208,7 @@ export default (props) => {
         style={{
           display: 'flex',
           alignItems: 'center',
-          padding: '24px 32px',
+          padding: '16px 32px',
         }}
       >
         <div style={{ flex: 1 }}>
