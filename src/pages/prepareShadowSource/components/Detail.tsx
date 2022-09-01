@@ -121,7 +121,16 @@ export default (props) => {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <a style={{ margin: '0 32px' }}>编辑链路</a>
+          <a
+            style={{ margin: '0 32px' }}
+            onClick={() => {
+              setPrepareState({
+                editLink: prepareState.currentLink,
+              });
+            }}
+          >
+            编辑链路
+          </a>
           <Dropdown overlay={dropDownContent}>
             <Button style={{ width: 32, padding: 0 }}>
               <Icon type="more" />

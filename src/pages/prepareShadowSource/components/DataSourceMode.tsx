@@ -95,8 +95,13 @@ const DropdowTable = (props) => {
   );
 };
 
-export default (props) => {
-  const [editedDataSource, setEditDataSource] = useState(undefined);
+interface Props {
+  setEditedDataSource: (record: any) => void;
+}
+export default (props: Props) => {
+  const { setEditedDataSource } = props;
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
+  const [editShadowTable, setEditShadowTable] = useState<any>(undefined);
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.getLinkList,
     defaultQuery: {
@@ -186,14 +191,14 @@ export default (props) => {
       align: 'right',
       render: (text, record) => {
         return (
-          <span>
+          <span onClick={(e) => e.stopPropagation()}>
             <a>删除</a>
             <Dropdown overlay={<DropdowTable />}>
               <a style={{ marginLeft: 32 }}>查看24个应用</a>
             </Dropdown>
             <a
               style={{ marginLeft: 32 }}
-              onClick={() => setEditDataSource(record)}
+              onClick={() => setEditedDataSource(record)}
             >
               编辑
             </a>
@@ -202,6 +207,15 @@ export default (props) => {
       },
     },
   ];
+  if (editShadowTable) {
+    // 编辑影子表
+    return (
+      <TableInfo
+        detail={editShadowTable}
+        cancelCallback={() => setEditShadowTable(undefined)}
+      />
+    );
+  }
 
   return (
     <>
@@ -262,12 +276,17 @@ export default (props) => {
           pagination={false}
           loading={loading}
           size="small"
+          onRow={(record) => {
+            // 影子表隔离方式时，点击行触发编辑影子表
+            return {
+              onClick: () => {
+                // TODO 判断影子表
+                setEditShadowTable(record);
+              },
+            };
+          }}
         />
       </div>
-      <TableInfo
-        detail={editedDataSource}
-        cancelCallback={() => setEditDataSource(undefined)}
-      />
     </>
   );
 };

@@ -4,12 +4,14 @@ import Introduce from './components/Introduce';
 import List from './components/List';
 import SelectTypeModal from './modals/SelectTypeModal';
 import Detail from './components/Detail';
+import EditLinkModal from './modals/EditLinkModal';
 
 export const PrepareContext = createContext(null);
 
 export default (props) => {
   const [prepareState, setFullPrepareState] = useState({
     currentLink: null,
+    editLink: undefined,
   });
   const setPrepareState = (particalState) => {
     setFullPrepareState({
@@ -35,6 +37,10 @@ export default (props) => {
           />
         </Layout.Content>
       </Layout>
+      <EditLinkModal
+        detail={prepareState.editLink}
+        cancelCallback={() => setPrepareState({ editLink: undefined })}
+      />
     </PrepareContext.Provider>
   );
 };

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Icon, Tag } from 'antd';
 import styles from '../index.less';
 import classNames from 'classnames';
 import img1 from 'src/assets/link-type-0.png';
 import img2 from 'src/assets/link-type-1.png';
-import EditLinkModal from './EditLinkModal';
+import { PrepareContext } from '../indexPage';
 
 interface SelectTypeModalProps {
   detail: any;
@@ -12,12 +12,11 @@ interface SelectTypeModalProps {
 }
 export default (props: SelectTypeModalProps) => {
   const { detail, cancelCallback } = props;
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [showTypeSelectModal, setShowTypeSelectModal] = useState<boolean>(
     detail && !detail.id
   );
   const [selectType, setSelectType] = useState(0);
-
-  const [editLink, setEditLink] = useState(undefined);
 
   useEffect(() => {
     setShowTypeSelectModal(detail && !detail.id);
@@ -35,7 +34,9 @@ export default (props: SelectTypeModalProps) => {
         }}
         onOk={() => {
           setShowTypeSelectModal(false);
-          setEditLink(detail);
+          setPrepareState({
+            editLink: detail,
+          });
         }}
       >
         <div
@@ -144,10 +145,6 @@ export default (props: SelectTypeModalProps) => {
           </div>
         </div>
       </Modal>
-      <EditLinkModal
-        detail={editLink}
-        cancelCallback={() => setEditLink(undefined)}
-      />
     </>
   );
 };

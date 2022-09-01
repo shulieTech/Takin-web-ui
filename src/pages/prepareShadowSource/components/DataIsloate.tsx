@@ -143,7 +143,7 @@ export default (props) => {
           </Button>
         </div>
       </div>
-      {mode === 0 && <DataSourceMode />}
+      {mode === 0 && <DataSourceMode setEditedDataSource={setEditedDataSource}/>}
       {mode === 1 && <AppMode />}
       <EditDataSource
         detail={editedDataSource}
