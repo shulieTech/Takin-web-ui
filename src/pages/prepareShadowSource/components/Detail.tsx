@@ -12,11 +12,11 @@ export default (props) => {
   const commonStepStyle = {
     display: 'flex',
     minWidth: 132,
-    padding: '8px 22px',
+    padding: 8,
     borderRadius: 100,
     cursor: 'pointer',
-    border: '1px solid var(--BrandPrimary-500, #11bbd5)',
-    backgroundColor: '#F2FDFF',
+    // border: '1px solid var(--BrandPrimary-500, #11bbd5)',
+    // backgroundColor: '#F2FDFF',
   };
   const activeStepStyle = {
     color: '#fff',
@@ -46,20 +46,27 @@ export default (props) => {
           >
             <span
               style={{
-                fontSize: 30,
-                fontWeight: 200,
-                color: step === 0 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
+                fontSize: 18,
+                fontWeight: 500,
+                color: step === 0 ? '#fff' : 'var(--Netural-850, #414548)',
                 marginRight: 8,
-                lineHeight: 1,
+                width: 40,
+                height: 40,
+                border: `1px solid ${
+                  step === 0 ? '#fff' : 'var(--Netural-300, #DBDFE3)'
+                }`,
+                borderRadius: '100%',
+                lineHeight: '38px',
+                textAlign: 'center',
               }}
             >
-              ①
+              1
             </span>
             <div>
               <span
                 style={{
                   fontWeight: 600,
-                  color: step === 0 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
+                  color: step === 0 ? '#fff' : 'var(--Netural-850, #414548)',
                 }}
               >
                 应用检查
@@ -80,20 +87,27 @@ export default (props) => {
           >
             <span
               style={{
-                fontSize: 30,
-                fontWeight: 200,
-                color: step === 1 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
+                fontSize: 18,
+                fontWeight: 500,
+                color: step === 1 ? '#fff' : 'var(--Netural-850, #414548)',
                 marginRight: 8,
-                lineHeight: 1,
+                width: 40,
+                height: 40,
+                border: `1px solid ${
+                  step === 1 ? '#fff' : 'var(--Netural-300, #DBDFE3)'
+                }`,
+                borderRadius: '100%',
+                lineHeight: '38px',
+                textAlign: 'center',
               }}
             >
-              ②
+              2
             </span>
             <div>
               <span
                 style={{
                   fontWeight: 600,
-                  color: step === 1 ? '#fff' : 'var(--BrandPrimary-500, #11bbd5)',
+                  color: step === 1 ? '#fff' : 'var(--Netural-850, #414548)',
                 }}
               >
                 数据隔离
@@ -104,23 +118,6 @@ export default (props) => {
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a style={{ margin: '0 32px' }}>编辑链路</a>
-          <span>
-            <StatusDot style={{ marginRight: 8 }} />
-            未开始
-          </span>
-          <Divider type="vertical" style={{ height: 24, margin: '0 32px' }} />
-
-          <span
-            className="truncate"
-            style={{
-              color: 'var(--Netural-990, #25282A)',
-              fontWeight: 600,
-              fontSize: 16,
-            }}
-          >
-            用户组-发送消息
-          </span>
-          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           <Dropdown overlay={dropDownContent}>
             <Button style={{ width: 32, padding: 0 }}>
               <Icon type="more" />
@@ -158,7 +155,14 @@ export default (props) => {
             </span>
           }
         />
-        <div style={{ flex: 1, overflow: 'auto', paddingBottom: 16 }}>
+        <div
+          style={{
+            flex: 1,
+            overflow: 'auto',
+            paddingBottom: 16,
+            position: 'relative',
+          }}
+        >
           {step === 0 && <AppCheck />}
           {step === 1 && <DataIsloate />}
         </div>
