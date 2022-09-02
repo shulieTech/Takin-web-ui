@@ -29,7 +29,7 @@ export default (props: Props) => {
   });
 
   const { list, loading, total, query, getList } = useListService({
-    service: service.getLinkList,
+    service: service.entryList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
@@ -51,10 +51,10 @@ export default (props: Props) => {
                   marginRight: 12,
                 }}
               >
-                GET
+                {record.method}
               </span>
               <div className="truncate" style={{ flex: 1 }}>
-                撤回消息
+                {record.entranceName || '-'}
               </div>
             </div>
             <div
@@ -66,7 +66,7 @@ export default (props: Props) => {
                 cursor: 'pointer',
               }}
             >
-              https://ip:port/uentrance/interf/issue/query
+              {record.entranceUrl || record.serviceName || '-'}
             </div>
           </div>
         );
@@ -115,16 +115,16 @@ export default (props: Props) => {
                     marginRight: 12,
                   }}
                 >
-                  GET
+                  {record.method}
                 </span>
                 <div className="truncate" style={{ flex: 1 }}>
                   <Input
-                    value={record.name}
+                    value={record.entranceName}
                     onChange={(e) => {
                       const val = Array.isArray(value) ? value.concat() : [];
                       const valIndex = val.findIndex((x) => x.id === record.id);
                       if (valIndex > -1) {
-                        val[valIndex].name = e.target.value;
+                        val[valIndex].entranceName = e.target.value;
                         if (onChange) {
                           onChange(val);
                         }
@@ -142,7 +142,7 @@ export default (props: Props) => {
                   cursor: 'pointer',
                 }}
               >
-                https://ip:port/uentrance/interf/issue/query
+                {record.entranceUrl}
               </div>
             </div>
           </div>
@@ -176,7 +176,8 @@ export default (props: Props) => {
               allowClear
               onChange={(val) =>
                 getList({
-                  appId: val,
+                  applicationName: val,
+                  samplerType: 'HTTP',
                   current: 0,
                 })
               }
@@ -184,13 +185,17 @@ export default (props: Props) => {
               filterOption={false}
               loading={appLoading}
               onSearch={debounce(
-                (val) => getAppList({ current: 0, applicationName: val }),
+                (val) =>
+                  getAppList({
+                    current: 0,
+                    applicationName: val,
+                  }),
                 300
               )}
             >
               {appList.map((x) => (
-                <Select.Option key={x.id} value={x.id}>
-                  {x.applicationName}
+                <Select.Option key={x.value} value={x.value}>
+                  {x.label}
                 </Select.Option>
               ))}
             </Select>

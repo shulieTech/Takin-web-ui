@@ -223,7 +223,7 @@ export default (props: Props) => {
               ),
             },
             {
-              icon: 'icon-a-ziyuanzhunbeishuoming01-02jieruyingyong',
+              icon: 'icon-a-ziyuanzhunbeishuoming08-02yace',
               text: (
                 <>
                   压测

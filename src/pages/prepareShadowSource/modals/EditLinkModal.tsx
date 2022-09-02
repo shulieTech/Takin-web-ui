@@ -44,8 +44,8 @@ const EditLinkModal = (props: EditLinkModalProps) => {
     >
       <Form>
         <Form.Item label="链路名称">
-          {getFieldDecorator('title', {
-            initialValue: detail?.title,
+          {getFieldDecorator('name', {
+            initialValue: detail?.name,
             rules: [
               { required: true, whitespace: true, message: '请输入链路名称' },
             ],
@@ -67,8 +67,8 @@ const EditLinkModal = (props: EditLinkModalProps) => {
           }
         >
           {canEditLink
-            ? getFieldDecorator('links', {
-              initialValue: detail?.links,
+            ? getFieldDecorator('detailInputs', {
+              initialValue: detail?.detailInputs,
               rules: [
                 {
                   validator: (rule, val, callback) => {
@@ -81,7 +81,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
                 },
               ],
             })(<LinkFilter />)
-            : [1, 2].map((x) => {
+            : (detail?.detailInputs || []).map((x) => {
               return (
                   <div style={{ marginBottom: 16 }} key={x}>
                     <div style={{ lineHeight: 1.5 }}>
@@ -94,10 +94,10 @@ const EditLinkModal = (props: EditLinkModalProps) => {
                             marginRight: 12,
                           }}
                         >
-                          GET
+                          {x.method}
                         </span>
                         <div className="truncate" style={{ flex: 1 }}>
-                          撤回消息
+                          {x.entranceName || '-'}
                         </div>
                       </div>
                       <div
@@ -109,7 +109,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
                           cursor: 'pointer',
                         }}
                       >
-                        https://ip:port/uentrance/interf/issue/query
+                        {x.entranceUrl || '-'}
                       </div>
                     </div>
                   </div>

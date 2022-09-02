@@ -5,21 +5,28 @@ export default {
    * @name 链路列表
    */
   async getLinkList(data = {}) {
-    const url = '/interfaceperformance/config/query';
+    const url = '/pressureResource/list';
     return httpGet(url, data);
   },
   /**
    * @name 添加链路
    */
   async addLink(data = {}) {
-    const url = '/interfaceperformance/config/query';
+    const url = '/pressureResource/create';
     return httpPost(url, data);
   },
   /**
    * @name 应用下拉列表
    */
   async appList(data = {}) {
-    const url = '/application/center/list/dictionary';
+    const url = '/application/names';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 入口path列表
+   */
+  async entryList(data = {}) {
+    const url = '/application/entrances/bySamplerType';
     return httpGet(url, data);
   },
   /**

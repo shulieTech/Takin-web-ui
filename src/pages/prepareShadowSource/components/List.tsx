@@ -46,14 +46,14 @@ export default (props) => {
           placeholder="搜索链路名称"
           onSearch={(val) =>
             getList({
-              queryName: val?.trim(),
+              name: val?.trim(),
             })
           }
         />
       </div>
       <div>
         <Spin spinning={loading}>
-          {total === 0 && !query.queryName && (
+          {total === 0 && !query.name && (
             <div
               style={{
                 textAlign: 'center',
