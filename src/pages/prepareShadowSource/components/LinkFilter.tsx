@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Input, Pagination, Icon } from 'antd';
+import { Table, Select, Input, Pagination, Icon, Tooltip } from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
 import { debounce } from 'lodash';
@@ -57,17 +57,20 @@ export default (props: Props) => {
                 {record.entranceName || '-'}
               </div>
             </div>
-            <div
-              className="truncate"
-              style={{
-                fontSize: 12,
-                color: 'var(--Netural-600, #90959A)',
-                marginRight: 12,
-                cursor: 'pointer',
-              }}
-            >
-              {record.entranceUrl || record.serviceName || '-'}
-            </div>
+            <Tooltip title={record.entranceUrl || record.serviceName}>
+              <div
+                className="truncate"
+                style={{
+                  fontSize: 12,
+                  color: 'var(--Netural-600, #90959A)',
+                  marginRight: 12,
+                  cursor: 'pointer',
+                  maxWidth: 400,
+                }}
+              >
+                {record.entranceUrl || record.serviceName || '-'}
+              </div>
+            </Tooltip>
           </div>
         );
       },
@@ -133,17 +136,20 @@ export default (props: Props) => {
                   />
                 </div>
               </div>
-              <div
-                className="truncate"
-                style={{
-                  fontSize: 12,
-                  color: 'var(--Netural-600, #90959A)',
-                  marginRight: 12,
-                  cursor: 'pointer',
-                }}
-              >
-                {record.entranceUrl}
-              </div>
+              <Tooltip title={record.entranceUrl || record.serviceName}>
+                <div
+                  className="truncate"
+                  style={{
+                    fontSize: 12,
+                    color: 'var(--Netural-600, #90959A)',
+                    marginRight: 12,
+                    cursor: 'pointer',
+                    maxWidth: 400,
+                  }}
+                >
+                  {record.entranceUrl}
+                </div>
+              </Tooltip>
             </div>
           </div>
         );
@@ -224,6 +230,9 @@ export default (props: Props) => {
                     Array.isArray(value) &&
                     value.some((x) => x.id === record.id),
                 };
+              },
+              onChange: (selectedRowKeys, selectedRows) => {
+                onChange(selectedRows);
               },
             }}
             onRow={(record) => {
