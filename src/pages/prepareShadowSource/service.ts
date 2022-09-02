@@ -16,6 +16,13 @@ export default {
     return httpPost(url, data);
   },
   /**
+   * @name 链路详情
+   */
+  async getLinkDetail(data = {}) {
+    const url = '/pressureResource/detailList';
+    return httpGet(url, data);
+  },
+  /**
    * @name 应用下拉列表
    */
   async appList(data = {}) {
@@ -26,7 +33,7 @@ export default {
    * @name 入口path列表
    */
   async entryList(data = {}) {
-    const url = '/application/entrances/bySamplerType';
+    const url = '/application/entrances/list';
     return httpGet(url, data);
   },
   /**

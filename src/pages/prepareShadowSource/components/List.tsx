@@ -93,7 +93,7 @@ export default (props) => {
                       marginBottom: 8,
                     }}
                   >
-                    {x.title || '-'}
+                    {x.name || '-'}
                   </div>
                   <span
                     style={{
@@ -114,15 +114,16 @@ export default (props) => {
                   >
                     ID:{x.id}
                   </span>
-
-                  <span className={styles['icon-chuan']} />
-                  <span
-                    style={{
-                      color: 'var(--BrandPrimary-500, #0fbbd5)',
-                    }}
-                  >
-                    23
-                  </span>
+                  <div style={{ marginTop: 8 }}>
+                    <span className={styles['icon-chuan']} />
+                    <span
+                      style={{
+                        color: 'var(--BrandPrimary-500, #0fbbd5)',
+                      }}
+                    >
+                      23
+                    </span>
+                  </div>
                 </div>
               </div>
             );

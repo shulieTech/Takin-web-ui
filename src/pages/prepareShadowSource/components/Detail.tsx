@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Divider, Icon, Button, Dropdown, Alert } from 'antd';
+import { Icon, Alert } from 'antd';
 import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
-import StatusDot from './StatusDot';
 import Help from './Help';
 import styles from '../index.less';
 
@@ -26,7 +25,6 @@ export default (props) => {
       '0px 8px 24px rgba(136, 136, 136, 0.1), 0px 6px 14px rgba(136, 136, 136, 0.3)',
   };
 
-  const dropDownContent = <div>1111</div>;
   return (
     <div
       style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -131,11 +129,6 @@ export default (props) => {
           >
             编辑链路
           </a>
-          <Dropdown overlay={dropDownContent}>
-            <Button style={{ width: 32, padding: 0 }}>
-              <Icon type="more" />
-            </Button>
-          </Dropdown>
         </div>
       </div>
       <div

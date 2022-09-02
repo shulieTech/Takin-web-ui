@@ -54,10 +54,10 @@ export default (props: Props) => {
                 {record.method}
               </span>
               <div className="truncate" style={{ flex: 1 }}>
-                {record.entranceName || '-'}
+                {record.name || '-'}
               </div>
             </div>
-            <Tooltip title={record.entranceUrl || record.serviceName}>
+            <Tooltip title={record.serviceName}>
               <div
                 className="truncate"
                 style={{
@@ -68,7 +68,7 @@ export default (props: Props) => {
                   maxWidth: 400,
                 }}
               >
-                {record.entranceUrl || record.serviceName || '-'}
+                {record.serviceName || '-'}
               </div>
             </Tooltip>
           </div>
@@ -93,7 +93,7 @@ export default (props: Props) => {
               }}
               onClick={() => {
                 const val = Array.isArray(value) ? value.concat() : [];
-                const valIndex = val.findIndex((x) => x.id === record.id);
+                const valIndex = val.findIndex((x) => x.value === record.value);
                 if (valIndex > -1) {
                   val.splice(valIndex, 1);
                   if (onChange) {
@@ -125,7 +125,7 @@ export default (props: Props) => {
                     value={record.entranceName}
                     onChange={(e) => {
                       const val = Array.isArray(value) ? value.concat() : [];
-                      const valIndex = val.findIndex((x) => x.id === record.id);
+                      const valIndex = val.findIndex((x) => x.value === record.value);
                       if (valIndex > -1) {
                         val[valIndex].entranceName = e.target.value;
                         if (onChange) {
@@ -157,6 +157,19 @@ export default (props: Props) => {
     },
   ];
 
+  // 左边表格数据转换成右边表格格式
+  const transformLeftDataToRight = (arr) => {
+    return arr.map((x) => ({
+      value: x.value,
+      appName: x.appName,
+      entranceUrl: x.serviceName,
+      entranceName: x.entranceName,
+      method: x.method,
+      rpcType: x.rpcType,
+      extend: x.extend,
+    }));
+  };
+
   return (
     <div
       style={{
@@ -183,7 +196,6 @@ export default (props: Props) => {
               onChange={(val) =>
                 getList({
                   applicationName: val,
-                  samplerType: 'HTTP',
                   current: 0,
                 })
               }
@@ -193,8 +205,8 @@ export default (props: Props) => {
               onSearch={debounce(
                 (val) =>
                   getAppList({
-                    current: 0,
                     applicationName: val,
+                    current: 0,
                   }),
                 300
               )}
@@ -210,7 +222,7 @@ export default (props: Props) => {
               style={{ width: 228 }}
               onSearch={(val) =>
                 getList({
-                  name: val,
+                  serviceName: val,
                   current: 0,
                 })
               }
@@ -220,7 +232,7 @@ export default (props: Props) => {
             size="small"
             showHeader={false}
             columns={leftColmuns}
-            rowKey="id"
+            rowKey="value"
             loading={loading}
             dataSource={list}
             rowSelection={{
@@ -228,25 +240,25 @@ export default (props: Props) => {
                 return {
                   checked:
                     Array.isArray(value) &&
-                    value.some((x) => x.id === record.id),
+                    value.some((x) => x.value === record.value),
                 };
               },
               onChange: (selectedRowKeys, selectedRows) => {
-                onChange(selectedRows);
+                onChange(transformLeftDataToRight(selectedRows));
               },
             }}
             onRow={(record) => {
               return {
                 onClick: () => {
                   const val = Array.isArray(value) ? value : [];
-                  const index = val.findIndex((x) => x.id === record.id);
+                  const index = val.findIndex((x) => x.value === record.value);
                   if (index > -1) {
                     val.splice(index, 1);
                   } else {
                     val.push(record);
                   }
                   if (onChange) {
-                    onChange(val);
+                    onChange(transformLeftDataToRight(val));
                   }
                 },
               };
@@ -300,7 +312,7 @@ export default (props: Props) => {
           <Table
             size="small"
             columns={rightColumns}
-            rowKey="id"
+            rowKey="value"
             dataSource={(value || []).slice(
               (rightPage.current - 1) * rightPage.pageSize
             )}
