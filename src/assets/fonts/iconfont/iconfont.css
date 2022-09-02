@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2556232 */
-  src: url('./iconfont.woff2?t=1631073807892') format('woff2'),
-       url('./iconfont.woff?t=1631073807892') format('woff'),
-       url('./iconfont.ttf?t=1631073807892') format('truetype');
+  src: url('iconfont.woff2?t=1662091185933') format('woff2'),
+       url('iconfont.woff?t=1662091185933') format('woff'),
+       url('iconfont.ttf?t=1662091185933') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,78 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-a-ziyuanzhunbeishuoming02-02weihulianlu:before {
+  content: "\e62a";
+}
+
+.icon-a-ziyuanzhunbeishuoming03-01heduijiedianxinxi:before {
+  content: "\e62b";
+}
+
+.icon-a-ziyuanzhunbeishuoming06-03peizhiyingzishujuyuan:before {
+  content: "\e62c";
+}
+
+.icon-a-ziyuanzhunbeishuoming07-01yingyongjiancha:before {
+  content: "\e62d";
+}
+
+.icon-a-ziyuanzhunbeishuoming03-02jianchayingyongzhuangtai:before {
+  content: "\e62e";
+}
+
+.icon-a-ziyuanzhunbeishuoming04-01chakanyingyongfanwei:before {
+  content: "\e62f";
+}
+
+.icon-a-ziyuanzhunbeishuoming02-01chuangjianlianlu:before {
+  content: "\e630";
+}
+
+.icon-a-ziyuanzhunbeishuoming07-02yingziziyuanjiancha:before {
+  content: "\e631";
+}
+
+.icon-a-ziyuanzhunbeishuoming06-02xietongtuijin:before {
+  content: "\e632";
+}
+
+.icon-a-ziyuanzhunbeishuoming05-01goutongquerengelifangan:before {
+  content: "\e633";
+}
+
+.icon-a-ziyuanzhunbeishuoming01-01shulilianlu:before {
+  content: "\e634";
+}
+
+.icon-a-ziyuanzhunbeishuoming01-02jieruyingyong:before {
+  content: "\e635";
+}
+
+.icon-a-ziyuanzhunbeishuoming08-01lianlutiaoshi:before {
+  content: "\e636";
+}
+
+.icon-a-ziyuanzhunbeishuoming05-02zaiTakinzhongshezhilianlugelifangan:before {
+  content: "\e637";
+}
+
+.icon-a-ziyuanzhunbeishuoming06-01jianchashujuyuan:before {
+  content: "\e638";
+}
+
+.icon-bianji:before {
+  content: "\e6f7";
+}
+
+.icon-wenben:before {
+  content: "\e600";
+}
+
+.icon-shanchu:before {
+  content: "\e6c7";
 }
 
 .icon-ES:before {
