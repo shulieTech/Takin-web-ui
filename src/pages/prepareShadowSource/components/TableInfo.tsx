@@ -4,6 +4,7 @@ import useListService from 'src/utils/useListService';
 import service from '../service';
 import { debounce } from 'lodash';
 import StatusDot from './StatusDot';
+import EditRowTable from 'src/components/edit-row-table';
 
 const { Option } = Select;
 
@@ -14,6 +15,7 @@ interface Props {
 
 export default (props: Props) => {
   const { detail, cancelCallback } = props;
+  const [listItemAdded, setListItemAdded] = useState();
   const [boxStyle, setBoxStyle] = useState({ top: '100%' });
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.getLinkList,
@@ -27,23 +29,37 @@ export default (props: Props) => {
     isQueryOnMount: false,
   });
 
-  useEffect(() => {
-    if (detail?.id) {
-      setBoxStyle({
-        top: 0,
+  const saveRowData = (record, rowState, setRowState) => {
+    rowState?.form?.validateFields((errors, values) => {
+      if (errors) {
+        setRowState({
+          errors,
+        });
+        return;
+      }
+      setRowState({
+        saving: true,
       });
-      getList();
-    } else {
-      setBoxStyle({
-        top: '100%',
-      });
-    }
-  }, [detail]);
+      // TODO 保存行数据
+    });
+  };
+
+  const deleteRow = (row, index) => {
+    // TODO 删除行数据
+  };
 
   const columns = [
     {
       title: '业务表名',
       dataIndex: 'tableName',
+      formField: (
+        <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+      ),
+      formFieldOptions: {
+        rules: [
+          { required: true, whiteSpace: true, message: '请输入业务表名' },
+        ],
+      },
       render: (text, record) => {
         return (
           <>
@@ -73,6 +89,14 @@ export default (props: Props) => {
     {
       title: '影子表名',
       dataIndex: 'shadowTableName',
+      formField: (
+        <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+      ),
+      formFieldOptions: {
+        rules: [
+          { required: true, whiteSpace: true, message: '请输入影子表名' },
+        ],
+      },
     },
     {
       title: '配置状态',
@@ -90,12 +114,72 @@ export default (props: Props) => {
     },
     {
       title: '操作',
-      dataIndex: '',
-      render: (text, record) => {
-        return <a>删除</a>;
+      align: 'right',
+      render: (text, record, index, rowState, setRowState) => {
+        return rowState?.editing ? (
+          <span>
+            <Button
+              type="link"
+              style={{
+                marginLeft: 4,
+                color: 'var(--FunctionNegative-500, #D24D40)',
+              }}
+              onClick={() => {
+                if (record._edting) {
+                  setListItemAdded(undefined);
+                }
+                setRowState({
+                  editing: false,
+                  errors: undefined,
+                });
+              }}
+            >
+              取消
+            </Button>
+            <Button
+              type="link"
+              style={{
+                marginLeft: 8,
+                color: 'var(--Brandprimary-500, #0FBBD5)',
+              }}
+              onClick={() => saveRowData(record, rowState, setRowState)}
+              loading={rowState?.saving}
+            >
+              保存
+            </Button>
+          </span>
+        ) : (
+          <span>
+            <a
+              style={{ marginLeft: 8 }}
+              onClick={() => deleteRow(record, index)}
+            >
+              删除
+            </a>
+            <a
+              style={{ marginLeft: 8 }}
+              onClick={() => setRowState({ editing: true })}
+            >
+              编辑
+            </a>
+          </span>
+        );
       },
     },
   ];
+
+  useEffect(() => {
+    if (detail?.id) {
+      setBoxStyle({
+        top: 0,
+      });
+      getList();
+    } else {
+      setBoxStyle({
+        top: '100%',
+      });
+    }
+  }, [detail]);
 
   return (
     <div
@@ -135,7 +219,12 @@ export default (props: Props) => {
           <Button type="link" style={{ marginLeft: 24 }}>
             全部不加入
           </Button>
-          <Button style={{ marginLeft: 24 }}>新增业务表</Button>
+          <Button
+            style={{ marginLeft: 24 }}
+            onClick={() => setListItemAdded({ _edting: true })}
+          >
+            新增影子表
+          </Button>
           <Icon
             style={{ marginLeft: 24, padding: 8 }}
             type="caret-down"
@@ -194,10 +283,10 @@ export default (props: Props) => {
           </Button>
         </div>
       </div>
-      <Table
+      <EditRowTable
         size="small"
         columns={columns}
-        dataSource={list}
+        dataSource={listItemAdded ? [...list, listItemAdded] : list}
         pagination={false}
         loading={loading}
       />

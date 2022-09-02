@@ -155,6 +155,7 @@ export default (props) => {
         </span>
       ),
       dataIndex: '',
+      align: 'right',
       render: (text, record) => {
         return (
           <Switch
