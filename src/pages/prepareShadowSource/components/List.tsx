@@ -5,7 +5,7 @@ import service from '../service';
 import { PrepareContext } from '../indexPage';
 import classNames from 'classnames';
 import styles from '../index.less';
-import { LINK_STATUS } from '../contants';
+import { LINK_STATUS } from '../constants';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -15,8 +15,12 @@ export default (props) => {
       current: 0,
       pageSize: 10,
     },
-    // isQueryOnMount: false,
+    isQueryOnMount: false,
   });
+
+  useEffect(() => {
+    getList();
+  }, [prepareState.refreshListKey]);
 
   return (
     <div>
@@ -77,24 +81,24 @@ export default (props) => {
               <div
                 key={x.id}
                 className={classNames(styles['link-item'], {
-                  [styles.active]:
-                    x.id === parseInt(prepareState.currentLink?.id, 10),
+                  [styles.active]: x.id === prepareState.currentLink?.id,
                 })}
                 onClick={() => {
                   setPrepareState({ currentLink: x });
                 }}
               >
-                <div style={{ display: 'flex' }}>
-                  <div
-                    className="truncate"
-                    style={{
-                      flex: 1,
-                      color: 'var(--Netural-850, #414548)',
-                      marginBottom: 8,
-                    }}
-                  >
-                    {x.name || '-'}
-                  </div>
+                <div style={{ display: 'flex', marginBottom: 8 }}>
+                  <Tooltip title={x.name} placement="topLeft">
+                    <div
+                      className="truncate"
+                      style={{
+                        flex: 1,
+                        color: 'var(--Netural-850, #414548)',
+                      }}
+                    >
+                      {x.name || '-'}
+                    </div>
+                  </Tooltip>
                   <span
                     style={{
                       color: 'var(--Netural-700, #6F7479)',
@@ -114,16 +118,18 @@ export default (props) => {
                   >
                     ID:{x.id}
                   </span>
-                  <div style={{ marginTop: 8 }}>
-                    <span className={styles['icon-chuan']} />
-                    <span
-                      style={{
-                        color: 'var(--BrandPrimary-500, #0fbbd5)',
-                      }}
-                    >
-                      23
-                    </span>
-                  </div>
+                  {x.detailCount > 1 && (
+                    <div style={{ marginTop: 8 }}>
+                      <span className={styles['icon-chuan']} />
+                      <span
+                        style={{
+                          color: 'var(--BrandPrimary-500, #0fbbd5)',
+                        }}
+                      >
+                        {x.detailCount}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             );

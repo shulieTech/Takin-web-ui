@@ -25,6 +25,10 @@ export default (props) => {
       '0px 8px 24px rgba(136, 136, 136, 0.1), 0px 6px 14px rgba(136, 136, 136, 0.3)',
   };
 
+  useEffect(() => {
+    setStep(0);
+  }, [prepareState.currentLink?.id]);
+
   return (
     <div
       style={{ height: '100%', display: 'flex', flexDirection: 'column' }}

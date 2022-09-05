@@ -12,6 +12,7 @@ export default (props) => {
   const [prepareState, setFullPrepareState] = useState({
     currentLink: null,
     editLink: undefined,
+    refreshListKey: 0,
   });
   const setPrepareState = (particalState) => {
     setFullPrepareState({
@@ -39,6 +40,12 @@ export default (props) => {
       </Layout>
       <EditLinkModal
         detail={prepareState.editLink}
+        okCallback={() => {
+          setPrepareState({
+            editLink: undefined,
+            refreshListKey: prepareState.refreshListKey + 1,
+          });
+        }}
         cancelCallback={() => setPrepareState({ editLink: undefined })}
       />
     </PrepareContext.Provider>

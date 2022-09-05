@@ -9,14 +9,16 @@ import LinkFilter from '../components/LinkFilter';
 interface EditLinkModalProps {
   form?: WrappedFormUtils;
   detail: any;
+  okCallback: () => void;
   cancelCallback: () => void;
-  canEditLink: boolean;
 }
 const EditLinkModal = (props: EditLinkModalProps) => {
-  const { cancelCallback, canEditLink = true, form } = props;
+  const { okCallback, cancelCallback, form } = props;
   const { getFieldDecorator, validateFields } = form;
   const [loading, setLoading] = useState(false);
   const [detail, setDetail] = useState(props.detail);
+
+  const canEditLink = props?.detail?.type === 0 || !props?.detail?.id; // 手动新增的才可编辑
 
   const getDetail = async () => {
     setLoading(true);
@@ -40,13 +42,13 @@ const EditLinkModal = (props: EditLinkModalProps) => {
       }
       const {
         data: { success },
-      } = await service.addLink({
+      } = await service[detail.id ? 'updateLink' : 'addLink']({
+        ...detail,
         ...values,
       });
       if (success) {
         message.success('操作成功');
-        cancelCallback();
-        // TODO 刷新列表
+        okCallback();
       }
     });
   };
@@ -54,6 +56,8 @@ const EditLinkModal = (props: EditLinkModalProps) => {
   useEffect(() => {
     if (props.detail?.id) {
       getDetail();
+    } else {
+      setDetail(props.detail);
     }
   }, [props.detail?.id]);
 
@@ -68,6 +72,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
         disabled: loading,
       }}
       width={canEditLink ? 1180 : 630}
+      destroyOnClose
     >
       <Spin spinning={loading}>
         <Form>
@@ -82,6 +87,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
                 placeholder="请输入"
                 maxLength={25}
                 style={{ width: 470 }}
+                readOnly={!canEditLink}
               />
             )}
           </Form.Item>

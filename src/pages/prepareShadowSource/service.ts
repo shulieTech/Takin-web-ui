@@ -16,6 +16,13 @@ export default {
     return httpPost(url, data);
   },
   /**
+   * @name 更新链路
+   */
+  async updateLink(data = {}) {
+    const url = '/pressureResource/update';
+    return httpPost(url, data);
+  },
+  /**
    * @name 链路详情
    */
   async getLinkDetail(data = {}) {
