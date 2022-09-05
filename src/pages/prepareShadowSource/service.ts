@@ -57,4 +57,11 @@ export default {
     const url = '/pressureResource/app/checkList';
     return httpGet(url, data);
   },
+  /**
+   * @name 数据源新增
+   */
+  async addDatasource(data = {}) {
+    const url = '/pressureResource/ds/create';
+    return httpPost(url, data);
+  },
 };

@@ -13,6 +13,7 @@ import {
 import { Input, Select, Password } from '@formily/antd-components';
 import useListService from 'src/utils/useListService';
 import service from '../service';
+import { debounce } from 'lodash';
 
 interface Props {
   detail: any;
@@ -23,6 +24,18 @@ interface Props {
 export default (props: Props) => {
   const { detail, okCallback, cancelCallback, ...rest } = props;
   const actions = useMemo(createAsyncFormActions, []);
+
+  const {
+    list: appList,
+    getList: getAppList,
+    loading: appLoading,
+  } = useListService({
+    service: service.appList,
+    defaultQuery: {
+      current: 0,
+      pageSize: 10,
+    },
+  });
 
   const { list: middlewareList, loading: middlewareListLoading } =
     useListService({
@@ -64,7 +77,7 @@ export default (props: Props) => {
         wrapperCol={18}
       >
         <FormItem
-          name="connectionPool"
+          name="middlewareName"
           title="中间件名称"
           component={Select}
           dataSource={middlewareList}
@@ -75,7 +88,7 @@ export default (props: Props) => {
           rules={[{ required: true, message: '请选择中间件' }]}
         />
         <FormItem
-          name="url"
+          name="businessDatabase"
           title={
             <span>
               业务数据源
@@ -94,7 +107,7 @@ export default (props: Props) => {
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
         <FormItem
-          name="username"
+          name="businessUserName"
           title="用户名"
           component={Input}
           rules={[
@@ -103,7 +116,7 @@ export default (props: Props) => {
           props={{ maxLength: 25, placeholder: '请输入' }}
         />
         <FormItem
-          name="shadowUrl"
+          name="shadowDatabase"
           title="影子数据源"
           component={Input}
           rules={[
@@ -125,7 +138,7 @@ export default (props: Props) => {
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
         <FormItem
-          name="shadowPwd"
+          name="shadowPassword"
           title="影子数据源密码"
           component={Password}
           rules={[
@@ -149,11 +162,26 @@ export default (props: Props) => {
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
         <FormItem
-          name="apps"
+          name="relationApps"
           title="关联应用"
           component={Select}
           rules={[{ required: true, message: '请选择关联应用' }]}
-          props={{ placeholder: '请选择' }}
+          props={{
+            placeholder: '请选择',
+            mode: 'multiple',
+            showSearch: true,
+            filterOption: false,
+            loading: appLoading,
+            onSearch: debounce(
+              (val) =>
+                getAppList({
+                  applicationName: val,
+                  current: 0,
+                }),
+              300
+            )
+          }}
+          dataSource={appList}
         />
         <FormItem
           name="maxActive"

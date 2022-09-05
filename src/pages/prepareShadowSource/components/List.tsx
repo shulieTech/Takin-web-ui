@@ -32,7 +32,7 @@ export default (props) => {
   }, [prepareState.refreshListKey]);
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ padding: 16 }}>
         链路
         <Tooltip title="1111">
@@ -64,7 +64,7 @@ export default (props) => {
           }
         />
       </div>
-      <div>
+      <div style={{ flex: 1, overflow: 'auto' }}>
         <Spin spinning={loading}>
           {total === 0 && !query.name && (
             <div
@@ -143,23 +143,25 @@ export default (props) => {
               </div>
             );
           })}
-          <Pagination
-            style={{
-              padding: 16,
-              textAlign: 'center',
-            }}
-            simple
-            hideOnSinglePage
-            size="small"
-            total={total}
-            pageSize={query.pageSize}
-            current={query.current + 1}
-            onChange={(page, pageSize) => {
-              getList({ pageSize, current: page - 1 });
-            }}
-          />
         </Spin>
       </div>
+      {total > 0 && <div style={{ padding: 8, display: 'flex', alignItems: 'center' }}>
+        <Pagination
+          style={{
+            flex: 1,
+          }}
+          simple
+          hideOnSinglePage
+          size="small"
+          total={total}
+          pageSize={query.pageSize}
+          current={query.current + 1}
+          onChange={(page, pageSize) => {
+            getList({ pageSize, current: page - 1 });
+          }}
+        />
+        <div>总计：<b> {total} </b>条</div>
+      </div>}
     </div>
   );
 };
