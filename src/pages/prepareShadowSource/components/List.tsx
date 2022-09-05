@@ -16,6 +16,15 @@ export default (props) => {
       pageSize: 10,
     },
     isQueryOnMount: false,
+    afterSearchCallback: (res, newQuery) => {
+      // 未搜索状态下，默认选中第一个
+      const { data: { success, data } } = res;
+      if (success && data?.list?.length > 0 && !newQuery.name) {
+        setPrepareState({
+          currentLink: data.list[0]
+        });
+      }
+    }
   });
 
   useEffect(() => {

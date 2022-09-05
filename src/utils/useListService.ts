@@ -5,7 +5,7 @@ interface Props {
   service: (params: any) => Promise<any>;
   defaultQuery?: any;
   isQueryOnMount?: boolean;
-  afterSearchCallback?: (res: any) => void;
+  afterSearchCallback?: (res: any, query?: any) => void;
   dataListPath?: string;
 }
 
@@ -49,7 +49,7 @@ const useListService = (props: Props) => {
         setTotal(totalCount || data.count || data.total);
       }
       if (typeof afterSearchCallback === 'function') {
-        afterSearchCallback(res);
+        afterSearchCallback(res, newQuery);
       }
       return res;
     } finally {

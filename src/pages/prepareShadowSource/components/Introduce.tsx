@@ -283,9 +283,8 @@ export default (props: Props) => {
         >
           {list.map((x, i, arr) => {
             return (
-              <>
+              <span key={x.title}>
                 <Button
-                  key={x.title}
                   shape="round"
                   className={classNames(styles['round-btn'], {
                     [styles.active]: activeKey === i,
@@ -312,7 +311,7 @@ export default (props: Props) => {
                 {i < arr.length - 1 && (
                   <Icon type="right" style={{ margin: '0 24px' }} />
                 )}
-              </>
+              </span>
             );
           })}
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { Icon, Alert } from 'antd';
 import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
@@ -13,7 +13,7 @@ export default (props) => {
     display: 'flex',
     minWidth: 132,
     padding: 8,
-    paddingRight: 16,   
+    paddingRight: 16,
     borderRadius: 100,
     cursor: 'pointer',
     // border: '1px solid var(--BrandPrimary-500, #11bbd5)',
@@ -65,7 +65,7 @@ export default (props) => {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
           {
             stepList.map((x, i, arr) => {
-              return <>
+              return <Fragment key={x.title}>
                 <div
                   style={{
                     ...commonStepStyle,
@@ -106,7 +106,7 @@ export default (props) => {
                   type="right"
                   style={{ margin: '0 12px', color: 'var(--Netural-400, #BFC3C8)' }}
                 />}
-              </>;
+              </Fragment>;
             })
           }
 
