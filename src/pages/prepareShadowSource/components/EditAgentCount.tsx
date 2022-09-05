@@ -38,13 +38,13 @@ export default Form.create()((prop) => {
         />
       </Tooltip>
 
-      {form.getFieldDecorator('count', {
+      {form.getFieldDecorator('nodeNum', {
         initialValue: 1,
         rules: [
           { required: true, message: '请填写该字段' },
           {
             type: 'integer',
-            min: 1,
+            min: record.nodeNum,
             max: 10000,
             message: '请输入正确的正整数',
           },
@@ -58,7 +58,7 @@ export default Form.create()((prop) => {
           max={10000}
         />
       )}
-      <span style={{ marginLeft: 8 }}>/1</span>
+      <span style={{ marginLeft: 8 }}>/{record.agentNodeNum}</span>
       <span>
         <Button
           type="link"
@@ -88,8 +88,8 @@ export default Form.create()((prop) => {
       </span>
     </span>
   ) : (
-    <span>
-      1/1
+    <span style={{ color: record.status === 1 ? 'var(--FunctionNegative-500, #D24D40)' : 'inherit' }}>
+      {record.nodeNum}/{record.agentNodeNum}
       <a onClick={() => setIsEditing(true)} style={{ marginLeft: 8 }}>
         <Icon type="edit" />
       </a>

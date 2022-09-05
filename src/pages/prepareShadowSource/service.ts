@@ -50,4 +50,11 @@ export default {
     const url = '/v2/link/ds/support/name/new';
     return httpGet(url, data);
   },
+  /**
+   * @name 应用检查列表
+   */
+  async appCheckList(data = {}) {
+    const url = '/pressureResource/app/checkList';
+    return httpGet(url, data);
+  },
 };

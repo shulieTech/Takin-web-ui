@@ -9,8 +9,6 @@ import {
   Checkbox,
   Tooltip,
   Switch,
-  InputNumber,
-  Form,
 } from 'antd';
 import { PrepareContext } from '../indexPage';
 import useListService from 'src/utils/useListService';
@@ -18,16 +16,18 @@ import service from '../service';
 import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
 import EditAgentCount from './EditAgentCount';
+import { ISOLATE_TYPE } from '../constants';
 
 const { Option } = Select;
 
 export default (props) => {
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const {
-    list: appList,
-    getList: getAppList,
-    loading: appLoading,
+    list: entryList,
+    getList: getEntryList,
+    loading: entryLoading,
   } = useListService({
-    service: service.appList,
+    service: service.entryList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
@@ -35,15 +35,16 @@ export default (props) => {
   });
 
   const { list, loading, total, query, getList, resetList } = useListService({
-    service: service.getLinkList,
+    service: service.appCheckList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      type: '',
-      status: '',
+      resourceId: prepareState.currentLink?.id,
+      joinPressure: undefined,
+      status: undefined,
       entry: undefined,
     },
-    // isQueryOnMount: false,
+    isQueryOnMount: false,
   });
 
   const toggleInvovled = (checked, record) => {
@@ -53,7 +54,7 @@ export default (props) => {
   const columns = [
     {
       title: '应用',
-      dataIndex: 'applicationName',
+      dataIndex: 'appName',
       render: (text, record) => {
         return (
           <div style={{ display: 'inline-flex' }}>
@@ -82,14 +83,14 @@ export default (props) => {
                   color: 'var(--Netural-1000, #141617)',
                 }}
               >
-                mall-monitor-1.0-SNAPSHOTmall-monitor-1.0-SNAPSHOT
+                {text}
               </div>
               <div
                 style={{
                   color: 'var(--Netural-600, #90959A)',
                 }}
               >
-                ID:92
+                ID:{record.detailId}
               </div>
             </div>
           </div>
@@ -102,8 +103,8 @@ export default (props) => {
       render: (text, record) => {
         return (
           {
-            0: <StatusDot />,
-            1: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+            0: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />, // 正常
+            1: <StatusDot color="var(--FunctionNegative-400, #E8695D)" />, // 不正常
           }[text] || '-'
         );
       },
@@ -120,9 +121,9 @@ export default (props) => {
           </Tooltip>
         </span>
       ),
-      dataIndex: 'plan',
+      dataIndex: 'isolateType',
       render: (text, record) => {
-        return text || '-';
+        return ISOLATE_TYPE[text] || '-';
       },
     },
     {
@@ -154,18 +155,24 @@ export default (props) => {
           </Tooltip>
         </span>
       ),
-      dataIndex: '',
+      dataIndex: 'joinPressure',
       align: 'right',
       render: (text, record) => {
         return (
           <Switch
-            checked={text}
+            checked={text === 0} // 0是， 1否
             onChange={(checked) => toggleInvovled(checked, record)}
           />
         );
       },
     },
   ];
+
+  useEffect(() => {
+    if (prepareState.currentLink?.id) {
+      getList();
+    }
+  }, [prepareState.currentLink?.id]);
 
   return (
     <>
@@ -181,7 +188,7 @@ export default (props) => {
             placeholder="搜索应用"
             onSearch={(val) =>
               getList({
-                name: val,
+                appName: val,
                 current: 0,
               })
             }
@@ -206,21 +213,22 @@ export default (props) => {
               filterOption={false}
               placeholder="搜索入口URL"
               onSearch={debounce(
-                (val) => getAppList({ current: 0, applicationName: val }),
+                (val) => getEntryList({ current: 0, serviceName: val }),
                 300
               )}
+              loading={entryLoading}
               optionLabelProp="label"
               allowClear
             >
-              {appList.map((x) => {
+              {entryList.map((x) => {
                 return (
                   <Option
-                    value={x.id}
-                    key={x.id}
+                    value={x.value}
+                    key={x.value}
                     style={{
                       border: '1px solid #F7F8FA',
                     }}
-                    label="https://ip:port/uentrance/interf/issue/biopsy-sequence"
+                    label={x.label}
                   >
                     <div
                       style={{
@@ -231,9 +239,9 @@ export default (props) => {
                       className="truncate"
                     >
                       <span style={{ marginRight: 8, fontWeight: 700 }}>
-                        GET
+                        {x.label}
                       </span>
-                      凭证申领信息查询
+                      {x.serviceName}
                     </div>
                     <div
                       style={{
@@ -241,7 +249,7 @@ export default (props) => {
                         color: 'var(--Netural-600, #90959A)',
                       }}
                     >
-                      https://ip:port/uentrance/interf/issue/biopsy-sequence
+                      {x.serviceName}
                     </div>
                   </Option>
                 );
@@ -259,17 +267,20 @@ export default (props) => {
                   current: 0,
                 })
               }
+              allowClear
+              placeholder="请选择"
             >
-              <Option value="">全部</Option>
+              <Option value={0}>正常</Option>
+              <Option value={1}>不正常</Option>
             </Select>
           </span>
           <span>
             <Checkbox
               style={{ marginRight: 8 }}
-              checked={query.type === 1}
+              checked={query.joinPressure === 0}
               onChange={(e) =>
                 getList({
-                  type: e.target.checked ? 1 : 0,
+                  joinPressure: e.target.checked ? 0 : 1, // 是否加入压测范围(0-是 1-否)
                 })
               }
             >
@@ -291,6 +302,7 @@ export default (props) => {
         </div>
       </div>
       <Table
+        rowKey="detailId"
         columns={columns}
         dataSource={list}
         pagination={false}
