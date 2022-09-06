@@ -82,28 +82,28 @@ export default {
    * @name 新增影子表
    */
   async addShadowTable(data = {}) {
-    const url = 'pressureResource/table/save';
+    const url = '/pressureResource/table/save';
     return httpPost(url, data);
   },
   /**
    * @name 修改影子表
    */
   async updateShadowTable(data = {}) {
-    const url = 'pressureResource/table/update';
+    const url = '/pressureResource/table/update';
     return httpPost(url, data);
   },
   /**
    * @name 删除影子表
    */
   async deleteShadowTable(data = {}) {
-    const url = 'pressureResource/table/del';
+    const url = '/pressureResource/table/del';
     return httpGet(url, data);
   },
   /**
    * @name 影子表列表
    */
   async listShadowTable(data = {}) {
-    const url = 'pressureResource/table/list';
+    const url = '/pressureResource/table/list';
     return httpGet(url, data);
   },
 };
