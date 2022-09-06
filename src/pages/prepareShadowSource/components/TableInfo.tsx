@@ -60,6 +60,12 @@ export default (props: Props) => {
 
       if (success) {
         message.success('操作成功');
+        setRowState({
+          editing: false,
+        });
+        if (!newValue.id) {
+          setListItemAdded(undefined);
+        }
         getList();
       }
 
