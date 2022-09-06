@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Divider, Button, Icon, Switch, Input, Select } from 'antd';
+import { Table, Divider, Button, Icon, Switch, Input, Select, message, Popconfirm } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import { debounce } from 'lodash';
@@ -18,19 +18,19 @@ export default (props: Props) => {
   const [listItemAdded, setListItemAdded] = useState();
   const [boxStyle, setBoxStyle] = useState({ top: '100%' });
   const { list, loading, total, query, getList, resetList } = useListService({
-    service: service.getLinkList,
+    service: service.listShadowTable,
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      type: '',
+      dsId: detail.id,
+      queryBusinessTableName: undefined,
       status: '',
-      entry: undefined,
     },
     isQueryOnMount: false,
   });
 
   const saveRowData = (record, rowState, setRowState) => {
-    rowState?.form?.validateFields((errors, values) => {
+    rowState?.form?.validateFields(async (errors, values) => {
       if (errors) {
         setRowState({
           errors,
@@ -40,18 +40,45 @@ export default (props: Props) => {
       setRowState({
         saving: true,
       });
-      // TODO 保存行数据
+
+      const newValue = {
+        dsId: detail.id,
+        ...record,
+        ...values,
+      };
+
+      delete newValue._edting;
+
+      // 保存行数据
+      const { data: { success, data } } = await service[newValue.id ? 'updateShadowTable' : 'addShadowTable'](newValue).finally(() => {
+        setRowState({
+          saving: false,
+        });
+      });
+
+      if (success) {
+        message.success('操作成功');
+        getList();
+      }
+
     });
   };
 
-  const deleteRow = (row, index) => {
-    // TODO 删除行数据
+  const deleteRow = async (row, index) => {
+    // 删除行数据
+    const { data: { success, data } } = await service.deleteShadowTable({
+      id: row.id
+    });
+    if (success) {
+      message.success('操作成功');
+      getList();
+    }
   };
 
   const columns = [
     {
       title: '业务表名',
-      dataIndex: 'tableName',
+      dataIndex: 'businessTable',
       formField: (
         <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
       ),
@@ -63,7 +90,7 @@ export default (props: Props) => {
       render: (text, record) => {
         return (
           <>
-            {record.isManual && (
+            {record.type === 0 && ( // (0-手工 1-自动)
               <span
                 style={{
                   backgroundColor: 'var(--Netural/600, #90959A)',
@@ -88,7 +115,7 @@ export default (props: Props) => {
     },
     {
       title: '影子表名',
-      dataIndex: 'shadowTableName',
+      dataIndex: 'shadowTable',
       formField: (
         <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
       ),
@@ -101,15 +128,27 @@ export default (props: Props) => {
     {
       title: '配置状态',
       dataIndex: 'status',
-      render: (text, record) => {
-        return <StatusDot />;
+      render: (text) => {
+        return {
+          0: <StatusDot />,
+          1: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
+          2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+        }[text || 0];
       },
     },
     {
       title: '是否加入',
-      dataIndex: 'invovled',
+      dataIndex: 'joinFlag',
+      formField: (
+        <Switch />
+      ),
+      formFieldOptions: {
+        getValueFromEvent: checked => {
+          return checked ? 1 : 0;
+        },
+      },
       render: (text, record) => {
-        return <Switch />;
+        return <Switch checked={text === 0} />; // 是否加入压测范围(0-否 1-是)
       },
     },
     {
@@ -150,12 +189,13 @@ export default (props: Props) => {
           </span>
         ) : (
           <span>
-            <a
-              style={{ marginLeft: 8 }}
-              onClick={() => deleteRow(record, index)}
-            >
-              删除
-            </a>
+            <Popconfirm title="确认删除？" onConfirm={() => deleteRow(record, index)}>
+              <a
+                style={{ marginLeft: 8 }}
+              >
+                删除
+              </a>
+            </Popconfirm>
             <a
               style={{ marginLeft: 8 }}
               onClick={() => setRowState({ editing: true })}
@@ -211,8 +251,8 @@ export default (props: Props) => {
             表信息
           </span>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <span>jdbc:mysql://192.168.100.252：3306/easydemo_dbl</span>
-          <span style={{ marginLeft: 24 }}>业务库名：easydemo_db</span>
+          <span>{detail.businessDatabase}</span>
+          <span style={{ marginLeft: 24 }}>业务库名：{detail.database}</span>
         </div>
         <div>
           <Button type="link">全部加入</Button>
@@ -245,7 +285,7 @@ export default (props: Props) => {
             placeholder="搜索表名"
             onSearch={(val) =>
               getList({
-                name: val,
+                queryBusinessTableName: val,
                 current: 0,
               })
             }
@@ -267,6 +307,8 @@ export default (props: Props) => {
               }
             >
               <Option value="">全部</Option>
+              <Option value="0">全部</Option>
+              <Option value="1">全部</Option>
             </Select>
           </span>
         </div>
@@ -284,6 +326,7 @@ export default (props: Props) => {
         </div>
       </div>
       <EditRowTable
+        rowKey="id"
         size="small"
         columns={columns}
         dataSource={listItemAdded ? [...list, listItemAdded] : list}
