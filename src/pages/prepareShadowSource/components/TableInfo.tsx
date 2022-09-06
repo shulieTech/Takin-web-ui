@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Table, Divider, Button, Icon, Switch, Input, Select, message, Popconfirm } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
@@ -15,6 +15,7 @@ interface Props {
 
 export default (props: Props) => {
   const { detail, cancelCallback } = props;
+  const inputSearchRef = useRef();
   const [listItemAdded, setListItemAdded] = useState();
   const [boxStyle, setBoxStyle] = useState({ top: '100%' });
   const { list, loading, total, query, getList, resetList } = useListService({
@@ -42,6 +43,7 @@ export default (props: Props) => {
       });
 
       const newValue = {
+        resourceId: detail.resourceId,
         dsId: detail.id,
         ...record,
         ...values,
@@ -133,7 +135,7 @@ export default (props: Props) => {
           0: <StatusDot />,
           1: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
           2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
-        }[text || 0];
+        }[text] || '-';
       },
     },
     {
@@ -252,7 +254,7 @@ export default (props: Props) => {
           </span>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           <span>{detail.businessDatabase}</span>
-          <span style={{ marginLeft: 24 }}>业务库名：{detail.database}</span>
+          <span style={{ marginLeft: 24 }}>业务库名：{detail.database || '-'}</span>
         </div>
         <div>
           <Button type="link">全部加入</Button>
@@ -282,6 +284,7 @@ export default (props: Props) => {
       >
         <div style={{ flex: 1 }}>
           <Input.Search
+            ref={inputSearchRef}
             placeholder="搜索表名"
             onSearch={(val) =>
               getList({
@@ -307,13 +310,21 @@ export default (props: Props) => {
               }
             >
               <Option value="">全部</Option>
-              <Option value="0">全部</Option>
-              <Option value="1">全部</Option>
+              <Option value={0}>未检测</Option>
+              <Option value={1}>检测失败</Option>
+              <Option value={2}>检测成功</Option>
             </Select>
           </span>
         </div>
         <div>
-          <Button type="link" onClick={resetList} disabled={loading}>
+          <Button
+            type="link"
+            onClick={() => {
+              resetList();
+              inputSearchRef?.current?.input?.setValue();
+            }}
+            disabled={loading}
+          >
             重置
           </Button>
           <Button

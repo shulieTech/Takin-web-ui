@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   Divider,
   Icon,
@@ -44,6 +44,7 @@ const DropdowTable = (props) => {
       }}
     >
       <Input.Search
+        ref={inputSearchRef}
         placeholder="搜索应用"
         style={{
           marginBottom: 8,
@@ -80,13 +81,14 @@ interface Props {
 }
 export default (props: Props) => {
   const { setEditedDataSource } = props;
+  const inputSearchRef = useRef();
   const [editShadowTable, setEditShadowTable] = useState<any>(undefined);
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.datasourceViewMode,
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      queryBusinessDataBase: '',
+      queryBusinessDataBase: undefined,
       status: '',
     },
     // isQueryOnMount: false,
@@ -254,7 +256,14 @@ export default (props: Props) => {
             }}
           />
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <Button type="link" onClick={resetList} disabled={loading}>
+          <Button
+            type="link"
+            onClick={() => {
+              resetList();
+              inputSearchRef?.current?.input?.setValue();
+            }}
+            disabled={loading}
+          >
             重置
           </Button>
           <Button

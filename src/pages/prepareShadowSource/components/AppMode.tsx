@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   Icon,
   Button,
@@ -13,6 +13,7 @@ import StatusDot from './StatusDot';
 const DropdowTable = (props) => {
   const { defaultList = [] } = props;
   const [list, setList] = useState(defaultList);
+  const inputSearchRef = useRef();
 
   const filterList = (e) => {
     if (e.target.value && e.target.value.trim()) {
@@ -34,6 +35,7 @@ const DropdowTable = (props) => {
       }}
     >
       <Input.Search
+        ref={inputSearchRef}
         placeholder="搜索数据源"
         style={{
           marginBottom: 8,
@@ -168,7 +170,14 @@ export default (props) => {
           />
         </div>
         <div>
-          <Button type="link" onClick={resetList} disabled={loading}>
+          <Button
+            type="link"
+            onClick={() => {
+              resetList();
+              inputSearchRef?.current?.input?.setValue();
+            }}
+            disabled={loading}
+          >
             重置
           </Button>
           <Button

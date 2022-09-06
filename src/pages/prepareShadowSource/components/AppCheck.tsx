@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   Divider,
   Icon,
@@ -22,6 +22,8 @@ const { Option } = Select;
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
+  const inputSearchRef = useRef();
+
   const {
     list: entryList,
     getList: getEntryList,
@@ -185,6 +187,7 @@ export default (props) => {
       >
         <div style={{ flex: 1 }}>
           <Input.Search
+            ref={inputSearchRef}
             placeholder="搜索应用"
             onSearch={(val) =>
               getList({
@@ -289,7 +292,14 @@ export default (props) => {
           </span>
         </div>
         <div>
-          <Button type="link" onClick={resetList} disabled={loading}>
+          <Button 
+            type="link" 
+            onClick={() => {
+              resetList();
+              inputSearchRef?.current?.input?.setValue();
+            }} 
+            disabled={loading}
+          >
             重置
           </Button>
           <Button
