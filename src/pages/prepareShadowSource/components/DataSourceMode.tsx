@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Alert,
   Divider,
   Icon,
   Button,
@@ -23,30 +22,14 @@ import { debounce } from 'lodash';
 const { Option } = Select;
 
 const DropdowTable = (props) => {
-  const defaultList = [
-    {
-      id: 1,
-      applicationName: '门店-无清单团单-发版',
-      status: 0,
-    },
-    {
-      id: 2,
-      applicationName: '门店-无清单团单-发版',
-      status: 1,
-    },
-    {
-      id: 3,
-      applicationName: '门店-无清单团单-发版',
-      status: 2,
-    },
-  ];
+  const { defaultList = [] } = props;
   const [list, setList] = useState(defaultList);
 
   const filterList = (e) => {
     if (e.target.value && e.target.value.trim()) {
       setList(
         list.filter(
-          (x) => x.applicationName.indexOf(e.target.value.trim()) > -1
+          (x) => x.appName.indexOf(e.target.value.trim()) > -1
         )
       );
     } else {
@@ -72,16 +55,16 @@ const DropdowTable = (props) => {
       />
       <Table
         size="small"
-        rowKey="id"
+        rowKey="appName"
         dataSource={list}
         columns={[
           {
             title: '应用',
-            dataIndex: 'applicationName',
+            dataIndex: 'appName',
           },
           {
             title: '是否加入压测范围',
-            dataIndex: 'status',
+            dataIndex: 'joinPressure',
             fixed: 'right',
             align: 'right',
             render: (text) => {
@@ -103,13 +86,12 @@ export default (props: Props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [editShadowTable, setEditShadowTable] = useState<any>(undefined);
   const { list, loading, total, query, getList, resetList } = useListService({
-    service: service.getLinkList,
+    service: service.datasourceViewMode,
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      type: '',
+      queryBusinessDataBase: '',
       status: '',
-      entry: undefined,
     },
     // isQueryOnMount: false,
   });
@@ -117,7 +99,7 @@ export default (props: Props) => {
   const columns = [
     {
       title: '数据源地址',
-      dataIndex: 'applicationName',
+      dataIndex: 'businessDatabase',
       render: (text, record) => {
         return (
           <div style={{ display: 'inline-flex' }}>
@@ -146,14 +128,14 @@ export default (props: Props) => {
                   color: 'var(--Netural-1000, #141617)',
                 }}
               >
-                mall-monitor-1.0-SNAPSHOTmall-monitor-1.0-SNAPSHOT
+                {text}
               </div>
               <div
                 style={{
                   color: 'var(--Netural-600, #90959A)',
                 }}
               >
-                ID:92
+                ID:{record.id}
               </div>
             </div>
           </div>
@@ -167,21 +149,37 @@ export default (props: Props) => {
         return (
           {
             0: <StatusDot />,
-            1: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+            1: (
+              <>
+                <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
+                <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+                <Tooltip title={record.remark}>
+                  <Icon 
+                    type="file-text"
+                    theme="filled"
+                    style={{
+                      cursor: 'pointer',
+                      color: 'var(--Brandprimary-500, #0FBBD5)',
+                    }} 
+                  />
+                </Tooltip>
+              </>
+            ),
+            2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
           }[text] || '-'
         );
       },
     },
     {
       title: '用户名',
-      dataIndex: 'username',
+      dataIndex: 'businessUserName',
       render: (text, record) => {
         return text || '-';
       },
     },
     {
       title: '类型',
-      dataIndex: 'type',
+      dataIndex: 'middlewareType',
       render: (text, record) => {
         return text ? <Tag>{text}</Tag> : '-';
       },
@@ -193,9 +191,9 @@ export default (props: Props) => {
         return (
           <span onClick={(e) => e.stopPropagation()}>
             <a>删除</a>
-            <Dropdown overlay={<DropdowTable />}>
-              <a style={{ marginLeft: 32 }}>查看24个应用</a>
-            </Dropdown>
+            {record.appList.length > 0 && <Dropdown overlay={<DropdowTable defaultList={record.appList} />}>
+              <a style={{ marginLeft: 32 }}>查看{record.appList.length}个应用</a>
+            </Dropdown>}
             <a
               style={{ marginLeft: 32 }}
               onClick={() => setEditedDataSource(record)}
@@ -240,6 +238,9 @@ export default (props: Props) => {
               }
             >
               <Option value="">全部</Option>
+              <Option value={0}>未检测</Option>
+              <Option value={1}>检测失败</Option>
+              <Option value={2}>检测成功</Option>
             </Select>
           </span>
         </div>
@@ -248,7 +249,7 @@ export default (props: Props) => {
             placeholder="搜索数据源"
             onSearch={(val) =>
               getList({
-                name: val,
+                queryBusinessDataBase: val,
                 current: 0,
               })
             }

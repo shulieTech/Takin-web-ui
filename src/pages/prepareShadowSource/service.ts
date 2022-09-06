@@ -64,4 +64,46 @@ export default {
     const url = '/pressureResource/ds/create';
     return httpPost(url, data);
   },
+  /**
+   * @name 数据源模式列表
+   */
+  async datasourceViewMode(data = {}) {
+    const url = '/pressureResource/ds/listByDs';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 应用视图模式列表
+   */
+  async appViewMode(data = {}) {
+    const url = '/pressureResource/ds/listByApp';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 新增影子表
+   */
+  async addShadowTable(data = {}) {
+    const url = 'pressureResource/table/save';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 修改影子表
+   */
+  async updateShadowTable(data = {}) {
+    const url = 'pressureResource/table/update';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 删除影子表
+   */
+  async deleteShadowTable(data = {}) {
+    const url = 'pressureResource/table/del';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 影子表列表
+   */
+  async listShadowTable(data = {}) {
+    const url = 'pressureResource/table/list';
+    return httpGet(url, data);
+  },
 };
