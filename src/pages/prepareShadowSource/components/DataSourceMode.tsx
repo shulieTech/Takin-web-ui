@@ -11,13 +11,10 @@ import {
   Switch,
   Dropdown,
 } from 'antd';
-import { PrepareContext } from '../indexPage';
-import Help from './Help';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import TableInfo from './TableInfo';
-import { debounce } from 'lodash';
 
 const { Option } = Select;
 
@@ -83,7 +80,6 @@ interface Props {
 }
 export default (props: Props) => {
   const { setEditedDataSource } = props;
-  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [editShadowTable, setEditShadowTable] = useState<any>(undefined);
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.datasourceViewMode,
@@ -154,13 +150,13 @@ export default (props: Props) => {
                 <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
                 <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
                 <Tooltip title={record.remark}>
-                  <Icon 
+                  <Icon
                     type="file-text"
                     theme="filled"
                     style={{
                       cursor: 'pointer',
                       color: 'var(--Brandprimary-500, #0FBBD5)',
-                    }} 
+                    }}
                   />
                 </Tooltip>
               </>

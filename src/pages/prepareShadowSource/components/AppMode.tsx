@@ -1,49 +1,23 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Alert,
-  Divider,
   Icon,
   Button,
-  Tooltip,
   Table,
   Input,
-  Select,
-  Tag,
   Dropdown,
 } from 'antd';
-import { PrepareContext } from '../indexPage';
-import Help from './Help';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
-import { debounce } from 'lodash';
-
-const { Option } = Select;
 
 const DropdowTable = (props) => {
-  const defaultList = [
-    {
-      id: 1,
-      interface: 'jdbc:mysql://192.168.100.252：3306/easydemo_dbl',
-      status: 0,
-    },
-    {
-      id: 2,
-      interface: 'jdbc:mysql://192.168.100.252：3306/easydemo_dbl',
-      status: 1,
-    },
-    {
-      id: 3,
-      interface: 'jdbc:mysql://192.168.100.252：3306/easydemo_dbl',
-      status: 2,
-    },
-  ];
+  const { defaultList = [] } = props;
   const [list, setList] = useState(defaultList);
 
   const filterList = (e) => {
     if (e.target.value && e.target.value.trim()) {
       setList(
-        list.filter((x) => x.interface.indexOf(e.target.value.trim()) > -1)
+        list.filter((x) => x.businessDataBase.indexOf(e.target.value.trim()) > -1)
       );
     } else {
       setList(defaultList);
@@ -73,7 +47,7 @@ const DropdowTable = (props) => {
         dataSource={list}
         columns={[
           {
-            dataIndex: 'interface',
+            dataIndex: 'businessDataBase',
           },
           {
             dataIndex: 'status',
@@ -82,8 +56,8 @@ const DropdowTable = (props) => {
             render: (text) => {
               return {
                 0: <StatusDot />,
-                1: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
-                2: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
+                1: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
+                2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
               }[text];
             },
           },
@@ -96,13 +70,11 @@ const DropdowTable = (props) => {
 
 export default (props) => {
   const { list, loading, total, query, getList, resetList } = useListService({
-    service: service.getLinkList,
+    service: service.appViewMode,
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      type: '',
-      status: '',
-      entry: undefined,
+      queryAppName: undefined,
     },
     // isQueryOnMount: false,
   });
@@ -110,7 +82,7 @@ export default (props) => {
   const columns = [
     {
       title: '应用',
-      dataIndex: 'applicationName',
+      dataIndex: 'appName',
       render: (text, record) => {
         return (
           <div style={{ display: 'inline-flex' }}>
@@ -139,14 +111,14 @@ export default (props) => {
                   color: 'var(--Netural-1000, #141617)',
                 }}
               >
-                mall-monitor-1.0-SNAPSHOTmall-monitor-1.0-SNAPSHOT
+                {text}
               </div>
               <div
                 style={{
                   color: 'var(--Netural-600, #90959A)',
                 }}
               >
-                ID:92
+                ID:{record.id}
               </div>
             </div>
           </div>
@@ -159,10 +131,10 @@ export default (props) => {
       render: (text, record) => {
         return (
           <div style={{ textAlign: 'right' }}>
-            divjdbc:mysql://192.168.100.252：3306/
+            {record.dsList?.[0]?.businessDataBase}
             <div style={{ marginTop: 8 }}>
-              <Dropdown overlay={<DropdowTable />}>
-                <a>共3个</a>
+              <Dropdown overlay={<DropdowTable defaultList={record.dsList} />}>
+                <a>共{record.dsList.length}个</a>
               </Dropdown>
             </div>
           </div>
@@ -183,9 +155,10 @@ export default (props) => {
         <div style={{ flex: 1 }}>
           <Input.Search
             placeholder="搜索应用"
+            value={}
             onSearch={(val) =>
               getList({
-                name: val,
+                queryAppName: val,
                 current: 0,
               })
             }
