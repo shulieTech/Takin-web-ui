@@ -18,13 +18,15 @@ export default (props) => {
     isQueryOnMount: false,
     afterSearchCallback: (res, newQuery) => {
       // 未搜索状态下，默认选中第一个
-      const { data: { success, data } } = res;
+      const {
+        data: { success, data },
+      } = res;
       if (success && data?.list?.length > 0 && !newQuery.name) {
         setPrepareState({
-          currentLink: data.list[0]
+          currentLink: data.list[0],
         });
       }
-    }
+    },
   });
 
   useEffect(() => {
@@ -145,23 +147,37 @@ export default (props) => {
           })}
         </Spin>
       </div>
-      {total > 0 && <div style={{ padding: 8, display: 'flex', alignItems: 'center' }}>
-        <Pagination
+      {total > 0 && (
+        <div
           style={{
-            flex: 1,
+            padding: 8,
+            display: 'flex',
+            alignItems: 'center',
+            borderTop: '1px solid #f7f8f9',
           }}
-          simple
-          hideOnSinglePage
-          size="small"
-          total={total}
-          pageSize={query.pageSize}
-          current={query.current + 1}
-          onChange={(page, pageSize) => {
-            getList({ pageSize, current: page - 1 });
-          }}
-        />
-        <div>总计：<b> {total} </b>条</div>
-      </div>}
+        >
+          <div
+            style={{
+              flex: 1,
+            }}
+          >
+            <Pagination
+              simple
+              hideOnSinglePage
+              size="small"
+              total={total}
+              pageSize={query.pageSize}
+              current={query.current + 1}
+              onChange={(page, pageSize) => {
+                getList({ pageSize, current: page - 1 });
+              }}
+            />
+          </div>
+          <div>
+            总计：<b> {total} </b>条
+          </div>
+        </div>
+      )}
     </div>
   );
 };

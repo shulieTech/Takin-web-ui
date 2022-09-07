@@ -3,6 +3,7 @@ import { Icon, Alert } from 'antd';
 import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
+import RemoteImport from './RemoteImport';
 import Help from './Help';
 import styles from '../index.less';
 
@@ -36,7 +37,7 @@ export default (props) => {
       subTitle: '未开始',
     },
     {
-      title: '远程调用配置',
+      title: '远程调用',
       subTitle: '未开始',
     },
     {
@@ -164,6 +165,7 @@ export default (props) => {
         >
           {step === 0 && <AppCheck />}
           {step === 1 && <DataIsloate />}
+          {step === 2 && <RemoteImport />}
         </div>
       </div>
 

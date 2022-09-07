@@ -87,7 +87,6 @@ const EditLinkModal = (props: EditLinkModalProps) => {
                 placeholder="请输入"
                 maxLength={25}
                 style={{ width: 470 }}
-                readOnly={!canEditLink}
               />
             )}
           </Form.Item>
