@@ -191,6 +191,13 @@ const BusinessFlowService = {
     const url = '/scriptManage/support/plugin/version';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取jtl文件下载地址
+   */
+  async getJtlDownLoadUrl(data = {}) {
+    const url = '/report/getJtlDownLoadUrl';
+    return httpGet(url, data);
+  },
 };
 
 export default BusinessFlowService;

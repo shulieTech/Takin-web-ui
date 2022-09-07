@@ -79,8 +79,17 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
     });
   };
 
-  const downloadJtl = (row) => {
-    downloadFile(row.jtlPath, `调试记录-${row.id}.zip`);
+  const downloadJtl = async (row) => {
+    const {
+      data: { data, success },
+    } = await ScriptManageService.getJtlDownLoadUrl({
+      reportId: row.cloudReportId,
+    });
+    if (success && typeof data.content === 'string') {
+      const filePath: string = data.content;
+      const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+      downloadFile(filePath, fileName);
+    }
   };
 
   const getColumns = (): ColumnProps<any>[] => {
@@ -127,7 +136,7 @@ const DebugScriptRecordModal: React.FC<Props> = props => {
               >
                 调试详情
               </Link>
-              {row.jtlPath && <a onClick={() => downloadJtl(row)} style={{ marginLeft: 8 }}>下载jtl</a>}
+              {row.cloudReportId && <a onClick={() => downloadJtl(row)} style={{ marginLeft: 8 }}>下载jtl</a>}
             </>
           );
         }
