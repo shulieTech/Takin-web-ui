@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Divider, Button, Icon, Switch, Input, Select, message, Popconfirm } from 'antd';
+import { Divider, Button, Icon, Switch, Input, Select, message, Popconfirm, Tooltip } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
-import { debounce } from 'lodash';
 import StatusDot from './StatusDot';
 import EditRowTable from 'src/components/edit-row-table';
 
@@ -43,9 +42,9 @@ export default (props: Props) => {
       });
 
       const newValue = {
+        ...record,
         resourceId: detail.resourceId,
         dsId: detail.id,
-        ...record,
         ...values,
       };
 
@@ -249,7 +248,7 @@ export default (props: Props) => {
           alignItems: 'center',
         }}
       >
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, display: 'flex' }}>
           <span
             style={{
               fontSize: 16,
@@ -261,9 +260,11 @@ export default (props: Props) => {
           </span>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           <span>{detail.businessDatabase}</span>
-          <span style={{ marginLeft: 24 }}>业务库名：{detail.database || '-'}</span>
+          <Tooltip title={detail.database}>
+            <span className="truncate" style={{ marginLeft: 24, flex: 1 }}>业务库名：{detail.database || '-'}</span>
+          </Tooltip>
         </div>
-        <div>
+        <div style={{ whiteSpace: 'nowrap', marginLeft: 16 }}>
           <Button type="link">全部加入</Button>
           <Button type="link" style={{ marginLeft: 24 }}>
             全部不加入
@@ -347,7 +348,7 @@ export default (props: Props) => {
         rowKey="id"
         size="small"
         columns={columns}
-        dataSource={listItemAdded ? [...list, listItemAdded] : list}
+        dataSource={listItemAdded ? [listItemAdded, ...list] : list}
         pagination={false}
         loading={loading}
       />

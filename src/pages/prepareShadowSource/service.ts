@@ -106,4 +106,18 @@ export default {
     const url = '/pressureResource/table/list';
     return httpGet(url, data);
   },
+  /**
+   * @name 导入配置文件
+   */
+  async importConfigFile(data = {}) {
+    const url = '/pressureResource/ds/import';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 导出配置文件
+   */
+  async exportConfigFile(data = {}) {
+    const url = '/pressureResource/ds/export';
+    return httpGet(url, data);
+  },
 };

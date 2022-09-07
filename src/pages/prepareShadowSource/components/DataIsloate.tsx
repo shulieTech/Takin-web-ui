@@ -8,6 +8,7 @@ import {
   Modal,
   Radio,
   message,
+  Upload,
 } from 'antd';
 import { PrepareContext } from '../indexPage';
 import DataIsolateGuide from './DataIsolateGuide';
@@ -16,11 +17,15 @@ import AppMode from './AppMode';
 import EditDataSource from '../modals/EditDataSource';
 import service from '../service';
 import styles from '../index.less';
+import { getUrl } from 'src/utils/request';
 
 export default (props) => {
   const [showGuide, setShowGuide] = useState(false);
   const [mode, setMode] = useState(0);
   const [editedDataSource, setEditedDataSource] = useState(undefined);
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
+  const [uploading, setUploading] = useState(false);
+  const [isolateListRefreshKey, setIsolateListRefreshKey] = useState(0);
 
   const setIsolatePlan = () => {
     let val;
@@ -67,6 +72,29 @@ export default (props) => {
 
   const activeModeSwitchStyle = {
     backgroundColor: 'var(--Netural-100, #EEF0F2)',
+  };
+
+  const uploadFile = async ({ file }) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('resourceId', prepareState.currentLink.id);
+
+    const {
+      data: { success },
+    } = await service.importConfigFile(formData).finally(() => {
+      setUploading(false);
+    });
+    if (success) {
+      message.success('操作成功');
+      setIsolateListRefreshKey(isolateListRefreshKey + 1);
+    }
+  };
+
+  const downLoadConfigFile = () => {
+    window.location.href = getUrl(
+      `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
+    );
   };
 
   return (
@@ -137,14 +165,31 @@ export default (props) => {
           >
             新增数据源
           </Button>
-          <Button style={{ marginLeft: 24 }}>导入隔离配置</Button>
-          <Button type="primary" style={{ marginLeft: 24 }}>
+          <Upload
+            accept=".xlsx,.csv,.xls"
+            showUploadList={false}
+            customRequest={uploadFile}
+          >
+            <Button style={{ marginLeft: 24 }} loading={uploading}>
+              导入隔离配置
+            </Button>
+          </Upload>
+          <Button
+            type="primary"
+            style={{ marginLeft: 24 }}
+            onClick={downLoadConfigFile}
+          >
             导出待配置项
           </Button>
         </div>
       </div>
-      {mode === 0 && <DataSourceMode setEditedDataSource={setEditedDataSource}/>}
-      {mode === 1 && <AppMode />}
+      {mode === 0 && (
+        <DataSourceMode
+          setEditedDataSource={setEditedDataSource}
+          isolateListRefreshKey={isolateListRefreshKey}
+        />
+      )}
+      {mode === 1 && <AppMode isolateListRefreshKey={isolateListRefreshKey} />}
       <EditDataSource
         detail={editedDataSource}
         okCallback={() => {

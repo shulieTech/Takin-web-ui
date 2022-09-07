@@ -163,7 +163,7 @@ export default (props) => {
           }}
         >
           {step === 0 && <AppCheck />}
-          {step === 3 && <DataIsloate />}
+          {step === 1 && <DataIsloate />}
         </div>
       </div>
 

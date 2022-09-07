@@ -13,7 +13,6 @@ import StatusDot from './StatusDot';
 const DropdowTable = (props) => {
   const { defaultList = [] } = props;
   const [list, setList] = useState(defaultList);
-  const inputSearchRef = useRef();
 
   const filterList = (e) => {
     if (e.target.value && e.target.value.trim()) {
@@ -70,7 +69,13 @@ const DropdowTable = (props) => {
   );
 };
 
+interface Props {
+  isolateListRefreshKey: number;
+}
+
 export default (props) => {
+  const inputSearchRef = useRef();
+
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.appViewMode,
     defaultQuery: {
@@ -78,7 +83,7 @@ export default (props) => {
       pageSize: 10,
       queryAppName: undefined,
     },
-    // isQueryOnMount: false,
+    isQueryOnMount: false,
   });
 
   const columns = [
@@ -145,6 +150,10 @@ export default (props) => {
     },
   ];
 
+  useEffect(() => {
+    getList();
+  }, [props.isolateListRefreshKey]);
+
   return (
     <>
       <div
@@ -156,8 +165,8 @@ export default (props) => {
       >
         <div style={{ flex: 1 }}>
           <Input.Search
+            ref={inputSearchRef}
             placeholder="搜索应用"
-            value={}
             onSearch={(val) =>
               getList({
                 queryAppName: val,

@@ -25,9 +25,7 @@ const DropdowTable = (props) => {
   const filterList = (e) => {
     if (e.target.value && e.target.value.trim()) {
       setList(
-        list.filter(
-          (x) => x.appName.indexOf(e.target.value.trim()) > -1
-        )
+        list.filter((x) => x.appName.indexOf(e.target.value.trim()) > -1)
       );
     } else {
       setList(defaultList);
@@ -44,7 +42,6 @@ const DropdowTable = (props) => {
       }}
     >
       <Input.Search
-        ref={inputSearchRef}
         placeholder="搜索应用"
         style={{
           marginBottom: 8,
@@ -78,6 +75,7 @@ const DropdowTable = (props) => {
 
 interface Props {
   setEditedDataSource: (record: any) => void;
+  isolateListRefreshKey: number;
 }
 export default (props: Props) => {
   const { setEditedDataSource } = props;
@@ -91,7 +89,7 @@ export default (props: Props) => {
       queryBusinessDataBase: undefined,
       status: '',
     },
-    // isQueryOnMount: false,
+    isQueryOnMount: false,
   });
 
   const columns = [
@@ -150,7 +148,10 @@ export default (props: Props) => {
             1: (
               <>
                 <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
-                <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+                <Divider
+                  type="vertical"
+                  style={{ height: 24, margin: '0 24px' }}
+                />
                 <Tooltip title={record.remark}>
                   <Icon
                     type="file-text"
@@ -163,7 +164,7 @@ export default (props: Props) => {
                 </Tooltip>
               </>
             ),
-            2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
+            2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
           }[text] || '-'
         );
       },
@@ -189,9 +190,13 @@ export default (props: Props) => {
         return (
           <span onClick={(e) => e.stopPropagation()}>
             <a>删除</a>
-            {record.appList.length > 0 && <Dropdown overlay={<DropdowTable defaultList={record.appList} />}>
-              <a style={{ marginLeft: 32 }}>查看{record.appList.length}个应用</a>
-            </Dropdown>}
+            {record.appList.length > 0 && (
+              <Dropdown overlay={<DropdowTable defaultList={record.appList} />}>
+                <a style={{ marginLeft: 32 }}>
+                  查看{record.appList.length}个应用
+                </a>
+              </Dropdown>
+            )}
             <a
               style={{ marginLeft: 32 }}
               onClick={() => setEditedDataSource(record)}
@@ -212,6 +217,10 @@ export default (props: Props) => {
       />
     );
   }
+
+  useEffect(() => {
+    getList();
+  }, [props.isolateListRefreshKey]);
 
   return (
     <>
@@ -244,6 +253,7 @@ export default (props: Props) => {
         </div>
         <div>
           <Input.Search
+            ref={inputSearchRef}
             placeholder="搜索数据源"
             onSearch={(val) =>
               getList({
