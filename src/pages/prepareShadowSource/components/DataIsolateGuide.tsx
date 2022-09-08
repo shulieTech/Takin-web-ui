@@ -6,12 +6,14 @@ import img1 from 'src/assets/data-isolate-1.png';
 import img2 from 'src/assets/data-isolate-2.png';
 import img3 from 'src/assets/data-isolate-3.png';
 import img4 from 'src/assets/data-isolate-4.png';
+import { ISOLATE_TYPE } from '../constants';
 
 interface Props {
-  setIsolatePlan: () => void;
+  setIsolateType: () => void;
 }
 
 export default (props) => {
+  const { prepareState } = useContext(PrepareContext);
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <div
@@ -23,8 +25,9 @@ export default (props) => {
       >
         <div style={{ flex: 1 }} />
         <div>
-          隔离方式：影子库
-          <a style={{ marginLeft: 16 }} onClick={props.setIsolatePlan}>
+          隔离方式：
+          {ISOLATE_TYPE[prepareState?.currentLink?.isolateType] || '-'}
+          <a style={{ marginLeft: 16 }} onClick={props.setIsolateType}>
             设置
           </a>
         </div>
@@ -77,7 +80,7 @@ export default (props) => {
                 与团队沟通后，需先进行影子库、影子表的选择
               </div>
               <div>
-                <Button type="primary" ghost onClick={props.setIsolatePlan}>
+                <Button type="primary" ghost onClick={props.setIsolateType}>
                   立即设置
                 </Button>
               </div>

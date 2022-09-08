@@ -30,6 +30,13 @@ export default {
     return httpGet(url, data);
   },
   /**
+   * @name 设置隔离方式
+   */
+  async setIsolateType(data = {}) {
+    const url = '/pressureResource/setIsolateType';
+    return httpGet(url, data);
+  },
+  /**
    * @name 应用下拉列表
    */
   async appList(data = {}) {

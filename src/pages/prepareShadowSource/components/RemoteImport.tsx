@@ -21,7 +21,7 @@ const { Option } = Select;
 
 export default (props) => {
   const inputSearchRef = useRef();
-  const [editItem, setEditItem] = useState({});
+  const [editItem, setEditItem] = useState();
 
   const {
     list: entryList,

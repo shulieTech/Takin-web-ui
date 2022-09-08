@@ -208,6 +208,11 @@ export default (props: Props) => {
       },
     },
   ];
+
+  useEffect(() => {
+    getList();
+  }, [props.isolateListRefreshKey]);
+
   if (editShadowTable) {
     // 编辑影子表
     return (
@@ -217,10 +222,6 @@ export default (props: Props) => {
       />
     );
   }
-
-  useEffect(() => {
-    getList();
-  }, [props.isolateListRefreshKey]);
 
   return (
     <>

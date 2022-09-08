@@ -17,14 +17,23 @@ export default (props) => {
     },
     isQueryOnMount: false,
     afterSearchCallback: (res, newQuery) => {
-      // 未搜索状态下，默认选中第一个
+      // 未搜索状态下，默认选中已选中的那个或者第一个
       const {
         data: { success, data },
       } = res;
       if (success && data?.list?.length > 0 && !newQuery.name) {
-        setPrepareState({
-          currentLink: data.list[0],
-        });
+        const exsitIndex = data.list.findIndex(
+          (x) => x.id === prepareState.currentLink?.id
+        );
+        if (exsitIndex > -1) {
+          setPrepareState({
+            currentLink: data.list[exsitIndex],
+          });
+        } else {
+          setPrepareState({
+            currentLink: data.list[0],
+          });
+        }
       }
     },
   });

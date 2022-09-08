@@ -2,7 +2,7 @@
  * @name 基础布局Layout
  * @author MingShined
  */
-import { ConfigProvider, Layout, Modal, notification, Alert } from 'antd';
+import { ConfigProvider, Layout, Modal, notification, Spin } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
 import React, { useEffect, useRef } from 'react';
@@ -225,7 +225,18 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
 
   // 有此参数的时候只显示主体内容
   if (location.query?.bare === '1') {
-    return children;
+    return state.request ? (
+      children
+    ) : (
+      <Spin
+        style={{
+          display: 'flex',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      />
+    );
   }
 
   return (
