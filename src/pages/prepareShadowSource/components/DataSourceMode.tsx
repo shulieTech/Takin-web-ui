@@ -10,6 +10,8 @@ import {
   Tag,
   Switch,
   Dropdown,
+  Popconfirm,
+  message,
 } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
@@ -135,6 +137,7 @@ export default (props: Props) => {
                   border: '1px solid var(--Netural-200, #E5E8EC)',
                   borderRadius: 16,
                   marginRight: 24,
+                  position: 'relative',
                 }}
               >
                 <span
@@ -144,6 +147,27 @@ export default (props: Props) => {
                     color: 'var(--Netural-1000, #141617)',
                   }}
                 />
+                {record.type === 0 && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      right: 0,
+                      backgroundColor: 'var(--Netural-600, #90959A)',
+                      borderTopLeftRadius: 4,
+                      borderBottomRightRadius: 8,
+                      textAlign: 'center',
+                      display: 'inline-block',
+                      verticalAlign: 'middle',
+                      width: 14,
+                      height: 14,
+                      fontSize: 12,
+                      lineHeight: 1,
+                    }}
+                  >
+                    <Icon type="edit" style={{ color: '#fff' }} />
+                  </span>
+                )}
               </div>
               <div>
                 <div
@@ -186,7 +210,14 @@ export default (props: Props) => {
       render: (text, record) => {
         return (
           <span onClick={(e) => e.stopPropagation()}>
-            <a>删除</a>
+            {record.type === 0 && (
+              <Popconfirm
+                title="确认删除？"
+                onConfirm={() => deleteItem(record)}
+              >
+                <a>删除</a>
+              </Popconfirm>
+            )}
             {record.appList.length > 0 && (
               <Dropdown overlay={<DropdowTable defaultList={record.appList} />}>
                 <a style={{ marginLeft: 32 }}>
@@ -205,6 +236,16 @@ export default (props: Props) => {
       },
     },
   ];
+
+  const deleteItem = async (record) => {
+    const {
+      data: { success },
+    } = await service.deleteDataSource({ id: record.id });
+    if (success) {
+      message.success('操作成功');
+      getList();
+    }
+  };
 
   useEffect(() => {
     getList();
@@ -298,7 +339,7 @@ export default (props: Props) => {
                   setEditShadowTable(record);
                 },
               }
-              : {};
+            : {}; 
           }}
         />
       </div>

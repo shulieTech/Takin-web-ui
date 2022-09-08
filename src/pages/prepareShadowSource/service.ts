@@ -86,6 +86,13 @@ export default {
     return httpGet(url, data);
   },
   /**
+   * @name 删除手工数据源
+   */
+  async deleteDataSource(data = {}) {
+    const url = '/pressureResource/ds/delete';
+    return httpGet(url, data);
+  },
+  /**
    * @name 应用视图模式列表
    */
   async appViewMode(data = {}) {

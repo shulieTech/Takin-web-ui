@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Button, Icon, Switch, Input, Select, message, Popconfirm, Tooltip } from 'antd';
+import {
+  Divider,
+  Button,
+  Icon,
+  Switch,
+  Input,
+  Select,
+  message,
+  Popconfirm,
+  Tooltip,
+} from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
@@ -51,7 +61,11 @@ export default (props: Props) => {
       delete newValue._edting;
 
       // 保存行数据
-      const { data: { success, data } } = await service[newValue.id ? 'updateShadowTable' : 'addShadowTable'](newValue).finally(() => {
+      const {
+        data: { success, data },
+      } = await service[newValue.id ? 'updateShadowTable' : 'addShadowTable'](
+        newValue
+      ).finally(() => {
         setRowState({
           saving: false,
         });
@@ -67,14 +81,15 @@ export default (props: Props) => {
         }
         getList();
       }
-
     });
   };
 
   const deleteRow = async (row, index) => {
     // 删除行数据
-    const { data: { success, data } } = await service.deleteShadowTable({
-      id: row.id
+    const {
+      data: { success, data },
+    } = await service.deleteShadowTable({
+      id: row.id,
     });
     if (success) {
       message.success('操作成功');
@@ -100,9 +115,9 @@ export default (props: Props) => {
             {record.type === 0 && ( // (0-手工 1-自动)
               <span
                 style={{
-                  backgroundColor: 'var(--Netural/600, #90959A)',
-                  borderTopLeftRadius: 2,
-                  borderBottomRightRadius: 4,
+                  backgroundColor: 'var(--Netural-600, #90959A)',
+                  borderTopLeftRadius: 4,
+                  borderBottomRightRadius: 8,
                   textAlign: 'center',
                   display: 'inline-block',
                   verticalAlign: 'middle',
@@ -136,27 +151,27 @@ export default (props: Props) => {
       title: '配置状态',
       dataIndex: 'status',
       render: (text) => {
-        return {
-          0: <StatusDot />,
-          1: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
-          2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
-        }[text] || '-';
+        return (
+          {
+            0: <StatusDot />,
+            1: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
+            2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+          }[text] || '-'
+        );
       },
     },
     {
       title: '是否加入',
       dataIndex: 'joinFlag',
-      formField: (
-        <Switch />
-      ),
+      formField: <Switch />,
       formFieldOptions: {
         valuePropName: 'checked',
-        getValueFromEvent: checked => {
+        getValueFromEvent: (checked) => {
           return checked ? 1 : 0;
         },
       },
       render: (text, record) => {
-        return <Switch checked={text === 1} disabled/>; // 是否加入压测范围(0-否 1-是)
+        return <Switch checked={text === 1} disabled />; // 是否加入压测范围(0-否 1-是)
       },
     },
     {
@@ -195,14 +210,13 @@ export default (props: Props) => {
               保存
             </Button>
           </span>
-        ) : (
+        ) : record.type === 0 ? (
           <span>
-            <Popconfirm title="确认删除？" onConfirm={() => deleteRow(record, index)}>
-              <a
-                style={{ marginLeft: 8 }}
-              >
-                删除
-              </a>
+            <Popconfirm
+              title="确认删除？"
+              onConfirm={() => deleteRow(record, index)}
+            >
+              <a style={{ marginLeft: 8 }}>删除</a>
             </Popconfirm>
             <a
               style={{ marginLeft: 8 }}
@@ -211,6 +225,8 @@ export default (props: Props) => {
               编辑
             </a>
           </span>
+        ) : (
+          '-'
         );
       },
     },
@@ -261,7 +277,9 @@ export default (props: Props) => {
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           <span>{detail.businessDatabase}</span>
           <Tooltip title={detail.database}>
-            <span className="truncate" style={{ marginLeft: 24, flex: 1 }}>业务库名：{detail.database || '-'}</span>
+            <span className="truncate" style={{ marginLeft: 24, flex: 1 }}>
+              业务库名：{detail.database || '-'}
+            </span>
           </Tooltip>
         </div>
         <div style={{ whiteSpace: 'nowrap', marginLeft: 16 }}>
