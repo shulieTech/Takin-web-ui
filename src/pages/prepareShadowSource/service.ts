@@ -89,7 +89,7 @@ export default {
    * @name 删除手工数据源
    */
   async deleteDataSource(data = {}) {
-    const url = '/pressureResource/ds/delete';
+    const url = '/pressureResource/ds/del';
     return httpGet(url, data);
   },
   /**
