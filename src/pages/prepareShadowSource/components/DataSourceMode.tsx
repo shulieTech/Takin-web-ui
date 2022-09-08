@@ -15,6 +15,7 @@ import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import TableInfo from './TableInfo';
+import { PrepareContext } from '../indexPage';
 
 const { Option } = Select;
 
@@ -63,7 +64,7 @@ const DropdowTable = (props) => {
             fixed: 'right',
             align: 'right',
             render: (text) => {
-              return <Switch checked={text === 1} size="small" />;
+              return <Switch checked={text === 1} size="small" disabled/>;
             },
           },
         ]}
@@ -79,6 +80,7 @@ interface Props {
 }
 export default (props: Props) => {
   const { setEditedDataSource } = props;
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [editShadowTable, setEditShadowTable] = useState<any>(undefined);
   const { list, loading, total, query, getList, resetList } = useListService({
@@ -295,12 +297,11 @@ export default (props: Props) => {
           size="small"
           onRow={(record) => {
             // 影子表隔离方式时，点击行触发编辑影子表
-            return {
+            return prepareState.currentLink.isolateType === 3 ? {
               onClick: () => {
-                // TODO 判断影子表
                 setEditShadowTable(record);
               },
-            };
+            } : {};
           }}
         />
       </div>

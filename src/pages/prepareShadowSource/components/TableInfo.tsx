@@ -156,7 +156,7 @@ export default (props: Props) => {
         },
       },
       render: (text, record) => {
-        return <Switch checked={text === 1} />; // 是否加入压测范围(0-否 1-是)
+        return <Switch checked={text === 1} disabled/>; // 是否加入压测范围(0-否 1-是)
       },
     },
     {

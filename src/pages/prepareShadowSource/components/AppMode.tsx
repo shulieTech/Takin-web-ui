@@ -34,7 +34,6 @@ const DropdowTable = (props) => {
       }}
     >
       <Input.Search
-        ref={inputSearchRef}
         placeholder="搜索数据源"
         style={{
           marginBottom: 8,
@@ -73,7 +72,7 @@ interface Props {
   isolateListRefreshKey: number;
 }
 
-export default (props) => {
+export default (props: Props) => {
   const inputSearchRef = useRef();
 
   const { list, loading, total, query, getList, resetList } = useListService({

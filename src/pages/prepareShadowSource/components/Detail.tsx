@@ -13,7 +13,7 @@ export default (props) => {
   const commonStepStyle = {
     display: 'flex',
     minWidth: 132,
-    padding: 8,
+    padding: 4,
     paddingRight: 16,
     borderRadius: 100,
     cursor: 'pointer',
