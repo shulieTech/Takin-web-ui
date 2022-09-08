@@ -69,55 +69,50 @@ export default (props) => {
       dataIndex: 'appName',
       render: (text, record) => {
         return (
-          <div style={{ display: 'inline-flex' }}>
-            <div
-              style={{
-                width: 40,
-                lineHeight: '38px',
-                height: 40,
-                textAlign: 'center',
-                border: '1px solid var(--Netural-200, #E5E8EC)',
-                borderRadius: 16,
-                marginRight: 24,
-              }}
-            >
-              <span
-                className="iconfont icon-huancun1"
-                style={{
-                  fontSize: 18,
-                  color: 'var(--Netural-1000, #141617)',
-                }}
-              />
-            </div>
-            <div>
+          <>
+            {{
+              0: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />, // 正常
+              1: <StatusDot color="var(--FunctionNegative-400, #E8695D)" />, // 不正常
+            }[record.status] || '-'}
+            <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+            <div style={{ display: 'inline-flex' }}>
               <div
                 style={{
-                  color: 'var(--Netural-1000, #141617)',
+                  width: 40,
+                  lineHeight: '38px',
+                  height: 40,
+                  textAlign: 'center',
+                  border: '1px solid var(--Netural-200, #E5E8EC)',
+                  borderRadius: 16,
+                  marginRight: 24,
                 }}
               >
-                {text}
+                <span
+                  className="iconfont icon-huancun1"
+                  style={{
+                    fontSize: 18,
+                    color: 'var(--Netural-1000, #141617)',
+                  }}
+                />
               </div>
-              <div
-                style={{
-                  color: 'var(--Netural-600, #90959A)',
-                }}
-              >
-                ID:{record.detailId}
+              <div>
+                <div
+                  style={{
+                    color: 'var(--Netural-1000, #141617)',
+                  }}
+                >
+                  {text}
+                </div>
+                <div
+                  style={{
+                    color: 'var(--Netural-600, #90959A)',
+                  }}
+                >
+                  ID:{record.detailId}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      },
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      render: (text, record) => {
-        return (
-          {
-            0: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />, // 正常
-            1: <StatusDot color="var(--FunctionNegative-400, #E8695D)" />, // 不正常
-          }[text] || '-'
+          </>
         );
       },
     },

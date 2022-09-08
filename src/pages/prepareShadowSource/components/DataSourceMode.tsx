@@ -64,7 +64,7 @@ const DropdowTable = (props) => {
             fixed: 'right',
             align: 'right',
             render: (text) => {
-              return <Switch checked={text === 1} size="small" disabled/>;
+              return <Switch checked={text === 1} size="small" disabled />;
             },
           },
         ]}
@@ -100,74 +100,69 @@ export default (props: Props) => {
       dataIndex: 'businessDatabase',
       render: (text, record) => {
         return (
-          <div style={{ display: 'inline-flex' }}>
-            <div
-              style={{
-                width: 40,
-                lineHeight: '38px',
-                height: 40,
-                textAlign: 'center',
-                border: '1px solid var(--Netural-200, #E5E8EC)',
-                borderRadius: 16,
-                marginRight: 24,
-              }}
-            >
-              <span
-                className="iconfont icon-shujuku"
-                style={{
-                  fontSize: 18,
-                  color: 'var(--Netural-1000, #141617)',
-                }}
-              />
-            </div>
-            <div>
-              <div
-                style={{
-                  color: 'var(--Netural-1000, #141617)',
-                }}
-              >
-                {text}
-              </div>
-              <div
-                style={{
-                  color: 'var(--Netural-600, #90959A)',
-                }}
-              >
-                ID:{record.id}
-              </div>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      title: '配置状态',
-      dataIndex: 'status',
-      render: (text, record) => {
-        return (
-          {
-            0: <StatusDot />,
-            1: (
-              <>
-                <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
-                <Divider
-                  type="vertical"
-                  style={{ height: 24, margin: '0 24px' }}
-                />
-                <Tooltip title={record.remark}>
-                  <Icon
-                    type="file-text"
-                    theme="filled"
-                    style={{
-                      cursor: 'pointer',
-                      color: 'var(--Brandprimary-500, #0FBBD5)',
-                    }}
+          <>
+            {{
+              0: <StatusDot />,
+              1: (
+                <>
+                  <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
+                  <Divider
+                    type="vertical"
+                    style={{ height: 24, margin: '0 24px' }}
                   />
-                </Tooltip>
-              </>
-            ),
-            2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
-          }[text] || '-'
+                  <Tooltip title={record.remark}>
+                    <Icon
+                      type="file-text"
+                      theme="filled"
+                      style={{
+                        cursor: 'pointer',
+                        color: 'var(--Brandprimary-500, #0FBBD5)',
+                      }}
+                    />
+                  </Tooltip>
+                </>
+              ),
+              2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+            }[record.status] || '-'}
+            <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+            <div style={{ display: 'inline-flex' }}>
+              <div
+                style={{
+                  width: 40,
+                  lineHeight: '38px',
+                  height: 40,
+                  textAlign: 'center',
+                  border: '1px solid var(--Netural-200, #E5E8EC)',
+                  borderRadius: 16,
+                  marginRight: 24,
+                }}
+              >
+                <span
+                  className="iconfont icon-shujuku"
+                  style={{
+                    fontSize: 18,
+                    color: 'var(--Netural-1000, #141617)',
+                  }}
+                />
+              </div>
+              <div>
+                <div
+                  style={{
+                    color: 'var(--Netural-1000, #141617)',
+                  }}
+                >
+                  {text}
+                </div>
+                <div
+                  style={{
+                    color: 'var(--Netural-600, #90959A)',
+                  }}
+                >
+                  ID:{record.id}
+                </div>
+              </div>
+            </div>
+          </>
         );
       },
     },
@@ -297,11 +292,13 @@ export default (props: Props) => {
           size="small"
           onRow={(record) => {
             // 影子表隔离方式时，点击行触发编辑影子表
-            return prepareState.currentLink.isolateType === 3 ? {
-              onClick: () => {
-                setEditShadowTable(record);
-              },
-            } : {};
+            return prepareState.currentLink.isolateType === 3
+              ? {
+                onClick: () => {
+                  setEditShadowTable(record);
+                },
+              }
+              : {};
           }}
         />
       </div>
