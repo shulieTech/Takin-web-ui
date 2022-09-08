@@ -60,12 +60,12 @@
     height: 40px;
     margin-top: 16px;
     margin-right: 24px;
+    color: #000;
+    font-size: 24px;
     line-height: 38px;
     text-align: center;
     border: 1px solid var(--Netural-200, #e5e8ec);
     border-radius: 100%;
-    font-size: 24px;
-    color: #000;
   }
 }
 
@@ -150,5 +150,28 @@
         padding-right: 32px !important;
       }
     }
+  }
+}
+
+.custom-collapse {
+  --border: 1px solid var(--Netural-75, #f7f8fa);
+  border: var(--border) !important;
+  :global(.ant-collapse-item) {
+    border-bottom: var(--border) !important;
+  }
+  :global(.ant-collapse-header) {
+    background-color: #fff !important;
+  }
+  :global(.ant-collapse-content-box) {
+    padding: 0 !important;
+  }
+  :global(.ant-collapse-content) {
+    border-top: var(--border) !important;
+  }
+  :global(.ant-table-tbody > tr > td) {
+    border-bottom: var(--border);
+  }
+  :global(.ant-table-tbody > tr:last-of-type > td) {
+    border-bottom: none !important;
   }
 }

@@ -108,7 +108,7 @@ export default (props) => {
                     color: 'var(--Netural-600, #90959A)',
                   }}
                 >
-                  ID:{record.detailId}
+                  ID:{record.id}
                 </div>
               </div>
             </div>

@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
-import { Icon, Alert } from 'antd';
+import { Icon, Alert, Divider } from 'antd';
 import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
 import RemoteImport from './RemoteImport';
+import ProgressListModal from '../modals/ProgressList';
 import Help from './Help';
 import styles from '../index.less';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [step, setStep] = useState(0);
+  const [showProgressListModal, setShowProgressListModal] = useState(false);
+
   const commonStepStyle = {
     display: 'flex',
     minWidth: 132,
@@ -64,9 +67,27 @@ export default (props) => {
         }}
       >
         <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-          {
-            stepList.map((x, i, arr) => {
-              return <Fragment key={x.title}>
+          <div
+            style={{
+              background: 'var(--Netural-75, #F7F8FA)',
+              textAlign: 'center',
+              padding: '4px 16px',
+              border: '1px solid var(--Netural-200, #E5E8EC)',
+              borderRadius: 8,
+              textDecorationLine: 'underline',
+              color: 'var(--Netural-850, #414548)',
+              cursor: 'pointer',
+            }}
+            onClick={() => setShowProgressListModal(true)}
+          >
+            进度
+            <br />
+            清单
+          </div>
+          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+          {stepList.map((x, i, arr) => {
+            return (
+              <Fragment key={x.title}>
                 <div
                   style={{
                     ...commonStepStyle,
@@ -78,12 +99,14 @@ export default (props) => {
                     style={{
                       fontSize: 18,
                       fontWeight: 500,
-                      color: step === i ? '#fff' : 'var(--Netural-850, #414548)',
+                      color:
+                        step === i ? '#fff' : 'var(--Netural-850, #414548)',
                       marginRight: 8,
                       width: 40,
                       height: 40,
-                      border: `1px solid ${step === i ? '#fff' : 'var(--Netural-300, #DBDFE3)'
-                        }`,
+                      border: `1px solid ${
+                        step === i ? '#fff' : 'var(--Netural-300, #DBDFE3)'
+                      }`,
                       borderRadius: '100%',
                       lineHeight: '38px',
                       textAlign: 'center',
@@ -95,22 +118,29 @@ export default (props) => {
                     <span
                       style={{
                         fontWeight: 600,
-                        color: step === i ? '#fff' : 'var(--Netural-850, #414548)',
+                        color:
+                          step === i ? '#fff' : 'var(--Netural-850, #414548)',
                       }}
                     >
                       {x.title}
                     </span>
-                    <div style={{ fontSize: 12, marginTop: 4 }}>{x.subTitle}</div>
+                    <div style={{ fontSize: 12, marginTop: 4 }}>
+                      {x.subTitle}
+                    </div>
                   </div>
                 </div>
-                {i < arr.length - 1 && <Icon
-                  type="right"
-                  style={{ margin: '0 12px', color: 'var(--Netural-400, #BFC3C8)' }}
-                />}
-              </Fragment>;
-            })
-          }
-
+                {i < arr.length - 1 && (
+                  <Icon
+                    type="right"
+                    style={{
+                      margin: '0 12px',
+                      color: 'var(--Netural-400, #BFC3C8)',
+                    }}
+                  />
+                )}
+              </Fragment>
+            );
+          })}
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a
@@ -170,6 +200,11 @@ export default (props) => {
       </div>
 
       <Help />
+      {showProgressListModal && (
+        <ProgressListModal
+          cancelCallback={() => setShowProgressListModal(false)}
+        />
+      )}
     </div>
   );
 };
