@@ -33,8 +33,8 @@ export default {
    * @name 设置隔离方式
    */
   async setIsolateType(data = {}) {
-    const url = '/pressureResource/setIsolateType';
-    return httpGet(url, data);
+    const url = '/pressureResource/updateIsolate';
+    return httpPost(url, data);
   },
   /**
    * @name 应用下拉列表
@@ -63,6 +63,13 @@ export default {
   async appCheckList(data = {}) {
     const url = '/pressureResource/app/checkList';
     return httpGet(url, data);
+  },
+  /**
+   * @name 修改应用检查配置
+   */
+  async updateAppCheckRow(data = {}) {
+    const url = '/pressureResource/app/update';
+    return httpPost(url, data);
   },
   /**
    * @name 数据源新增

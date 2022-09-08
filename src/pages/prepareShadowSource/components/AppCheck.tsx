@@ -9,6 +9,7 @@ import {
   Checkbox,
   Tooltip,
   Switch,
+  message,
 } from 'antd';
 import { PrepareContext } from '../indexPage';
 import useListService from 'src/utils/useListService';
@@ -49,8 +50,17 @@ export default (props) => {
     isQueryOnMount: false,
   });
 
-  const toggleInvovled = (checked, record) => {
-    // TODO 加入压测范围
+  const toggleInvovled = async (checked, record) => {
+    const {
+      data: { success },
+    } = await service.updateAppCheckRow({
+      ...record,
+      joinPressure: checked ? 0 : 1,
+    });
+    if (success) {
+      message.success('操作成功');
+      getList();
+    }
   };
 
   const columns = [
@@ -142,7 +152,7 @@ export default (props) => {
       ),
       dataIndex: '',
       render: (text, record) => {
-        return <EditAgentCount record={record} />;
+        return <EditAgentCount record={record} okCallback={getList} />;
       },
     },
     {
@@ -172,7 +182,17 @@ export default (props) => {
 
   useEffect(() => {
     if (prepareState.currentLink?.id) {
-      getList();
+      getList(
+        {
+          current: 0,
+          pageSize: 10,
+          resourceId: prepareState.currentLink?.id,
+          joinPressure: undefined,
+          status: undefined,
+          entry: undefined,
+        },
+        false
+      );
     }
   }, [prepareState.currentLink?.id]);
 
@@ -280,10 +300,10 @@ export default (props) => {
           <span>
             <Checkbox
               style={{ marginRight: 8 }}
-              checked={query.joinPressure === 0}
+              checked={query.joinPressure === 1}
               onChange={(e) =>
                 getList({
-                  joinPressure: e.target.checked ? 0 : 1, // 是否加入压测范围(0-是 1-否)
+                  joinPressure: e.target.checked ? 1 : undefined,
                 })
               }
             >
@@ -292,12 +312,12 @@ export default (props) => {
           </span>
         </div>
         <div>
-          <Button 
-            type="link" 
+          <Button
+            type="link"
             onClick={() => {
               resetList();
               inputSearchRef?.current?.input?.setValue();
-            }} 
+            }}
             disabled={loading}
           >
             重置
@@ -312,7 +332,7 @@ export default (props) => {
         </div>
       </div>
       <Table
-        rowKey="detailId"
+        rowKey="id"
         columns={columns}
         dataSource={list}
         pagination={false}

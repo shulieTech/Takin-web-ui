@@ -260,7 +260,7 @@ export default (props) => {
               checked={query.joinPressure === 0}
               onChange={(e) =>
                 getList({
-                  joinPressure: e.target.checked ? 0 : 1,
+                  joinPressure: e.target.checked ? 0 : undefined,
                 })
               }
             >

@@ -48,7 +48,10 @@ export default (props) => {
             设置隔离方案
           </div>
           <div style={{ padding: 24 }}>
-            <Radio.Group defaultValue={val} onChange={(value) => (val = value)}>
+            <Radio.Group
+              defaultValue={val}
+              onChange={(e) => (val = e.target.value)}
+            >
               {Object.entries(ISOLATE_TYPE).map(([x, y]) => (
                 <Radio value={+x} key={x}>
                   {y}

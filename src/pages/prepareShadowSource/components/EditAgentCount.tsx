@@ -1,24 +1,40 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Icon, Button, Tooltip, InputNumber, Form } from 'antd';
-import { PrepareContext } from '../indexPage';
+import { Icon, Button, Tooltip, InputNumber, Form, message } from 'antd';
 import service from '../service';
 
-export default Form.create()((prop) => {
-  const { record, form } = prop;
+interface Props {
+  record: any;
+  okCallback: () => void;
+}
+
+const EditAgentCount = (prop: Props) => {
+  const { record, okCallback, form } = prop;
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorStr, setErrorStr] = useState('');
 
   const saveAgentCount = () => {
-    form.validateFields((error, values) => {
+    form.validateFields(async (error, values) => {
       if (error) {
-        setErrorStr(error.count.errors[0].message);
+        setErrorStr(error.nodeNum?.errors?.[0]?.message);
         return;
       }
       setErrorStr('');
       setSaving(true);
-      // TODO 保存
-      // console.log(values);
+      // 保存
+      const {
+        data: { success },
+      } = await service.updateAppCheckRow({
+        ...record,
+        ...values,
+      }).finally(() => {
+        setSaving(false);
+      });
+      if (success) {
+        message.success('操作成功');
+        setIsEditing(false);
+        okCallback();
+      }
     });
   };
 
@@ -39,12 +55,12 @@ export default Form.create()((prop) => {
       </Tooltip>
 
       {form.getFieldDecorator('nodeNum', {
-        initialValue: 1,
+        initialValue: record.nodeNum,
         rules: [
           { required: true, message: '请填写该字段' },
           {
             type: 'integer',
-            min: record.nodeNum,
+            min: 1,
             max: 10000,
             message: '请输入正确的正整数',
           },
@@ -88,11 +104,20 @@ export default Form.create()((prop) => {
       </span>
     </span>
   ) : (
-    <span style={{ color: record.status === 1 ? 'var(--FunctionNegative-500, #D24D40)' : 'inherit' }}>
+    <span
+      style={{
+        color:
+          record.status === 1
+            ? 'var(--FunctionNegative-500, #D24D40)'
+            : 'inherit',
+      }}
+    >
       {record.nodeNum}/{record.agentNodeNum}
       <a onClick={() => setIsEditing(true)} style={{ marginLeft: 8 }}>
         <Icon type="edit" />
       </a>
     </span>
   );
-});
+};
+
+export default Form.create()(EditAgentCount);
