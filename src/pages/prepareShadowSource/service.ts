@@ -169,4 +169,39 @@ export default {
     const url = '/pressureResource/progress';
     return httpGet(url, data);
   },
+  /**
+   * @name 步骤状态
+   */
+  async remoteCallList(data = {}) {
+    const url = '/pressureResource/entrances/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 步骤状态
+   */
+  async toggleRemoteCall(data = {}) {
+    const url = '/pressureResource/entrances/toggle';
+    return httpGet(url, data);
+  },
+  /**
+   * @name mock模板
+   */
+  async mockTplList(data = {}) {
+    const url = '/pressureResource/mockTpl/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 修改Mock
+   */
+  async updateMock(data = {}) {
+    const url = '/pressureResource/mock/update';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 进度清单
+   */
+  async progressList(data = {}) {
+    const url = '/pressureResource/progress/list';
+    return httpGet(url, data);
+  },
 };

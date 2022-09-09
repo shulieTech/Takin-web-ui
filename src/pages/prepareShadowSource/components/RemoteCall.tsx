@@ -10,6 +10,7 @@ import {
   Tag,
   Switch,
   Checkbox,
+  message,
 } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
@@ -30,7 +31,7 @@ export default (props) => {
     getList: getEntryList,
     loading: entryLoading,
   } = useListService({
-    service: service.entryList,
+    service: service.remoteCallList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
@@ -47,6 +48,22 @@ export default (props) => {
     },
     // isQueryOnMount: false,
   });
+
+  const toggleInvovled = async (checked, record) => {
+    const {
+      data: { success },
+    } = await service.toggleRemoteCall({
+      ...record,
+      joinPressure: checked ? 0 : 1,
+    });
+    if (success) {
+      message.success('操作成功');
+      getList();
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+      });
+    }
+  };
 
   const columns = [
     {
@@ -159,13 +176,18 @@ export default (props) => {
     {
       title: '是否放行',
       align: 'right',
+      dataIndex: 'joinPressure',
       render: (text, record) => {
         return (
           <span>
             <Button type="link" onClick={() => setEditItem(record)}>
               配置mock
             </Button>
-            <Switch style={{ marginLeft: 24 }} />
+            <Switch
+              style={{ marginLeft: 24 }}
+              checked={text === 0} // 0是， 1否
+              onChange={(checked) => toggleInvovled(checked, record)}
+            />
           </span>
         );
       },
@@ -331,6 +353,9 @@ export default (props) => {
           okCallback={() => {
             setEditItem(undefined);
             getList();
+            setPrepareState({
+              stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+            });
           }}
         />
       )}

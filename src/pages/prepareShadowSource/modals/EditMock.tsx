@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import {
   Icon,
   Modal,
@@ -6,6 +6,7 @@ import {
   Dropdown,
   Button,
   Radio as AntRadio,
+  message,
 } from 'antd';
 import {
   Form,
@@ -16,6 +17,7 @@ import {
 import { Radio, Input, NumberPicker } from '@formily/antd-components';
 import useListService from 'src/utils/useListService';
 import service from '../service';
+import { PrepareContext } from '../indexPage';
 
 interface Props {
   detail: any;
@@ -25,6 +27,7 @@ interface Props {
 
 export default (props: Props) => {
   const { detail, okCallback, cancelCallback, ...rest } = props;
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const actions = useMemo(createAsyncFormActions, []);
   const [selectedTplIndex, setSelectedTplIndex] = useState(0);
   const [showTplDropDown, setShowTplDropDown] = useState(false);
@@ -37,7 +40,7 @@ export default (props: Props) => {
   //   getList,
   //   loading,
   // } = useListService({
-  //   service: service.appList,
+  //   service: service.mockTplList,
   //   defaultQuery: {
   //     current: 0,
   //     pageSize: 10,
@@ -58,6 +61,15 @@ export default (props: Props) => {
       ...values,
     };
     // TODO 提交数据
+    const {
+      data: { success },
+    } = await service.updateMock(newValue);
+    if (success) {
+      message.success('操作成功');
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+      });
+    }
   };
 
   const chooseTpl = () => {

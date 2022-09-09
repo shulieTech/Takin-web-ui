@@ -3,7 +3,7 @@ import { Icon, Alert, Divider } from 'antd';
 import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
-import RemoteImport from './RemoteImport';
+import RemoteImport from './RemoteCall';
 import ProgressListModal from '../modals/ProgressList';
 import Help from './Help';
 import styles from '../index.less';

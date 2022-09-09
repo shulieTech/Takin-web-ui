@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, Collapse, Icon, Spin, Divider, Table } from 'antd';
+import { Modal, Collapse, Icon, Spin, Divider, Table, Empty } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import { PrepareContext } from '../indexPage';
@@ -16,7 +16,7 @@ export default (props: Props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
 
   const { list, loading, total, query, getList } = useListService({
-    service: service.getLinkList,
+    service: service.progressList,
     defaultQuery: {
       status: undefined,
       current: 0,
@@ -42,14 +42,14 @@ export default (props: Props) => {
   );
 
   return (
-    <Spin spinning={loading}>
-      <Modal
-        visible
-        width={1300}
-        bodyStyle={{ padding: 0, height: '80vh', overflow: 'auto' }}
-        footer={null}
-        onCancel={cancelCallback}
-      >
+    <Modal
+      visible
+      width={1300}
+      bodyStyle={{ padding: 0, height: '80vh', overflow: 'auto' }}
+      footer={null}
+      onCancel={cancelCallback}
+    >
+      <Spin spinning={loading}>
         <div
           style={{
             padding: '24px 40px',
@@ -159,115 +159,119 @@ export default (props: Props) => {
             </span>
           </div>
         </div>
-        <Collapse
-          expandIconPosition="right"
-          expandIcon={(panelProps) => caretDownBtn}
-          className={styles['custom-collapse']}
-        >
-          {list.map((record) => {
-            return (
-              <Panel
-                key={record.id}
-                header={
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div
-                      style={{
-                        flex: 1,
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      {{
-                        0: (
-                          <Icon
-                            type="check-square"
-                            theme="filled"
-                            style={{
-                              color: 'var(--FunctionPositive-300, #2DC396)',
-                            }}
-                          />
-                        ),
-                        1: (
-                          <Icon
-                            type="warning"
-                            theme="filled"
-                            style={{
-                              color: 'var(--FunctionAlert-500, #FFA929)',
-                            }}
-                          />
-                        ),
-                      }[record.status] || '-'}
-                      <Divider
-                        type="vertical"
-                        style={{ height: 24, margin: '0 24px' }}
-                      />
-                      <div style={{ display: 'inline-flex' }}>
-                        <div>
-                          <div
-                            style={{
-                              color: 'var(--Netural-1000, #141617)',
-                            }}
-                          >
-                            {record.name}
-                          </div>
-                          <div
-                            style={{
-                              color: 'var(--Netural-600, #90959A)',
-                            }}
-                          >
-                            ID:{record.id}
+        {list.length > 0 ? (
+          <Collapse
+            expandIconPosition="right"
+            expandIcon={(panelProps) => caretDownBtn}
+            className={styles['custom-collapse']}
+          >
+            {list.map((record) => {
+              return (
+                <Panel
+                  key={record.id}
+                  header={
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div
+                        style={{
+                          flex: 1,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {{
+                          0: (
+                            <Icon
+                              type="check-square"
+                              theme="filled"
+                              style={{
+                                color: 'var(--FunctionPositive-300, #2DC396)',
+                              }}
+                            />
+                          ),
+                          1: (
+                            <Icon
+                              type="warning"
+                              theme="filled"
+                              style={{
+                                color: 'var(--FunctionAlert-500, #FFA929)',
+                              }}
+                            />
+                          ),
+                        }[record.status] || '-'}
+                        <Divider
+                          type="vertical"
+                          style={{ height: 24, margin: '0 24px' }}
+                        />
+                        <div style={{ display: 'inline-flex' }}>
+                          <div>
+                            <div
+                              style={{
+                                color: 'var(--Netural-1000, #141617)',
+                              }}
+                            >
+                              {record.name}
+                            </div>
+                            <div
+                              style={{
+                                color: 'var(--Netural-600, #90959A)',
+                              }}
+                            >
+                              ID:{record.id}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <span
-                      style={{
-                        flex: 1,
-                        color:
-                          record.status === 1
-                            ? 'var(--FunctionNegative-500, #D24D40)'
-                            : 'inherit',
-                      }}
-                    >
-                      {record.nodeNum}/{record.agentNodeNum}
-                    </span>
-                  </div>}
-              >
-                <Table
-                  dataSource={[
-                    {
-                      name: '影子表1',
-                      url: 'amdpdubboService#queryWaybillInfoByCode',
-                      status: 0,
-                      msg: '正常',
-                    },
-                    {
-                      name: '影子表2',
-                      url: 'amdpdubboService#queryWaybillInfoByCode',
-                      status: 0,
-                      msg: '正常',
-                    },
-                  ]}
-                  columns={[
-                    {
-                      dataIndex: 'name',
-                      render: (text) => (
-                        <div style={{ paddingLeft: 200 }}>{text}</div>
-                      ),
-                    },
-                    { dataIndex: 'url' },
-                    { dataIndex: 'msg', align: 'right' },
-                  ]}
-                  showHeader={false}
-                  pagination={{
-                    hideOnSinglePage: true,
-                  }}
-                />
-              </Panel>
-            );
-          })}
-        </Collapse>
-      </Modal>
-    </Spin>
+                      <span
+                        style={{
+                          flex: 1,
+                          color:
+                            record.status === 1
+                              ? 'var(--FunctionNegative-500, #D24D40)'
+                              : 'inherit',
+                        }}
+                      >
+                        {record.nodeNum}/{record.agentNodeNum}
+                      </span>
+                    </div>}
+                >
+                  <Table
+                    dataSource={[
+                      {
+                        name: '影子表1',
+                        url: 'amdpdubboService#queryWaybillInfoByCode',
+                        status: 0,
+                        msg: '正常',
+                      },
+                      {
+                        name: '影子表2',
+                        url: 'amdpdubboService#queryWaybillInfoByCode',
+                        status: 0,
+                        msg: '正常',
+                      },
+                    ]}
+                    columns={[
+                      {
+                        dataIndex: 'name',
+                        render: (text) => (
+                          <div style={{ paddingLeft: 200 }}>{text}</div>
+                        ),
+                      },
+                      { dataIndex: 'url' },
+                      { dataIndex: 'msg', align: 'right' },
+                    ]}
+                    showHeader={false}
+                    pagination={{
+                      hideOnSinglePage: true,
+                    }}
+                  />
+                </Panel>
+              );
+            })}
+          </Collapse>
+        ) : (
+          <Empty style={{ marginTop: 160 }} />
+        )}
+      </Spin>
+    </Modal>
   );
 };
