@@ -112,6 +112,53 @@ export default (props) => {
       `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
     );
   };
+  // 获取数据源统计信息
+  const getDataSourceSummaryInfo = async (id) => {
+    const {
+      data: { success, data },
+    } = await service.dataSourceSummaryInfo({ id });
+    if (success) {
+      setPrepareState({
+        helpInfo: {
+          show: true,
+          text: (
+            <>
+              {data.totalSize > 0 ? (
+                <span>
+                  识别数据源：<b>{data.totalSize}</b>
+                </span>
+              ) : (
+                '暂无数据源'
+              )}
+              {data.normalSize > 0 && (
+                <span style={{ marginLeft: 32 }}>
+                  正常： <b>{data.normalSize}</b>
+                </span>
+              )}
+              {data.exceptionSize > 0 && (
+                <span
+                  style={{
+                    marginLeft: 32,
+                  }}
+                >
+                  异常：
+                  <b style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}>
+                    {data.exceptionSize}
+                  </b>
+                </span>
+              )}
+            </>
+          ),
+          checkTime: data.checkTime,
+          userName: data.userName,
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDataSourceSummaryInfo(prepareState.currentLink.id);
+  }, []);
 
   if (showGuide) {
     return <DataIsolateGuide setIsolateType={setIsolateType} />;
@@ -191,9 +238,7 @@ export default (props) => {
             showUploadList={false}
             customRequest={uploadFile}
           >
-            <Button loading={uploading}>
-              导入隔离配置
-            </Button>
+            <Button loading={uploading}>导入隔离配置</Button>
           </Upload>
           <Button
             type="primary"
@@ -214,7 +259,6 @@ export default (props) => {
       <EditDataSource
         detail={editedDataSource}
         okCallback={() => {
-          // 刷新列表
           setEditedDataSource(undefined);
           setIsolateListRefreshKey(isolateListRefreshKey + 1);
         }}

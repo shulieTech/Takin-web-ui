@@ -50,6 +50,50 @@ export default (props) => {
     isQueryOnMount: false,
   });
 
+  // 获取应用统计信息
+  const getAppSummaryInfo = async (id) => {
+    const {
+      data: { success, data },
+    } = await service.appSummaryInfo({ id });
+    if (success) {
+      setPrepareState({
+        helpInfo: {
+          show: true,
+          text: (
+            <>
+              {data.totalSize > 0 ? (
+                <span>
+                  识别应用：<b>{data.totalSize}</b>
+                </span>
+              ) : (
+                '暂无应用'
+              )}
+              {data.normalSize > 0 && (
+                <span style={{ marginLeft: 32 }}>
+                  正常： <b>{data.normalSize}</b>
+                </span>
+              )}
+              {data.exceptionSize > 0 && (
+                <span
+                  style={{
+                    marginLeft: 32,
+                  }}
+                >
+                  异常：
+                  <b style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}>
+                    {data.exceptionSize}
+                  </b>
+                </span>
+              )}
+            </>
+          ),
+          checkTime: data.checkTime,
+          userName: data.userName,
+        },
+      });
+    }
+  };
+
   const toggleInvovled = async (checked, record) => {
     const {
       data: { success },
@@ -154,7 +198,10 @@ export default (props) => {
       title: (
         <span>
           是否加入压测范围
-          <Tooltip title="如加入压测范围，即需要有相应的隔离配置，检查该应用是否准备完成" placement="topRight">
+          <Tooltip
+            title="如加入压测范围，即需要有相应的隔离配置，检查该应用是否准备完成"
+            placement="topRight"
+          >
             <Icon
               type="info-circle"
               style={{ marginLeft: 8, cursor: 'pointer' }}
@@ -188,6 +235,7 @@ export default (props) => {
         },
         false
       );
+      getAppSummaryInfo(prepareState.currentLink?.id);
     }
   }, [prepareState.currentLink?.id]);
 

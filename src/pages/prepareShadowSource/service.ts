@@ -148,4 +148,18 @@ export default {
     const url = '/pressureResource/ds/export';
     return httpGet(url, data);
   },
+  /**
+   * @name 应用统计信息
+   */
+  async appSummaryInfo(data = {}) {
+    const url = '/pressureResource/appInfo';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 数据源统计信息
+   */
+  async dataSourceSummaryInfo(data = {}) {
+    const url = '/pressureResource/dsInfo';
+    return httpGet(url, data);
+  },
 };

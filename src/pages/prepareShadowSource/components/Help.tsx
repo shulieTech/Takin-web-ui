@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal, Tooltip, Icon, Divider } from 'antd';
 import Introduce from './Introduce';
+import { PrepareContext } from '../indexPage';
+import moment from 'moment';
 
 export default (props) => {
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
+  const { helpInfo = {} } = prepareState;
   const [showModal, setShowModal] = useState(false);
+
+  if (!helpInfo.show) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -14,7 +22,7 @@ export default (props) => {
       }}
     >
       <div style={{ flex: 1 }}>
-        <Tooltip title="222">
+        <Tooltip title="">
           <Icon
             type="info-circle"
             style={{ marginLeft: 8, cursor: 'pointer' }}
@@ -39,17 +47,22 @@ export default (props) => {
           <Introduce showAddBtn={false} />
         </Modal>
         <Divider type="vertical" style={{ height: 24, margin: '0 36px' }} />
-
-        <span>
+        {helpInfo?.text || '暂无数据'}
+        {/* <span>
           识别应用：<b>24</b>
         </span>
         <span style={{ marginLeft: 32 }}>
           正常： <b>24</b>
-        </span>
+        </span> */}
       </div>
       <div>
-        <span>检测时间：3 分钟前</span>
-        <span style={{ marginLeft: 40 }}>负责人：朱七七</span>
+        <span>
+          检测时间：
+          {helpInfo?.checkTime ? moment(helpInfo?.checkTime).fromNow() : '-'}
+        </span>
+        <span style={{ marginLeft: 40 }}>
+          负责人：{helpInfo?.userName || '-'}
+        </span>
       </div>
     </div>
   );

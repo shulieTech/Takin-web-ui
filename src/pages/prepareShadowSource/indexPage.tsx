@@ -13,6 +13,12 @@ export default (props) => {
     currentLink: null,
     editLink: undefined,
     refreshListKey: 0,
+    helpInfo: {
+      show: true,
+      text: undefined,
+      checkTime: undefined,
+      userName: undefined
+    }
   });
   const setPrepareState = (particalState) => {
     setFullPrepareState({

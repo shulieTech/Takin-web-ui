@@ -16,10 +16,12 @@ import service from '../service';
 import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
 import EditMockModal from '../modals/EditMock';
+import { PrepareContext } from '../indexPage';
 
 const { Option } = Select;
 
 export default (props) => {
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [editItem, setEditItem] = useState();
 
@@ -169,6 +171,14 @@ export default (props) => {
       },
     },
   ];
+
+  useEffect(() => {
+    setPrepareState({
+      helpInfo: {
+        show: false,
+      },
+    });
+  }, []);
 
   return (
     <>
