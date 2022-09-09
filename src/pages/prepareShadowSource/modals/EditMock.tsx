@@ -82,6 +82,7 @@ export default (props: Props) => {
       message.success('操作成功');
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        refreshListKey: prepareState.refreshListKey + 1,
       });
     }
   };

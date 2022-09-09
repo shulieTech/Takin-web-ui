@@ -51,8 +51,8 @@ export default (props) => {
         okCallback={() => {
           setPrepareState({
             editLink: undefined,
-            refreshListKey: prepareState.refreshListKey + 1,
             stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+            refreshListKey: prepareState.refreshListKey + 1,
           });
         }}
         cancelCallback={() => setPrepareState({ editLink: undefined })}

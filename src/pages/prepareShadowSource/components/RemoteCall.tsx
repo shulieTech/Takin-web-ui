@@ -355,6 +355,7 @@ export default (props) => {
             getList();
             setPrepareState({
               stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+              refreshListKey: prepareState.refreshListKey + 1,
             });
           }}
         />

@@ -85,6 +85,7 @@ export default (props: Props) => {
         getList();
         setPrepareState({
           stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+          refreshListKey: prepareState.refreshListKey + 1,
         });
       }
     });
@@ -102,6 +103,7 @@ export default (props: Props) => {
       getList();
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        refreshListKey: prepareState.refreshListKey + 1,
       });
     }
   };
@@ -123,6 +125,7 @@ export default (props: Props) => {
       getList();
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        refreshListKey: prepareState.refreshListKey + 1,
       });
     }
   };
