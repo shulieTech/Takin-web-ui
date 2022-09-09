@@ -191,7 +191,7 @@ export default (props) => {
             showUploadList={false}
             customRequest={uploadFile}
           >
-            <Button style={{ marginLeft: 24 }} loading={uploading}>
+            <Button loading={uploading}>
               导入隔离配置
             </Button>
           </Upload>

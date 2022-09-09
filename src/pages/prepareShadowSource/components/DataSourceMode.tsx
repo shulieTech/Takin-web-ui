@@ -225,12 +225,12 @@ export default (props: Props) => {
                 </a>
               </Dropdown>
             )}
-            <a
+            {/* <a
               style={{ marginLeft: 32 }}
               onClick={() => setEditedDataSource(record)}
             >
               编辑
-            </a>
+            </a> */}
           </span>
         );
       },
