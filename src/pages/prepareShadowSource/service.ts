@@ -170,24 +170,31 @@ export default {
     return httpGet(url, data);
   },
   /**
-   * @name 步骤状态
+   * @name 远程调用列表
    */
   async remoteCallList(data = {}) {
-    const url = '/pressureResource/entrances/list';
+    const url = '/pressureResource/remoteCall/list';
     return httpGet(url, data);
   },
   /**
-   * @name 步骤状态
+   * @name 启用停用调用列表
    */
   async toggleRemoteCall(data = {}) {
-    const url = '/pressureResource/entrances/toggle';
+    const url = '/pressureResource/remoteCall/toggle';
     return httpGet(url, data);
   },
   /**
-   * @name mock模板
+   * @name mock模板列表
    */
   async mockTplList(data = {}) {
     const url = '/pressureResource/mockTpl/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name mock详情
+   */
+  async getMock(data = {}) {
+    const url = '/pressureResource/mock/detail';
     return httpGet(url, data);
   },
   /**

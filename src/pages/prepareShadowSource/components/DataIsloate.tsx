@@ -256,14 +256,16 @@ export default (props) => {
         />
       )}
       {mode === 1 && <AppMode isolateListRefreshKey={isolateListRefreshKey} />}
-      <EditDataSource
-        detail={editedDataSource}
-        okCallback={() => {
-          setEditedDataSource(undefined);
-          setIsolateListRefreshKey(isolateListRefreshKey + 1);
-        }}
-        cancelCallback={() => setEditedDataSource(undefined)}
-      />
+      {editedDataSource && (
+        <EditDataSource
+          detail={editedDataSource}
+          okCallback={() => {
+            setEditedDataSource(undefined);
+            setIsolateListRefreshKey(isolateListRefreshKey + 1);
+          }}
+          cancelCallback={() => setEditedDataSource(undefined)}
+        />
+      )}
     </>
   );
 };
