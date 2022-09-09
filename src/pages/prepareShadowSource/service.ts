@@ -114,6 +114,13 @@ export default {
     return httpPost(url, data);
   },
   /**
+   * @name 批量修改影子表加入状态
+   */
+  async batchUpdateShadowTable(data = {}) {
+    const url = '/pressureResource/ds/batchUpdate';
+    return httpPost(url, data);
+  },
+  /**
    * @name 删除影子表
    */
   async deleteShadowTable(data = {}) {

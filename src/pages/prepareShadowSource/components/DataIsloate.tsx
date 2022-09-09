@@ -177,7 +177,7 @@ export default (props) => {
             </a>
           </div>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <Tooltip title="333">
+          {/* <Tooltip title="数据库连接地址">
             <Icon type="info-circle" style={{ cursor: 'pointer' }} />
           </Tooltip>
           <Button
@@ -185,7 +185,7 @@ export default (props) => {
             onClick={() => setEditedDataSource({})}
           >
             新增数据源
-          </Button>
+          </Button> */}
           <Upload
             accept=".xlsx,.csv,.xls"
             showUploadList={false}
@@ -214,8 +214,9 @@ export default (props) => {
       <EditDataSource
         detail={editedDataSource}
         okCallback={() => {
-          // TODO 刷新列表
+          // 刷新列表
           setEditedDataSource(undefined);
+          setIsolateListRefreshKey(isolateListRefreshKey + 1);
         }}
         cancelCallback={() => setEditedDataSource(undefined)}
       />

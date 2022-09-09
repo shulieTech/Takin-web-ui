@@ -42,11 +42,11 @@ export default (props) => {
     {
       title: '远程调用',
       subTitle: '未开始',
-    },
-    {
-      title: '数据隔离',
-      subTitle: '未开始',
-    },
+    }, 
+    // {
+    //   title: '数据隔离',
+    //   subTitle: '未开始',
+    // },
   ];
 
   useEffect(() => {

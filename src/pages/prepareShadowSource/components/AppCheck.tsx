@@ -120,7 +120,7 @@ export default (props) => {
       title: (
         <span>
           隔离方案
-          <Tooltip title="222">
+          <Tooltip title="默认继承链路的隔离方案(影子库、影子表、影子库/表)">
             <Icon
               type="info-circle"
               style={{ marginLeft: 8, cursor: 'pointer' }}
@@ -137,7 +137,7 @@ export default (props) => {
       title: (
         <span>
           节点总数/探针总数
-          <Tooltip title="222">
+          <Tooltip title="预计要接入的节点数/实际已接入的节点数">
             <Icon
               type="info-circle"
               style={{ marginLeft: 8, cursor: 'pointer' }}
@@ -154,7 +154,7 @@ export default (props) => {
       title: (
         <span>
           是否加入压测范围
-          <Tooltip title="222">
+          <Tooltip title="如加入压测范围，即需要有相应的隔离配置，检查该应用是否准备完成" placement="topRight">
             <Icon
               type="info-circle"
               style={{ marginLeft: 8, cursor: 'pointer' }}

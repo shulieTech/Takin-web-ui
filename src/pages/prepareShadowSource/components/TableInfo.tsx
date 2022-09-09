@@ -27,6 +27,7 @@ export default (props: Props) => {
   const inputSearchRef = useRef();
   const [listItemAdded, setListItemAdded] = useState();
   const [boxStyle, setBoxStyle] = useState({ top: '100%' });
+  const [batchActionType, setBatchActionType] = useState(undefined);
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.listShadowTable,
     defaultQuery: {
@@ -91,6 +92,24 @@ export default (props: Props) => {
     } = await service.deleteShadowTable({
       id: row.id,
     });
+    if (success) {
+      message.success('操作成功');
+      getList();
+    }
+  };
+
+  const batchChangeJoin = async (joinFlag) => {
+    setBatchActionType(joinFlag);
+    const {
+      data: { success },
+    } = await service
+      .batchUpdateShadowTable({
+        joinFlag,
+        ids: list.map((x) => x.id),
+      })
+      .finally(() => {
+        setBatchActionType(undefined);
+      });
     if (success) {
       message.success('操作成功');
       getList();
@@ -283,8 +302,21 @@ export default (props: Props) => {
           </Tooltip>
         </div>
         <div style={{ whiteSpace: 'nowrap', marginLeft: 16 }}>
-          <Button type="link">全部加入</Button>
-          <Button type="link" style={{ marginLeft: 24 }}>
+          <Button
+            type="link"
+            onClick={() => batchChangeJoin(0)}
+            loading={batchActionType === 0}
+            disabled={batchActionType === 1}
+          >
+            全部加入
+          </Button>
+          <Button
+            type="link"
+            style={{ marginLeft: 24 }}
+            onClick={() => batchChangeJoin(1)}
+            loading={batchActionType === 1}
+            disabled={batchActionType === 0}
+          >
             全部不加入
           </Button>
           <Button

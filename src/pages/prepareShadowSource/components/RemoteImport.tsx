@@ -52,74 +52,91 @@ export default (props) => {
       dataIndex: 'interfaceName',
       render: (text, record) => {
         return (
-          <div style={{ display: 'inline-flex' }}>
-            <div
-              style={{
-                width: 40,
-                lineHeight: '38px',
-                height: 40,
-                textAlign: 'center',
-                border: '1px solid var(--Netural-200, #E5E8EC)',
-                borderRadius: 16,
-                marginRight: 24,
-              }}
-            >
-              <span
-                className="iconfont icon-shujuku"
-                style={{
-                  fontSize: 18,
-                  color: 'var(--Netural-1000, #141617)',
-                }}
-              />
-            </div>
-            <div>
-              <div
-                style={{
-                  color: 'var(--Netural-1000, #141617)',
-                }}
-              >
-                {text}
-              </div>
-              <div
-                style={{
-                  color: 'var(--Netural-600, #90959A)',
-                }}
-              >
-                ID:{record.id}
-              </div>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      title: '配置状态',
-      dataIndex: 'status',
-      render: (text, record) => {
-        return (
-          {
-            0: <StatusDot />,
-            1: (
-              <>
-                <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
-                <Divider
-                  type="vertical"
-                  style={{ height: 24, margin: '0 24px' }}
-                />
-                <Tooltip title={record.remark}>
-                  <Icon
-                    type="file-text"
-                    theme="filled"
-                    style={{
-                      cursor: 'pointer',
-                      color: 'var(--Brandprimary-500, #0FBBD5)',
-                    }}
+          <>
+            {{
+              0: <StatusDot />,
+              1: (
+                <>
+                  <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
+                  <Divider
+                    type="vertical"
+                    style={{ height: 24, margin: '0 24px' }}
                   />
-                </Tooltip>
-              </>
-            ),
-            2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
-          }[text] || '-'
+                  <Tooltip title={record.remark}>
+                    <Icon
+                      type="file-text"
+                      theme="filled"
+                      style={{
+                        cursor: 'pointer',
+                        color: 'var(--Brandprimary-500, #0FBBD5)',
+                      }}
+                    />
+                  </Tooltip>
+                </>
+              ),
+              2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+            }[record.status] || '-'}
+            <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+            <div style={{ display: 'inline-flex' }}>
+              <div
+                style={{
+                  width: 40,
+                  lineHeight: '38px',
+                  height: 40,
+                  textAlign: 'center',
+                  border: '1px solid var(--Netural-200, #E5E8EC)',
+                  borderRadius: 16,
+                  marginRight: 24,
+                  position: 'relative',
+                }}
+              >
+                <span
+                  className="iconfont icon-shujuku"
+                  style={{
+                    fontSize: 18,
+                    color: 'var(--Netural-1000, #141617)',
+                  }}
+                />
+                {record.type === 0 && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      right: 0,
+                      backgroundColor: 'var(--Netural-600, #90959A)',
+                      borderTopLeftRadius: 4,
+                      borderBottomRightRadius: 8,
+                      textAlign: 'center',
+                      display: 'inline-block',
+                      verticalAlign: 'middle',
+                      width: 14,
+                      height: 14,
+                      fontSize: 12,
+                      lineHeight: 1,
+                    }}
+                  >
+                    <Icon type="edit" style={{ color: '#fff' }} />
+                  </span>
+                )}
+              </div>
+              <div>
+                <div
+                  style={{
+                    color: 'var(--Netural-1000, #141617)',
+                  }}
+                >
+                  {text}
+                </div>
+                <div
+                  style={{
+                    color: 'var(--Netural-600, #90959A)',
+                  }}
+                >
+                  ID:{record.id}
+                </div>
+              </div>
+            </div>
+          </>
         );
       },
     },
