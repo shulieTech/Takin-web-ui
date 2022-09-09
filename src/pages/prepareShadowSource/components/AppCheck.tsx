@@ -57,6 +57,21 @@ export default (props) => {
     } = await service.appSummaryInfo({ id });
     if (success) {
       setPrepareState({
+        alertInfo:
+          data.totalSize > 0 ? (
+            <span>
+              <Icon
+                type="check-square"
+                theme="filled"
+                style={{
+                  color: 'var(--Brandprimary-500, #11bbd5)',
+                  marginRight: 8,
+                }}
+              />
+              Takin已为该链路梳理出{data.totalSize}
+              个应用，请尽快检查各应用节点总数是否正确
+            </span>
+          ) : undefined,
         helpInfo: {
           show: true,
           text: (
@@ -104,6 +119,9 @@ export default (props) => {
     if (success) {
       message.success('操作成功');
       getList();
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+      });
     }
   };
 
@@ -191,7 +209,17 @@ export default (props) => {
       ),
       dataIndex: '',
       render: (text, record) => {
-        return <EditAgentCount record={record} okCallback={getList} />;
+        return (
+          <EditAgentCount
+            record={record}
+            okCallback={() => {
+              getList();
+              setPrepareState({
+                stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+              });
+            }}
+          />
+        );
       },
     },
     {

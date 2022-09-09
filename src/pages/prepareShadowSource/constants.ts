@@ -10,6 +10,12 @@ export const LINK_STATUS = {
   2: '已完成',
 };
 
+export const STEP_STATUS = {
+  0: '未开始',
+  1: '进行中',
+  2: '已完成',
+};
+
 export const LINK_TYPE = {
   0: '手动新增',
   1: '业务流程自动新增',

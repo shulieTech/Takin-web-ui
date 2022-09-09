@@ -7,10 +7,17 @@ import RemoteImport from './RemoteImport';
 import ProgressListModal from '../modals/ProgressList';
 import Help from './Help';
 import styles from '../index.less';
+import service from '../service';
+import { STEP_STATUS } from '../constants';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [step, setStep] = useState(0);
+  const [stepStatus, setStepStatus] = useState({
+    APP: 0,
+    DS: 0,
+    REMOTECALL: 0,
+  });
   const [showProgressListModal, setShowProgressListModal] = useState(false);
 
   const commonStepStyle = {
@@ -33,21 +40,34 @@ export default (props) => {
   const stepList = [
     {
       title: '应用检查',
-      subTitle: '未开始',
+      subTitle: STEP_STATUS[stepStatus.APP],
     },
     {
       title: '影子隔离',
-      subTitle: '未开始',
+      subTitle: STEP_STATUS[stepStatus.DS],
     },
     {
       title: '远程调用',
-      subTitle: '未开始',
-    }, 
-    // {
-    //   title: '数据隔离',
-    //   subTitle: '未开始',
-    // },
+      subTitle: STEP_STATUS[stepStatus.REMOTECALL],
+    },
   ];
+
+  const getStepStatus = async (id) => {
+    const {
+      data: { success, data },
+    } = await service.stepStatus({
+      id,
+    });
+    if (success) {
+      setStepStatus(data);
+    }
+  };
+
+  useEffect(() => {
+    if (prepareState.currentLink?.id) {
+      getStepStatus(prepareState.currentLink?.id);
+    }
+  }, [prepareState.currentLink?.id, prepareState.stepStatusRefreshKey]);
 
   useEffect(() => {
     setStep(0);
@@ -163,28 +183,18 @@ export default (props) => {
           overflow: 'hidden',
         }}
       >
-        <Alert
-          style={{
-            backgroundColor: 'var(--Netural-75, #F7F8FA)',
-            color: 'var(--Netural-800, #5A5E62)',
-            border: '1px solid var(--Netural-200, #E5E8EC)',
-            margin: '16px 32px',
-          }}
-          closable
-          message={
-            <span>
-              <Icon
-                type="check-square"
-                theme="filled"
-                style={{
-                  color: 'var(--Brandprimary-500, #11bbd5)',
-                  marginRight: 8,
-                }}
-              />
-              Takin已为该链路梳理出13个应用，请尽快检查各应用节点总数是否正确
-            </span>
-          }
-        />
+        {prepareState.alertInfo && (
+          <Alert
+            style={{
+              backgroundColor: 'var(--Netural-75, #F7F8FA)',
+              color: 'var(--Netural-800, #5A5E62)',
+              border: '1px solid var(--Netural-200, #E5E8EC)',
+              margin: '16px 32px',
+            }}
+            closable
+            message={prepareState.alertInfo}
+          />
+        )}
         <div
           style={{
             flex: 1,

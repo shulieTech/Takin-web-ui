@@ -162,4 +162,11 @@ export default {
     const url = '/pressureResource/dsInfo';
     return httpGet(url, data);
   },
+  /**
+   * @name 步骤状态
+   */
+  async stepStatus(data = {}) {
+    const url = '/pressureResource/progress';
+    return httpGet(url, data);
+  },
 };

@@ -13,6 +13,8 @@ export default (props) => {
     currentLink: null,
     editLink: undefined,
     refreshListKey: 0,
+    stepStatusRefreshKey: 0,
+    alertInfo: undefined,
     helpInfo: {
       show: true,
       text: undefined,
@@ -50,6 +52,7 @@ export default (props) => {
           setPrepareState({
             editLink: undefined,
             refreshListKey: prepareState.refreshListKey + 1,
+            stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
           });
         }}
         cancelCallback={() => setPrepareState({ editLink: undefined })}

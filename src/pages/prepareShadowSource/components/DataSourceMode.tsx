@@ -244,6 +244,9 @@ export default (props: Props) => {
     if (success) {
       message.success('操作成功');
       getList();
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+      });
     }
   };
 

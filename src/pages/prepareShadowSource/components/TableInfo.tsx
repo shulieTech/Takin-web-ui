@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   Divider,
   Button,
@@ -14,6 +14,7 @@ import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import EditRowTable from 'src/components/edit-row-table';
+import { PrepareContext } from '../indexPage';
 
 const { Option } = Select;
 
@@ -24,6 +25,7 @@ interface Props {
 
 export default (props: Props) => {
   const { detail, cancelCallback } = props;
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [listItemAdded, setListItemAdded] = useState();
   const [boxStyle, setBoxStyle] = useState({ top: '100%' });
@@ -81,6 +83,9 @@ export default (props: Props) => {
           setListItemAdded(undefined);
         }
         getList();
+        setPrepareState({
+          stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        });
       }
     });
   };
@@ -95,6 +100,9 @@ export default (props: Props) => {
     if (success) {
       message.success('操作成功');
       getList();
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+      });
     }
   };
 
@@ -113,6 +121,9 @@ export default (props: Props) => {
     if (success) {
       message.success('操作成功');
       getList();
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+      });
     }
   };
 
