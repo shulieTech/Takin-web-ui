@@ -9,6 +9,7 @@ import {
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
+import { PrepareContext } from '../indexPage';
 
 const DropdowTable = (props) => {
   const { defaultList = [] } = props;
@@ -74,6 +75,7 @@ interface Props {
 
 export default (props: Props) => {
   const inputSearchRef = useRef();
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
 
   const { list, loading, total, query, getList, resetList } = useListService({
     service: service.appViewMode,
@@ -81,6 +83,7 @@ export default (props: Props) => {
       current: 0,
       pageSize: 10,
       queryAppName: undefined,
+      resourceId: prepareState.currentLink.id,
     },
     isQueryOnMount: false,
   });

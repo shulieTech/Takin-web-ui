@@ -92,6 +92,7 @@ export default (props: Props) => {
       pageSize: 10,
       queryBusinessDataBase: undefined,
       status: '',
+      resourceId: prepareState.currentLink.id,
     },
     isQueryOnMount: false,
   });

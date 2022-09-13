@@ -45,6 +45,7 @@ export default (props) => {
       pageSize: 10,
       queryBusinessDataBase: undefined,
       status: '',
+      resourceId: prepareState.currentLink.id,
     },
     // isQueryOnMount: false,
   });
