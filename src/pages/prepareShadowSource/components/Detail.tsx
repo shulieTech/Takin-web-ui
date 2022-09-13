@@ -87,7 +87,7 @@ export default (props) => {
         }}
       >
         <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-          <div
+          {/* <div
             style={{
               background: 'var(--Netural-75, #F7F8FA)',
               textAlign: 'center',
@@ -104,7 +104,7 @@ export default (props) => {
             <br />
             清单
           </div>
-          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} /> */}
           {stepList.map((x, i, arr) => {
             return (
               <Fragment key={x.title}>

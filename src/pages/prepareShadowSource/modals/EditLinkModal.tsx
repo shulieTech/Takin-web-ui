@@ -94,7 +94,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
             label={
               <span>
                 链路串联
-                <Tooltip title="222">
+                <Tooltip title="选择链路中涉及的入口url">
                   <Icon
                     type="info-circle"
                     style={{ cursor: 'pointer', marginLeft: 4 }}

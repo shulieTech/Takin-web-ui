@@ -46,7 +46,7 @@ export default (props) => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ padding: 16 }}>
         链路
-        <Tooltip title="1111">
+        <Tooltip title="包含手工创建链路和业务流程产生的链路2部分">
           <Icon
             type="question-circle"
             className="pointer"
