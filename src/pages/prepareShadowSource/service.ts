@@ -23,6 +23,13 @@ export default {
     return httpPost(url, data);
   },
   /**
+   * @name 删除链路
+   */
+  async deleteLink(data = {}) {
+    const url = '/pressureResource/del';
+    return httpGet(url, data);
+  },
+  /**
    * @name 链路详情
    */
   async getLinkDetail(data = {}) {

@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
-import { Icon, Alert, Divider } from 'antd';
+import {
+  Icon,
+  Alert,
+  Divider,
+  Modal,
+  message,
+  Dropdown,
+  Menu,
+  Button,
+} from 'antd';
 import { PrepareContext } from '../indexPage';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
@@ -61,6 +70,26 @@ export default (props) => {
     if (success) {
       setStepStatus(data);
     }
+  };
+
+  const deleteLink = () => {
+    Modal.confirm({
+      title: '提示',
+      content: '确定删除该链路？',
+      onOk: async () => {
+        const {
+          data: { success, data },
+        } = await service.deleteLink({
+          id: prepareState.currentLink?.id,
+        });
+        if (success) {
+          message.success('操作成功');
+          setPrepareState({
+            refreshListKey: prepareState.refreshListKey + 1,
+          });
+        }
+      },
+    });
   };
 
   useEffect(() => {
@@ -163,8 +192,9 @@ export default (props) => {
           })}
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <a
-            style={{ margin: '0 32px' }}
+          <Button
+            type="link"
+            style={{ marginLeft: 32 }}
             onClick={() => {
               setPrepareState({
                 editLink: prepareState.currentLink,
@@ -172,7 +202,33 @@ export default (props) => {
             }}
           >
             编辑链路
-          </a>
+          </Button>
+          {prepareState.currentLink.type === 0 && (
+            <>
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item>
+                      <Button
+                        type="link"
+                        style={{
+                          padding: '0 32px',
+                          color: 'var(--FunctionNegative-500, #D24D40)',
+                        }}
+                        onClick={deleteLink}
+                      >
+                        删除链路
+                      </Button>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <Button style={{ width: 32, padding: 0, marginLeft: 32 }}>
+                  <Icon type="more" />
+                </Button>
+              </Dropdown>
+            </>
+          )}
         </div>
       </div>
       <div
