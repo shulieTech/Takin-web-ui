@@ -210,6 +210,9 @@ export default (props) => {
       ),
       dataIndex: '',
       render: (text, record) => {
+        if (record.joinPressure === 1) {
+          return '-';
+        }
         return (
           <EditAgentCount
             record={record}
