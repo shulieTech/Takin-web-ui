@@ -24,7 +24,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
     setLoading(true);
     const {
       data: { success, data },
-    } = await service.getLinkDetail({ id: props.detail.id }).finally(() => {
+    } = await service.getLinkDetail({ id: props.detail?.id }).finally(() => {
       setLoading(false);
     });
     if (success) {
@@ -42,7 +42,7 @@ const EditLinkModal = (props: EditLinkModalProps) => {
       }
       const {
         data: { success },
-      } = await service[detail.id ? 'updateLink' : 'addLink']({
+      } = await service[detail?.id ? 'updateLink' : 'addLink']({
         ...detail,
         ...values,
       });

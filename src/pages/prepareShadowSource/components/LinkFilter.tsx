@@ -3,6 +3,7 @@ import { Table, Select, Input, Pagination, Icon, Tooltip } from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
 import { debounce } from 'lodash';
+import styles from '../index.less';
 
 interface Props {
   value?: any;
@@ -175,6 +176,7 @@ export default (props: Props) => {
       style={{
         display: 'flex',
       }}
+      className={styles['link-filter']}
     >
       <div
         style={{
@@ -285,7 +287,7 @@ export default (props: Props) => {
             style={{ flex: 1 }}
           />
           <span style={{ lineHeight: 1 }}>
-            总计: <b>{total}</b> 条
+            总计: <b>{total || 0}</b> 条
           </span>
         </div>
       </div>
