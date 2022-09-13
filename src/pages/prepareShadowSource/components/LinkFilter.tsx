@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Input, Pagination, Icon, Tooltip } from 'antd';
+import {
+  Table,
+  Select,
+  Input,
+  Pagination,
+  Icon,
+  Tooltip,
+  Checkbox,
+} from 'antd';
 import service from '../service';
 import useListService from 'src/utils/useListService';
 import { debounce } from 'lodash';
@@ -42,36 +50,45 @@ export default (props: Props) => {
     {
       render: (text, record) => {
         return (
-          <div>
-            <div style={{ display: 'flex' }}>
-              <span
-                style={{
-                  fontSize: 12,
-                  color: 'var(--Netural-900, #303336)',
-                  fontWeight: 700,
-                  marginRight: 12,
-                }}
-              >
-                {record.method}
-              </span>
-              <div className="truncate" style={{ flex: 1 }}>
-                {record.name || '-'}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Checkbox
+              checked={
+                Array.isArray(value) &&
+                value.some((x) => x.value === record.value)
+              }
+              style={{ margin: '0 16px' }}
+            />
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex' }}>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: 'var(--Netural-900, #303336)',
+                    fontWeight: 700,
+                    marginRight: 12,
+                  }}
+                >
+                  {record.method}
+                </span>
+                <div className="truncate" style={{ flex: 1 }}>
+                  {record.name || '-'}
+                </div>
               </div>
+              <Tooltip title={record.serviceName}>
+                <div
+                  className="truncate"
+                  style={{
+                    fontSize: 12,
+                    color: 'var(--Netural-600, #90959A)',
+                    marginRight: 12,
+                    cursor: 'pointer',
+                    maxWidth: 400,
+                  }}
+                >
+                  {record.serviceName || '-'}
+                </div>
+              </Tooltip>
             </div>
-            <Tooltip title={record.serviceName}>
-              <div
-                className="truncate"
-                style={{
-                  fontSize: 12,
-                  color: 'var(--Netural-600, #90959A)',
-                  marginRight: 12,
-                  cursor: 'pointer',
-                  maxWidth: 400,
-                }}
-              >
-                {record.serviceName || '-'}
-              </div>
-            </Tooltip>
           </div>
         );
       },
@@ -126,7 +143,9 @@ export default (props: Props) => {
                     value={record.entranceName}
                     onChange={(e) => {
                       const val = Array.isArray(value) ? value.concat() : [];
-                      const valIndex = val.findIndex((x) => x.value === record.value);
+                      const valIndex = val.findIndex(
+                        (x) => x.value === record.value
+                      );
                       if (valIndex > -1) {
                         val[valIndex].entranceName = e.target.value;
                         if (onChange) {
@@ -148,7 +167,7 @@ export default (props: Props) => {
                     maxWidth: 400,
                   }}
                 >
-                  {record.entranceUrl}
+                  {record.entranceUrl || record.serviceName}
                 </div>
               </Tooltip>
             </div>
@@ -163,7 +182,7 @@ export default (props: Props) => {
     return arr.map((x) => ({
       value: x.value,
       appName: x.appName,
-      entranceUrl: x.serviceName,
+      entranceUrl: x.entranceUrl || x.serviceName,
       entranceName: x.entranceName,
       method: x.method,
       rpcType: x.rpcType,
@@ -188,7 +207,15 @@ export default (props: Props) => {
           flexDirection: 'column',
         }}
       >
-        <div style={{ flex: 1, padding: 24 }}>
+        <div
+          style={{
+            flex: 1,
+            padding: 24,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}
+        >
           <div style={{ marginBottom: 24 }}>
             应用：
             <Select
@@ -221,7 +248,7 @@ export default (props: Props) => {
             </Select>
             <Input.Search
               placeholder="搜索接口"
-              style={{ width: 228 }}
+              style={{ width: 210 }}
               onSearch={(val) =>
                 getList({
                   serviceName: val,
@@ -230,43 +257,35 @@ export default (props: Props) => {
               }
             />
           </div>
-          <Table
-            size="small"
-            showHeader={false}
-            columns={leftColmuns}
-            rowKey="value"
-            loading={loading}
-            dataSource={list}
-            rowSelection={{
-              getCheckboxProps: (record) => {
+          <div style={{ flex: 1, overflow: 'auto' }}>
+            <Table
+              size="small"
+              showHeader={false}
+              columns={leftColmuns}
+              rowKey="value"
+              loading={loading}
+              dataSource={list}
+              onRow={(record) => {
                 return {
-                  checked:
-                    Array.isArray(value) &&
-                    value.some((x) => x.value === record.value),
+                  onClick: () => {
+                    const val = Array.isArray(value) ? value : [];
+                    const index = val.findIndex(
+                      (x) => x.value === record.value
+                    );
+                    if (index > -1) {
+                      val.splice(index, 1);
+                    } else {
+                      val.push(record);
+                    }
+                    if (onChange) {
+                      onChange(transformLeftDataToRight(val));
+                    }
+                  },
                 };
-              },
-              onChange: (selectedRowKeys, selectedRows) => {
-                onChange(transformLeftDataToRight(selectedRows));
-              },
-            }}
-            onRow={(record) => {
-              return {
-                onClick: () => {
-                  const val = Array.isArray(value) ? value : [];
-                  const index = val.findIndex((x) => x.value === record.value);
-                  if (index > -1) {
-                    val.splice(index, 1);
-                  } else {
-                    val.push(record);
-                  }
-                  if (onChange) {
-                    onChange(transformLeftDataToRight(val));
-                  }
-                },
-              };
-            }}
-            pagination={false}
-          />
+              }}
+              pagination={false}
+            />
+          </div>
         </div>
         <div
           style={{
@@ -301,7 +320,15 @@ export default (props: Props) => {
           flexDirection: 'column',
         }}
       >
-        <div style={{ flex: 1, padding: 24 }}>
+        <div
+          style={{
+            flex: 1,
+            padding: 24,
+            display: 'flex',
+            overflow: 'hidden',
+            flexDirection: 'column',
+          }}
+        >
           <div
             style={{
               paddingBottom: 24,
@@ -311,16 +338,18 @@ export default (props: Props) => {
           >
             已选数据
           </div>
-          <Table
-            size="small"
-            columns={rightColumns}
-            rowKey="value"
-            dataSource={(value || []).slice(
-              (rightPage.current - 1) * rightPage.pageSize
-            )}
-            showHeader={false}
-            pagination={false}
-          />
+          <div style={{ flex: 1, overflow: 'auto' }}>
+            <Table
+              size="small"
+              columns={rightColumns}
+              rowKey="value"
+              dataSource={(value || []).slice(
+                (rightPage.current - 1) * rightPage.pageSize
+              )}
+              showHeader={false}
+              pagination={false}
+            />
+          </div>
         </div>
         <div
           style={{
