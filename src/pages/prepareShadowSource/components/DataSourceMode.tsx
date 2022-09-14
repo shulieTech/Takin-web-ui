@@ -66,7 +66,7 @@ const DropdowTable = (props) => {
             fixed: 'right',
             align: 'right',
             render: (text) => {
-              return <Switch checked={text === 1} size="small" disabled />;
+              return <Switch checked={text === 0} size="small" disabled />;
             },
           },
         ]}
