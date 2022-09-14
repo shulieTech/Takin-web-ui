@@ -37,8 +37,6 @@ export default (props) => {
               paddingRight: 24,
             }}
           >
-            无需Jmeter
-            <span className={styles.divider} />
             无需手动梳理隔离数据
             <span className={styles.divider} />
             数据变更后也能精准识别
