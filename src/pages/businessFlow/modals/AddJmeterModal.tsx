@@ -53,7 +53,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
   const handleClick = () => {
     if (props.action === 'edit') {
       setState({
-        fileList: [props.fileList],
+        fileList: props.fileList ? [props.fileList] : [],
       });
     }
   };

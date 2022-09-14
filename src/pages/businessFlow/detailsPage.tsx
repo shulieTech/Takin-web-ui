@@ -418,8 +418,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                       });
                     }}
                     id={id}
-                    btnText={`管理文件 ${detailData.relatedFiles &&
-                      detailData.relatedFiles.length}`}
+                    btnText={`管理文件 ${detailData?.relatedFiles?.length || 0}`}
                     fileList={detailData.relatedFiles}
                   />
                 </span>
