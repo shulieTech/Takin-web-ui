@@ -59,6 +59,7 @@ export default (props: Props) => {
         resourceId: detail.resourceId,
         dsId: detail.id,
         ...values,
+        joinFlag: values.joinFlag ? 0 : 1,
       };
 
       delete newValue._edting;
@@ -199,12 +200,14 @@ export default (props: Props) => {
       formField: <Switch />,
       formFieldOptions: {
         valuePropName: 'checked',
-        getValueFromEvent: (checked) => {
-          return checked ? 1 : 0;
-        },
+      },
+      getFormFieldOptions: (record, dataIndex) => {
+        return {
+          initialValue: record[dataIndex] === 0,
+        };
       },
       render: (text, record) => {
-        return <Switch checked={text === 1} disabled />; // 是否加入压测范围(0-否 1-是)
+        return <Switch checked={text === 0} disabled />; // 是否加入压测范围(0-是 1-否)
       },
     },
     {
