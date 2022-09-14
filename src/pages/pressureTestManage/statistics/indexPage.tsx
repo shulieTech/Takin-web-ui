@@ -48,8 +48,8 @@ const PressureStatistics: React.FC = (props) => {
     Promise.all([
       service.getTopSceneList({ type: 0, ...newParams }),
       service.getReportTotal(newParams),
-      service.getScriptOrSceneTotal({ type: 0, ...newParams }),
-      service.getScriptOrSceneTotal({ type: 1, ...newParams }),
+      service.getSceneTotal({ type: 0, ...newParams }),
+      service.getScriptTotal(newParams),
     ])
       .then((res) => {
         setData({
@@ -64,7 +64,7 @@ const PressureStatistics: React.FC = (props) => {
               res[2].data?.data?.data?.find((x) => x.type === '待启动')
                 ?.value || 0,
           },
-          scriptCount: res[3].data?.data?.total,
+          scriptCount: res[3].data?.data || 0,
         });
       })
       .finally(() => {

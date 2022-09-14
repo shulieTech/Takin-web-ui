@@ -8,8 +8,12 @@ export default {
     const url = '/statistic/getReportTotal';
     return httpGet(url, data);
   },
-  async getScriptOrSceneTotal(data) {
+  async getSceneTotal(data) {
     const url = '/statistic/getPressurePieTotal';
+    return httpGet(url, data);
+  },
+  async getScriptTotal(data) {
+    const url = '/businessFlow/scene/list/size';
     return httpGet(url, data);
   },
 };
