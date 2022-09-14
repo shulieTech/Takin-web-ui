@@ -40,6 +40,7 @@ const EditableCell = (props) => {
     children,
     formField,
     formFieldOptions = {},
+    getFormFieldOptions,
     ...restProps
   } = props;
   const { rowState, setRowState } = useContext(RowContext);
@@ -60,6 +61,15 @@ const EditableCell = (props) => {
           {rowState.form?.getFieldDecorator(dataIndex, {
             initialValue: record[dataIndex],
             ...formFieldOptions,
+            ...(getFormFieldOptions
+              ? getFormFieldOptions(
+                  record,
+                  dataIndex,
+                  index,
+                  rowState,
+                  setRowState
+                )
+              : {}),
           })(formField)}
         </Form.Item>
       ) : render ? (
@@ -91,6 +101,7 @@ export default (props: Props) => {
           render: x.render,
           formField: x.formField,
           formFieldOptions: x.formFieldOptions,
+          getFormFieldOptions: x.getFormFieldOptions,
         }),
       }))}
       {...rest}

@@ -124,7 +124,7 @@ export default {
    * @name 批量修改影子表加入状态
    */
   async batchUpdateShadowTable(data = {}) {
-    const url = '/pressureResource/ds/batchUpdate';
+    const url = '/pressureResource/table/batchUpdate';
     return httpPost(url, data);
   },
   /**
