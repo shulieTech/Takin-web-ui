@@ -18,7 +18,7 @@ const DropdowTable = (props) => {
   const filterList = (e) => {
     if (e.target.value && e.target.value.trim()) {
       setList(
-        list.filter((x) => x.businessDataBase.indexOf(e.target.value.trim()) > -1)
+        defaultList.filter((x) => x.businessDataBase.indexOf(e.target.value.trim()) > -1)
       );
     } else {
       setList(defaultList);
