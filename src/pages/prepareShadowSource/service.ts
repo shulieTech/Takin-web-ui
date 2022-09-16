@@ -54,7 +54,7 @@ export default {
    * @name 入口path列表
    */
   async entryList(data = {}) {
-    const url = '/application/entrances/list';
+    const url = '/application/entrances/pageList';
     return httpGet(url, data);
   },
   /**
