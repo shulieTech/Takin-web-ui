@@ -205,6 +205,13 @@ export default {
     return httpGet(url, data);
   },
   /**
+   * @name 检测mock
+   */
+  async mockcheck(data = {}) {
+    const url = '/pressureResource/remotecall/mockcheck';
+    return httpPost(url, data);
+  },
+  /**
    * @name mock模板列表
    */
   async mockTplList(data = {}) {

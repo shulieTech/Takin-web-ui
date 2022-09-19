@@ -32,7 +32,10 @@ export default (props: Props) => {
   const [selectedTplIndex, setSelectedTplIndex] = useState(0);
   const [showTplDropDown, setShowTplDropDown] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [testResult, setTestResult] = useState();
+  const [testResult, setTestResult] = useState({
+    success: undefined,
+    remark: null,
+  });
   const [testing, setTesting] = useState(false);
   const [type, setType] = useState(detail?.type || 1);
   const [avgRt, setAvgRt] = useState(0);
@@ -42,7 +45,7 @@ export default (props: Props) => {
   } catch (error) {
     mockObj = detail.mockInfo || {};
   }
-  
+
   const getAvgRt = async (id) => {
     const {
       data: { success, data },
@@ -84,6 +87,23 @@ export default (props: Props) => {
     if (success) {
       message.success('操作成功');
       okCallback();
+    }
+  };
+
+  const startTest = async () => {
+    const { values } = await actions.submit();
+    setTesting(true);
+    setTestResult({
+      success: undefined,
+      remark: undefined,
+    });
+    const {
+      data: { data, success },
+    } = await service.mockcheck(values).finally(() => {
+      setTesting(false);
+    });
+    if (success) {
+      setTestResult(data);
     }
   };
 
@@ -263,33 +283,39 @@ export default (props: Props) => {
               type="primary"
               ghost
               loading={testing}
+              onClick={startTest}
             >
               检测格式
             </Button>
-            <span
-              style={{
-                color: 'var(--BrandPrimary, #11BBD5)',
-              }}
-            >
-              <Icon
-                type="info-circle"
-                theme="filled"
-                style={{ marginRight: 8 }}
-              />
-              检测成功
-            </span>
-            <span
-              style={{
-                color: 'var(--FunctionNegative-500, #D24D40)',
-              }}
-            >
-              <Icon
-                type="close-circle"
-                theme="filled"
-                style={{ marginRight: 8 }}
-              />
-              检测失败：原因
-            </span>
+            {testResult?.success && (
+              <span
+                style={{
+                  color: 'var(--BrandPrimary, #11BBD5)',
+                }}
+              >
+                <Icon
+                  type="info-circle"
+                  theme="filled"
+                  style={{ marginRight: 8 }}
+                />
+                检测成功
+              </span>
+            )}
+            {testResult?.success === false && (
+              <span
+                style={{
+                  color: 'var(--FunctionNegative-500, #D24D40)',
+                }}
+              >
+                <Icon
+                  type="close-circle"
+                  theme="filled"
+                  style={{ marginRight: 8 }}
+                />
+                检测失败
+                {testResult?.remark && <span>：{testResult?.remark}</span>}
+              </span>
+            )}
           </div>
           <FormItem name="layout_3" label="返回响应时间">
             <div style={{ display: 'flex' }}>
