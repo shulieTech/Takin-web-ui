@@ -81,6 +81,11 @@ const PressureStatistics: React.FC = (props) => {
       dataIndex: 'gmtCreate',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
+    {
+      title: '最新压测时间',
+      dataIndex: 'lastTime',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+    },
     { title: '创建人', dataIndex: 'createName' },
     { title: '压测次数', dataIndex: 'count' },
     { title: '通过', dataIndex: 'success' },
@@ -238,6 +243,9 @@ const PressureStatistics: React.FC = (props) => {
           dataSource={data.topSceneList || []}
           columns={columns}
           pagination={false}
+          scroll={{
+            x: 'max-content',
+          }}
         />
       </div>
     </Spin>
