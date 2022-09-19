@@ -65,10 +65,8 @@ export default (props: Props) => {
   // });
 
   const list = [
-    `{\n"name1":"测试角色",\n"permissionValue":"test_role",\n"enabled":true,\n"remark":"这是一个测试使用的角色",\n"clientToken":"hyc11bzqcjdra4fg",\n"psId":"hU2czV4pMR"
-}`,
-    `{\n"name2":"测试角色",\n"permissionValue":"test_role",\n"enabled":true,\n"remark":"这是一个测试使用的角色",\n"clientToken":"hyc11bzqcjdra4fg",\n"psId":"hU2czV4pMR"
-}`,
+    `{\n\t"name1":"测试角色",\n\t"permissionValue":"test_role",\n\t"enabled":true,\n\t"remark":"这是一个测试使用的角色",\n\t"clientToken":"hyc11bzqcjdra4fg",\n\t"psId":"hU2czV4pMR"\n}`,
+    `{\n\t"name2":"测试角色",\n\t"permissionValue":"test_role",\n\t"enabled":true,\n\t"remark":"这是一个测试使用的角色",\n\t"clientToken":"hyc11bzqcjdra4fg",\n\t"psId":"hU2czV4pMR"\n}`,
   ];
 
   const handleSubmit = async () => {
@@ -108,8 +106,8 @@ export default (props: Props) => {
 
   const placeholder =
     {
-      0: '请在左侧选择Json格式模版',
-      1: `返回结果数据示例：\nmport  com.example.demo.entity.User ;\nUser user = new User();\nuser.setName("挡板");\nreturn user ;\n`,
+      0: '请在左侧选择Json格式模版，示例：\n{\n\t"name":"测试角色",\n\t"permissionValue":"test_role",\n\t"enabled":true,\n\t"remark":"这是一个测试使用的角色",\n\t"clientToken":"hyc11bzqcjdra4fg",\n\t"psId":"hU2czV4pMR"\n}',
+      1: `返回结果数据示例：\nimport  com.example.demo.entity.User ;\nUser user = new User();\nuser.setName("挡板");\nreturn user ;`,
     }[type] || '请输入';
 
   useEffect(() => {
@@ -217,6 +215,7 @@ export default (props: Props) => {
                             color: 'var(--Netural-850, #414548)',
                             lineHeight: '20px',
                             fontWeight: 600,
+                            whiteSpace: 'pre-wrap',
                           }}
                         >
                           {list[selectedTplIndex]}
