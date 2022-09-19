@@ -219,12 +219,14 @@ export default (props: Props) => {
                 <a>删除</a>
               </Popconfirm>
             )}
-            {record.appList.length > 0 && (
+            {record.appList?.length > 0 ? (
               <Dropdown overlay={<DropdowTable defaultList={record.appList} />}>
                 <a style={{ marginLeft: 32 }}>
                   查看{record.appList.length}个应用
                 </a>
               </Dropdown>
+            ) : (
+              '-'
             )}
             {/* <a
               style={{ marginLeft: 32 }}
@@ -339,12 +341,12 @@ export default (props: Props) => {
           onRow={(record) => {
             // 影子表隔离方式时，点击行触发编辑影子表
             return prepareState.currentLink.isolateType === 3
-              ? {
-                onClick: () => {
-                  setEditShadowTable(record);
-                },
-              }
-            : {}; 
+            ? {
+              onClick: () => {
+                setEditShadowTable(record);
+              },
+            }
+            : {};
           }}
         />
       </div>

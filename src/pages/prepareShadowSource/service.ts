@@ -177,17 +177,31 @@ export default {
     return httpGet(url, data);
   },
   /**
-   * @name 远程调用列表
+   * @name 接口类型下拉
    */
-  async remoteCallList(data = {}) {
-    const url = '/pressureResource/remoteCall/list';
+  async interfaceTypeList(data = {}) {
+    const url = '/v2/application/remote/call/interface/type/select';
     return httpGet(url, data);
   },
   /**
-   * @name 启用停用调用列表
+   * @name 远程调用列表
    */
-  async toggleRemoteCall(data = {}) {
-    const url = '/pressureResource/remoteCall/toggle';
+  async remoteCallList(data = {}) {
+    const url = '/pressureResource/remotecall/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 修改远程调用
+   */
+  async updateRemoteCall(data = {}) {
+    const url = '/pressureResource/remotecall/update';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 获取响应时间
+   */
+  async getAvgRt(data = {}) {
+    const url = '/pressureResource/remotecall/avgRt';
     return httpGet(url, data);
   },
   /**
@@ -196,20 +210,6 @@ export default {
   async mockTplList(data = {}) {
     const url = '/pressureResource/mockTpl/list';
     return httpGet(url, data);
-  },
-  /**
-   * @name mock详情
-   */
-  async getMock(data = {}) {
-    const url = '/pressureResource/mock/detail';
-    return httpGet(url, data);
-  },
-  /**
-   * @name 修改Mock
-   */
-  async updateMock(data = {}) {
-    const url = '/pressureResource/mock/update';
-    return httpPost(url, data);
   },
   /**
    * @name 进度清单

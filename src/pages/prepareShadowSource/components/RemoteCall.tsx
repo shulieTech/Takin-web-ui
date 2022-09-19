@@ -26,12 +26,21 @@ export default (props) => {
   const inputSearchRef = useRef();
   const [editItem, setEditItem] = useState();
 
+  const { list: interfaceTypeList, loading: interfaceLoading } = useListService(
+    {
+      service: service.interfaceTypeList,
+      defaultQuery: {
+        current: 0,
+        pageSize: 10,
+      },
+    }
+  );
   const {
     list: entryList,
     getList: getEntryList,
     loading: entryLoading,
   } = useListService({
-    service: service.remoteCallList,
+    service: service.entryList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
@@ -39,11 +48,12 @@ export default (props) => {
   });
 
   const { list, loading, total, query, getList, resetList } = useListService({
-    service: service.datasourceViewMode,
+    service: service.remoteCallList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      queryBusinessDataBase: undefined,
+      queryInterfaceName: undefined,
+      interface_child_type: '',
       status: '',
       resourceId: prepareState.currentLink.id,
     },
@@ -53,9 +63,9 @@ export default (props) => {
   const toggleInvovled = async (checked, record) => {
     const {
       data: { success },
-    } = await service.toggleRemoteCall({
+    } = await service.updateRemoteCall({
       ...record,
-      joinPressure: checked ? 0 : 1,
+      pass: checked ? 0 : 1,
     });
     if (success) {
       message.success('操作成功');
@@ -169,7 +179,7 @@ export default (props) => {
     },
     {
       title: '类型',
-      dataIndex: 'middlewareType',
+      dataIndex: 'interfaceChildType',
       render: (text, record) => {
         return text ? <Tag>{text}</Tag> : '-';
       },
@@ -177,7 +187,7 @@ export default (props) => {
     {
       title: '是否放行',
       align: 'right',
-      dataIndex: 'joinPressure',
+      dataIndex: 'pass',
       render: (text, record) => {
         return (
           <span>
@@ -218,7 +228,7 @@ export default (props) => {
             placeholder="搜索接口"
             onSearch={(val) =>
               getList({
-                queryBusinessDataBase: val,
+                queryInterfaceName: val,
                 current: 0,
               })
             }
@@ -287,7 +297,7 @@ export default (props) => {
             </Select>
           </span>
           <span style={{ marginRight: 24 }}>
-            类型：
+            状态：
             <Select
               style={{ width: 114 }}
               value={query.status}
@@ -304,13 +314,33 @@ export default (props) => {
               <Option value={2}>检测成功</Option>
             </Select>
           </span>
+          <span style={{ marginRight: 24 }}>
+            类型：
+            <Select
+              style={{ width: 114 }}
+              value={query.interface_child_type}
+              onChange={(val) =>
+                getList({
+                  interface_child_type: val,
+                  current: 0,
+                })
+              }
+            >
+              <Option value="">全部</Option>
+              {interfaceTypeList.map((x) => (
+                <Option value={x.value} key={x.value}>
+                  {x.label}
+                </Option>
+              ))}
+            </Select>
+          </span>
           <span>
             <Checkbox
               style={{ marginRight: 8 }}
-              checked={query.joinPressure === 0}
+              checked={query.pass === 0}
               onChange={(e) =>
                 getList({
-                  joinPressure: e.target.checked ? 0 : undefined,
+                  pass: e.target.checked ? 0 : undefined,
                 })
               }
             >

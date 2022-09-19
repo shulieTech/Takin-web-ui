@@ -32,10 +32,25 @@ export default (props: Props) => {
   const [selectedTplIndex, setSelectedTplIndex] = useState(0);
   const [showTplDropDown, setShowTplDropDown] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [mockDetail, setMockDetail] = useState({});
   const [testResult, setTestResult] = useState();
   const [testing, setTesting] = useState(false);
   const [type, setType] = useState(detail?.type || 1);
+  const [avgRt, setAvgRt] = useState(0);
+  let mockObj = detail.mockInfo || {};
+  try {
+    mockObj = JSON.parse(detail.mockReturnValue);
+  } catch (error) {
+    mockObj = detail.mockInfo || {};
+  }
+  
+  const getAvgRt = async (id) => {
+    const {
+      data: { success, data },
+    } = await service.getAvgRt({ id });
+    if (success) {
+      setAvgRt(data);
+    }
+  };
 
   // const {
   //   list,
@@ -56,39 +71,26 @@ export default (props: Props) => {
 }`,
   ];
 
-  const getMockDetail = async () => {
-    setLoading(true);
-    const {
-      data: { success, data },
-    } = await service.getMock({ id: detail.id }).finally(() => {
-      setLoading(false);
-    });
-    if (success) {
-      setMockDetail(data);
-    }
-  };
-
   const handleSubmit = async () => {
     const { values } = await actions.submit();
     const newValue = {
       ...detail,
-      ...values,
+      mockInfo: {
+        ...mockObj,
+        ...values,
+      },
     };
-    // TODO 提交数据
     const {
       data: { success },
-    } = await service.updateMock(newValue);
+    } = await service.updateRemoteCall(newValue);
     if (success) {
       message.success('操作成功');
-      setPrepareState({
-        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
-        refreshListKey: prepareState.refreshListKey + 1,
-      });
+      okCallback();
     }
   };
 
   const chooseTpl = () => {
-    actions.setFieldValue('tpl', list[selectedTplIndex]);
+    actions.setFieldValue('mockValue', list[selectedTplIndex]);
     setShowTplDropDown(false);
   };
 
@@ -98,7 +100,7 @@ export default (props: Props) => {
       setType(value);
     });
     onFieldInputChange$('type').subscribe(({ value }) => {
-      actions.setFieldState('tpl', (state) => {
+      actions.setFieldState('mockValue', (state) => {
         state.value = undefined;
       });
     });
@@ -106,13 +108,15 @@ export default (props: Props) => {
 
   const placeholder =
     {
-      1: '请在左侧选择Json格式模版',
-      2: `返回结果数据示例：\nmport  com.example.demo.entity.User ;\nUser user = new User();\nuser.setName("挡板");\nreturn user ;\n`,
+      0: '请在左侧选择Json格式模版',
+      1: `返回结果数据示例：\nmport  com.example.demo.entity.User ;\nUser user = new User();\nuser.setName("挡板");\nreturn user ;\n`,
     }[type] || '请输入';
 
   useEffect(() => {
-    getMockDetail();
-  }, []);
+    if (detail?.id) {
+      getAvgRt(detail.id);
+    }
+  }, [detail?.id]);
 
   return (
     <Modal
@@ -136,7 +140,7 @@ export default (props: Props) => {
       <Spin spinning={loading}>
         <Form
           actions={actions}
-          initialValues={mockDetail}
+          initialValues={mockObj || {}}
           labelCol={4}
           wrapperCol={18}
           effects={formEffects}
@@ -146,13 +150,13 @@ export default (props: Props) => {
             title="类型"
             component={Radio.Group}
             dataSource={[
-              { label: 'Json格式', value: 1 },
-              { label: '脚本格式', value: 2 },
+              { label: 'Json格式', value: '0' },
+              { label: '脚本格式', value: '1' },
             ]}
             rules={[{ required: true, message: '请选择类型' }]}
-            initialValue={1}
+            initialValue={0}
           />
-          {list?.length > 0 && type === 1 && (
+          {list?.length > 0 && type === 0 && (
             <div style={{ position: 'relative' }}>
               <div
                 style={{
@@ -242,7 +246,7 @@ export default (props: Props) => {
             </div>
           )}
           <FormItem
-            name="tpl"
+            name="mockValue"
             title={<span style={{ position: 'relative' }}>Mock数据</span>}
             component={Input.TextArea}
             rules={[
@@ -291,20 +295,22 @@ export default (props: Props) => {
           <FormItem name="layout_3" label="返回响应时间">
             <div style={{ display: 'flex' }}>
               <FormItem
-                name="timeout"
+                name="responseTime"
                 component={NumberPicker}
                 props={{ placeholder: '请输入', min: 0, precision: 0 }}
                 initialValue={100}
                 rules={[{ required: true, message: '请输入返回响应时间' }]}
               />
               <span style={{ marginLeft: 8, marginRight: 16 }}>ms</span>
-              <span
-                style={{
-                  color: 'var(--Netural-600, #90959A)',
-                }}
-              >
-                历史相应时间参考：平均100 ms
-              </span>
+              {avgRt > 0 && (
+                <span
+                  style={{
+                    color: 'var(--Netural-600, #90959A)',
+                  }}
+                >
+                  历史相应时间参考：平均{avgRt} ms
+                </span>
+              )}
             </div>
           </FormItem>
         </Form>
