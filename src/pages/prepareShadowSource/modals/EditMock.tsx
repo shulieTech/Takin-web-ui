@@ -156,7 +156,7 @@ export default (props: Props) => {
             rules={[{ required: true, message: '请选择类型' }]}
             initialValue={0}
           />
-          {list?.length > 0 && type === 0 && (
+          {list?.length > 0 && type === '0' && (
             <div style={{ position: 'relative' }}>
               <div
                 style={{
