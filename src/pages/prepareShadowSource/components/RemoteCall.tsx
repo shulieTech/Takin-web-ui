@@ -172,7 +172,7 @@ export default (props) => {
     },
     {
       title: '调用依赖',
-      dataIndex: 'dependency',
+      dataIndex: 'invoke',
       render: (text, record) => {
         return text || '-';
       },
