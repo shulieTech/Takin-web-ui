@@ -80,6 +80,7 @@ export default (props: Props) => {
         ...mockObj,
         ...values,
       },
+      resourceId: prepareState.currentLink.id,
     };
     const {
       data: { success },

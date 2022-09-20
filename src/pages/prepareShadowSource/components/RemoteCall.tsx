@@ -66,6 +66,7 @@ export default (props) => {
     } = await service.updateRemoteCall({
       ...record,
       pass: checked ? 0 : 1,
+      resourceId: prepareState.currentLink.id,
     });
     if (success) {
       message.success('操作成功');

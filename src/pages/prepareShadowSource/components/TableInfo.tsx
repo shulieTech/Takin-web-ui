@@ -109,13 +109,18 @@ export default (props: Props) => {
   };
 
   const batchChangeJoin = async (joinFlag) => {
+    const ids = list.filter((x) => x.type === 0).map((x) => x.id);
+    if (ids.length === 0) {
+      return;
+    }
     setBatchActionType(joinFlag);
     const {
       data: { success },
     } = await service
       .batchUpdateShadowTable({
         joinFlag,
-        ids: list.map((x) => x.id),
+        ids,
+        resourceId: prepareState.currentLink?.id,
       })
       .finally(() => {
         setBatchActionType(undefined);
@@ -317,23 +322,27 @@ export default (props: Props) => {
           </Tooltip>
         </div>
         <div style={{ whiteSpace: 'nowrap', marginLeft: 16 }}>
-          <Button
-            type="link"
-            onClick={() => batchChangeJoin(0)}
-            loading={batchActionType === 0}
-            disabled={batchActionType === 1}
-          >
-            全部加入
-          </Button>
-          <Button
-            type="link"
-            style={{ marginLeft: 24 }}
-            onClick={() => batchChangeJoin(1)}
-            loading={batchActionType === 1}
-            disabled={batchActionType === 0}
-          >
-            全部不加入
-          </Button>
+          {list.filter((x) => x.type === 0).length > 0 && (
+            <>
+              <Button
+                type="link"
+                onClick={() => batchChangeJoin(0)}
+                loading={batchActionType === 0}
+                disabled={batchActionType === 1}
+              >
+                全部加入
+              </Button>
+              <Button
+                type="link"
+                style={{ marginLeft: 24 }}
+                onClick={() => batchChangeJoin(1)}
+                loading={batchActionType === 1}
+                disabled={batchActionType === 0}
+              >
+                全部不加入
+              </Button>
+            </>
+          )}
           <Button
             style={{ marginLeft: 24 }}
             onClick={() => setListItemAdded({ _edting: true })}
