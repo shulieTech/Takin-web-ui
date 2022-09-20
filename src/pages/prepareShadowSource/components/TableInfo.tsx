@@ -109,7 +109,7 @@ export default (props: Props) => {
   };
 
   const batchChangeJoin = async (joinFlag) => {
-    const ids = list.filter((x) => x.type === 0).map((x) => x.id);
+    const ids = list.map((x) => x.id);
     if (ids.length === 0) {
       return;
     }
@@ -249,7 +249,7 @@ export default (props: Props) => {
               保存
             </Button>
           </span>
-        ) : record.type === 0 ? (
+        ) : (
           <span>
             <Popconfirm
               title="确认删除？"
@@ -264,8 +264,6 @@ export default (props: Props) => {
               编辑
             </a>
           </span>
-        ) : (
-          '-'
         );
       },
     },
@@ -322,7 +320,7 @@ export default (props: Props) => {
           </Tooltip>
         </div>
         <div style={{ whiteSpace: 'nowrap', marginLeft: 16 }}>
-          {list.filter((x) => x.type === 0).length > 0 && (
+          {list.length > 0 && (
             <>
               <Button
                 type="link"
