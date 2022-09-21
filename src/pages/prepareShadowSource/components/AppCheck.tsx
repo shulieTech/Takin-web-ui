@@ -414,6 +414,7 @@ export default (props) => {
         pagination={false}
         loading={loading}
         size="small"
+        scroll={{ x: 'max-content' }}
       />
     </>
   );

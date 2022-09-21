@@ -64,6 +64,7 @@ const DropdowTable = (props) => {
           },
         ]}
         pagination={false}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   );
@@ -207,6 +208,7 @@ export default (props: Props) => {
           pagination={false}
           loading={loading}
           size="small"
+          scroll={{ x: 'max-content' }}
         />
       </div>
     </>

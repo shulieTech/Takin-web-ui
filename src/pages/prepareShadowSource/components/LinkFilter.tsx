@@ -284,6 +284,7 @@ export default (props: Props) => {
                 };
               }}
               pagination={false}
+              scroll={{ x: 'max-content' }}
             />
           </div>
         </div>
@@ -348,6 +349,7 @@ export default (props: Props) => {
               )}
               showHeader={false}
               pagination={false}
+              scroll={{ x: 'max-content' }}
             />
           </div>
         </div>
