@@ -79,12 +79,12 @@ const PressureStatistics: React.FC = (props) => {
     {
       title: '创建日期',
       dataIndex: 'gmtCreate',
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      render: (text) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '-',
     },
     {
       title: '最新压测时间',
       dataIndex: 'lastTime',
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      render: (text) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '-',
     },
     { title: '创建人', dataIndex: 'createName' },
     { title: '压测次数', dataIndex: 'count' },
