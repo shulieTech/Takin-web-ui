@@ -374,7 +374,17 @@ export default (props) => {
         <Table
           columns={columns}
           dataSource={list}
-          pagination={false}
+          pagination={{
+            total,
+            pageSize: query.pageSize,
+            current: query.current + 1,
+            hideOnSinglePage: true,
+            onChange: (page, pageSize) => getList({
+              pageSize,
+              current: page - 1,
+            }),
+            style: { marginRight: 60 },
+          }}
           loading={loading}
           size="small"
           scroll={{ x: 'max-content' }}

@@ -421,7 +421,17 @@ export default (props: Props) => {
         size="small"
         columns={columns}
         dataSource={listItemAdded ? [listItemAdded, ...list] : list}
-        pagination={false}
+        pagination={{
+          total,
+          pageSize: query.pageSize,
+          current: query.current + 1,
+          hideOnSinglePage: true,
+          onChange: (page, pageSize) => getList({
+            pageSize,
+            current: page - 1,
+          }),
+          style: { marginRight: 60 },
+        }}
         loading={loading}
       />
     </div>
