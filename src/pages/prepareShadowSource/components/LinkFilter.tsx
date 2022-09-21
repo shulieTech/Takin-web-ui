@@ -301,7 +301,7 @@ export default (props: Props) => {
             total={total}
             pageSize={query.pageSize}
             onChange={(current, pageSize) =>
-              getList({ pageSize, current: current + 1 })
+              getList({ pageSize, current: current - 1 })
             }
             style={{ flex: 1 }}
           />
