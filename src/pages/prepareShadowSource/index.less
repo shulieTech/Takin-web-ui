@@ -1,0 +1,190 @@
+.banner {
+  margin-bottom: 24px;
+  padding: 24px;
+  background-image: url(../../assets/prepare-banner.png),
+    linear-gradient(90deg, #f7f8fa, #f8f9fd 50%);
+  background-repeat: no-repeat;
+  background-position: right, left;
+  background-size: auto 100%, auto;
+  border-radius: 8px;
+  .divider {
+    display: inline-block;
+    height: 24px;
+    margin: 0 24px;
+    vertical-align: middle;
+    border-left: 1px solid var(--Netural-100; #eef0f2);
+  }
+}
+
+.round-btn {
+  display: inline-block;
+  min-width: 180px;
+  height: 48px;
+  font-size: 16px;
+  line-height: '46px';
+  &.active {
+    background-color: #e3fafe !important;
+    border-color: #74dfef;
+  }
+}
+
+.card {
+  position: relative;
+  min-height: 350px;
+  padding: 32px 24px;
+  background: linear-gradient(161.67deg, #f2fdff 0%, #ffffff 28.86%);
+  border: 1px solid #bfebf3;
+  border-radius: 16px;
+  .title {
+    margin-bottom: 32px;
+    color: var(--Netural-900, #303336);
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .order {
+    position: absolute;
+    top: 32px;
+    right: 24px;
+    display: inline-block;
+    width: 48px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 46px;
+    text-align: center;
+    border: 1px solid var(--Netural-200, #e5e8ec);
+    border-radius: 100%;
+  }
+  .icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-top: 16px;
+    margin-right: 24px;
+    color: #000;
+    font-size: 24px;
+    line-height: 38px;
+    text-align: center;
+    border: 1px solid var(--Netural-200, #e5e8ec);
+    border-radius: 100%;
+  }
+}
+
+.link-item {
+  margin: 8px;
+  padding: 16px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  &.active {
+    background-color: #f5feff;
+    border: 1px solid var(--BrandPrimary-500, #0fbbd5);
+  }
+  .icon-chuan {
+    display: inline-block;
+    width: 14px;
+    margin-right: 8px;
+    color: #fff;
+    line-height: 14px;
+    text-align: center;
+    background-color: var(--BrandPrimary-500, #0fbbd5);
+    border-radius: 4px;
+    &::before {
+      content: '串';
+    }
+  }
+}
+
+.card-checkbox {
+  position: relative;
+  padding: 24px;
+  border: 1px solid var(--Netural-100, #eef0f2);
+  border-radius: 4px;
+  .icon-checked {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    display: none;
+    color: var(--BrandPrimary-500, #0fbbd5);
+    font-size: 24px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  &.checked {
+    border-color: var(--BrandPrimary-500, #0fbbd5);
+    .icon-checked {
+      display: block;
+    }
+  }
+}
+
+.modal-tight {
+  :global(.ant-modal-body) {
+    padding: 24px;
+  }
+}
+
+.detail-box {
+  :global(.ant-table-small) {
+    border-right: none;
+    border-left: none;
+    :global(.ant-table-body) {
+      margin: auto;
+      color: var(--Netural-990, #25282a);
+    }
+    thead tr th {
+      color: var(--Netural-800, #5a5e62);
+      font-weight: normal;
+      &:first-of-type {
+        padding-left: 32px !important;
+      }
+      &:last-of-type {
+        padding-right: 32px !important;
+      }
+    }
+    tbody tr td {
+      &:first-of-type {
+        padding-left: 32px !important;
+      }
+      &:last-of-type {
+        padding-right: 32px !important;
+      }
+    }
+  }
+}
+
+.custom-collapse {
+  --border: 1px solid var(--Netural-75, #f7f8fa);
+  border: var(--border) !important;
+  :global(.ant-collapse-item) {
+    border-bottom: var(--border) !important;
+  }
+  :global(.ant-collapse-header) {
+    background-color: #fff !important;
+  }
+  :global(.ant-collapse-content-box) {
+    padding: 0 !important;
+  }
+  :global(.ant-collapse-content) {
+    border-top: var(--border) !important;
+  }
+  :global(.ant-table-tbody > tr > td) {
+    border-bottom: var(--border);
+  }
+  :global(.ant-table-tbody > tr:last-of-type > td) {
+    border-bottom: none !important;
+  }
+}
+
+:global(.has-error) {
+  .link-filter {
+    :global(.ant-select-selection),
+    :global(.ant-input-affix-wrapper .ant-input) {
+      border-color: #d9d9d9 !important;
+      box-shadow: none !important;
+    }
+    :global(.ant-select-arrow) {
+      color: rgba(0, 0, 0, 0.25) !important;
+    }
+  }
+}

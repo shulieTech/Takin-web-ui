@@ -18,6 +18,7 @@ import { useStateReducer } from 'racc';
 import IndexService from './service';
 import { getTakinAuthority } from 'src/utils/utils';
 import { getThemeByKeyName } from 'src/utils/useTheme';
+import Introduce from './components/Introduce';
 
 interface Props { }
 interface State {
@@ -156,9 +157,26 @@ const DashboardPage: React.FC<Props> = props => {
   };
 
   const disableDashboardFlowBalance = getThemeByKeyName('disableDashboardFlowBalance');
+  const nickName = localStorage.getItem('troweb-userName');
 
   return (
-    <BasePageLayout title="工作台">
+    <BasePageLayout 
+      title={
+        <div>
+          工作台
+          <div 
+            style={{
+              color: '#A2A6B1',
+              fontWeight: 'normal',
+              fontSize: 12,
+              marginTop: 8,
+            }}
+          >
+            {nickName ? `${nickName}，` : ''}工作愉快～
+          </div>
+        </div>}
+    >
+      <Introduce/>
       <Row type="flex">
         <Col span={6}>
           <PressureTestSwitch data={switchStatus} />

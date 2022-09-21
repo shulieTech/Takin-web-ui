@@ -9,7 +9,7 @@
     rgba(249, 254, 255, 1) 0%,
     rgba(255, 255, 255, 1) 100%
   );
-  box-shadow: 0px 2px 8px 0px rgba(126, 155, 159, 0.14);
+  // box-shadow: 0px 2px 8px 0px rgba(126, 155, 159, 0.14);
   border-radius: 4px;
   border: 1px solid rgba(233, 239, 255, 1);
   padding: 24px;
@@ -115,4 +115,37 @@
 
 .defaultTxt {
   color: #a2a6b1;
+}
+
+.introduce-guide{
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  background-image:  url(../../assets/dashboard-prepare-bg.jpg), linear-gradient(90deg, #F7F8FA, #F8F9FD 50%);
+  background-repeat: no-repeat;
+  background-size: auto 100%, auto;
+  background-position: right, left;
+  border: 1px solid transparent;
+  transition: all .3s;
+  &:hover {
+    border-color: #00BCD4;
+  }
+  .divider {
+    display: inline-block;
+    height: 24px;
+    margin: 0 24px;
+    border-left: 1px solid var(--Netural-100; #EEF0F2);
+    vertical-align: middle;
+  }
+  .order{
+    display: inline-block;
+    width: 48px;
+    line-height: 48px;
+    border-radius: 100%;
+    text-align: center;
+    border: 1px solid var(--Netural-200, #E5E8EC);
+    font-size: 20px;
+    font-weight: 700;
+    margin-right: 16px;
+  }
 }
