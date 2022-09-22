@@ -188,6 +188,7 @@ export default (props) => {
     {
       title: '是否放行',
       align: 'right',
+      fixed: 'right',
       dataIndex: 'pass',
       render: (text, record) => {
         return (
@@ -234,7 +235,7 @@ export default (props) => {
               })
             }
             style={{
-              width: 260,
+              width: 160,
             }}
           />
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
@@ -373,9 +374,20 @@ export default (props) => {
         <Table
           columns={columns}
           dataSource={list}
-          pagination={false}
+          pagination={{
+            total,
+            pageSize: query.pageSize,
+            current: query.current + 1,
+            hideOnSinglePage: true,
+            onChange: (page, pageSize) => getList({
+              pageSize,
+              current: page - 1,
+            }),
+            style: { marginRight: 60 },
+          }}
           loading={loading}
           size="small"
+          scroll={{ x: 'max-content' }}
         />
       </div>
       {!!editItem && (
