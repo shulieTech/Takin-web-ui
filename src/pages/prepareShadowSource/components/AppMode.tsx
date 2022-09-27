@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import {
-  Icon,
-  Button,
-  Table,
-  Input,
-  Dropdown,
-} from 'antd';
+import { Icon, Button, Table, Input, Dropdown } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
@@ -18,7 +12,9 @@ const DropdowTable = (props) => {
   const filterList = (e) => {
     if (e.target.value && e.target.value.trim()) {
       setList(
-        defaultList.filter((x) => x.businessDataBase.indexOf(e.target.value.trim()) > -1)
+        defaultList.filter(
+          (x) => x.businessDataBase.indexOf(e.target.value.trim()) > -1
+        )
       );
     } else {
       setList(defaultList);
@@ -56,9 +52,19 @@ const DropdowTable = (props) => {
             fixed: 'right',
             render: (text) => {
               return {
-                0: <StatusDot />,
-                1: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
-                2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+                0: <StatusDot title="未检测" />,
+                1: (
+                  <StatusDot
+                    color="var(--FunctionNegative-500, #D24D40)"
+                    title="检测失败"
+                  />
+                ),
+                2: (
+                  <StatusDot
+                    color="var(--FunctionPositive-300, #2DC396)"
+                    title="检测成功"
+                  />
+                ),
               }[text];
             },
           },
@@ -210,10 +216,11 @@ export default (props: Props) => {
             pageSize: query.pageSize,
             current: query.current + 1,
             hideOnSinglePage: true,
-            onChange: (page, pageSize) => getList({
-              pageSize,
-              current: page - 1,
-            }),
+            onChange: (page, pageSize) =>
+              getList({
+                pageSize,
+                current: page - 1,
+              }),
             style: { marginRight: 60 },
           }}
           loading={loading}

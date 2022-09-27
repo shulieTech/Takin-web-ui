@@ -108,7 +108,7 @@ const getFormData = (that: Login): FormDataType[] => {
       },
       node: (
         <Input
-          style={{ width: 205 }}
+          style={{ width: 232 }}
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="验证码"
@@ -117,13 +117,7 @@ const getFormData = (that: Login): FormDataType[] => {
       ),
       extra: (
         <div style={{ display: 'inline-block' }}>
-          <img style={{ marginLeft: 16 }} src={that.state.imgSrc} />
-          <span
-            style={{ marginLeft: 8, cursor: 'pointer' }}
-            onClick={that.refresh}
-          >
-            <Icon type="redo" />
-          </span>
+          <img style={{ marginLeft: 16, cursor: 'pointer' }} src={that.state.imgSrc} onClick={that.refresh}/>
         </div>
       ),
     },

@@ -85,10 +85,13 @@ export default (props) => {
         return (
           <>
             {{
-              0: <StatusDot />,
+              0: <StatusDot title="未检测" />,
               1: (
                 <>
-                  <StatusDot color="var(--FunctionPositive-300, #2DC396)" />
+                  <StatusDot
+                    color="var(--FunctionNegative-500, #D24D40)"
+                    title="检测失败"
+                  />
                   <Divider
                     type="vertical"
                     style={{ height: 24, margin: '0 24px' }}
@@ -105,7 +108,12 @@ export default (props) => {
                   </Tooltip>
                 </>
               ),
-              2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+              2: (
+                <StatusDot
+                  color="var(--FunctionPositive-300, #2DC396)"
+                  title="检测成功"
+                />
+              ),
             }[record.status] || '-'}
             <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
             <div style={{ display: 'inline-flex' }}>
@@ -379,10 +387,11 @@ export default (props) => {
             pageSize: query.pageSize,
             current: query.current + 1,
             hideOnSinglePage: true,
-            onChange: (page, pageSize) => getList({
-              pageSize,
-              current: page - 1,
-            }),
+            onChange: (page, pageSize) =>
+              getList({
+                pageSize,
+                current: page - 1,
+              }),
             style: { marginRight: 60 },
           }}
           loading={loading}

@@ -134,8 +134,18 @@ export default (props) => {
         return (
           <>
             {{
-              0: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />, // 正常
-              1: <StatusDot color="var(--FunctionNegative-400, #E8695D)" />, // 不正常
+              0: (
+                <StatusDot
+                  color="var(--FunctionPositive-300, #2DC396)"
+                  title="正常"
+                />
+              ), // 正常
+              1: (
+                <StatusDot
+                  color="var(--FunctionNegative-400, #E8695D)"
+                  title="异常"
+                />
+              ), // 不正常
             }[record.status] || '-'}
             <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
             <div style={{ display: 'inline-flex' }}>
@@ -370,7 +380,7 @@ export default (props) => {
               placeholder="请选择"
             >
               <Option value={0}>正常</Option>
-              <Option value={1}>不正常</Option>
+              <Option value={1}>异常</Option>
             </Select>
           </span>
           <span>
@@ -416,10 +426,11 @@ export default (props) => {
           pageSize: query.pageSize,
           current: query.current + 1,
           hideOnSinglePage: true,
-          onChange: (page, pageSize) => getList({
-            pageSize,
-            current: page - 1,
-          }),
+          onChange: (page, pageSize) =>
+            getList({
+              pageSize,
+              current: page - 1,
+            }),
           style: { marginRight: 60 },
         }}
         loading={loading}
