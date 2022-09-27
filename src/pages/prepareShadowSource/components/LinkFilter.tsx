@@ -229,16 +229,17 @@ export default (props: Props) => {
                 })
               }
               showSearch
-              filterOption={false}
+              filterOption
               loading={appLoading}
-              onSearch={debounce(
-                (val) =>
-                  getAppList({
-                    applicationName: val,
-                    current: 0,
-                  }),
-                300
-              )}
+              optionFilterProp="children"
+              // onSearch={debounce(
+              //   (val) =>
+              //     getAppList({
+              //       applicationName: val,
+              //       current: 0,
+              //     }),
+              //   300
+              // )}
             >
               {appList.map((x) => (
                 <Select.Option key={x.value} value={x.value}>

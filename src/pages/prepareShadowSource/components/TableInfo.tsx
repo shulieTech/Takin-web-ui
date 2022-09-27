@@ -183,6 +183,7 @@ export default (props: Props) => {
           { required: true, whiteSpace: true, message: '请输入影子表名' },
         ],
       },
+      render: text => text || '-',
     },
     {
       title: '配置状态',
@@ -190,9 +191,19 @@ export default (props: Props) => {
       render: (text) => {
         return (
           {
-            0: <StatusDot />,
-            1: <StatusDot color="var(--FunctionNegative-500, #D24D40)" />,
-            2: <StatusDot color="var(--FunctionPositive-300, #2DC396)" />,
+            0: <StatusDot title="未检测" />,
+            1: (
+              <StatusDot
+                color="var(--FunctionNegative-500, #D24D40)"
+                title="检测失败"
+              />
+            ),
+            2: (
+              <StatusDot
+                color="var(--FunctionPositive-300, #2DC396)"
+                title="检测成功"
+              />
+            ),
           }[text] || '-'
         );
       },
@@ -210,7 +221,7 @@ export default (props: Props) => {
         };
       },
       render: (text, record) => {
-        return <Switch checked={text === 0} disabled />; // 是否加入压测范围(0-是 1-否)
+        return { 0: '是', 1: '否' }[text] || '-'; // 是否加入压测范围(0-是 1-否)
       },
     },
     {
@@ -426,10 +437,11 @@ export default (props: Props) => {
           pageSize: query.pageSize,
           current: query.current + 1,
           hideOnSinglePage: true,
-          onChange: (page, pageSize) => getList({
-            pageSize,
-            current: page - 1,
-          }),
+          onChange: (page, pageSize) =>
+            getList({
+              pageSize,
+              current: page - 1,
+            }),
           style: { marginRight: 60 },
         }}
         loading={loading}
