@@ -266,20 +266,24 @@ export default (props) => {
   ];
 
   useEffect(() => {
-    if (prepareState.currentLink?.id) {
-      getList(
-        {
-          current: 0,
-          pageSize: 10,
-          resourceId: prepareState.currentLink?.id,
-          joinPressure: undefined,
-          status: undefined,
-          entry: undefined,
-        },
-        false
-      );
-      getAppSummaryInfo(prepareState.currentLink?.id);
-    }
+    const timer = setTimeout(() => {
+      if (prepareState.currentLink?.id) {
+        getList(
+          {
+            current: 0,
+            pageSize: 10,
+            resourceId: prepareState.currentLink?.id,
+            joinPressure: undefined,
+            status: undefined,
+            entry: undefined,
+          },
+          false
+        );
+        getAppSummaryInfo(prepareState.currentLink?.id);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+    
   }, [prepareState.currentLink?.id]);
 
   return (

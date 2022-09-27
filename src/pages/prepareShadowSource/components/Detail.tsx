@@ -93,9 +93,12 @@ export default (props) => {
   };
 
   useEffect(() => {
-    if (prepareState.currentLink?.id) {
-      getStepStatus(prepareState.currentLink?.id);
-    }
+    const timer = setTimeout(() => {
+      if (prepareState.currentLink?.id) {
+        getStepStatus(prepareState.currentLink?.id);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
   }, [prepareState.currentLink?.id, prepareState.stepStatusRefreshKey]);
 
   useEffect(() => {
