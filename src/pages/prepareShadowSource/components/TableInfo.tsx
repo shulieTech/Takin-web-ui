@@ -183,6 +183,7 @@ export default (props: Props) => {
           { required: true, whiteSpace: true, message: '请输入影子表名' },
         ],
       },
+      render: text => text || '-',
     },
     {
       title: '配置状态',
@@ -220,7 +221,7 @@ export default (props: Props) => {
         };
       },
       render: (text, record) => {
-        return <Switch checked={text === 0} disabled />; // 是否加入压测范围(0-是 1-否)
+        return { 0: '是', 1: '否' }[text] || '-'; // 是否加入压测范围(0-是 1-否)
       },
     },
     {
