@@ -328,11 +328,9 @@ const BusinessFlowDetail: React.FC<Props> = props => {
   return (
     <BusinessFlowDetailContext.Provider value={{ state, setState }}>
       <MainPageLayout>
-        <Link to="/businessFlow">
-          <Button type="link" style={{ marginBottom: 16 }}>
-            <Icon type="left" /> 返回
-          </Button>
-        </Link>
+        <Button type="link" style={{ marginBottom: 16 }} onClick={() => window.history.back()}>
+          <Icon type="left" /> 返回
+        </Button>
         <div className={styles.borders}>
           <CustomDetailHeader
             title={
