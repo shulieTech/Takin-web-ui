@@ -80,9 +80,10 @@ const DropdowTable = (props) => {
 interface Props {
   setEditedDataSource: (record: any) => void;
   isolateListRefreshKey: number;
+  freshIsoloateHelpInfo: () => void;
 }
 export default (props: Props) => {
-  const { setEditedDataSource } = props;
+  const { setEditedDataSource, freshIsoloateHelpInfo  } = props;
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [editShadowTable, setEditShadowTable] = useState<any>(undefined);
@@ -277,6 +278,7 @@ export default (props: Props) => {
       <TableInfo
         detail={editShadowTable}
         cancelCallback={() => setEditShadowTable(undefined)}
+        freshIsoloateHelpInfo={freshIsoloateHelpInfo}
       />
     );
   }

@@ -21,10 +21,11 @@ const { Option } = Select;
 interface Props {
   detail: any;
   cancelCallback: () => void;
+  freshIsoloateHelpInfo: () => void;
 }
 
 export default (props: Props) => {
-  const { detail, cancelCallback } = props;
+  const { detail, cancelCallback, freshIsoloateHelpInfo } = props;
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [listItemAdded, setListItemAdded] = useState();
@@ -59,6 +60,7 @@ export default (props: Props) => {
         resourceId: detail.resourceId,
         dsId: detail.id,
         ...values,
+        shadowTable: `PT_${values.businessTable}`,
         joinFlag: values.joinFlag ? 0 : 1,
       };
 
@@ -88,6 +90,7 @@ export default (props: Props) => {
           stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
           refreshListKey: prepareState.refreshListKey + 1,
         });
+        freshIsoloateHelpInfo();
       }
     });
   };
@@ -105,6 +108,7 @@ export default (props: Props) => {
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
       });
+      freshIsoloateHelpInfo();
     }
   };
 
@@ -131,6 +135,7 @@ export default (props: Props) => {
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
       });
+      freshIsoloateHelpInfo();
     }
   };
 
@@ -175,15 +180,15 @@ export default (props: Props) => {
     {
       title: '影子表名',
       dataIndex: 'shadowTable',
-      formField: (
-        <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
-      ),
-      formFieldOptions: {
-        rules: [
-          { required: true, whiteSpace: true, message: '请输入影子表名' },
-        ],
-      },
-      render: text => text || '-',
+      // formField: (
+      //   <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+      // ),
+      // formFieldOptions: {
+      //   rules: [
+      //     { required: true, whiteSpace: true, message: '请输入影子表名' },
+      //   ],
+      // },
+      render: (text) => text || '-',
     },
     {
       title: '配置状态',

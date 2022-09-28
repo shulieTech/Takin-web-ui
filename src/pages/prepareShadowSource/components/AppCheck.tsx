@@ -245,6 +245,7 @@ export default (props) => {
         }
         return (
           <EditAgentCount
+            editable={false}
             record={record}
             okCallback={() => {
               getList();

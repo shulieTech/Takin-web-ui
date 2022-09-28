@@ -8,6 +8,7 @@ import BusinessService from 'src/pages/businessActivity/service';
 const initState = {
   dictionaryMap: {} as any,
   domains: [], // 业务域列表
+  envList: [], // 环境列表
 };
 export type CommonModelState = Partial<typeof initState>;
 
@@ -41,7 +42,15 @@ const commonModel = new BasicDva<CommonModelState>({
           }
         });
       }
-    }
+    },
+    setEnvList({ payload }, { call, put, select }) {
+      put({
+        type: 'updateState',
+        payload: {
+          envList: payload
+        }
+      });
+    },
   }
 }).render();
 

@@ -4,11 +4,12 @@ import service from '../service';
 
 interface Props {
   record: any;
+  editable?: boolean;
   okCallback: () => void;
 }
 
 const EditAgentCount = (prop: Props) => {
-  const { record, okCallback, form } = prop;
+  const { record, okCallback, editable = true, form } = prop;
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorStr, setErrorStr] = useState('');
@@ -113,9 +114,9 @@ const EditAgentCount = (prop: Props) => {
       }}
     >
       {record.nodeNum}/{record.agentNodeNum}
-      <a onClick={() => setIsEditing(true)} style={{ marginLeft: 8 }}>
+      {editable && <a onClick={() => setIsEditing(true)} style={{ marginLeft: 8 }}>
         <Icon type="edit" />
-      </a>
+      </a>}
     </span>
   );
 };

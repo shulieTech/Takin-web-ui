@@ -27,6 +27,8 @@ export default (props) => {
   const [editedDataSource, setEditedDataSource] = useState(undefined);
   const [uploading, setUploading] = useState(false);
   const [isolateListRefreshKey, setIsolateListRefreshKey] = useState(0);
+  const [helpInfoKey, setHelpInfoKey] = useState(0);
+  const freshIsoloateHelpInfo = () => setHelpInfoKey(helpInfoKey + 1);
 
   const setIsolateType = () => {
     let val = prepareState?.currentLink?.isolateType;
@@ -158,7 +160,7 @@ export default (props) => {
 
   useEffect(() => {
     getDataSourceSummaryInfo(prepareState.currentLink.id);
-  }, []);
+  }, [helpInfoKey]);
 
   if (showGuide) {
     return <DataIsolateGuide setIsolateType={setIsolateType} />;
@@ -253,6 +255,7 @@ export default (props) => {
         <DataSourceMode
           setEditedDataSource={setEditedDataSource}
           isolateListRefreshKey={isolateListRefreshKey}
+          freshIsoloateHelpInfo={freshIsoloateHelpInfo}
         />
       )}
       {mode === 1 && <AppMode isolateListRefreshKey={isolateListRefreshKey} />}
