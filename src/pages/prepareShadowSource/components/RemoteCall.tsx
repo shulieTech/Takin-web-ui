@@ -92,20 +92,24 @@ export default (props) => {
                     color="var(--FunctionNegative-500, #D24D40)"
                     title="检测失败"
                   />
-                  <Divider
-                    type="vertical"
-                    style={{ height: 24, margin: '0 24px' }}
-                  />
-                  <Tooltip title={record.remark}>
-                    <Icon
-                      type="file-text"
-                      theme="filled"
-                      style={{
-                        cursor: 'pointer',
-                        color: 'var(--Brandprimary-500, #0FBBD5)',
-                      }}
-                    />
-                  </Tooltip>
+                  {record.remark && (
+                    <>
+                      <Divider
+                        type="vertical"
+                        style={{ height: 24, margin: '0 24px' }}
+                      />
+                      <Tooltip title={record.remark}>
+                        <Icon
+                          type="file-text"
+                          theme="filled"
+                          style={{
+                            cursor: 'pointer',
+                            color: 'var(--Brandprimary-500, #0FBBD5)',
+                          }}
+                        />
+                      </Tooltip>
+                    </>
+                  )}
                 </>
               ),
               2: (

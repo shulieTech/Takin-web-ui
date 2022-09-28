@@ -141,10 +141,30 @@ export default (props) => {
                 />
               ), // 正常
               1: (
-                <StatusDot
-                  color="var(--FunctionNegative-400, #E8695D)"
-                  title="异常"
-                />
+                <>
+                  <StatusDot
+                    color="var(--FunctionNegative-500, #D24D40)"
+                    title="异常"
+                  />
+                  {record.remark && (
+                    <>
+                      <Divider
+                        type="vertical"
+                        style={{ height: 24, margin: '0 24px' }}
+                      />
+                      <Tooltip title={record.remark}>
+                        <Icon
+                          type="file-text"
+                          theme="filled"
+                          style={{
+                            cursor: 'pointer',
+                            color: 'var(--Brandprimary-500, #0FBBD5)',
+                          }}
+                        />
+                      </Tooltip>
+                    </>
+                  )}
+                </>
               ), // 不正常
             }[record.status] || '-'}
             <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
@@ -283,7 +303,6 @@ export default (props) => {
       }
     }, 300);
     return () => clearTimeout(timer);
-    
   }, [prepareState.currentLink?.id]);
 
   return (
