@@ -4,7 +4,7 @@ import styles from '../index.less';
 import classNames from 'classnames';
 import img1 from 'src/assets/link-type-0.png';
 import img2 from 'src/assets/link-type-1.png';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 
 interface SelectTypeModalProps {
   detail: any;

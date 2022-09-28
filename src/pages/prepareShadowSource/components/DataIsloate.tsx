@@ -10,7 +10,7 @@ import {
   message,
   Upload,
 } from 'antd';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import DataIsolateGuide from './DataIsolateGuide';
 import DataSourceMode from './DataSourceMode';
 import AppMode from './AppMode';

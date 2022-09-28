@@ -8,16 +8,21 @@ function getRouter(router) {
   if (router.routes) {
     router.routes = router.routes
       .filter(({ component }) => {
-        if (component.indexOf('page.tsx') >= 0) {
-          return true;
+        // if (component.indexOf('page.tsx') >= 0) {
+        //   return true;
+        // }
+        // if (
+        //   component.indexOf('Page.tsx') >= 0 ||
+        //   component.indexOf('404.tsx') >= 0
+        // ) {
+        //   return true;
+        // }
+        // return false;
+
+        if (component.indexOf('/components') > -1 || component.indexOf('/modals') > -1 || !component.endsWith('.tsx')) {
+          return false;
         }
-        if (
-          component.indexOf('Page.tsx') >= 0 ||
-          component.indexOf('404.tsx') >= 0
-        ) {
-          return true;
-        }
-        return false;
+        return true;
       })
       .map(item => {
         if (!item.path) {

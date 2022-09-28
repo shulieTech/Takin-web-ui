@@ -17,7 +17,7 @@ import service from '../service';
 import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
 import EditMockModal from '../modals/EditMock';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 
 const { Option } = Select;
 

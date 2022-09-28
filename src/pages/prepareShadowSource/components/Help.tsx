@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Modal, Tooltip, Icon, Divider } from 'antd';
 import Introduce from './Introduce';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import moment from 'moment';
 
 export default (props) => {

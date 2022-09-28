@@ -9,7 +9,7 @@ import {
   Menu,
   Button,
 } from 'antd';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
 import RemoteImport from './RemoteCall';

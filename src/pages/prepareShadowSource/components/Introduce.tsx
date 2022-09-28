@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import { Button, Tooltip, Row, Col, Icon } from 'antd';
 import styles from '../index.less';
 import classNames from 'classnames';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 
 interface Props {
   showAddBtn?: boolean;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Icon, Input, Pagination, Tooltip, Button, Spin, Empty } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import classNames from 'classnames';
 import styles from '../index.less';
 import { LINK_STATUS } from '../constants';

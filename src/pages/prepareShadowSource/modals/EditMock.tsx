@@ -17,7 +17,7 @@ import {
 import { Radio, Input, NumberPicker } from '@formily/antd-components';
 import useListService from 'src/utils/useListService';
 import service from '../service';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 
 interface Props {
   detail: any;

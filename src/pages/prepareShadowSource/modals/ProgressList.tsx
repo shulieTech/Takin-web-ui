@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Collapse, Icon, Spin, Divider, Table, Empty } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import styles from '../index.less';
 
 const { Panel } = Collapse;
