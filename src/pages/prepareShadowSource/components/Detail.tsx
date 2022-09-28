@@ -18,6 +18,7 @@ import Help from './Help';
 import styles from '../index.less';
 import service from '../service';
 import { STEP_STATUS } from '../constants';
+import SyncLinkModal from '../modals/SyncLink';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -26,8 +27,10 @@ export default (props) => {
     APP: 0,
     DS: 0,
     REMOTECALL: 0,
+    SHADOW_CONSUMER: 0,
   });
   const [showProgressListModal, setShowProgressListModal] = useState(false);
+  const [showSyncLinkModal, setShowSyncLinkModal] = useState(false);
 
   const commonStepStyle = {
     display: 'flex',
@@ -58,6 +61,10 @@ export default (props) => {
     {
       title: '远程调用',
       subTitle: STEP_STATUS[stepStatus.REMOTECALL],
+    },
+    {
+      title: '影子消费者',
+      subTitle: STEP_STATUS[stepStatus.SHADOW_CONSUMER],
     },
   ];
 
@@ -206,32 +213,37 @@ export default (props) => {
           >
             编辑链路
           </Button>
-          {prepareState.currentLink.type === 0 && (
-            <>
-              <Dropdown
-                overlay={
-                  <Menu>
-                    <Menu.Item>
-                      <Button
-                        type="link"
-                        style={{
-                          padding: '0 32px',
-                          color: 'var(--FunctionNegative-500, #D24D40)',
-                        }}
-                        onClick={deleteLink}
-                      >
-                        删除链路
-                      </Button>
-                    </Menu.Item>
-                  </Menu>
-                }
-              >
-                <Button style={{ width: 32, padding: 0, marginLeft: 32 }}>
-                  <Icon type="more" />
-                </Button>
-              </Dropdown>
-            </>
-          )}
+
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item>
+                  <Button type="link" block onClick={() => setShowSyncLinkModal(true)}>
+                    同步配置
+                  </Button>
+                </Menu.Item>
+                {prepareState.currentLink.type === 0 && (
+                  <Menu.Item>
+                    <Button
+                      type="link"
+                      block
+                      style={{
+                        padding: '0 32px',
+                        color: 'var(--FunctionNegative-500, #D24D40)',
+                      }}
+                      onClick={deleteLink}
+                    >
+                      删除链路
+                    </Button>
+                  </Menu.Item>
+                )}
+              </Menu>
+            }
+          >
+            <Button style={{ width: 32, padding: 0, marginLeft: 32 }}>
+              <Icon type="more" />
+            </Button>
+          </Dropdown>
         </div>
       </div>
       <div
@@ -272,6 +284,13 @@ export default (props) => {
       {showProgressListModal && (
         <ProgressListModal
           cancelCallback={() => setShowProgressListModal(false)}
+        />
+      )}
+      {showSyncLinkModal && (
+        <SyncLinkModal
+          detail={prepareState.currentLink}
+          okCallback={() => setShowSyncLinkModal(false)}
+          cancelCallback={() => setShowSyncLinkModal(false)}
         />
       )}
     </div>

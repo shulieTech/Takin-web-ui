@@ -225,4 +225,11 @@ export default {
     const url = '/pressureResource/progress/list';
     return httpGet(url, data);
   },
+  /**
+   * @name 同步链路到其他环境
+   */
+  async syncLink(data = {}) {
+    const url = '/pressureResource/syncLink';
+    return httpPost(url, data);
+  },
 };
