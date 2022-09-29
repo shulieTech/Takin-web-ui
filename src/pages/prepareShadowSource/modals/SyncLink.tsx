@@ -4,8 +4,8 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import service from '../service';
 import useListService from 'src/utils/useListService';
 import { LINK_STATUS } from '../constants';
+import { connect } from 'dva';
 
-const FormItem = Form.Item;
 const { Option } = Select;
 
 interface Props {
@@ -13,11 +13,15 @@ interface Props {
   okCallback: () => void;
   cancelCallback: () => void;
   form?: WrappedFormUtils;
+  envList?: any[];
 }
 
 const SyncLink = (props: Props) => {
-  const { detail, okCallback, cancelCallback, form } = props;
+  const { detail, okCallback, cancelCallback, form, envList } = props;
   const { getFieldDecorator, validateFields } = form;
+  const otherEnvList = envList.filter(
+    (x) => x.envCode !== localStorage.getItem('env-code')
+  );
 
   const startSync = () => {
     validateFields(async (err, values) => {
@@ -57,10 +61,14 @@ const SyncLink = (props: Props) => {
           <Form.Item label="将压测配置同步到以下环境：">
             {getFieldDecorator('targetEnv', {
               rules: [{ required: true, message: '请选择目标环境' }],
+              initialValue: otherEnvList?.[0]?.envCode,
             })(
               <Radio.Group>
-                <Radio value={1}>生产环境</Radio>
-                <Radio value={2}>预发环境</Radio>
+                {otherEnvList.map((x) => (
+                  <Radio value={x.envCode} key={x.envCode}>
+                    {x.envName}
+                  </Radio>
+                ))}
               </Radio.Group>
             )}
           </Form.Item>
@@ -79,4 +87,6 @@ const SyncLink = (props: Props) => {
   );
 };
 
-export default Form.create()(SyncLink);
+export default connect(({ common }) => ({ ...common }))(
+  Form.create()(SyncLink)
+);

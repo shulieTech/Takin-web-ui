@@ -43,8 +43,8 @@ const commonModel = new BasicDva<CommonModelState>({
         });
       }
     },
-    setEnvList({ payload }, { call, put, select }) {
-      put({
+    *setEnvList({ payload }, { call, put, select }) {
+      yield put({
         type: 'updateState',
         payload: {
           envList: payload

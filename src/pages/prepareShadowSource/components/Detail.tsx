@@ -34,7 +34,7 @@ export default (props) => {
 
   const commonStepStyle = {
     display: 'flex',
-    minWidth: 132,
+    // minWidth: 132,
     padding: 4,
     paddingRight: 16,
     borderRadius: 100,
@@ -52,19 +52,19 @@ export default (props) => {
   const stepList = [
     {
       title: '应用检查',
-      subTitle: STEP_STATUS[stepStatus.APP],
+      statusName: stepStatus.APP,
     },
     {
       title: '影子隔离',
-      subTitle: STEP_STATUS[stepStatus.DS],
+      statusName: stepStatus.DS,
     },
     {
       title: '远程调用',
-      subTitle: STEP_STATUS[stepStatus.REMOTECALL],
+      statusName: stepStatus.REMOTECALL,
     },
     {
       title: '影子消费者',
-      subTitle: STEP_STATUS[stepStatus.SHADOW_CONSUMER],
+      statusName: stepStatus.SHADOW_CONSUMER,
     },
   ];
 
@@ -184,7 +184,7 @@ export default (props) => {
                       {x.title}
                     </span>
                     <div style={{ fontSize: 12, marginTop: 4 }}>
-                      {x.subTitle}
+                      {STEP_STATUS[x.statusName] || '未开始'}
                     </div>
                   </div>
                 </div>
@@ -218,7 +218,12 @@ export default (props) => {
             overlay={
               <Menu>
                 <Menu.Item>
-                  <Button type="link" block onClick={() => setShowSyncLinkModal(true)}>
+                  <Button
+                    type="link"
+                    block
+                    onClick={() => setShowSyncLinkModal(true)}
+                    style={{ padding: '0 32px' }}
+                  >
                     同步配置
                   </Button>
                 </Menu.Item>
