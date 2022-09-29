@@ -18,6 +18,7 @@ import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
 import EditAgentCount from './EditAgentCount';
 import { ISOLATE_TYPE } from '../constants';
+import AppErrorListModal from 'src/pages/appManage/modals/AppErrorListModal';
 
 const { Option } = Select;
 
@@ -146,24 +147,27 @@ export default (props) => {
                     color="var(--FunctionNegative-500, #D24D40)"
                     title="异常"
                   />
-                  {record.remark && (
-                    <>
+                  {
+                    record.applicationId && <>
                       <Divider
                         type="vertical"
                         style={{ height: 24, margin: '0 24px' }}
                       />
-                      <Tooltip title={record.remark}>
-                        <Icon
-                          type="file-text"
-                          theme="filled"
-                          style={{
-                            cursor: 'pointer',
-                            color: 'var(--Brandprimary-500, #0FBBD5)',
-                          }}
-                        />
-                      </Tooltip>
+                      <AppErrorListModal
+                        appId={record.applicationId}
+                        btnText={
+                          <Icon
+                            type="file-text"
+                            theme="filled"
+                            style={{
+                              cursor: 'pointer',
+                              color: 'var(--Brandprimary-500, #0FBBD5)',
+                            }}
+                          />
+                        }
+                      />
                     </>
-                  )}
+                  }
                 </>
               ), // 不正常
             }[record.status] || '-'}
