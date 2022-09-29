@@ -7,7 +7,13 @@ import classNames from 'classnames';
 import styles from '../index.less';
 import { LINK_STATUS } from '../constants';
 
-export default (props) => {
+interface Props {
+  collapsed: boolean;
+  setCollapsed: (val: boolean) => void;
+}
+
+export default (props: Props) => {
+  const { collapsed, setCollapsed } = props;
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const { list, loading, total, query, getList } = useListService({
     service: service.getLinkList,
@@ -42,6 +48,20 @@ export default (props) => {
     getList();
   }, [prepareState.refreshListKey]);
 
+  if (collapsed) {
+    return (
+      <div style={{ textAlign: 'center', lineHeight: '54px' }}>
+        <Tooltip title="展开链路列表">
+          <Icon
+            type="menu-unfold"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setCollapsed(false)}
+          />
+        </Tooltip>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ padding: 16 }}>
@@ -53,16 +73,23 @@ export default (props) => {
             style={{ marginLeft: 4 }}
           />
         </Tooltip>
+        <Button
+          size="small"
+          style={{ width: 24, padding: 0, marginLeft: 24 }}
+          onClick={() => {
+            setPrepareState({ currentLink: {} });
+          }}
+        >
+          <Icon type="plus" />
+        </Button>
         <span className="flt-rt">
-          <Button
-            size="small"
-            style={{ width: 24, padding: 0 }}
-            onClick={() => {
-              setPrepareState({ currentLink: {} });
-            }}
-          >
-            <Icon type="plus" />
-          </Button>
+          <Tooltip title="收起链路列表">
+            <Icon
+              type="menu-fold"
+              style={{ cursor: 'pointer', lineHeight: '24px' }}
+              onClick={() => setCollapsed(true)}
+            />
+          </Tooltip>
         </span>
       </div>
       <div style={{ padding: 16 }}>

@@ -19,6 +19,8 @@ export default (props) => {
       userName: undefined
     }
   });
+  const [collapsed, setCollapsed] = useState(false);
+
   const setPrepareState = (particalState) => {
     setFullPrepareState({
       ...prepareState,
@@ -29,11 +31,13 @@ export default (props) => {
     <PrepareContext.Provider value={{ prepareState, setPrepareState }}>
       <Layout>
         <Layout.Sider
+          collapsed={collapsed}
+          collapsedWidth={40}
           width={260}
           theme="light"
           style={{ borderRight: '1px solid var(--Netural-100, #EEF0F2)' }}
         >
-          <List />
+          <List collapsed={collapsed} setCollapsed={setCollapsed}/>
         </Layout.Sider>
         <Layout.Content style={{ background: '#fff' }}>
           {props.children}

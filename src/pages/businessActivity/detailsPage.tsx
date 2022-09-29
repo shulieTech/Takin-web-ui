@@ -198,7 +198,7 @@ const BusinessActivityDetails: React.FC<Props> = (props) => {
         >
           <HeaderNode isTempActivity={state.queryParams.tempActivity}/>
           <div
-            style={{ position: 'relative', height: '100%' }}
+            style={{ position: 'relative', height: '100%', overflow: 'hidden' }}
             id="detail_graph_box"
           >
             <Spin spinning={false} wrapperClassName={'spin-full'}>
