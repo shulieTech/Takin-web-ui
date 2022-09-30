@@ -21,6 +21,7 @@ import { STEP_STATUS } from '../constants';
 import SyncLinkModal from '../modals/SyncLink';
 import { Link } from 'umi';
 import AddJmeterModal from 'src/pages/businessFlow/modals/AddJmeterModal';
+import ShadowConsumer from './ShadowConsumer';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -316,6 +317,7 @@ export default (props) => {
           {step === 0 && <AppCheck />}
           {step === 1 && <DataIsloate />}
           {step === 2 && <RemoteImport />}
+          {step === 3 && <ShadowConsumer />}
         </div>
       </div>
 

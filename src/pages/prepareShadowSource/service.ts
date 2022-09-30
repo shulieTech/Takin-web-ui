@@ -239,4 +239,18 @@ export default {
     const url = '/businessFlow/scene/detail';
     return httpGet(url, data);
   },
+  /**
+   * @name 影子消费者列表
+   */
+  async shadowConsumerList(data = {}) {
+    const url = '/pressureResource/shadowConsumer/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name mq类型列表
+   */
+  async mqTypeList(data = {}) {
+    const url = '/v2/consumers/type';
+    return httpGet(url, data);
+  },
 };

@@ -114,6 +114,7 @@ export default (props) => {
       `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
     );
   };
+  
   // 获取数据源统计信息
   const getDataSourceSummaryInfo = async (id) => {
     const {
