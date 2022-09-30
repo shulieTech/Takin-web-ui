@@ -98,7 +98,7 @@ export default (props: Props) => {
             { label: '不消费影子topic', value: '0' },
             { label: '消费影子topic', value: '1' },
           ]}
-          initialValue={0}
+          initialValue={'0'}
         />
       </Form>
     </Modal>
