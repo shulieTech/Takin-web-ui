@@ -243,7 +243,7 @@ export default {
    * @name 影子消费者列表
    */
   async shadowConsumerList(data = {}) {
-    const url = '/pressureResource/shadowConsumer/list';
+    const url = '/v2/consumers/page';
     return httpGet(url, data);
   },
   /**
@@ -252,5 +252,26 @@ export default {
   async mqTypeList(data = {}) {
     const url = '/v2/consumers/type';
     return httpGet(url, data);
+  },
+  /**
+   * @name 新增影子消费
+   */
+  async createShdowConsumer(data = {}) {
+    const url = '/v2/consumers/create';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 编辑影子消费
+   */
+  async updateShdowConsumer(data = {}) {
+    const url = '/v2/consumers/update';
+    return httpPut(url, data);
+  },
+  /**
+   * @name 删除影子消费
+   */
+  async deleteConsumer(data = {}) {
+    const url = '/consumers/delete';
+    return httpDelete(url, data);
   },
 };

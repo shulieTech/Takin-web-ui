@@ -10,7 +10,7 @@ import {
   Tag,
   Switch,
   message,
-  Upload,
+  Popconfirm,
 } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
@@ -25,7 +25,6 @@ export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [editItem, setEditItem] = useState<any>();
-  const [uploading, setUploading] = useState(false);
 
   const { list: mqTypeList, loading: mqTypeLoading } = useListService({
     service: service.mqTypeList,
@@ -40,27 +39,27 @@ export default (props) => {
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      queryInterfaceName: undefined,
-      mqType: '',
-      status: '',
+      applicationId: '6977836591314112512',
+      topicGroup: undefined,
+      type: undefined,
+      shadowconsumerEnable: undefined,
       resourceId: prepareState.currentLink.id,
     },
     // isQueryOnMount: false,
   });
 
-  const toggleInvovled = async (checked, record) => {
+  const deleteItem = async (record) => {
     const {
-      data: { success },
-    } = await service.updateRemoteCall({
-      ...record,
-      pass: checked ? 0 : 1,
-      resourceId: prepareState.currentLink.id,
+      data: { data, success },
+    } = await service.deleteConsumer({
+      ids: [record.id],
     });
     if (success) {
       message.success('操作成功');
       getList();
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        refreshListKey: prepareState.refreshListKey + 1,
       });
     }
   };
@@ -68,7 +67,7 @@ export default (props) => {
   const columns = [
     {
       title: '业务的topic#业务的消费组',
-      dataIndex: 'name',
+      dataIndex: 'topicGroup',
       render: (text, record) => {
         return (
           <>
@@ -128,7 +127,7 @@ export default (props) => {
                     color: 'var(--Netural-1000, #141617)',
                   }}
                 />
-                {record.type === 0 && (
+                {record.isManual && (
                   <span
                     style={{
                       position: 'absolute',
@@ -187,18 +186,34 @@ export default (props) => {
     },
     {
       title: '是否消费topic',
+      dataIndex: 'shadowconsumerEnable',
+      render: (text, record) => {
+        return { 0: '否', 1: '是' }[text] || '-';
+      },
+    },
+    {
+      title: '操作',
       align: 'right',
       fixed: 'right',
-      dataIndex: 'pass',
+      dataIndex: 'shadowconsumerEnable',
       render: (text, record) => {
-        return (
-          <span>
-            <Switch
-              style={{ marginLeft: 24 }}
-              checked={text === 0} // 0是， 1否
-              onChange={(checked) => toggleInvovled(checked, record)}
-            />
-          </span>
+        return record.isManual ? (
+          <>
+            <Button
+              type="link"
+              style={{ marginLeft: 8 }}
+              onClick={() => setEditItem(record)}
+            >
+              编辑
+            </Button>
+            <Popconfirm title="确认删除？" onConfirm={() => deleteItem(record)}>
+              <Button type="link" style={{ marginLeft: 8 }}>
+                删除
+              </Button>
+            </Popconfirm>
+          </>
+        ) : (
+          '-'
         );
       },
     },
@@ -221,14 +236,11 @@ export default (props) => {
   return (
     <>
       <div style={{ display: 'flex', padding: '0 32px' }}>
-        <div style={{ flex: 1 }}/>
+        <div style={{ flex: 1 }} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button onClick={() => setEditItem({})}>新增影子消费者</Button>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <Button
-            type="primary"
-            onClick={downLoadTplFile}
-          >
+          <Button type="primary" onClick={downLoadTplFile}>
             导出
           </Button>
         </div>
@@ -258,16 +270,18 @@ export default (props) => {
           <span style={{ marginRight: 24 }}>
             状态：
             <Select
+              placeholder="请选择"
               style={{ width: 114 }}
-              value={query.status}
+              value={query.shadowconsumerEnable}
               onChange={(val) =>
                 getList({
-                  status: val,
+                  shadowconsumerEnable: val,
                   current: 0,
                 })
               }
+              allowClear
             >
-              <Option value="">全部</Option>
+              {/* <Option value="">全部</Option> */}
               <Option value={0}>可消费</Option>
               <Option value={1}>不消费</Option>
             </Select>
@@ -275,16 +289,18 @@ export default (props) => {
           <span style={{ marginRight: 24 }}>
             类型：
             <Select
+              placeholder="请选择"
               style={{ width: 114 }}
-              value={query.mqType}
+              value={query.type}
               onChange={(val) =>
                 getList({
-                  mqType: val,
+                  type: val,
                   current: 0,
                 })
               }
+              allowClear
             >
-              <Option value="">全部</Option>
+              {/* <Option value="">全部</Option> */}
               {mqTypeList.map((x) => (
                 <Option value={x.value} key={x.value}>
                   {x.label}

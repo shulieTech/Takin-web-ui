@@ -1,5 +1,5 @@
 import React, { useState, useContext, useMemo } from 'react';
-import { Modal } from 'antd';
+import { message, Modal } from 'antd';
 import { Form, FormItem, createAsyncFormActions } from '@formily/antd';
 import { Input, Select, Radio } from '@formily/antd-components';
 import service from '../service';
@@ -24,8 +24,17 @@ export default (props: Props) => {
       ...detail,
       ...values,
       resourceId: prepareState.currentLink.id,
+      applicationId: '6977836591314112512',
     };
     // TODO 提交数据
+    const {
+      data: { data, success },
+    } = await service[detail.id ? 'updateShdowConsumer' : 'createShdowConsumer'](newValue);
+    if (success) {
+      message.success('操作成功');
+      cancelCallback();
+      okCallback();
+    }
   };
 
   return (
@@ -51,7 +60,7 @@ export default (props: Props) => {
         wrapperCol={18}
       >
         <FormItem
-          name="mqType"
+          name="type"
           title="MQ类型"
           component={Select}
           dataSource={mqTypeList}
@@ -61,7 +70,7 @@ export default (props: Props) => {
           rules={[{ required: true, message: '请选择MQ类型' }]}
         />
         <FormItem
-          name="topic"
+          name="topicGroup"
           title="业务的topic"
           component={Input}
           rules={[
@@ -70,19 +79,24 @@ export default (props: Props) => {
               whitespace: true,
               message: '请输入业务的topic#业务的消费组',
             },
+            {
+              validator: (val) => {
+                return !val || (typeof val === 'string' && val.length > 0 && val.indexOf('#') > -1)
+                  ? ''
+                  : '业务的topic#业务的消费组请以#分割';
+              },
+            },
           ]}
           props={{ maxLength: 200, whitespace: true, placeholder: '请输入' }}
         />
         <FormItem
-          name="isConsumed"
+          name="shadowconsumerEnable"
           title="是否消费"
           component={Radio.Group}
-          rules={[
-            { required: true, message: '请选择是否消费' },
-          ]}
+          rules={[{ required: true, message: '请选择是否消费' }]}
           dataSource={[
-            { label: '不消费影子topic', value: 0 },
-            { label: '消费影子topic', value: 1 },
+            { label: '不消费影子topic', value: '0' },
+            { label: '消费影子topic', value: '1' },
           ]}
           initialValue={0}
         />
