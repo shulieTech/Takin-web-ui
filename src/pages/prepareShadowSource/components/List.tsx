@@ -6,6 +6,7 @@ import { PrepareContext } from '../_layout';
 import classNames from 'classnames';
 import styles from '../index.less';
 import { LINK_STATUS } from '../constants';
+import { router } from 'umi';
 
 interface Props {
   collapsed: boolean;
@@ -131,6 +132,7 @@ export default (props: Props) => {
                   [styles.active]: x.id === prepareState.currentLink?.id,
                 })}
                 onClick={() => {
+                  router.push('/prepareShadowSource');
                   setPrepareState({ currentLink: x });
                 }}
               >

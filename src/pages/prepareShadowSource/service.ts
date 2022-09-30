@@ -232,4 +232,11 @@ export default {
     const url = '/pressureResource/syncLink';
     return httpPost(url, data);
   },
+  /**
+   * @name 获取关联的业务流程详情
+   */
+  async getFlowDetail(data = {}) {
+    const url = '/businessFlow/scene/detail';
+    return httpGet(url, data);
+  },
 };

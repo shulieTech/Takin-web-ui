@@ -25,6 +25,7 @@ interface Props {
     scriptFile?: {};
     pluginConfigs?: any[];
   };
+  resetModalProps?: any;
 }
 
 interface State {
@@ -276,6 +277,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
       onClick={handleClick}
       beforeOk={handleSubmit}
       afterCancel={handleCancle}
+      {...(props.resetModalProps || {})}
     >
       <div style={{ position: 'relative' }}>
         {state.loading && (
