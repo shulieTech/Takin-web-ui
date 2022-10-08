@@ -85,8 +85,7 @@ export default (props: SelectTypeModalProps) => {
                     lineHeight: '24px',
                   }}
                 >
-                  接入应用后，Takin会自动获取接口数据，您可以通过手工串联入口的方式进行链路创建。「好处说明」
-                  建议使用
+                  接入应用后，Takin会自动获取接口数据，您可以通过手工串联入口的方式进行链路创建。
                 </div>
                 <div>
                   适用于
