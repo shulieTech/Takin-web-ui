@@ -20,7 +20,7 @@ import service from '../service';
 import { STEP_STATUS } from '../constants';
 import SyncLinkModal from '../modals/SyncLink';
 import { Link } from 'umi';
-import AddJmeterModal from 'src/pages/businessFlow/modals/AddJmeterModal';
+// import AddJmeterModal from 'src/pages/businessFlow/modals/AddJmeterModal';
 import ShadowConsumer from './ShadowConsumer';
 
 export default (props) => {
@@ -34,7 +34,7 @@ export default (props) => {
   });
   const [showProgressListModal, setShowProgressListModal] = useState(false);
   const [showSyncLinkModal, setShowSyncLinkModal] = useState(false);
-  const [flowDetail, setFlowDetail] = useState<any>();
+  // const [flowDetail, setFlowDetail] = useState<any>();
 
   const commonStepStyle = {
     display: 'flex',
@@ -104,21 +104,21 @@ export default (props) => {
   };
 
   // 获取关联业务流程的详情
-  const getFlowDetail = async () => {
-    const {
-      data: { data, success },
-      // TODO 获取业务流程的id
-    } = await service.getFlowDetail({ id: 289 });
-    if (success) {
-      setFlowDetail(data);
-    }
-  };
+  // const getFlowDetail = async () => {
+  //   const {
+  //     data: { data, success },
+  //     // TODO 获取业务流程的id
+  //   } = await service.getFlowDetail({ id: 289 });
+  //   if (success) {
+  //     setFlowDetail(data);
+  //   }
+  // };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (prepareState.currentLink?.id) {
         getStepStatus(prepareState.currentLink?.id);
-        getFlowDetail();
+        // getFlowDetail();
       }
     }, 300);
     return () => clearTimeout(timer);
@@ -218,7 +218,7 @@ export default (props) => {
           })}
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {flowDetail && (
+          {/* {flowDetail && (
             <AddJmeterModal
               btnText="管理脚本"
               action="edit"
@@ -231,7 +231,10 @@ export default (props) => {
               }}
               resetModalProps={{ btnProps: { type: 'default' } }}
             />
-          )}
+          )} */}
+          <Link to={`/prepareShadowSource/sub/flow?id=288`}>
+            <Button style={{ marginLeft: 24 }}>管理脚本</Button>
+          </Link>
           <Link to={`/prepareShadowSource/sub/activity?id=45`}>
             <Button style={{ marginLeft: 24 }}>链路拓扑</Button>
           </Link>
