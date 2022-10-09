@@ -225,6 +225,7 @@ export default (props) => {
               fileList={flowDetail?.scriptFile}
               detailData={flowDetail}
               id={flowDetail?.id}
+              jumpToDetailOnSuccess={false}
               onSuccess={() => {
                 //
               }}

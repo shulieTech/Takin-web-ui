@@ -16,7 +16,7 @@ import { ButtonProps } from 'antd/lib/button';
 
 interface Props {
   btnText?: string | React.ReactNode;
-  onSuccess?: () => void;
+  onSuccess?: (data?: any) => void;
   businessActivityId?: string;
   action?: string;
   fileList?: any[];
@@ -26,6 +26,7 @@ interface Props {
     pluginConfigs?: any[];
   };
   resetModalProps?: any;
+  jumpToDetailOnSuccess?: boolean;
 }
 
 interface State {
@@ -36,7 +37,7 @@ interface State {
   okBtnProps?: ButtonProps;
 }
 const AddJmeterModal: React.FC<Props> = (props) => {
-  const { detailData = {} } = props;
+  const { detailData = {}, jumpToDetailOnSuccess = true } = props;
   const [state, setState] = useStateReducer<State>({
     fileList: null,
     form: null as WrappedFormUtils,
@@ -247,8 +248,10 @@ const AddJmeterModal: React.FC<Props> = (props) => {
         });
         if (success) {
           message.success('保存成功!');
-          router.push(`/businessFlow/details?id=${data.id}&isAuto=true`);
-          props.onSuccess();
+          if (jumpToDetailOnSuccess) {
+            router.push(`/businessFlow/details?id=${data.id}&isAuto=true`);
+          }
+          props.onSuccess(data);
           resolve(true);
           return;
         }

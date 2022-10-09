@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import img1 from 'src/assets/link-type-0.png';
 import img2 from 'src/assets/link-type-1.png';
 import { PrepareContext } from '../_layout';
+import AddJmeterModal from 'src/pages/businessFlow/modals/AddJmeterModal';
 
 interface SelectTypeModalProps {
   detail: any;
@@ -33,10 +34,14 @@ export default (props: SelectTypeModalProps) => {
           setShowTypeSelectModal(false);
         }}
         onOk={() => {
+          if (selectType === 1) {
+            document.querySelector('#addJmeterModalBtn')?.click();
+          } else {
+            setPrepareState({
+              editLink: detail,
+            });
+          }
           setShowTypeSelectModal(false);
-          setPrepareState({
-            editLink: detail,
-          });
         }}
       >
         <div
@@ -101,8 +106,8 @@ export default (props: SelectTypeModalProps) => {
             className={classNames(styles['card-checkbox'], {
               [styles.checked]: selectType === 1,
             })}
-            style={{ cursor: 'not-allowed' }}
-            // onClick={() => setSelectType(1)}
+            style={{ cursor: 'pointer' }}
+            onClick={() => setSelectType(1)}
           >
             <Icon
               type="check-square"
@@ -133,7 +138,7 @@ export default (props: SelectTypeModalProps) => {
                   }}
                 >
                   已有jmeter脚本可以使用此种模式新建，Takin会自动匹配接口 <br />
-                  <span style={{ color: '#FFA73B' }}>本期暂无，敬请期待</span>
+                  {/* <span style={{ color: '#FFA73B' }}>本期暂无，敬请期待</span> */}
                 </div>
                 <div>
                   适用于
@@ -144,6 +149,22 @@ export default (props: SelectTypeModalProps) => {
           </div>
         </div>
       </Modal>
+      <AddJmeterModal
+        btnText="1111"
+        jumpToDetailOnSuccess={false}
+        onSuccess={() => {
+          //
+        }}
+        resetModalProps={{
+          btnProps: {
+            type: 'default',
+            style: {
+              display: 'none',
+            },
+            id: 'addJmeterModalBtn',
+          },
+        }}
+      />
     </>
   );
 };
