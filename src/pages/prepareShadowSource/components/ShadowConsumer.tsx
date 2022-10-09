@@ -235,7 +235,7 @@ export default (props) => {
 
   return (
     <>
-      <div style={{ display: 'flex', padding: '0 32px' }}>
+      <div style={{ display: 'flex', padding: '16px 32px 0' }}>
         <div style={{ flex: 1 }} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button onClick={() => setEditItem({})}>新增影子消费者</Button>
