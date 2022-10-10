@@ -18,11 +18,12 @@ const getAddDynamicDbFormData = (
   detailData,
   agentSourceType
 ): FormDataType[] => {
+  const formValues = state.form?.getFieldsValue() || {};
   useEffect(() => {
-    if (state.dsType) {
+    if (state.form && formValues.dsType && formValues.connectionPool) {
       queryTemplate();
     }
-  }, [state.dsType]);
+  }, [state.dsType, formValues.dsType, formValues.connectionPool]);
   /**
    * @name 切换方案类型
    */
@@ -37,15 +38,16 @@ const getAddDynamicDbFormData = (
    * @name 获取隔离方案动态模板
    */
   const queryTemplate = async () => {
+    const values = state.form.getFieldsValue() || {};
     const {
       data: { success, data },
     } = await AppManageService.queryTemplate({
-      applicationName: state.form.getFieldsValue().applicationName,
-      agentSourceType: state.form.getFieldsValue().middlewareType,
-      dsType: state.dsType,
+      applicationName: values.applicationName,
+      agentSourceType: values.middlewareType,
+      dsType: values.dsType,
       cacheType: state.cacheType,
       isNewData: true,
-      connectionPool: state.form.getFieldsValue().connectionPool,
+      connectionPool: values.connectionPool,
     });
     if (success) {
       setState({
@@ -164,21 +166,6 @@ const getAddDynamicDbFormData = (
 
   const basicDbFormData = [
     {
-      key: 'applicationName',
-      label: '应用',
-      options: {
-        initialValue: detailData && detailData.applicationName,
-        rules: [
-          {
-            required: true,
-            whitespace: true,
-            message: '请选择应用',
-          },
-        ],
-      },
-      node: <Input disabled={true} />,
-    },
-    {
       key: 'middlewareType',
       label: '类型',
       options: {
@@ -232,6 +219,24 @@ const getAddDynamicDbFormData = (
       ),
     },
   ];
+  if (detailData?.applicationName) {
+    basicDbFormData.unshift(
+      {
+        key: 'applicationName',
+        label: '应用',
+        options: {
+          initialValue: detailData && detailData.applicationName,
+          rules: [
+            {
+              required: true,
+              message: '请选择应用',
+            },
+          ],
+        },
+        node: <Input disabled={true} />,
+      }
+    );
+  }
 
   const linkFormData = [
     {

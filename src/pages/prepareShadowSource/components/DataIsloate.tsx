@@ -19,6 +19,7 @@ import service from '../service';
 import styles from '../index.less';
 import { getUrl } from 'src/utils/request';
 import { ISOLATE_TYPE } from '../constants';
+import AddDynamicDbDrawer from 'src/pages/appManage/components/AddDynamicDbDrawer';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -236,12 +237,22 @@ export default (props) => {
           >
             新增数据源
           </Button> */}
+          <AddDynamicDbDrawer
+            titles="新增数据源"
+            action="add"
+            detailData={{
+              dsType: { 1: '0', 2: '2', 3: '1' }[prepareState?.currentLink?.isolateType]
+            }}
+            onSuccess={() => {
+              // TODO 刷新
+            }}
+          />
           <Upload
             accept=".xlsx,.csv,.xls"
             showUploadList={false}
             customRequest={uploadFile}
           >
-            <Button loading={uploading}>导入隔离配置</Button>
+            <Button loading={uploading} style={{ marginLeft: 16 }}>导入隔离配置</Button>
           </Upload>
           <Button
             type="primary"
