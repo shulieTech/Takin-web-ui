@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import styles from '../index.less';
 import { LINK_STATUS } from '../constants';
 import { router } from 'umi';
+import { debounce } from 'lodash';
 
 interface Props {
   collapsed: boolean;
@@ -44,6 +45,11 @@ export default (props: Props) => {
       }
     },
   });
+
+  const changeLink = debounce((x) => {
+    router.push('/prepareShadowSource');
+    setPrepareState({ currentLink: x });
+  }, 500);
 
   useEffect(() => {
     getList();
@@ -131,10 +137,7 @@ export default (props: Props) => {
                 className={classNames(styles['link-item'], {
                   [styles.active]: x.id === prepareState.currentLink?.id,
                 })}
-                onClick={() => {
-                  router.push('/prepareShadowSource');
-                  setPrepareState({ currentLink: x });
-                }}
+                onClick={() => changeLink(x)}
               >
                 <div style={{ display: 'flex', marginBottom: 8 }}>
                   <Tooltip title={x.name} placement="topLeft">
