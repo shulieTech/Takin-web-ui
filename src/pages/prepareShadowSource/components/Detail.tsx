@@ -128,6 +128,24 @@ export default (props) => {
     setStep(0);
   }, [prepareState.currentLink?.id]);
 
+  useEffect(() => {
+    // 获取压测开关状态及探针版本
+    service.querySwitchStatus({}).then(({ data: { success, data } }) => {
+      if (success) {
+        setPrepareState({
+          pressureEngineStatus: data.switchStatus,
+        });
+      }
+    });
+    service.queryAgentStatus({}).then(({ data: { success, data } }) => {
+      if (success) {
+        setPrepareState({
+          isNewAgent: data,
+        });
+      }
+    });
+  }, []);
+
   return (
     <div
       style={{ height: '100%', display: 'flex', flexDirection: 'column' }}

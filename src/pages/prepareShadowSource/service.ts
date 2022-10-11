@@ -274,4 +274,18 @@ export default {
     const url = '/consumers/delete';
     return httpDelete(url, data);
   },
+  /**
+   * @name 获取压测开关状态
+   */
+  async querySwitchStatus(data = {}) {
+    const url = '/application/center/app/switch/un_safe';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取agent版本
+   */
+  async queryAgentStatus(data = {}) {
+    const url = '/application/center/app/config/ds/isnew';
+    return httpGet(url, data);
+  },
 };

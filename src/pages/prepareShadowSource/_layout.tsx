@@ -17,7 +17,9 @@ export default (props) => {
       text: undefined,
       checkTime: undefined,
       userName: undefined
-    }
+    },
+    pressureEngineStatus: undefined, // 压测开关状态
+    isNewAgent: undefined, // 是否新探针版本
   });
   const [collapsed, setCollapsed] = useState(false);
 

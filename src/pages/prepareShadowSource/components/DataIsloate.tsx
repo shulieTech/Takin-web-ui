@@ -20,6 +20,7 @@ import styles from '../index.less';
 import { getUrl } from 'src/utils/request';
 import { ISOLATE_TYPE } from '../constants';
 import AddDynamicDbDrawer from 'src/pages/appManage/components/AddDynamicDbDrawer';
+import AddAndEditDbDrawer from 'src/pages/appManage/components/AddAndEditDbDrawer';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -115,7 +116,7 @@ export default (props) => {
       `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
     );
   };
-  
+
   // 获取数据源统计信息
   const getDataSourceSummaryInfo = async (id) => {
     const {
@@ -241,22 +242,41 @@ export default (props) => {
             titles="新增数据源"
             action="add"
             detailData={{
-              dsType: { 1: '0', 2: '2', 3: '1' }[prepareState?.currentLink?.isolateType]
+              dsType: { 1: '0', 2: '2', 3: '1' }[prepareState?.currentLink?.isolateType],
             }}
             onSuccess={() => {
               // TODO 刷新
             }}
           />
+          <span style={{ marginLeft: 16 }}>
+            <AddAndEditDbDrawer
+              disabled={
+                prepareState.pressureEngineStatus === 'OPENING' ||
+                prepareState.pressureEngineStatus === 'CLOSING'
+                  ? true
+                  : false
+              }
+              titles="新增其他影子存储"
+              action="add"
+              id={'6977836591314112512'}
+              detailData={{}}
+              onSccuess={() => {
+                // TODO 刷新
+              }}
+            />
+          </span>
           <Upload
             accept=".xlsx,.csv,.xls"
             showUploadList={false}
             customRequest={uploadFile}
           >
-            <Button loading={uploading} style={{ marginLeft: 16 }}>导入隔离配置</Button>
+            <Button loading={uploading} style={{ marginLeft: 16 }}>
+              导入隔离配置
+            </Button>
           </Upload>
           <Button
             type="primary"
-            style={{ marginLeft: 24 }}
+            style={{ marginLeft: 16 }}
             onClick={downLoadConfigFile}
           >
             导出待配置项
