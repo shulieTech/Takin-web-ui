@@ -17,17 +17,15 @@ import AppMode from './AppMode';
 import EditDataSource from '../modals/EditDataSource';
 import service from '../service';
 import styles from '../index.less';
-import { getUrl } from 'src/utils/request';
+// import { getUrl } from 'src/utils/request';
 import { ISOLATE_TYPE } from '../constants';
-import AddDynamicDbDrawer from 'src/pages/appManage/components/AddDynamicDbDrawer';
-import AddAndEditDbDrawer from 'src/pages/appManage/components/AddAndEditDbDrawer';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const showGuide = !prepareState.currentLink?.isolateType;
   const [mode, setMode] = useState(0);
   const [editedDataSource, setEditedDataSource] = useState(undefined);
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
   const [isolateListRefreshKey, setIsolateListRefreshKey] = useState(0);
   const [helpInfoKey, setHelpInfoKey] = useState(0);
   const freshIsoloateHelpInfo = () => setHelpInfoKey(helpInfoKey + 1);
@@ -94,28 +92,28 @@ export default (props) => {
     backgroundColor: 'var(--Netural-100, #EEF0F2)',
   };
 
-  const uploadFile = async ({ file }) => {
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('resourceId', prepareState.currentLink.id);
+  // const uploadFile = async ({ file }) => {
+  //   setUploading(true);
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('resourceId', prepareState.currentLink.id);
 
-    const {
-      data: { success },
-    } = await service.importConfigFile(formData).finally(() => {
-      setUploading(false);
-    });
-    if (success) {
-      message.success('操作成功');
-      setIsolateListRefreshKey(isolateListRefreshKey + 1);
-    }
-  };
+  //   const {
+  //     data: { success },
+  //   } = await service.importConfigFile(formData).finally(() => {
+  //     setUploading(false);
+  //   });
+  //   if (success) {
+  //     message.success('操作成功');
+  //     setIsolateListRefreshKey(isolateListRefreshKey + 1);
+  //   }
+  // };
 
-  const downLoadConfigFile = () => {
-    window.location.href = getUrl(
-      `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
-    );
-  };
+  // const downLoadConfigFile = () => {
+  //   window.location.href = getUrl(
+  //     `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
+  //   );
+  // };
 
   // 获取数据源统计信息
   const getDataSourceSummaryInfo = async (id) => {
@@ -229,7 +227,7 @@ export default (props) => {
             </a>
           </div>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          {/* <Tooltip title="数据库连接地址">
+          <Tooltip title="数据库连接地址">
             <Icon type="info-circle" style={{ cursor: 'pointer' }} />
           </Tooltip>
           <Button
@@ -237,35 +235,8 @@ export default (props) => {
             onClick={() => setEditedDataSource({})}
           >
             新增数据源
-          </Button> */}
-          <AddDynamicDbDrawer
-            titles="新增数据源"
-            action="add"
-            detailData={{
-              dsType: { 1: '0', 2: '2', 3: '1' }[prepareState?.currentLink?.isolateType],
-            }}
-            onSuccess={() => {
-              // TODO 刷新
-            }}
-          />
-          <span style={{ marginLeft: 16 }}>
-            <AddAndEditDbDrawer
-              disabled={
-                prepareState.pressureEngineStatus === 'OPENING' ||
-                prepareState.pressureEngineStatus === 'CLOSING'
-                  ? true
-                  : false
-              }
-              titles="新增其他影子存储"
-              action="add"
-              id={'6977836591314112512'}
-              detailData={{}}
-              onSccuess={() => {
-                // TODO 刷新
-              }}
-            />
-          </span>
-          <Upload
+          </Button>
+          {/* <Upload
             accept=".xlsx,.csv,.xls"
             showUploadList={false}
             customRequest={uploadFile}
@@ -280,7 +251,7 @@ export default (props) => {
             onClick={downLoadConfigFile}
           >
             导出待配置项
-          </Button>
+          </Button> */}
         </div>
       </div>
       {mode === 0 && (

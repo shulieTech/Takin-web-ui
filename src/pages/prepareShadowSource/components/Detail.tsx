@@ -8,6 +8,7 @@ import {
   Dropdown,
   Menu,
   Button,
+  Upload,
 } from 'antd';
 import { PrepareContext } from '../_layout';
 import AppCheck from './AppCheck';
@@ -20,7 +21,7 @@ import service from '../service';
 import { STEP_STATUS } from '../constants';
 import SyncLinkModal from '../modals/SyncLink';
 import { Link } from 'umi';
-// import AddJmeterModal from 'src/pages/businessFlow/modals/AddJmeterModal';
+import { getUrl } from 'src/utils/request';
 import ShadowConsumer from './ShadowConsumer';
 
 export default (props) => {
@@ -34,6 +35,7 @@ export default (props) => {
   });
   const [showProgressListModal, setShowProgressListModal] = useState(false);
   const [showSyncLinkModal, setShowSyncLinkModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
   // const [flowDetail, setFlowDetail] = useState<any>();
 
   const commonStepStyle = {
@@ -113,6 +115,28 @@ export default (props) => {
   //     setFlowDetail(data);
   //   }
   // };
+
+  const uploadFile = async ({ file }) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('resourceId', prepareState.currentLink.id);
+
+    const {
+      data: { success },
+    } = await service.importConfigFile(formData).finally(() => {
+      setUploading(false);
+    });
+    if (success) {
+      message.success('操作成功');
+    }
+  };
+
+  const downLoadConfigFile = () => {
+    window.location.href = getUrl(
+      `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
+    );
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -260,6 +284,32 @@ export default (props) => {
           <Dropdown
             overlay={
               <Menu>
+                <Menu.Item>
+                  <Upload
+                    accept=".xlsx,.csv,.xls"
+                    showUploadList={false}
+                    customRequest={uploadFile}
+                  >
+                    <Button
+                      type="link"
+                      block
+                      loading={uploading}
+                      style={{ padding: '0 32px' }}
+                    >
+                      导入配置
+                    </Button>
+                  </Upload>
+                </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    type="link"
+                    block
+                    style={{ padding: '0 32px' }}
+                    onClick={downLoadConfigFile}
+                  >
+                    导出配置
+                  </Button>
+                </Menu.Item>
                 <Menu.Item>
                   <Button
                     type="link"
