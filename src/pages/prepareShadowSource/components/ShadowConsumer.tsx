@@ -41,7 +41,7 @@ export default (props) => {
       current: 0,
       pageSize: 10,
       queryTopicGroup: undefined,
-      applicationName: undefined,
+      queryApplicationName: undefined,
       mqType: undefined,
       consumerTag: undefined,
       resourceId: prepareState.currentLink.id,
@@ -139,7 +139,7 @@ export default (props) => {
                 }}
               >
                 <span
-                  className="iconfont icon-shujuku"
+                  className="iconfont icon-ES"
                   style={{
                     fontSize: 18,
                     color: 'var(--Netural-1000, #141617)',
@@ -200,7 +200,7 @@ export default (props) => {
           <>
             <Tag>{text}</Tag>
             {record.mqType === 'KAFKA' && (
-              <span>{{ 0: '生产', 1: '消费' }[record.comsumerType]}</span>
+              <span>{{ 0: '生产者', 1: '消费者' }[record.comsumerType]}</span>
             )}
           </>
         ) : (
@@ -265,7 +265,7 @@ export default (props) => {
     const {
       data: { success, data },
       // TODO topic 统计信息
-    } = await service.appSummaryInfo({ id });
+    } = await service.consumerSummaryInfo({ id });
     if (success) {
       setPrepareState({
         helpInfo: {
@@ -346,7 +346,7 @@ export default (props) => {
             placeholder="搜索应用"
             onSearch={(val) =>
               getList({
-                applicationName: val,
+                queryApplicationName: val,
                 current: 0,
               })
             }

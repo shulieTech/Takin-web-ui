@@ -145,7 +145,7 @@ export default (props: Props) => {
             { label: '不消费影子topic', value: 1 },
             { label: '消费影子topic', value: 0 },
           ]}
-          initialValue={'0'}
+          initialValue={1}
         />
         <FormItem
           name="isCluster"
@@ -154,8 +154,8 @@ export default (props: Props) => {
           component={Radio.Group}
           rules={[{ required: true, message: '请选择是否影子集群' }]}
           dataSource={[
-            { label: '是', value: 0 },
             { label: '否', value: 1 },
+            { label: '是', value: 0 },
           ]}
           initialValue={1}
         />
@@ -199,9 +199,9 @@ export default (props: Props) => {
           component={NumberPicker}
           rules={[
             {
-              required: true,
+              // required: true,
               format: 'integer',
-              message: '请输入影子生产使用消费线程数',
+              message: '请输入正确的影子生产使用消费线程数',
             },
           ]}
           props={{

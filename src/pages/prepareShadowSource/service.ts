@@ -247,6 +247,13 @@ export default {
     return httpGet(url, data);
   },
   /**
+   * @name 影子消费者统计信息
+   */
+  async consumerSummaryInfo(data = {}) {
+    const url = '/pressureResource/mqInfo';
+    return httpGet(url, data);
+  },
+  /**
    * @name mq类型列表
    */
   async mqTypeList(data = {}) {
