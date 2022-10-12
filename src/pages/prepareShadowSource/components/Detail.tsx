@@ -31,7 +31,7 @@ export default (props) => {
     APP: 0,
     DS: 0,
     REMOTECALL: 0,
-    SHADOW_CONSUMER: 0,
+    MQ: 0,
   });
   const [showProgressListModal, setShowProgressListModal] = useState(false);
   const [showSyncLinkModal, setShowSyncLinkModal] = useState(false);
@@ -70,7 +70,7 @@ export default (props) => {
     },
     {
       title: '影子topic',
-      statusName: stepStatus.SHADOW_CONSUMER,
+      statusName: stepStatus.MQ,
     },
   ];
 
