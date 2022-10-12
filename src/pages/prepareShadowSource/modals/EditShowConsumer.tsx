@@ -29,9 +29,7 @@ export default (props: Props) => {
       ...detail,
       ...values,
       resourceId: prepareState.currentLink.id,
-      applicationId: '6977836591314112512',
     };
-    // TODO 提交数据
     const {
       data: { data, success },
     } = await service[detail.id ? 'updateShdowConsumer' : 'createShdowConsumer'](newValue);
@@ -44,21 +42,21 @@ export default (props: Props) => {
 
   const formEffects = () => {
     const { onFieldValueChange$, onFieldInputChange$ } = FormEffectHooks;
-    onFieldValueChange$('type').subscribe(({ value }) => {
+    onFieldValueChange$('mqType').subscribe(({ value }) => {
       const isKafka = value === 'KAFKA';
       actions.setFieldState(
-        'shadowconsumerEnable',
+        'consumerTag',
         (state) => (state.visible = !isKafka)
       );
       actions.setFieldState(
-        '*(isCluster,kafkaType)',
+        '*(isCluster,comsumerType)',
         (state) => (state.visible = isKafka)
       );
     });
     onFieldValueChange$('isCluster').subscribe(({ value }) => {
       actions.setFieldState(
-        '*(clusterName,monitorurl,poolSize)',
-        (state) => (state.visible = value === '1')
+        'mqConsumerFeature.*',
+        (state) => (state.visible = value === 0)
       );
     });
   };
@@ -87,7 +85,7 @@ export default (props: Props) => {
         effects={formEffects}
       >
         <FormItem
-          name="type"
+          name="mqType"
           title="MQ类型"
           component={Select}
           dataSource={mqTypeList}
@@ -97,13 +95,13 @@ export default (props: Props) => {
           rules={[{ required: true, message: '请选择MQ类型' }]}
         />
         <FormItem
-          name="kafkaType"
+          name="comsumerType"
           title="生产/消费"
           visible={false}
           component={Select}
           dataSource={[
-            { label: '生产', value: 1 },
-            { label: '消费', value: 2 },
+            { label: '生产', value: 0 },
+            { label: '消费', value: 1 },
           ]}
           props={{
             placeholder: '请选择',
@@ -139,13 +137,13 @@ export default (props: Props) => {
         />
 
         <FormItem
-          name="shadowconsumerEnable"
+          name="consumerTag"
           title="是否消费"
           component={Radio.Group}
           rules={[{ required: true, message: '请选择是否消费' }]}
           dataSource={[
-            { label: '不消费影子topic', value: '0' },
-            { label: '消费影子topic', value: '1' },
+            { label: '不消费影子topic', value: 1 },
+            { label: '消费影子topic', value: 0 },
           ]}
           initialValue={'0'}
         />
@@ -156,13 +154,13 @@ export default (props: Props) => {
           component={Radio.Group}
           rules={[{ required: true, message: '请选择是否影子集群' }]}
           dataSource={[
-            { label: '否', value: '0' },
-            { label: '是', value: '1' },
+            { label: '是', value: 0 },
+            { label: '否', value: 1 },
           ]}
-          initialValue={'0'}
+          initialValue={1}
         />
         <FormItem
-          name="clusterName"
+          name="mqConsumerFeature.clusterName"
           title="影子集群名称"
           component={Input}
           rules={[
@@ -174,11 +172,12 @@ export default (props: Props) => {
           ]}
           props={{
             maxLength: 200,
-            placeholder: '请输入影子集群名称clusterName（多个用逗号隔开）',
+            placeholder: '请输入影子集群名称（多个用逗号隔开）',
           }}
+          visible={false}
         />
         <FormItem
-          name="monitorurl"
+          name="mqConsumerFeature.clusterAddr"
           title="影子集群地址"
           component={Input}
           rules={[
@@ -190,11 +189,12 @@ export default (props: Props) => {
           ]}
           props={{
             maxLength: 200,
-            placeholder: '请输入影子集群地址monitorurl（多个用逗号隔开）',
+            placeholder: '请输入影子集群地址（多个用逗号隔开）',
           }}
+          visible={false}
         />
         <FormItem
-          name="poolSize"
+          name="mqConsumerFeature.threadCount"
           title="影子生产使用消费线程数"
           component={NumberPicker}
           rules={[
@@ -205,10 +205,11 @@ export default (props: Props) => {
             },
           ]}
           props={{
-            placeholder: '请输入影子生产使用消费线程数poolSize',
+            placeholder: '请输入影子生产使用消费线程数',
             style: { width: '100%' },
             min: 0,
           }}
+          visible={false}
         />
       </Form>
     </Modal>
