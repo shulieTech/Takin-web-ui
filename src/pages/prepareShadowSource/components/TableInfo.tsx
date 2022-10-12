@@ -230,6 +230,14 @@ export default (props: Props) => {
       },
     },
     {
+      title: '类型',
+      dataIndex: 'type',
+      render: text => {
+        // TODO 类型
+        return { 1: '只读', 2: '写入' }[text] || '-';
+      } 
+    },
+    {
       title: '操作',
       align: 'right',
       render: (text, record, index, rowState, setRowState) => {

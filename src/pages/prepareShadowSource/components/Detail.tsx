@@ -69,7 +69,7 @@ export default (props) => {
       statusName: stepStatus.REMOTECALL,
     },
     {
-      title: '影子消费者',
+      title: '影子topic',
       statusName: stepStatus.SHADOW_CONSUMER,
     },
   ];

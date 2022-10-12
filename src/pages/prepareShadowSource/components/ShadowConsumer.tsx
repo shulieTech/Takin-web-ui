@@ -11,19 +11,20 @@ import {
   Switch,
   message,
   Popconfirm,
+  Checkbox,
 } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import EditShowConsumerModal from '../modals/EditShowConsumer';
 import { PrepareContext } from '../_layout';
-import { getUrl } from 'src/utils/request';
 
 const { Option } = Select;
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
-  const inputSearchRef = useRef();
+  const inputSearchRef1 = useRef();
+  const inputSearchRef2 = useRef();
   const [editItem, setEditItem] = useState<any>();
 
   const { list: mqTypeList, loading: mqTypeLoading } = useListService({
@@ -174,6 +175,7 @@ export default (props) => {
       title: 'MQ类型',
       dataIndex: 'type',
       render: (text, record) => {
+        // TODO kafka 生产者/消费者
         return text ? <Tag>{text}</Tag> : '-';
       },
     },
@@ -188,6 +190,7 @@ export default (props) => {
       title: '是否消费topic',
       dataIndex: 'shadowconsumerEnable',
       render: (text, record) => {
+        // TODO kafka生产者不显示
         return { 0: '否', 1: '是' }[text] || '-';
       },
     },
@@ -197,7 +200,7 @@ export default (props) => {
       fixed: 'right',
       dataIndex: 'shadowconsumerEnable',
       render: (text, record) => {
-        return record.isManual ? (
+        return (
           <>
             <Button
               type="link"
@@ -206,24 +209,21 @@ export default (props) => {
             >
               编辑
             </Button>
-            <Popconfirm title="确认删除？" onConfirm={() => deleteItem(record)}>
-              <Button type="link" style={{ marginLeft: 8 }}>
-                删除
-              </Button>
-            </Popconfirm>
+            {record.isManual && (
+              <Popconfirm
+                title="确认删除？"
+                onConfirm={() => deleteItem(record)}
+              >
+                <Button type="link" style={{ marginLeft: 8 }}>
+                  删除
+                </Button>
+              </Popconfirm>
+            )}
           </>
-        ) : (
-          '-'
         );
       },
     },
   ];
-
-  const downLoadTplFile = () => {
-    window.location.href = getUrl(
-      `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
-    );
-  };
 
   useEffect(() => {
     setPrepareState({
@@ -239,10 +239,6 @@ export default (props) => {
         <div style={{ flex: 1 }} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button onClick={() => setEditItem({})}>新增影子消费者</Button>
-          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <Button type="primary" onClick={downLoadTplFile}>
-            导出
-          </Button>
         </div>
       </div>
       <div
@@ -254,19 +250,34 @@ export default (props) => {
       >
         <div style={{ flex: 1 }}>
           <Input.Search
-            ref={inputSearchRef}
-            placeholder="搜索"
+            ref={inputSearchRef1}
+            placeholder="搜索业务topic#业务的消费组"
             onSearch={(val) =>
               getList({
-                name: val,
+                topicGroup: val,
                 current: 0,
               })
             }
             style={{
-              width: 260,
+              width: 240,
+              marginRight: 16,
             }}
           />
-          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+          <Input.Search
+            ref={inputSearchRef2}
+            placeholder="搜索应用"
+            onSearch={(val) =>
+              getList({
+                app: val,
+                current: 0,
+              })
+            }
+            style={{
+              width: 240,
+              marginRight: 16,
+            }}
+          />
+          {/* <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           <span style={{ marginRight: 24 }}>
             状态：
             <Select
@@ -281,11 +292,10 @@ export default (props) => {
               }
               allowClear
             >
-              {/* <Option value="">全部</Option> */}
               <Option value={0}>可消费</Option>
               <Option value={1}>不消费</Option>
             </Select>
-          </span>
+          </span> */}
           <span style={{ marginRight: 24 }}>
             类型：
             <Select
@@ -299,6 +309,7 @@ export default (props) => {
                 })
               }
               allowClear
+              loading={mqTypeLoading}
             >
               {/* <Option value="">全部</Option> */}
               {mqTypeList.map((x) => (
@@ -308,13 +319,27 @@ export default (props) => {
               ))}
             </Select>
           </span>
+          <span>
+            <Checkbox
+              style={{ marginRight: 8 }}
+              checked={query.shadowconsumerEnable === 1}
+              onChange={(e) =>
+                getList({
+                  shadowconsumerEnable: e.target.checked ? 1 : undefined,
+                })
+              }
+            >
+              消费topic
+            </Checkbox>
+          </span>
         </div>
         <div>
           <Button
             type="link"
             onClick={() => {
               resetList();
-              inputSearchRef?.current?.input?.setValue();
+              inputSearchRef1?.current?.input?.setValue();
+              inputSearchRef2?.current?.input?.setValue();
             }}
             disabled={loading}
           >

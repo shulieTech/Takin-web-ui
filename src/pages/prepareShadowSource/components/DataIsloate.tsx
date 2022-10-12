@@ -227,11 +227,11 @@ export default (props) => {
             </a>
           </div>
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <Tooltip title="数据库连接地址">
+          {/* <Tooltip title="数据库连接地址">
             <Icon type="info-circle" style={{ cursor: 'pointer' }} />
-          </Tooltip>
+          </Tooltip> */}
           <Button
-            style={{ marginLeft: 24 }}
+            type="primary"
             onClick={() => setEditedDataSource({})}
           >
             新增数据源
