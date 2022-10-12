@@ -40,20 +40,37 @@ export default (props) => {
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      applicationId: '6977836591314112512',
-      topicGroup: undefined,
-      type: undefined,
-      shadowconsumerEnable: undefined,
+      queryTopicGroup: undefined,
+      applicationName: undefined,
+      mqType: undefined,
+      consumerTag: undefined,
       resourceId: prepareState.currentLink.id,
     },
     // isQueryOnMount: false,
   });
 
+  const toggleItem = async (record, checked) => {
+    const {
+      data: { data, success },
+    } = await service.toggleConsumer({
+      id: record.id,
+      consumerTag: checked ? 0 : 1,
+    });
+    if (success) {
+      message.success('操作成功');
+      getList();
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        refreshListKey: prepareState.refreshListKey + 1,
+      });
+    }
+  };
+
   const deleteItem = async (record) => {
     const {
       data: { data, success },
     } = await service.deleteConsumer({
-      ids: [record.id],
+      id: record.id,
     });
     if (success) {
       message.success('操作成功');
@@ -128,7 +145,7 @@ export default (props) => {
                     color: 'var(--Netural-1000, #141617)',
                   }}
                 />
-                {record.isManual && (
+                {record.type === 0 && (
                   <span
                     style={{
                       position: 'absolute',
@@ -151,13 +168,17 @@ export default (props) => {
                 )}
               </div>
               <div>
-                <div
-                  style={{
-                    color: 'var(--Netural-1000, #141617)',
-                  }}
-                >
-                  {text}
-                </div>
+                <Tooltip title={text}>
+                  <div
+                    style={{
+                      color: 'var(--Netural-1000, #141617)',
+                      maxWidth: 300,
+                    }}
+                    className="truncate"
+                  >
+                    {text}
+                  </div>
+                </Tooltip>
                 <div
                   style={{
                     color: 'var(--Netural-600, #90959A)',
@@ -173,32 +194,47 @@ export default (props) => {
     },
     {
       title: 'MQ类型',
-      dataIndex: 'type',
+      dataIndex: 'mqType',
       render: (text, record) => {
-        // TODO kafka 生产者/消费者
-        return text ? <Tag>{text}</Tag> : '-';
+        return text ? (
+          <>
+            <Tag>{text}</Tag>
+            {record.mqType === 'KAFKA' && (
+              <span>{{ 0: '生产', 1: '消费' }[record.comsumerType]}</span>
+            )}
+          </>
+        ) : (
+          '-'
+        );
       },
     },
     {
       title: '调用应用',
-      dataIndex: 'apps',
+      dataIndex: 'applicationName',
       render: (text, record) => {
         return text || '-';
       },
     },
     {
       title: '是否消费topic',
-      dataIndex: 'shadowconsumerEnable',
+      dataIndex: 'consumerTag', // 0-消费 1-不消费
       render: (text, record) => {
-        // TODO kafka生产者不显示
-        return { 0: '否', 1: '是' }[text] || '-';
+        // kafka生产者不显示
+        if (record.mqType === 'KAFKA' && record.comsumerType === 0) {
+          return '-';
+        }
+        return (
+          <Switch
+            checked={text === 0}
+            onChange={(checked) => toggleItem(record, checked)}
+          />
+        );
       },
     },
     {
       title: '操作',
       align: 'right',
       fixed: 'right',
-      dataIndex: 'shadowconsumerEnable',
       render: (text, record) => {
         return (
           <>
@@ -209,7 +245,7 @@ export default (props) => {
             >
               编辑
             </Button>
-            {record.isManual && (
+            {record.type === 0 && (
               <Popconfirm
                 title="确认删除？"
                 onConfirm={() => deleteItem(record)}
@@ -225,13 +261,55 @@ export default (props) => {
     },
   ];
 
+  const getConsumerSummaryInfo = async (id) => {
+    const {
+      data: { success, data },
+      // TODO topic 统计信息
+    } = await service.appSummaryInfo({ id });
+    if (success) {
+      setPrepareState({
+        helpInfo: {
+          show: true,
+          text: (
+            <>
+              {data.totalSize > 0 ? (
+                <span>
+                  识别topic：<b>{data.totalSize}</b>
+                </span>
+              ) : (
+                '暂无数据'
+              )}
+              {data.normalSize > 0 && (
+                <span style={{ marginLeft: 32 }}>
+                  正常： <b>{data.normalSize}</b>
+                </span>
+              )}
+              {data.exceptionSize > 0 && (
+                <span
+                  style={{
+                    marginLeft: 32,
+                  }}
+                >
+                  异常：
+                  <b style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}>
+                    {data.exceptionSize}
+                  </b>
+                </span>
+              )}
+            </>
+          ),
+          checkTime: data.checkTime,
+          userName: data.userName,
+        },
+      });
+    }
+  };
+
   useEffect(() => {
-    setPrepareState({
-      helpInfo: {
-        show: false,
-      },
-    });
-  }, []);
+    if (prepareState.currentLink?.id) {
+      getConsumerSummaryInfo(prepareState.currentLink?.id);
+    }
+  }, [prepareState.currentLink?.id]);
 
   return (
     <>
@@ -254,7 +332,7 @@ export default (props) => {
             placeholder="搜索业务topic#业务的消费组"
             onSearch={(val) =>
               getList({
-                topicGroup: val,
+                queryTopicGroup: val,
                 current: 0,
               })
             }
@@ -268,7 +346,7 @@ export default (props) => {
             placeholder="搜索应用"
             onSearch={(val) =>
               getList({
-                app: val,
+                applicationName: val,
                 current: 0,
               })
             }
@@ -277,34 +355,15 @@ export default (props) => {
               marginRight: 16,
             }}
           />
-          {/* <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <span style={{ marginRight: 24 }}>
-            状态：
-            <Select
-              placeholder="请选择"
-              style={{ width: 114 }}
-              value={query.shadowconsumerEnable}
-              onChange={(val) =>
-                getList({
-                  shadowconsumerEnable: val,
-                  current: 0,
-                })
-              }
-              allowClear
-            >
-              <Option value={0}>可消费</Option>
-              <Option value={1}>不消费</Option>
-            </Select>
-          </span> */}
           <span style={{ marginRight: 24 }}>
             类型：
             <Select
               placeholder="请选择"
               style={{ width: 114 }}
-              value={query.type}
+              value={query.mqType}
               onChange={(val) =>
                 getList({
-                  type: val,
+                  mqType: val,
                   current: 0,
                 })
               }
@@ -322,10 +381,10 @@ export default (props) => {
           <span>
             <Checkbox
               style={{ marginRight: 8 }}
-              checked={query.shadowconsumerEnable === 1}
+              checked={query.consumerTag === 0}
               onChange={(e) =>
                 getList({
-                  shadowconsumerEnable: e.target.checked ? 1 : undefined,
+                  consumerTag: e.target.checked ? 0 : undefined,
                 })
               }
             >
