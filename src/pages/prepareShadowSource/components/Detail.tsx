@@ -242,7 +242,7 @@ export default (props) => {
                       {x.title}
                     </span>
                     <div style={{ fontSize: 12, marginTop: 4 }}>
-                      {STEP_STATUS[x.statusName] || '未开始'}
+                      {STEP_STATUS[x.statusName] || '-'}
                     </div>
                   </div>
                 </div>
