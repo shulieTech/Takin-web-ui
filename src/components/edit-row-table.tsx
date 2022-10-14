@@ -1,8 +1,19 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Table, Form } from 'antd';
-import { TableProps } from 'antd/lib/table';
+import { TableProps, ColumnProps } from 'antd/lib/table';
+import { GetFieldDecoratorOptions } from 'antd/lib/form/Form';
 
-interface Props extends TableProps<any> {}
+interface Props extends TableProps<any> {
+  columns: EditableColumnProps[];
+}
+export interface EditableColumnProps extends ColumnProps<any> {
+  record?: any;
+  index?: number;
+  formField?: React.ReactNode;
+  getFormField?: (record, dataIndex, index, rowState, setRowState) => React.ReactNode;
+  formFieldOptions?: GetFieldDecoratorOptions;
+  getFormFieldOptions?: (record, dataIndex, index, rowState, setRowState) => GetFieldDecoratorOptions;
+}
 
 const RowContext = createContext({
   rowState: {
@@ -30,7 +41,7 @@ const EditableRow = Form.create()((props) => {
   );
 });
 
-const EditableCell = (props) => {
+const EditableCell = (props: EditableColumnProps) => {
   const {
     dataIndex,
     title,
@@ -39,6 +50,7 @@ const EditableCell = (props) => {
     render,
     children,
     formField,
+    getFormField,
     formFieldOptions = {},
     getFormFieldOptions,
     ...restProps
@@ -54,9 +66,13 @@ const EditableCell = (props) => {
     }
   }, [record?._edting]);
 
+  const finalFormField = getFormField
+    ? getFormField(record, dataIndex, index, rowState, setRowState)
+    : formField;
+
   return (
     <td {...restProps}>
-      {rowState.editing && formField ? (
+      {rowState.editing && finalFormField ? (
         <Form.Item style={{ margin: 0 }}>
           {rowState.form?.getFieldDecorator(dataIndex, {
             initialValue: record[dataIndex],
@@ -70,7 +86,7 @@ const EditableCell = (props) => {
                   setRowState
                 )
               : {}),
-          })(formField)}
+          })(finalFormField)}
         </Form.Item>
       ) : render ? (
         render(record[dataIndex], record, index, rowState, setRowState)
@@ -100,6 +116,7 @@ export default (props: Props) => {
           title: x.title,
           render: x.render,
           formField: x.formField,
+          getFormField: x.getFormField,
           formFieldOptions: x.formFieldOptions,
           getFormFieldOptions: x.getFormFieldOptions,
         }),

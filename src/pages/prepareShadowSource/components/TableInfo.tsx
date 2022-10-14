@@ -13,7 +13,7 @@ import {
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
-import EditRowTable from 'src/components/edit-row-table';
+import EditRowTable, { EditableColumnProps } from 'src/components/edit-row-table';
 import { PrepareContext } from '../_layout';
 
 const { Option } = Select;
@@ -139,13 +139,17 @@ export default (props: Props) => {
     }
   };
 
-  const columns = [
+  const columns: EditableColumnProps[] = [
     {
       title: '业务表名',
       dataIndex: 'businessTable',
-      formField: (
-        <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
-      ),
+      // formField: (
+      //   <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+      // ),
+      getFormField: (record) =>
+        record.type === 0 ? (
+          <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+        ) : undefined,
       formFieldOptions: {
         rules: [
           { required: true, whiteSpace: true, message: '请输入业务表名' },
@@ -232,10 +236,10 @@ export default (props: Props) => {
     {
       title: '类型',
       dataIndex: 'type',
-      render: text => {
+      render: (text) => {
         // TODO 类型
         return { 1: '只读', 2: '写入' }[text] || '-';
-      } 
+      },
     },
     {
       title: '操作',
@@ -275,12 +279,14 @@ export default (props: Props) => {
           </span>
         ) : (
           <span>
-            <Popconfirm
-              title="确认删除？"
-              onConfirm={() => deleteRow(record, index)}
-            >
-              <a style={{ marginLeft: 8 }}>删除</a>
-            </Popconfirm>
+            {record.type === 0 && (
+              <Popconfirm
+                title="确认删除？"
+                onConfirm={() => deleteRow(record, index)}
+              >
+                <a style={{ marginLeft: 8 }}>删除</a>
+              </Popconfirm>
+            )}
             <a
               style={{ marginLeft: 8 }}
               onClick={() => setRowState({ editing: true })}
