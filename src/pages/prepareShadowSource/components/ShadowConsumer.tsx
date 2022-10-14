@@ -84,9 +84,10 @@ export default (props) => {
 
   const columns = [
     {
-      title: '业务的topic#业务的消费组',
+      title: '业务的topic',
       dataIndex: 'topicGroup',
       render: (text, record) => {
+        const topicName = text.split('#')[0];
         return (
           <>
             {{
@@ -168,7 +169,7 @@ export default (props) => {
                 )}
               </div>
               <div>
-                <Tooltip title={text}>
+                <Tooltip title={topicName}>
                   <div
                     style={{
                       color: 'var(--Netural-1000, #141617)',
@@ -176,7 +177,7 @@ export default (props) => {
                     }}
                     className="truncate"
                   >
-                    {text}
+                    {topicName}
                   </div>
                 </Tooltip>
                 <div
@@ -190,6 +191,13 @@ export default (props) => {
             </div>
           </>
         );
+      },
+    },
+    {
+      title: '业务的消费组',
+      render: (text, record) => {
+        const topicGroup = record.topicGroup.split('#')[1];
+        return topicGroup || '-';
       },
     },
     {
@@ -264,7 +272,7 @@ export default (props) => {
   const getConsumerSummaryInfo = async (id) => {
     const {
       data: { success, data },
-      // TODO topic 统计信息
+      // topic 统计信息
     } = await service.consumerSummaryInfo({ id });
     if (success) {
       setPrepareState({

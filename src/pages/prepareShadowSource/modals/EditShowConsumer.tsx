@@ -23,11 +23,16 @@ export default (props: Props) => {
 
   const { prepareState, setPrepareState } = useContext(PrepareContext);
 
+  const [topicLabel, setTopicLabel] = useState('业务'); // 例如kafka-其它 label名叫影子的topic，其他情况叫业务的topic
+
   const handleSubmit = async () => {
     const { values } = await actions.submit();
     const newValue = {
       ...detail,
       ...values,
+      topicGroup: `${values.justTopicName}#${values.justTopicGroup}`,
+      justTopicName: undefined,
+      justTopicGroup: undefined,
       resourceId: prepareState.currentLink.id,
     };
     const {
@@ -85,6 +90,7 @@ export default (props: Props) => {
           state.visible =
             ['kafka-其它'].includes(mqType) && [1, 2].includes(comsumerType); // 其他，消费者/自产自销
         });
+        setTopicLabel(['kafka-其它'].includes(mqType) ? '影子' : '业务');
       });
     });
 
@@ -135,6 +141,14 @@ export default (props: Props) => {
     });
   };
 
+  // 将topicGroup拆分成2个字段
+  const initialValues = detail.topicGroup ? {
+    ...detail,
+    justTopicName: detail.topicGroup.split('#')[0],
+    justTopicGroup: detail.topicGroup.split('#')[1],
+    topicGroup: undefined,
+  } : detail;
+
   return (
     <Modal
       title={`${detail?.id ? '编辑' : '新增'}影子消费者`}
@@ -153,7 +167,7 @@ export default (props: Props) => {
     >
       <Form
         actions={actions}
-        initialValues={detail}
+        initialValues={initialValues}
         labelCol={8}
         wrapperCol={16}
         effects={formEffects}
@@ -190,29 +204,35 @@ export default (props: Props) => {
           initialValue={1}
         />
         <FormItem
-          name="topicGroup"
-          title="业务的topic"
+          name="justTopicName"
+          title={`${topicLabel}的topic`}
           component={Input}
           rules={[
             {
               required: true,
               whitespace: true,
-              message: '请输入业务的topic#业务的消费组',
-            },
-            {
-              validator: (val) => {
-                return !val ||
-                  (typeof val === 'string' &&
-                    val.length > 0 &&
-                    val.indexOf('#') > -1)
-                  ? ''
-                  : '业务的topic#业务的消费组请以#分割';
-              },
+              message: `请输入${topicLabel}的topic`,
             },
           ]}
           props={{
             maxLength: 50,
-            placeholder: '请输入业务的topic#业务的消费组',
+            placeholder: `请输入${topicLabel}的topic`,
+          }}
+        />
+        <FormItem
+          name="justTopicGroup"
+          title={`${topicLabel}的消费组`}
+          component={Input}
+          rules={[
+            {
+              required: true,
+              whitespace: true,
+              message: `请输入${topicLabel}的消费组`,
+            },
+          ]}
+          props={{
+            maxLength: 50,
+            placeholder: `请输入${topicLabel}的消费组`,
           }}
         />
         <FormItem

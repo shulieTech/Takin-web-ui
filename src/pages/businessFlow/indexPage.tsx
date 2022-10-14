@@ -36,29 +36,29 @@ const BusinessFlow: React.FC<Props> = props => {
   const btnAuthority: any =
     localStorage.getItem('trowebBtnResource') &&
     JSON.parse(localStorage.getItem('trowebBtnResource'));
-  const menu = (
-    <Menu>
-      {/* <Menu.Item>
-        <AuthorityBtn
-          isShow={btnAuthority && btnAuthority.businessFlow_2_create}
-        >
-          <Link to="/businessFlow/addBusinessFlow?action=add">
-            <Button type="link">手工新增</Button>
-          </Link>
-        </AuthorityBtn>
-      </Menu.Item> */}
-      <Menu.Item>
-        <AddJmeterModal
-          btnText="Jmeter 扫描新增"
-          onSuccess={() => {
-            setState({
-              isReload: !state.isReload
-            });
-          }}
-        />
-      </Menu.Item>
-    </Menu>
-  );
+  // const menu = (
+  //   <Menu>
+  //     {/* <Menu.Item>
+  //       <AuthorityBtn
+  //         isShow={btnAuthority && btnAuthority.businessFlow_2_create}
+  //       >
+  //         <Link to="/businessFlow/addBusinessFlow?action=add">
+  //           <Button type="link">手工新增</Button>
+  //         </Link>
+  //       </AuthorityBtn>
+  //     </Menu.Item> */}
+  //     <Menu.Item>
+  //       <AddJmeterModal
+  //         btnText="Jmeter 扫描新增"
+  //         onSuccess={() => {
+  //           setState({
+  //             isReload: !state.isReload
+  //           });
+  //         }}
+  //       />
+  //     </Menu.Item>
+  //   </Menu>
+  // );
 
   return (
     <BusinessFlowContext.Provider value={{ state, setState }}>
@@ -76,9 +76,22 @@ const BusinessFlow: React.FC<Props> = props => {
             }
             extra={
               <div style={{ float: 'right' }}>
-                <Dropdown overlay={menu} placement="bottomLeft">
+                {/* <Dropdown overlay={menu} placement="bottomLeft">
                   <Button type="primary">新增</Button>
-                </Dropdown>
+                </Dropdown> */}
+                <AddJmeterModal
+                  btnText="Jmeter 扫描新增"
+                  onSuccess={() => {
+                    setState({
+                      isReload: !state.isReload
+                    });
+                  }}
+                  resetModalProps={{
+                    btnProps: {
+                      type: 'primary',
+                    },
+                  }}
+                />
               </div>}
           />
         </div>
