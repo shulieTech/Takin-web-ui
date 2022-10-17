@@ -174,7 +174,7 @@ const SiderMenu: React.FC<Props> = (props) => {
       >
         {renderMenuNode()}
       </Menu>
-      {/* {getTakinAuthority() === 'true' && (
+      {getTakinAuthority() === 'true' && (
         <Popover
           content={content}
           placement="topLeft"
@@ -192,7 +192,7 @@ const SiderMenu: React.FC<Props> = (props) => {
             />
           </Card>
         </Popover>
-      )} */}
+      )}
     </Sider>
   );
 };

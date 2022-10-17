@@ -50,7 +50,7 @@ const getFormData = (that: Login): FormDataType[] => {
   const disableTenant = getThemeByKeyName('disableTenant');
   const usernamePlaceholder = disableTenant
     ? '请输入账号'
-    : '<用户名>@<企业别名>，例如： username@shulie';
+    : '<用户名>@<企业别名>，例如： username@yidongyun';
   return [
     {
       key: 'username',
@@ -67,7 +67,7 @@ const getFormData = (that: Login): FormDataType[] => {
       node: (
         <Input
           className={styles.inputStyle}
-          onChange={that.onBlur}
+          // onChange={that.onBlur}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
           // 人寿没有租户
           placeholder={usernamePlaceholder}
@@ -146,7 +146,7 @@ const getFormDatatre = (that: Login): FormDataType[] => {
       node: (
         <Input
           className={styles.inputStyle}
-          onChange={that.onBlurs}
+          // onChange={that.onBlurs}
           placeholder="用户名"
         />
       ),
@@ -207,7 +207,7 @@ const getFormDatas = (that: Login): FormDataType[] => {
           className={styles.inputStyle}
           addonBefore="中国+86"
           placeholder="手机号"
-          onChange={that.onBlurs}
+          // onChange={that.onBlurs}
         />
       ),
     },
@@ -425,7 +425,7 @@ export default class Login extends DvaComponent<Props, State> {
     } = await UserService.troLogin({
       ...value,
       loginType: this.state.keyType,
-      password: encryptStr(value.password),
+      // password: encryptStr(value.password),
     });
     if (success) {
       notification.success({
@@ -710,7 +710,7 @@ export default class Login extends DvaComponent<Props, State> {
           <div className={styles.login}>
             <p className={styles.sysName}>全链路压测</p>
             {dom}
-            <center className={styles.other}>其他登录方式</center>
+            {/* <center className={styles.other}>其他登录方式</center>
             <Row className={styles.otherimg} type="flex" justify="center">
               {this.state.arr.map((ite) => {
                 return (
@@ -721,7 +721,7 @@ export default class Login extends DvaComponent<Props, State> {
                   </Col>
                 );
               })}
-            </Row>
+            </Row> */}
           </div>
         </div>
       </div>
