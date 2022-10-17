@@ -85,9 +85,8 @@ export default (props) => {
   const columns = [
     {
       title: '业务的topic',
-      dataIndex: 'topicGroup',
+      dataIndex: 'topic',
       render: (text, record) => {
-        const topicName = text.split('#')[0];
         return (
           <>
             {{
@@ -169,7 +168,7 @@ export default (props) => {
                 )}
               </div>
               <div>
-                <Tooltip title={topicName}>
+                <Tooltip title={text}>
                   <div
                     style={{
                       color: 'var(--Netural-1000, #141617)',
@@ -177,7 +176,7 @@ export default (props) => {
                     }}
                     className="truncate"
                   >
-                    {topicName}
+                    {text}
                   </div>
                 </Tooltip>
                 <div
@@ -195,9 +194,9 @@ export default (props) => {
     },
     {
       title: '业务的消费组',
+      dataIndex: 'group',
       render: (text, record) => {
-        const topicGroup = record.topicGroup.split('#')[1];
-        return topicGroup || '-';
+        return text || '-';
       },
     },
     {
@@ -207,8 +206,8 @@ export default (props) => {
         return text ? (
           <>
             <Tag>{text}</Tag>
-            {record.mqType === 'KAFKA' && (
-              <span>{{ 0: '生产者', 1: '消费者' }[record.comsumerType]}</span>
+            {['KAFKA', 'KAFKA-其他'].includes(record.mqType) && (
+              <span>{{ 0: '生产者', 1: '消费者', 2: '自产自销' }[record.comsumerType]}</span>
             )}
           </>
         ) : (

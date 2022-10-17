@@ -30,9 +30,6 @@ export default (props: Props) => {
     const newValue = {
       ...detail,
       ...values,
-      topicGroup: `${values.justTopicName}#${values.justTopicGroup}`,
-      justTopicName: undefined,
-      justTopicGroup: undefined,
       resourceId: prepareState.currentLink.id,
     };
     const {
@@ -53,6 +50,10 @@ export default (props: Props) => {
       // 影子集群配置
       actions.getFormState((formState) => {
         const { mqType, comsumerType } = formState.values || {};
+        // kafka/kafka其他 生产者不显示group
+        actions.setFieldState('group', state => {
+          state.visible = !(['KAFKA', 'KAFKA-其他'].includes(mqType) && comsumerType === 0);
+        });
         // 是否消费
         actions.setFieldState(
           'consumerTag',
@@ -141,14 +142,6 @@ export default (props: Props) => {
     });
   };
 
-  // 将topicGroup拆分成2个字段
-  const initialValues = detail.topicGroup ? {
-    ...detail,
-    justTopicName: detail.topicGroup.split('#')[0],
-    justTopicGroup: detail.topicGroup.split('#')[1],
-    topicGroup: undefined,
-  } : detail;
-
   return (
     <Modal
       title={`${detail?.id ? '编辑' : '新增'}影子消费者`}
@@ -167,7 +160,7 @@ export default (props: Props) => {
     >
       <Form
         actions={actions}
-        initialValues={initialValues}
+        initialValues={detail}
         labelCol={8}
         wrapperCol={16}
         effects={formEffects}
@@ -198,7 +191,7 @@ export default (props: Props) => {
           initialValue={1}
         />
         <FormItem
-          name="justTopicName"
+          name="topic"
           title={`${topicLabel}的topic`}
           component={Input}
           rules={[
@@ -214,7 +207,7 @@ export default (props: Props) => {
           }}
         />
         <FormItem
-          name="justTopicGroup"
+          name="group"
           title={`${topicLabel}的消费组`}
           component={Input}
           rules={[
