@@ -23,7 +23,7 @@ export default (props: Props) => {
 
   const { prepareState, setPrepareState } = useContext(PrepareContext);
 
-  const [topicLabel, setTopicLabel] = useState('业务'); // 例如kafka-其它 label名叫影子的topic，其他情况叫业务的topic
+  const [topicLabel, setTopicLabel] = useState('业务'); // 例如KAFKA-其他 label名叫影子的topic，其他情况叫业务的topic
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -58,14 +58,14 @@ export default (props: Props) => {
           'consumerTag',
           (state) =>
             (state.visible = !(
-              ['KAFKA', 'kafka-其它'].includes(mqType) && comsumerType === 0
+              ['KAFKA', 'KAFKA-其他'].includes(mqType) && comsumerType === 0
             ))
         );
         // 生产/消费/自产自销
         actions.setFieldState('comsumerType', (state) => {
-          state.visible = ['KAFKA', 'kafka-其它'].includes(mqType);
+          state.visible = ['KAFKA', 'KAFKA-其他'].includes(mqType);
           state.props.dataSource =
-            mqType === 'kafka-其它'
+            mqType === 'KAFKA-其他'
               ? [
                   { label: '生产', value: 0 },
                   { label: '消费', value: 1 },
@@ -79,18 +79,18 @@ export default (props: Props) => {
 
         // 是否影子集群
         actions.setFieldState('isCluster', (state) => {
-          state.visible = ['kafka-其它'].includes(mqType);
+          state.visible = ['KAFKA-其他'].includes(mqType);
         });
 
         actions.setFieldState('topicTokens', (state) => {
           state.visible =
-            ['kafka-其它'].includes(mqType) && [0, 2].includes(comsumerType); // 其他，生产者/自产自销
+            ['KAFKA-其他'].includes(mqType) && [0, 2].includes(comsumerType); // 其他，生产者/自产自销
         });
         actions.setFieldState('systemIdToken', (state) => {
           state.visible =
-            ['kafka-其它'].includes(mqType) && [1, 2].includes(comsumerType); // 其他，消费者/自产自销
+            ['KAFKA-其他'].includes(mqType) && [1, 2].includes(comsumerType); // 其他，消费者/自产自销
         });
-        setTopicLabel(['kafka-其它'].includes(mqType) ? '影子' : '业务');
+        setTopicLabel(['KAFKA-其他'].includes(mqType) ? '影子' : '业务');
       });
     });
 
@@ -101,7 +101,7 @@ export default (props: Props) => {
         actions.setFieldState('brokerUrl', (state) => {
           state.visible =
             (['KAFKA'].includes(mqType) && [0].includes(comsumerType)) || // kafka，生产者
-            (['kafka-其它'].includes(mqType) && // 其他，生产者，非影子集群
+            (['KAFKA-其他'].includes(mqType) && // 其他，生产者，非影子集群
               [0].includes(comsumerType) &&
               isCluster === 1);
         });
@@ -118,7 +118,7 @@ export default (props: Props) => {
           }
         );
         actions.setFieldState(
-          'mqConsumerFeature.consumnerThreadCount',
+          'mqConsumerFeature.consumerThreadCount',
           (state) => {
             state.visible = isCluster === 0 && [1, 2].includes(comsumerType);
           }
@@ -176,13 +176,7 @@ export default (props: Props) => {
           name="mqType"
           title="MQ类型"
           component={Select}
-          // dataSource={mqTypeList}
-          dataSource={[
-            { label: 'RABBITMQ', value: 'RABBITMQ', disable: true },
-            { label: 'ROCKETMQ', value: 'ROCKETMQ', disable: true },
-            { label: 'KAFKA', value: 'KAFKA', disable: true },
-            { label: 'kafka-其它', value: 'kafka-其它', disable: true },
-          ]}
+          dataSource={mqTypeList}
           props={{
             placeholder: '请选择',
           }}
@@ -363,7 +357,7 @@ export default (props: Props) => {
           visible={false}
         />
         <FormItem
-          name="mqConsumerFeature.consumnerThreadCount"
+          name="mqConsumerFeature.consumerThreadCount"
           title="影子消费使用消费线程数"
           component={NumberPicker}
           rules={[
