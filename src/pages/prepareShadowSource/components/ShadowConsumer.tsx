@@ -256,6 +256,7 @@ export default (props) => {
               <Popconfirm
                 title="确认删除？"
                 onConfirm={() => deleteItem(record)}
+                placement="topLeft"
               >
                 <Button type="link" style={{ marginLeft: 8 }}>
                   删除
