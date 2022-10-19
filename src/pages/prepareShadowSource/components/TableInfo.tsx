@@ -60,7 +60,7 @@ export default (props: Props) => {
         resourceId: detail.resourceId,
         dsId: detail.id,
         ...values,
-        shadowTable: `PT_${values.businessTable}`,
+        // shadowTable: `PT_${values.businessTable}`,
         joinFlag: values.joinFlag ? 0 : 1,
       };
 
