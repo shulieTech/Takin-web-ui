@@ -105,6 +105,7 @@ export default (props: Props) => {
           onSearch={(val) =>
             getList({
               name: val?.trim(),
+              currrent: 0,
             })
           }
         />
