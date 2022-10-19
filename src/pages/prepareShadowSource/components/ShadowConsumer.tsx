@@ -227,7 +227,7 @@ export default (props) => {
       dataIndex: 'consumerTag', // 0-消费 1-不消费
       render: (text, record) => {
         // kafka生产者不显示
-        if (record.mqType === 'KAFKA' && record.comsumerType === 0) {
+        if (['KAFKA', 'KAFKA-其他'].includes(record.mqType) && record.comsumerType === 0) {
           return '-';
         }
         return (
