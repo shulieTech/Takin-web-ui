@@ -233,14 +233,14 @@ export default (props: Props) => {
         return { 0: '是', 1: '否' }[text] || '-'; // 是否加入压测范围(0-是 1-否)
       },
     },
-    {
-      title: '类型',
-      dataIndex: 'type',
-      render: (text) => {
-        // TODO 类型
-        return { 1: '只读', 2: '写入' }[text] || '-';
-      },
-    },
+    // {
+    //   title: '类型',
+    //   dataIndex: 'type',
+    //   render: (text) => {
+    //     // TODO 类型
+    //     return { 1: '只读', 2: '写入' }[text] || '-';
+    //   },
+    // },
     {
       title: '操作',
       align: 'right',

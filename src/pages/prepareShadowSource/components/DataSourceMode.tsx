@@ -202,7 +202,8 @@ export default (props: Props) => {
                   }}
                 >
                   ID:{record.id}
-                  <Tag style={{ marginLeft: 8 }}>只读</Tag>
+                  {/* TODO */}
+                  {/* <Tag style={{ marginLeft: 8 }}>只读</Tag> */}
                 </div>
               </div>
             </div>
