@@ -147,7 +147,7 @@ export default (props: Props) => {
       //   <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
       // ),
       getFormField: (record) =>
-        record.type === 0 ? (
+        record.type === 0 || !record.id ? (
           <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
         ) : undefined,
       formFieldOptions: {
