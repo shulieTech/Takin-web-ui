@@ -225,4 +225,81 @@ export default {
     const url = '/pressureResource/progress/list';
     return httpGet(url, data);
   },
+  /**
+   * @name 同步链路到其他环境
+   */
+  async syncLink(data = {}) {
+    const url = '/pressureResource/syncLink';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 获取关联的业务流程详情
+   */
+  async getFlowDetail(data = {}) {
+    const url = '/businessFlow/scene/detail';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 影子消费者列表
+   */
+  async shadowConsumerList(data = {}) {
+    const url = '/pressureResource/mqconsumer/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 影子消费者统计信息
+   */
+  async consumerSummaryInfo(data = {}) {
+    const url = '/pressureResource/mqInfo';
+    return httpGet(url, data);
+  },
+  /**
+   * @name mq类型列表
+   */
+  async mqTypeList(data = {}) {
+    const url = '/v2/consumers/type';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 新增影子消费
+   */
+  async createShdowConsumer(data = {}) {
+    const url = '/pressureResource/mqconsumer/create';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 编辑影子消费
+   */
+  async updateShdowConsumer(data = {}) {
+    const url = '/pressureResource/mqconsumer/update';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 删除影子消费
+   */
+  async deleteConsumer(data = {}) {
+    const url = '/pressureResource/mqconsumer/del';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 是否消费影子topic
+   */
+  async toggleConsumer(data = {}) {
+    const url = '/pressureResource/mqconsumer/consumerTag';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 获取压测开关状态
+   */
+  async querySwitchStatus(data = {}) {
+    const url = '/application/center/app/switch/un_safe';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取agent版本
+   */
+  async queryAgentStatus(data = {}) {
+    const url = '/application/center/app/config/ds/isnew';
+    return httpGet(url, data);
+  },
 };

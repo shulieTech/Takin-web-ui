@@ -17,7 +17,7 @@ import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import TableInfo from './TableInfo';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 
 const { Option } = Select;
 
@@ -80,9 +80,10 @@ const DropdowTable = (props) => {
 interface Props {
   setEditedDataSource: (record: any) => void;
   isolateListRefreshKey: number;
+  freshIsoloateHelpInfo: () => void;
 }
 export default (props: Props) => {
-  const { setEditedDataSource } = props;
+  const { setEditedDataSource, freshIsoloateHelpInfo } = props;
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [editShadowTable, setEditShadowTable] = useState<any>(undefined);
@@ -97,6 +98,10 @@ export default (props: Props) => {
     },
     isQueryOnMount: false,
   });
+
+  const toggleItem = (record) => {
+    // TODO 启用禁用数据源
+  };
 
   const columns = [
     {
@@ -113,20 +118,24 @@ export default (props: Props) => {
                     color="var(--FunctionNegative-500, #D24D40)"
                     title="检测失败"
                   />
-                  <Divider
-                    type="vertical"
-                    style={{ height: 24, margin: '0 24px' }}
-                  />
-                  <Tooltip title={record.remark}>
-                    <Icon
-                      type="file-text"
-                      theme="filled"
-                      style={{
-                        cursor: 'pointer',
-                        color: 'var(--Brandprimary-500, #0FBBD5)',
-                      }}
-                    />
-                  </Tooltip>
+                  {record.remark && (
+                    <>
+                      <Divider
+                        type="vertical"
+                        style={{ height: 24, margin: '0 24px' }}
+                      />
+                      <Tooltip title={record.remark}>
+                        <Icon
+                          type="file-text"
+                          theme="filled"
+                          style={{
+                            cursor: 'pointer',
+                            color: 'var(--Brandprimary-500, #0FBBD5)',
+                          }}
+                        />
+                      </Tooltip>
+                    </>
+                  )}
                 </>
               ),
               2: (
@@ -193,6 +202,8 @@ export default (props: Props) => {
                   }}
                 >
                   ID:{record.id}
+                  {/* TODO */}
+                  {/* <Tag style={{ marginLeft: 8 }}>只读</Tag> */}
                 </div>
               </div>
             </div>
@@ -220,29 +231,32 @@ export default (props: Props) => {
       render: (text, record) => {
         return (
           <span onClick={(e) => e.stopPropagation()}>
-            {record.type === 0 && (
-              <Popconfirm
-                title="确认删除？"
-                onConfirm={() => deleteItem(record)}
-              >
-                <a>删除</a>
-              </Popconfirm>
-            )}
             {record.appList?.length > 0 ? (
               <Dropdown overlay={<DropdowTable defaultList={record.appList} />}>
-                <a style={{ marginLeft: 32 }}>
+                <a style={{ marginLeft: 16 }}>
                   查看{record.appList.length}个应用
                 </a>
               </Dropdown>
             ) : (
               '-'
             )}
-            {/* <a
-              style={{ marginLeft: 32 }}
+            <Popconfirm title="确认启用？" onConfirm={() => toggleItem(record)}>
+              <a style={{ marginLeft: 16 }}>启用</a>
+            </Popconfirm>
+            <a
+              style={{ marginLeft: 16 }}
               onClick={() => setEditedDataSource(record)}
             >
               编辑
-            </a> */}
+            </a>
+            {record.type === 0 && (
+              <Popconfirm
+                title="确认删除？"
+                onConfirm={() => deleteItem(record)}
+              >
+                <a style={{ marginLeft: 16 }}>删除</a>
+              </Popconfirm>
+            )}
           </span>
         );
       },
@@ -273,6 +287,7 @@ export default (props: Props) => {
       <TableInfo
         detail={editShadowTable}
         cancelCallback={() => setEditShadowTable(undefined)}
+        freshIsoloateHelpInfo={freshIsoloateHelpInfo}
       />
     );
   }

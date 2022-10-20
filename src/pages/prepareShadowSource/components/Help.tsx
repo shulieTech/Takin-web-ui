@@ -1,13 +1,29 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Modal, Tooltip, Icon, Divider } from 'antd';
 import Introduce from './Introduce';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import moment from 'moment';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const { helpInfo = {} } = prepareState;
   const [showModal, setShowModal] = useState(false);
+  const [fromNowStr, setFromNowStr] = useState('-');
+
+  useEffect(() => {
+    // 更新检测时间显示
+    if (helpInfo?.checkTime) {
+      const refreshTimeText = () => {
+        setFromNowStr(moment(helpInfo?.checkTime).fromNow());
+      };
+      refreshTimeText();
+      const timer = setInterval(refreshTimeText, 10000);
+      return () => {
+        clearInterval(timer);
+        setFromNowStr('-');
+      };
+    }
+  }, [helpInfo?.checkTime]);
 
   if (!helpInfo.show) {
     return null;
@@ -58,7 +74,7 @@ export default (props) => {
       <div>
         <span>
           检测时间：
-          {helpInfo?.checkTime ? moment(helpInfo?.checkTime).fromNow() : '-'}
+          {fromNowStr}
         </span>
         <span style={{ marginLeft: 40 }}>
           负责人：{helpInfo?.userName || '-'}

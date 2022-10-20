@@ -11,7 +11,7 @@ export const LINK_STATUS = {
 };
 
 export const STEP_STATUS = {
-  0: '未开始',
+  0: '-',
   1: '进行中',
   2: '已完成',
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Icon, Input, Empty, Spin, Pagination, Tag } from 'antd';
+import { Icon, Input, Empty, Spin, Pagination, Tag, Tooltip } from 'antd';
 import { debounce } from 'lodash';
 import { connect } from 'dva';
 import BusinessActivityService from '../service';
@@ -17,6 +17,7 @@ const ActivityLeftList = (props) => {
   const [listLoading, setListLoading] = useState(false);
   const [listData, setListData] = useState([]);
   const [total, setTotal] = useState(0);
+  const [collapsed, setCollapsed] = useState(false);
 
   const getBusinessTypeName = (type) => {
     return props?.dictionaryMap?.domain.find((x) => x.value === type)?.label;
@@ -53,6 +54,28 @@ const ActivityLeftList = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialId, JSON.stringify(listData)]);
 
+  if (collapsed) {
+    return (
+      <div
+        style={{
+          textAlign: 'center',
+          lineHeight: '54px',
+          width: 40,
+          height: '100%',
+          backgroundColor: '#fff',
+        }}
+      >
+        <Tooltip title="展开业务活动列表">
+          <Icon
+            type="menu-unfold"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setCollapsed(false)}
+          />
+        </Tooltip>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -69,13 +92,23 @@ const ActivityLeftList = (props) => {
           height: '100%',
         }}
       >
-        {window.history.length > 1 && (
-          <div style={{ marginTop: 8, padding: 8 }}>
+        <div style={{ marginTop: 8, padding: 8 }}>
+          {window.history.length > 1 && (
             <a onClick={() => window.history.go(-1)}>
               <Icon type="left" style={{ marginRight: 8 }} /> 返回
             </a>
-          </div>
-        )}
+          )}
+          <span className="flt-rt">
+            <Tooltip title="收起业务活动列表">
+              <Icon
+                type="menu-fold"
+                style={{ cursor: 'pointer', lineHeight: '24px' }}
+                onClick={() => setCollapsed(true)}
+              />
+            </Tooltip>
+          </span>
+        </div>
+
         <div style={{ padding: 8 }}>
           <Input
             style={{ marginBottom: 8 }}

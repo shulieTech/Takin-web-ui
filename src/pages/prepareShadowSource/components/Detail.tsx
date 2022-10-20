@@ -8,8 +8,9 @@ import {
   Dropdown,
   Menu,
   Button,
+  Upload,
 } from 'antd';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import AppCheck from './AppCheck';
 import DataIsloate from './DataIsloate';
 import RemoteImport from './RemoteCall';
@@ -18,6 +19,10 @@ import Help from './Help';
 import styles from '../index.less';
 import service from '../service';
 import { STEP_STATUS } from '../constants';
+import SyncLinkModal from '../modals/SyncLink';
+import { Link } from 'umi';
+import { getUrl } from 'src/utils/request';
+import ShadowConsumer from './ShadowConsumer';
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
@@ -26,12 +31,16 @@ export default (props) => {
     APP: 0,
     DS: 0,
     REMOTECALL: 0,
+    MQ: 0,
   });
   const [showProgressListModal, setShowProgressListModal] = useState(false);
+  const [showSyncLinkModal, setShowSyncLinkModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  // const [flowDetail, setFlowDetail] = useState<any>();
 
   const commonStepStyle = {
     display: 'flex',
-    minWidth: 132,
+    // minWidth: 132,
     padding: 4,
     paddingRight: 16,
     borderRadius: 100,
@@ -49,15 +58,19 @@ export default (props) => {
   const stepList = [
     {
       title: '应用检查',
-      subTitle: STEP_STATUS[stepStatus.APP],
+      statusName: stepStatus.APP,
     },
     {
       title: '影子隔离',
-      subTitle: STEP_STATUS[stepStatus.DS],
+      statusName: stepStatus.DS,
     },
     {
       title: '远程调用',
-      subTitle: STEP_STATUS[stepStatus.REMOTECALL],
+      statusName: stepStatus.REMOTECALL,
+    },
+    {
+      title: '影子topic',
+      statusName: stepStatus.MQ,
     },
   ];
 
@@ -92,10 +105,44 @@ export default (props) => {
     });
   };
 
+  // 获取关联业务流程的详情
+  // const getFlowDetail = async () => {
+  //   const {
+  //     data: { data, success },
+  //     // TODO 获取业务流程的id
+  //   } = await service.getFlowDetail({ id: 289 });
+  //   if (success) {
+  //     setFlowDetail(data);
+  //   }
+  // };
+
+  const uploadFile = async ({ file }) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('resourceId', prepareState.currentLink.id);
+
+    const {
+      data: { success },
+    } = await service.importConfigFile(formData).finally(() => {
+      setUploading(false);
+    });
+    if (success) {
+      message.success('操作成功');
+    }
+  };
+
+  const downLoadConfigFile = () => {
+    window.location.href = getUrl(
+      `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
+    );
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (prepareState.currentLink?.id) {
         getStepStatus(prepareState.currentLink?.id);
+        // getFlowDetail();
       }
     }, 300);
     return () => clearTimeout(timer);
@@ -104,6 +151,24 @@ export default (props) => {
   useEffect(() => {
     setStep(0);
   }, [prepareState.currentLink?.id]);
+
+  useEffect(() => {
+    // 获取压测开关状态及探针版本
+    service.querySwitchStatus({}).then(({ data: { success, data } }) => {
+      if (success) {
+        setPrepareState({
+          pressureEngineStatus: data.switchStatus,
+        });
+      }
+    });
+    service.queryAgentStatus({}).then(({ data: { success, data } }) => {
+      if (success) {
+        setPrepareState({
+          isNewAgent: data,
+        });
+      }
+    });
+  }, []);
 
   return (
     <div
@@ -177,7 +242,7 @@ export default (props) => {
                       {x.title}
                     </span>
                     <div style={{ fontSize: 12, marginTop: 4 }}>
-                      {x.subTitle}
+                      {STEP_STATUS[x.statusName] || '-'}
                     </div>
                   </div>
                 </div>
@@ -195,43 +260,102 @@ export default (props) => {
           })}
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Button
-            type="link"
-            style={{ marginLeft: 32 }}
-            onClick={() => {
-              setPrepareState({
-                editLink: prepareState.currentLink,
-              });
-            }}
+          {/* {flowDetail && (
+            <AddJmeterModal
+              btnText="管理脚本"
+              action="edit"
+              fileList={flowDetail?.scriptFile}
+              detailData={flowDetail}
+              id={flowDetail?.id}
+              jumpToDetailOnSuccess={false}
+              onSuccess={() => {
+                //
+              }}
+              resetModalProps={{ btnProps: { type: 'default' } }}
+            />
+          )} */}
+          <Link to={`/prepareShadowSource/sub/flow?id=288`}>
+            <Button style={{ marginLeft: 24 }}>管理脚本</Button>
+          </Link>
+          <Link to={`/prepareShadowSource/sub/activity?id=45`}>
+            <Button style={{ marginLeft: 24 }}>链路拓扑</Button>
+          </Link>
+
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item>
+                  <Upload
+                    accept=".xlsx,.csv,.xls"
+                    showUploadList={false}
+                    customRequest={uploadFile}
+                  >
+                    <Button
+                      type="link"
+                      block
+                      loading={uploading}
+                      style={{ padding: '0 32px' }}
+                    >
+                      导入配置
+                    </Button>
+                  </Upload>
+                </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    type="link"
+                    block
+                    style={{ padding: '0 32px' }}
+                    onClick={downLoadConfigFile}
+                  >
+                    导出配置
+                  </Button>
+                </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    type="link"
+                    block
+                    onClick={() => setShowSyncLinkModal(true)}
+                    style={{ padding: '0 32px' }}
+                  >
+                    同步配置
+                  </Button>
+                </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    type="link"
+                    block
+                    onClick={() => {
+                      setPrepareState({
+                        editLink: prepareState.currentLink,
+                      });
+                    }}
+                    style={{ padding: '0 32px' }}
+                  >
+                    编辑链路
+                  </Button>
+                </Menu.Item>
+                {prepareState.currentLink.type === 0 && (
+                  <Menu.Item>
+                    <Button
+                      type="link"
+                      block
+                      style={{
+                        padding: '0 32px',
+                        color: 'var(--FunctionNegative-500, #D24D40)',
+                      }}
+                      onClick={deleteLink}
+                    >
+                      删除链路
+                    </Button>
+                  </Menu.Item>
+                )}
+              </Menu>
+            }
           >
-            编辑链路
-          </Button>
-          {prepareState.currentLink.type === 0 && (
-            <>
-              <Dropdown
-                overlay={
-                  <Menu>
-                    <Menu.Item>
-                      <Button
-                        type="link"
-                        style={{
-                          padding: '0 32px',
-                          color: 'var(--FunctionNegative-500, #D24D40)',
-                        }}
-                        onClick={deleteLink}
-                      >
-                        删除链路
-                      </Button>
-                    </Menu.Item>
-                  </Menu>
-                }
-              >
-                <Button style={{ width: 32, padding: 0, marginLeft: 32 }}>
-                  <Icon type="more" />
-                </Button>
-              </Dropdown>
-            </>
-          )}
+            <Button style={{ width: 32, padding: 0, marginLeft: 24 }}>
+              <Icon type="more" />
+            </Button>
+          </Dropdown>
         </div>
       </div>
       <div
@@ -265,6 +389,7 @@ export default (props) => {
           {step === 0 && <AppCheck />}
           {step === 1 && <DataIsloate />}
           {step === 2 && <RemoteImport />}
+          {step === 3 && <ShadowConsumer />}
         </div>
       </div>
 
@@ -272,6 +397,13 @@ export default (props) => {
       {showProgressListModal && (
         <ProgressListModal
           cancelCallback={() => setShowProgressListModal(false)}
+        />
+      )}
+      {showSyncLinkModal && (
+        <SyncLinkModal
+          detail={prepareState.currentLink}
+          okCallback={() => setShowSyncLinkModal(false)}
+          cancelCallback={() => setShowSyncLinkModal(false)}
         />
       )}
     </div>

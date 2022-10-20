@@ -183,6 +183,8 @@ const TargetMap = (props) => {
       render: (text, record, index) => {
         return <span>{text}</span>;
       },
+      className: 'truncate',
+      fixed: 'left',
     },
     {
       title: '类型',
@@ -264,6 +266,7 @@ const TargetMap = (props) => {
       rowKey="xpathMd5"
       defaultExpandAllRows
       size="small"
+      scroll={{ x: 'max-content' }}
       {...componentProps}
     />
   );

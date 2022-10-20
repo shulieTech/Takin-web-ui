@@ -1,17 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Icon, Button, Tooltip, InputNumber, Form, message } from 'antd';
+import {
+  Icon,
+  Button,
+  Tooltip,
+  InputNumber,
+  Form,
+  message,
+  Modal,
+  Table,
+} from 'antd';
 import service from '../service';
+import NodeDetailModal from '../modals/NodeDetail';
 
 interface Props {
   record: any;
+  editable?: boolean;
   okCallback: () => void;
 }
 
 const EditAgentCount = (prop: Props) => {
-  const { record, okCallback, form } = prop;
+  const { record, okCallback, editable = true, form } = prop;
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorStr, setErrorStr] = useState('');
+  const [detail, setDetail] = useState();
 
   const saveAgentCount = () => {
     form.validateFields(async (error, values) => {
@@ -24,12 +36,14 @@ const EditAgentCount = (prop: Props) => {
       // 保存
       const {
         data: { success },
-      } = await service.updateAppCheckRow({
-        ...record,
-        ...values,
-      }).finally(() => {
-        setSaving(false);
-      });
+      } = await service
+        .updateAppCheckRow({
+          ...record,
+          ...values,
+        })
+        .finally(() => {
+          setSaving(false);
+        });
       if (success) {
         message.success('操作成功');
         setIsEditing(false);
@@ -112,10 +126,20 @@ const EditAgentCount = (prop: Props) => {
             : 'inherit',
       }}
     >
-      {record.nodeNum}/{record.agentNodeNum}
-      <a onClick={() => setIsEditing(true)} style={{ marginLeft: 8 }}>
-        <Icon type="edit" />
-      </a>
+      <span style={{ cursor: 'pointer' }} onClick={() => setDetail(record)}>
+        {record.nodeNum}/{record.agentNodeNum}
+      </span>
+      {detail && (
+        <NodeDetailModal
+          detail={detail}
+          cancelCallback={() => setDetail(undefined)}
+        />
+      )}
+      {editable && (
+        <a onClick={() => setIsEditing(true)} style={{ marginLeft: 8 }}>
+          <Icon type="edit" />
+        </a>
+      )}
     </span>
   );
 };

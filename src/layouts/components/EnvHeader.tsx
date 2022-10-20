@@ -10,10 +10,18 @@ interface Props {}
 let path = '';
 const EnvHeader: React.FC<Props> = (props) => {
   const userType: string = localStorage.getItem('troweb-role');
-  const [envList, setEnvList] = useState([]);
+  const [envList, setStateEnvList] = useState([]);
   const [tenantList, setTenantList] = useState([]);
   const [desc, setDesc] = useState('');
   const [envEdit, setEnvEdit] = useState<any>();
+
+  const setEnvList = (data) => {
+    setStateEnvList(data);
+    window.g_app._store.dispatch({
+      type: 'common/setEnvList',
+      payload: data,
+    });
+  };
 
   useEffect(() => {
     if (getTakinTenantAuthority() === 'true') {

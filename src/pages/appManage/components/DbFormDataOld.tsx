@@ -20,38 +20,38 @@ const getDbFormDataOld = (
   /**
    * @name 切换方案类型
    */
-  const handleChange = async e => {
+  const handleChange = async (e) => {
     setState({
       dsType: e.target.value,
-      dbConfig: undefined
+      dbConfig: undefined,
     });
   };
 
   /**
    * @name 切换类型
    */
-  const handleChangeDbType = async value => {
+  const handleChangeDbType = async (value) => {
     state.form.setFieldsValue({
-      dsType: null
+      dsType: null,
     });
     setState({
       dbType: value,
       dsType: null,
-      dbConfig: undefined
+      dbConfig: undefined,
     });
   };
 
   /**
    * @name 修改配置代码
    */
-  const handleChangeCode = value => {
+  const handleChangeCode = (value) => {
     // console.log('value', value);
     setState({
-      config: value
+      config: value,
     });
   };
 
-  const handleCopy = async value => {
+  const handleCopy = async (value) => {
     if (copy(value)) {
       message.success('复制成功');
     } else {
@@ -59,24 +59,6 @@ const getDbFormDataOld = (
     }
   };
   const basicFormData = [
-    {
-      key: 'applicationName',
-      label: '应用',
-      options: {
-        initialValue:
-          action !== 'add'
-            ? dbTableDetail && dbTableDetail.applicationName
-            : detailData && detailData.applicationName,
-        rules: [
-          {
-            required: true,
-            whitespace: true,
-            message: '请选择应用'
-          }
-        ]
-      },
-      node: <Input disabled={true} />
-    },
     {
       key: 'dbType',
       label: '类型',
@@ -88,9 +70,9 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请选择类型'
-          }
-        ]
+            message: '请选择类型',
+          },
+        ],
       },
       node: (
         <CommonSelect
@@ -99,18 +81,37 @@ const getDbFormDataOld = (
           dataSource={[
             { label: '搜索引擎（ES）', value: 2 },
             { label: '数据库(HBase)', value: 3 },
-            { label: '消息队列（kafka）', value: 4 }
+            { label: '消息队列（kafka）', value: 4 },
           ]}
           onChange={handleChangeDbType}
-          onRender={item => (
+          onRender={(item) => (
             <CommonSelect.Option key={item.value} value={item.value}>
               {item.label}
             </CommonSelect.Option>
           )}
         />
-      )
-    }
+      ),
+    },
   ];
+  if (dbTableDetail?.applicationName || detailData?.applicationName) {
+    basicFormData.unshift({
+      key: 'applicationName',
+      label: '应用',
+      options: {
+        initialValue:
+          action !== 'add'
+            ? dbTableDetail && dbTableDetail.applicationName
+            : detailData && detailData.applicationName,
+        rules: [
+          {
+            required: true,
+            message: '请选择应用',
+          },
+        ],
+      },
+      node: <Input disabled />,
+    });
+  }
 
   const planTypeFormData = [
     {
@@ -124,9 +125,9 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请选择方案类型'
-          }
-        ]
+            message: '请选择方案类型',
+          },
+        ],
       },
       node: (
         <Radio.Group
@@ -136,8 +137,8 @@ const getDbFormDataOld = (
           <Radio value={0}>影子库</Radio>
           <Radio value={1}>影子表</Radio>
         </Radio.Group>
-      )
-    }
+      ),
+    },
   ];
 
   const planTypeCacheFormData = [
@@ -152,9 +153,9 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请选择方案类型'
-          }
-        ]
+            message: '请选择方案类型',
+          },
+        ],
       },
       node: (
         <Radio.Group
@@ -163,8 +164,8 @@ const getDbFormDataOld = (
         >
           <Radio value={2}>影子server</Radio>
         </Radio.Group>
-      )
-    }
+      ),
+    },
   ];
 
   const planTypeHBaseFormData = [
@@ -179,9 +180,9 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请选择方案类型'
-          }
-        ]
+            message: '请选择方案类型',
+          },
+        ],
       },
       node: (
         <Radio.Group
@@ -190,8 +191,8 @@ const getDbFormDataOld = (
         >
           <Radio value={4}>影子集群</Radio>
         </Radio.Group>
-      )
-    }
+      ),
+    },
   ];
 
   const planTypeKafkaFormData = [
@@ -206,9 +207,9 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请选择方案类型'
-          }
-        ]
+            message: '请选择方案类型',
+          },
+        ],
       },
       node: (
         <Radio.Group
@@ -217,8 +218,8 @@ const getDbFormDataOld = (
         >
           <Radio value={5}>影子集群</Radio>
         </Radio.Group>
-      )
-    }
+      ),
+    },
   ];
 
   const planTypeESFormData = [
@@ -233,9 +234,9 @@ const getDbFormDataOld = (
         rules: [
           {
             required: true,
-            message: '请选择方案类型'
-          }
-        ]
+            message: '请选择方案类型',
+          },
+        ],
       },
       node: (
         <Radio.Group
@@ -244,8 +245,8 @@ const getDbFormDataOld = (
         >
           <Radio value={3}>影子集群</Radio>
         </Radio.Group>
-      )
-    }
+      ),
+    },
   ];
 
   const dbFormData = [
@@ -284,7 +285,7 @@ const getDbFormDataOld = (
                     style={{
                       maxHeight: 400,
                       minHeight: 200,
-                      overflow: 'auto'
+                      overflow: 'auto',
                     }}
                   >
                     {state.dsType === 2
@@ -316,14 +317,14 @@ const getDbFormDataOld = (
           {
             required: true,
             message: '请输入配置代码',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
       node: (
         <Input.TextArea placeholder="请输入配置代码" style={{ height: 350 }} />
-      )
-    }
+      ),
+    },
   ];
 
   const tableFormData = [
@@ -337,11 +338,11 @@ const getDbFormDataOld = (
           {
             required: true,
             message: '请输入数据库URL',
-            whitespace: true
-          }
-        ]
+            whitespace: true,
+          },
+        ],
       },
-      node: <Input placeholder="请输入" />
+      node: <Input placeholder="请输入" />,
     },
     {
       key: 'tableConfig',
@@ -353,17 +354,17 @@ const getDbFormDataOld = (
           {
             required: true,
             whitespace: true,
-            message: '请输入表名称'
-          }
-        ]
+            message: '请输入表名称',
+          },
+        ],
       },
       node: (
         <Input.TextArea
           placeholder="请输入表名称，以逗号隔开"
           style={{ height: 300 }}
         />
-      )
-    }
+      ),
+    },
   ];
 
   if (state.dbType === 0) {

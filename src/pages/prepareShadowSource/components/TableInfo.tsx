@@ -13,18 +13,19 @@ import {
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
-import EditRowTable from 'src/components/edit-row-table';
-import { PrepareContext } from '../indexPage';
+import EditRowTable, { EditableColumnProps } from 'src/components/edit-row-table';
+import { PrepareContext } from '../_layout';
 
 const { Option } = Select;
 
 interface Props {
   detail: any;
   cancelCallback: () => void;
+  freshIsoloateHelpInfo: () => void;
 }
 
 export default (props: Props) => {
-  const { detail, cancelCallback } = props;
+  const { detail, cancelCallback, freshIsoloateHelpInfo } = props;
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const inputSearchRef = useRef();
   const [listItemAdded, setListItemAdded] = useState();
@@ -59,6 +60,7 @@ export default (props: Props) => {
         resourceId: detail.resourceId,
         dsId: detail.id,
         ...values,
+        shadowTable: `PT_${values.businessTable || record.businessTable}`,
         joinFlag: values.joinFlag ? 0 : 1,
       };
 
@@ -88,6 +90,7 @@ export default (props: Props) => {
           stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
           refreshListKey: prepareState.refreshListKey + 1,
         });
+        freshIsoloateHelpInfo();
       }
     });
   };
@@ -105,6 +108,7 @@ export default (props: Props) => {
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
       });
+      freshIsoloateHelpInfo();
     }
   };
 
@@ -131,16 +135,21 @@ export default (props: Props) => {
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
       });
+      freshIsoloateHelpInfo();
     }
   };
 
-  const columns = [
+  const columns: EditableColumnProps[] = [
     {
       title: '业务表名',
       dataIndex: 'businessTable',
-      formField: (
-        <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
-      ),
+      // formField: (
+      //   <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+      // ),
+      getFormField: (record) =>
+        record.type === 0 || !record.id ? (
+          <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+        ) : undefined,
       formFieldOptions: {
         rules: [
           { required: true, whiteSpace: true, message: '请输入业务表名' },
@@ -175,15 +184,15 @@ export default (props: Props) => {
     {
       title: '影子表名',
       dataIndex: 'shadowTable',
-      formField: (
-        <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
-      ),
-      formFieldOptions: {
-        rules: [
-          { required: true, whiteSpace: true, message: '请输入影子表名' },
-        ],
-      },
-      render: text => text || '-',
+      // formField: (
+      //   <Input placeholder="请输入" maxLength={25} style={{ width: 120 }} />
+      // ),
+      // formFieldOptions: {
+      //   rules: [
+      //     { required: true, whiteSpace: true, message: '请输入影子表名' },
+      //   ],
+      // },
+      render: (text) => text || '-',
     },
     {
       title: '配置状态',
@@ -224,6 +233,14 @@ export default (props: Props) => {
         return { 0: '是', 1: '否' }[text] || '-'; // 是否加入压测范围(0-是 1-否)
       },
     },
+    // {
+    //   title: '类型',
+    //   dataIndex: 'type',
+    //   render: (text) => {
+    //     // TODO 类型
+    //     return { 1: '只读', 2: '写入' }[text] || '-';
+    //   },
+    // },
     {
       title: '操作',
       align: 'right',
@@ -262,12 +279,14 @@ export default (props: Props) => {
           </span>
         ) : (
           <span>
-            <Popconfirm
-              title="确认删除？"
-              onConfirm={() => deleteRow(record, index)}
-            >
-              <a style={{ marginLeft: 8 }}>删除</a>
-            </Popconfirm>
+            {record.type === 0 && (
+              <Popconfirm
+                title="确认删除？"
+                onConfirm={() => deleteRow(record, index)}
+              >
+                <a style={{ marginLeft: 8 }}>删除</a>
+              </Popconfirm>
+            )}
             <a
               style={{ marginLeft: 8 }}
               onClick={() => setRowState({ editing: true })}

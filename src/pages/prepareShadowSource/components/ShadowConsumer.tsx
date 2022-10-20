@@ -9,38 +9,26 @@ import {
   Select,
   Tag,
   Switch,
-  Checkbox,
   message,
+  Popconfirm,
+  Checkbox,
 } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
-import { debounce } from 'lodash';
-import EditMockModal from '../modals/EditMock';
+import EditShowConsumerModal from '../modals/EditShowConsumer';
 import { PrepareContext } from '../_layout';
 
 const { Option } = Select;
 
 export default (props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
-  const inputSearchRef = useRef();
-  const [editItem, setEditItem] = useState();
+  const inputSearchRef1 = useRef();
+  const inputSearchRef2 = useRef();
+  const [editItem, setEditItem] = useState<any>();
 
-  const { list: interfaceTypeList, loading: interfaceLoading } = useListService(
-    {
-      service: service.interfaceTypeList,
-      defaultQuery: {
-        current: 0,
-        pageSize: 10,
-      },
-    }
-  );
-  const {
-    list: entryList,
-    getList: getEntryList,
-    loading: entryLoading,
-  } = useListService({
-    service: service.entryList,
+  const { list: mqTypeList, loading: mqTypeLoading } = useListService({
+    service: service.mqTypeList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
@@ -48,39 +36,56 @@ export default (props) => {
   });
 
   const { list, loading, total, query, getList, resetList } = useListService({
-    service: service.remoteCallList,
+    service: service.shadowConsumerList,
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      queryInterfaceName: undefined,
-      interface_child_type: '',
-      status: '',
+      queryTopicGroup: undefined,
+      queryApplicationName: undefined,
+      mqType: undefined,
+      consumerTag: undefined,
       resourceId: prepareState.currentLink.id,
     },
     // isQueryOnMount: false,
   });
 
-  const toggleInvovled = async (checked, record) => {
+  const toggleItem = async (record, checked) => {
     const {
-      data: { success },
-    } = await service.updateRemoteCall({
-      ...record,
-      pass: checked ? 0 : 1,
-      resourceId: prepareState.currentLink.id,
+      data: { data, success },
+    } = await service.toggleConsumer({
+      id: record.id,
+      consumerTag: checked ? 0 : 1,
     });
     if (success) {
       message.success('操作成功');
       getList();
       setPrepareState({
         stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        refreshListKey: prepareState.refreshListKey + 1,
+      });
+    }
+  };
+
+  const deleteItem = async (record) => {
+    const {
+      data: { data, success },
+    } = await service.deleteConsumer({
+      id: record.id,
+    });
+    if (success) {
+      message.success('操作成功');
+      getList();
+      setPrepareState({
+        stepStatusRefreshKey: prepareState.stepStatusRefreshKey + 1,
+        refreshListKey: prepareState.refreshListKey + 1,
       });
     }
   };
 
   const columns = [
     {
-      title: '接口名称',
-      dataIndex: 'interfaceName',
+      title: '业务的topic',
+      dataIndex: 'topic',
       render: (text, record) => {
         return (
           <>
@@ -134,7 +139,7 @@ export default (props) => {
                 }}
               >
                 <span
-                  className="iconfont icon-xiaoxiduilie"
+                  className="iconfont icon-ES"
                   style={{
                     fontSize: 18,
                     color: 'var(--Netural-1000, #141617)',
@@ -163,13 +168,17 @@ export default (props) => {
                 )}
               </div>
               <div>
-                <div
-                  style={{
-                    color: 'var(--Netural-1000, #141617)',
-                  }}
-                >
-                  {text}
-                </div>
+                <Tooltip title={text}>
+                  <div
+                    style={{
+                      color: 'var(--Netural-1000, #141617)',
+                      maxWidth: 300,
+                    }}
+                    className="truncate"
+                  >
+                    {text}
+                  </div>
+                </Tooltip>
                 <div
                   style={{
                     color: 'var(--Netural-600, #90959A)',
@@ -184,51 +193,140 @@ export default (props) => {
       },
     },
     {
-      title: '调用依赖',
-      dataIndex: 'invoke',
+      title: '业务的消费组',
+      dataIndex: 'group',
       render: (text, record) => {
         return text || '-';
       },
     },
     {
-      title: '类型',
-      dataIndex: 'interfaceChildType',
+      title: 'MQ类型',
+      dataIndex: 'mqType',
       render: (text, record) => {
-        return text ? <Tag>{text}</Tag> : '-';
+        return text ? (
+          <>
+            <Tag>{text}</Tag>
+            {['KAFKA', 'KAFKA-其他'].includes(record.mqType) && (
+              <span>{{ 0: '生产者', 1: '消费者', 2: '自产自销' }[record.comsumerType]}</span>
+            )}
+          </>
+        ) : (
+          '-'
+        );
       },
     },
     {
-      title: '是否放行',
+      title: '调用应用',
+      dataIndex: 'applicationName',
+      render: (text, record) => {
+        return text || '-';
+      },
+    },
+    {
+      title: '是否消费topic',
+      dataIndex: 'consumerTag', // 0-消费 1-不消费
+      render: (text, record) => {
+        // kafka生产者不显示
+        if (['KAFKA', 'KAFKA-其他'].includes(record.mqType) && record.comsumerType === 0) {
+          return '-';
+        }
+        return (
+          <Switch
+            checked={text === 0}
+            onChange={(checked) => toggleItem(record, checked)}
+          />
+        );
+      },
+    },
+    {
+      title: '操作',
       align: 'right',
       fixed: 'right',
-      dataIndex: 'pass',
       render: (text, record) => {
         return (
-          <span>
-            <Button type="link" onClick={() => setEditItem(record)}>
-              配置mock
+          <>
+            <Button
+              type="link"
+              style={{ marginLeft: 8 }}
+              onClick={() => setEditItem(record)}
+            >
+              编辑
             </Button>
-            <Switch
-              style={{ marginLeft: 24 }}
-              checked={text === 0} // 0是， 1否
-              onChange={(checked) => toggleInvovled(checked, record)}
-            />
-          </span>
+            {record.type === 0 && (
+              <Popconfirm
+                title="确认删除？"
+                onConfirm={() => deleteItem(record)}
+                placement="topLeft"
+              >
+                <Button type="link" style={{ marginLeft: 8 }}>
+                  删除
+                </Button>
+              </Popconfirm>
+            )}
+          </>
         );
       },
     },
   ];
 
+  const getConsumerSummaryInfo = async (id) => {
+    const {
+      data: { success, data },
+      // topic 统计信息
+    } = await service.consumerSummaryInfo({ id });
+    if (success) {
+      setPrepareState({
+        helpInfo: {
+          show: true,
+          text: (
+            <>
+              {data.totalSize > 0 ? (
+                <span>
+                  识别topic：<b>{data.totalSize}</b>
+                </span>
+              ) : (
+                '暂无数据'
+              )}
+              {data.normalSize > 0 && (
+                <span style={{ marginLeft: 32 }}>
+                  正常： <b>{data.normalSize}</b>
+                </span>
+              )}
+              {data.exceptionSize > 0 && (
+                <span
+                  style={{
+                    marginLeft: 32,
+                  }}
+                >
+                  异常：
+                  <b style={{ color: 'var(--FunctionNegative-500, #D24D40)' }}>
+                    {data.exceptionSize}
+                  </b>
+                </span>
+              )}
+            </>
+          ),
+          checkTime: data.checkTime,
+          userName: data.userName,
+        },
+      });
+    }
+  };
+
   useEffect(() => {
-    setPrepareState({
-      helpInfo: {
-        show: false,
-      },
-    });
-  }, []);
+    if (prepareState.currentLink?.id) {
+      getConsumerSummaryInfo(prepareState.currentLink?.id);
+    }
+  }, [prepareState.currentLink?.id]);
 
   return (
     <>
+      <div style={{ display: 'flex', padding: '16px 32px 0' }}>
+        <div style={{ flex: 1 }} />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Button onClick={() => setEditItem({})}>新增影子消费者</Button>
+        </div>
+      </div>
       <div
         style={{
           display: 'flex',
@@ -238,110 +336,50 @@ export default (props) => {
       >
         <div style={{ flex: 1 }}>
           <Input.Search
-            ref={inputSearchRef}
-            placeholder="搜索接口"
+            ref={inputSearchRef1}
+            placeholder="搜索业务topic#业务的消费组"
             onSearch={(val) =>
               getList({
-                queryInterfaceName: val,
+                queryTopicGroup: val,
                 current: 0,
               })
             }
             style={{
-              width: 160,
+              width: 240,
+              marginRight: 16,
             }}
           />
-          <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
-          <span style={{ marginRight: 24 }}>
-            入口：
-            <Select
-              style={{ width: 114 }}
-              value={query.entry}
-              onChange={(val) =>
-                getList({
-                  entry: val,
-                  current: 0,
-                })
-              }
-              dropdownMatchSelectWidth={false}
-              showSearch
-              filterOption={false}
-              placeholder="搜索入口URL"
-              onSearch={debounce(
-                (val) => getEntryList({ current: 0, serviceName: val }),
-                300
-              )}
-              loading={entryLoading}
-              optionLabelProp="label"
-              allowClear
-            >
-              {entryList.map((x) => {
-                return (
-                  <Option
-                    value={x.value}
-                    key={x.value}
-                    style={{
-                      border: '1px solid #F7F8FA',
-                    }}
-                    label={x.label}
-                  >
-                    <div
-                      style={{
-                        color: 'var(--Netural-900, #303336)',
-                        fontWeight: 500,
-                        marginBottom: 8,
-                      }}
-                      className="truncate"
-                    >
-                      <span style={{ marginRight: 8, fontWeight: 700 }}>
-                        {x.label}
-                      </span>
-                      {x.serviceName}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: 'var(--Netural-600, #90959A)',
-                      }}
-                    >
-                      {x.serviceName}
-                    </div>
-                  </Option>
-                );
-              })}
-            </Select>
-          </span>
-          <span style={{ marginRight: 24 }}>
-            状态：
-            <Select
-              style={{ width: 114 }}
-              value={query.status}
-              onChange={(val) =>
-                getList({
-                  status: val,
-                  current: 0,
-                })
-              }
-            >
-              <Option value="">全部</Option>
-              <Option value={0}>未检测</Option>
-              <Option value={1}>检测失败</Option>
-              <Option value={2}>检测成功</Option>
-            </Select>
-          </span>
+          <Input.Search
+            ref={inputSearchRef2}
+            placeholder="搜索应用"
+            onSearch={(val) =>
+              getList({
+                queryApplicationName: val,
+                current: 0,
+              })
+            }
+            style={{
+              width: 240,
+              marginRight: 16,
+            }}
+          />
           <span style={{ marginRight: 24 }}>
             类型：
             <Select
+              placeholder="请选择"
               style={{ width: 114 }}
-              value={query.interface_child_type}
+              value={query.mqType}
               onChange={(val) =>
                 getList({
-                  interface_child_type: val,
+                  mqType: val,
                   current: 0,
                 })
               }
+              allowClear
+              loading={mqTypeLoading}
             >
-              <Option value="">全部</Option>
-              {interfaceTypeList.map((x) => (
+              {/* <Option value="">全部</Option> */}
+              {mqTypeList.map((x) => (
                 <Option value={x.value} key={x.value}>
                   {x.label}
                 </Option>
@@ -351,14 +389,14 @@ export default (props) => {
           <span>
             <Checkbox
               style={{ marginRight: 8 }}
-              checked={query.pass === 0}
+              checked={query.consumerTag === 0}
               onChange={(e) =>
                 getList({
-                  pass: e.target.checked ? 0 : undefined,
+                  consumerTag: e.target.checked ? 0 : undefined,
                 })
               }
             >
-              已放行
+              消费topic
             </Checkbox>
           </span>
         </div>
@@ -367,7 +405,8 @@ export default (props) => {
             type="link"
             onClick={() => {
               resetList();
-              inputSearchRef?.current?.input?.setValue();
+              inputSearchRef1?.current?.input?.setValue();
+              inputSearchRef2?.current?.input?.setValue();
             }}
             disabled={loading}
           >
@@ -404,8 +443,9 @@ export default (props) => {
         />
       </div>
       {!!editItem && (
-        <EditMockModal
+        <EditShowConsumerModal
           detail={editItem}
+          mqTypeList={mqTypeList}
           cancelCallback={() => setEditItem(undefined)}
           okCallback={() => {
             setEditItem(undefined);

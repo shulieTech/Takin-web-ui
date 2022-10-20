@@ -23,10 +23,10 @@ interface Props {
   middleWareNameData: any[];
 }
 
-const getInitState = () => ({
+const getInitState = (props: Props) => ({
   form: null as WrappedFormUtils,
   middleWareName: undefined, // 中间件名称
-  dsType: undefined, // 隔离方案
+  dsType: props.detailData?.dsType, // 隔离方案
   dbType: undefined, // 类型
   cacheType: undefined, // 缓存类型
   typeRadioData: [], // 隔离方案枚举数据
@@ -40,7 +40,7 @@ const getInitState = () => ({
 export type AddDynamicDbDrawerState = ReturnType<typeof getInitState>;
 const AddDynamicDbDrawer: React.FC<Props> = props => {
   const { action, id, titles } = props;
-  const [state, setState] = useStateReducer(getInitState());
+  const [state, setState] = useStateReducer(getInitState(props));
 
   const handleClick = async () => {
     queryMiddleWareType();

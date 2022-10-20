@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Icon } from 'antd';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import Help from './Help';
 import img1 from 'src/assets/data-isolate-1.png';
 import img2 from 'src/assets/data-isolate-2.png';

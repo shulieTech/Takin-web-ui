@@ -10,14 +10,14 @@ import {
   message,
   Upload,
 } from 'antd';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import DataIsolateGuide from './DataIsolateGuide';
 import DataSourceMode from './DataSourceMode';
 import AppMode from './AppMode';
 import EditDataSource from '../modals/EditDataSource';
 import service from '../service';
 import styles from '../index.less';
-import { getUrl } from 'src/utils/request';
+// import { getUrl } from 'src/utils/request';
 import { ISOLATE_TYPE } from '../constants';
 
 export default (props) => {
@@ -25,8 +25,10 @@ export default (props) => {
   const showGuide = !prepareState.currentLink?.isolateType;
   const [mode, setMode] = useState(0);
   const [editedDataSource, setEditedDataSource] = useState(undefined);
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
   const [isolateListRefreshKey, setIsolateListRefreshKey] = useState(0);
+  const [helpInfoKey, setHelpInfoKey] = useState(0);
+  const freshIsoloateHelpInfo = () => setHelpInfoKey(helpInfoKey + 1);
 
   const setIsolateType = () => {
     let val = prepareState?.currentLink?.isolateType;
@@ -90,28 +92,29 @@ export default (props) => {
     backgroundColor: 'var(--Netural-100, #EEF0F2)',
   };
 
-  const uploadFile = async ({ file }) => {
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('resourceId', prepareState.currentLink.id);
+  // const uploadFile = async ({ file }) => {
+  //   setUploading(true);
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('resourceId', prepareState.currentLink.id);
 
-    const {
-      data: { success },
-    } = await service.importConfigFile(formData).finally(() => {
-      setUploading(false);
-    });
-    if (success) {
-      message.success('操作成功');
-      setIsolateListRefreshKey(isolateListRefreshKey + 1);
-    }
-  };
+  //   const {
+  //     data: { success },
+  //   } = await service.importConfigFile(formData).finally(() => {
+  //     setUploading(false);
+  //   });
+  //   if (success) {
+  //     message.success('操作成功');
+  //     setIsolateListRefreshKey(isolateListRefreshKey + 1);
+  //   }
+  // };
 
-  const downLoadConfigFile = () => {
-    window.location.href = getUrl(
-      `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
-    );
-  };
+  // const downLoadConfigFile = () => {
+  //   window.location.href = getUrl(
+  //     `/pressureResource/ds/export?resourceId=${prepareState.currentLink.id}`
+  //   );
+  // };
+
   // 获取数据源统计信息
   const getDataSourceSummaryInfo = async (id) => {
     const {
@@ -158,7 +161,7 @@ export default (props) => {
 
   useEffect(() => {
     getDataSourceSummaryInfo(prepareState.currentLink.id);
-  }, []);
+  }, [helpInfoKey]);
 
   if (showGuide) {
     return <DataIsolateGuide setIsolateType={setIsolateType} />;
@@ -226,33 +229,36 @@ export default (props) => {
           <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
           {/* <Tooltip title="数据库连接地址">
             <Icon type="info-circle" style={{ cursor: 'pointer' }} />
-          </Tooltip>
+          </Tooltip> */}
           <Button
-            style={{ marginLeft: 24 }}
+            type="primary"
             onClick={() => setEditedDataSource({})}
           >
             新增数据源
-          </Button> */}
-          <Upload
+          </Button>
+          {/* <Upload
             accept=".xlsx,.csv,.xls"
             showUploadList={false}
             customRequest={uploadFile}
           >
-            <Button loading={uploading}>导入隔离配置</Button>
+            <Button loading={uploading} style={{ marginLeft: 16 }}>
+              导入隔离配置
+            </Button>
           </Upload>
           <Button
             type="primary"
-            style={{ marginLeft: 24 }}
+            style={{ marginLeft: 16 }}
             onClick={downLoadConfigFile}
           >
             导出待配置项
-          </Button>
+          </Button> */}
         </div>
       </div>
       {mode === 0 && (
         <DataSourceMode
           setEditedDataSource={setEditedDataSource}
           isolateListRefreshKey={isolateListRefreshKey}
+          freshIsoloateHelpInfo={freshIsoloateHelpInfo}
         />
       )}
       {mode === 1 && <AppMode isolateListRefreshKey={isolateListRefreshKey} />}

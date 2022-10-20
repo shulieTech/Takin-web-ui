@@ -363,6 +363,21 @@ const GraphComponent = (props: GraphProps, ref: any) => {
       }
     };
     window.addEventListener('resize', resizeHandle);
+    let lastWidth = 0;
+    let observer;
+    if (window.ResizeObserver) {
+      observer = new ResizeObserver(entries => {
+        for (const entry of entries) {
+          if (Math.abs(lastWidth - entry.contentRect.width) > 50) {
+            resizeHandle();
+            lastWidth = entry.contentRect.width;
+          }
+        }
+        
+      });
+      observer.observe(container);
+
+    }
 
     // toolbar 提示语
     const helpDom = document.querySelector('[code=help]');
@@ -378,6 +393,7 @@ const GraphComponent = (props: GraphProps, ref: any) => {
 
     return () => {
       window.removeEventListener('resize', resizeHandle);
+      observer?.disconnect();
       if (props.help) {
         helpDom?.removeEventListener('click', showHelp);
       }

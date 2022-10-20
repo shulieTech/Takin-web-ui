@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { Icon, Modal, Tooltip } from 'antd';
 import {
   Form,
   FormItem,
   createAsyncFormActions,
+  FormEffectHooks,
 } from '@formily/antd';
-import { Input, Select, Password } from '@formily/antd-components';
-import useListService from 'src/utils/useListService';
+import { Input, Password, Radio } from '@formily/antd-components';
 import service from '../service';
-import { debounce } from 'lodash';
+import { PrepareContext } from '../_layout';
 
 interface Props {
   detail: any;
@@ -19,26 +19,7 @@ interface Props {
 export default (props: Props) => {
   const { detail, okCallback, cancelCallback, ...rest } = props;
   const actions = useMemo(createAsyncFormActions, []);
-
-  const {
-    list: appList,
-    getList: getAppList,
-    loading: appLoading,
-  } = useListService({
-    service: service.appList,
-    defaultQuery: {
-      current: 0,
-      pageSize: 10,
-    },
-  });
-
-  const { list: middlewareList, loading: middlewareListLoading } =
-    useListService({
-      service: service.middlewareList,
-      defaultQuery: {
-        middlewareType: '连接池',
-      },
-    });
+  const { prepareState, setPrepareState } = useContext(PrepareContext);
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -49,13 +30,102 @@ export default (props: Props) => {
     // TODO 提交数据
   };
 
+  const formEffects = () => {
+    const { onFieldValueChange$, onFieldInputChange$ } = FormEffectHooks;
+
+    const getTooltipTitle = (text, tips) => (
+      <span>
+        {text}
+        <Tooltip title={tips}>
+          <Icon
+            type="question-circle"
+            style={{ marginLeft: 4, cursor: 'pointer' }}
+          />
+        </Tooltip>
+      </span>
+    );
+    const isolateType = prepareState.currentLink?.isolateType;
+    onFieldValueChange$('type').subscribe(({ value }) => {
+      actions.setFieldState('*(!type)', (state) => (state.visible = false));
+      // isolateType
+      // 1: '影子库',
+      // 2: '影子库/表',
+      // 3: '影子表',
+      let visibleFields = [];
+      switch (true) {
+        case value === 1 && [1, 2].includes(isolateType):
+          visibleFields = [
+            'businessUserName',
+            'businessDatabase',
+            'shadowUserName',
+            'shadowDatabase',
+            'shadowPassword',
+          ];
+          actions.setFieldState('businessDatabase', (state) => {
+            state.props.title = getTooltipTitle(
+              '业务数据源',
+              '示例：jdbc:mysql://192.168.1.102:3306/easydemo_db'
+            );
+          });
+          actions.setFieldState('shadowDatabase', (state) => {
+            state.props.title = '影子数据源';
+          });
+
+          break;
+        case value === 1 && isolateType === 3:
+          visibleFields = ['businessUserName', 'businessDatabase'];
+          actions.setFieldState('businessDatabase', (state) => {
+            state.props.title = getTooltipTitle(
+              '业务数据源',
+              '示例：jdbc:mysql://192.168.1.102:3306/easydemo_db'
+            );
+          });
+          actions.setFieldState('shadowDatabase', (state) => {
+            state.props.title = '影子数据源';
+          });
+          break;
+        case value === 2:
+          visibleFields = ['businessDatabase', 'shadowDatabase'];
+          actions.setFieldState('businessDatabase', (state) => {
+            state.props.title = getTooltipTitle(
+              '业务数据源',
+              '示例：mongodb://192.168.1.217:27017/test'
+            );
+          });
+          actions.setFieldState('shadowDatabase', (state) => {
+            state.props.title = getTooltipTitle(
+              '影子数据源',
+              '示例：mongodb://192.168.1.217:27017/PT_test'
+            );
+          });
+          break;
+        case value === 3:
+          visibleFields = [
+            'businessNodes',
+            'performanceTestNodes',
+            'performanceClusterName',
+            'ptUserName',
+            'ptPassword',
+            'indices',
+          ];
+          break;
+        default:
+          visibleFields = [];
+      }
+
+      visibleFields.forEach((x) => {
+        actions.setFieldState(x, (state) => (state.visible = true));
+      });
+    });
+  };
+
   return (
     <Modal
-      title="数据源配置"
+      title={`${detail.id ? '编辑' : '新增'}数据源`}
       width={700}
       visible={!!detail}
       onOk={handleSubmit}
-      okText="好的"
+      okText="保存"
       onCancel={cancelCallback}
       maskClosable={false}
       bodyStyle={{
@@ -70,17 +140,36 @@ export default (props: Props) => {
         initialValues={detail}
         labelCol={6}
         wrapperCol={18}
+        effects={formEffects}
       >
         <FormItem
-          name="middlewareName"
-          title="中间件名称"
-          component={Select}
-          dataSource={middlewareList}
+          name="type"
+          title="类型"
+          component={Radio.Group}
+          dataSource={[
+            { label: '连接池', value: 1 },
+            { label: 'mongodb', value: 2 },
+            { label: 'ES', value: 3 },
+          ]}
+          editable={!detail.id}
           props={{
             placeholder: '请选择',
-            loading: middlewareListLoading,
           }}
-          rules={[{ required: true, message: '请选择中间件' }]}
+          rules={[{ required: true, message: '请选择类型' }]}
+          initialValue={1}
+        />
+        <FormItem
+          name="businessUserName"
+          title="业务数据源用户名"
+          component={Input}
+          rules={[
+            {
+              required: true,
+              whitespace: true,
+              message: '请输入业务数据源用户名',
+            },
+          ]}
+          props={{ maxLength: 25, placeholder: '请输入' }}
         />
         <FormItem
           name="businessDatabase"
@@ -89,7 +178,7 @@ export default (props: Props) => {
               业务数据源
               <Tooltip title="示例：jdbc:mysql://192.168.1.102:3306/easydemo_db">
                 <Icon
-                  type="info-circle"
+                  type="question-circle"
                   style={{ marginLeft: 4, cursor: 'pointer' }}
                 />
               </Tooltip>
@@ -97,28 +186,11 @@ export default (props: Props) => {
           }
           component={Input}
           rules={[
-            { required: true, whitespace: true, message: '请输入业务源' },
+            { required: true, whitespace: true, message: '请输入业务数据源' },
           ]}
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
-        <FormItem
-          name="businessUserName"
-          title="用户名"
-          component={Input}
-          rules={[
-            { required: true, whitespace: true, message: '请输入用户名' },
-          ]}
-          props={{ maxLength: 25, placeholder: '请输入' }}
-        />
-        <FormItem
-          name="shadowDatabase"
-          title="影子数据源"
-          component={Input}
-          rules={[
-            { required: true, whitespace: true, message: '请输入影子数据源' },
-          ]}
-          props={{ maxLength: 200, placeholder: '请输入' }}
-        />
+
         <FormItem
           name="shadowUserName"
           title="影子数据源用户名"
@@ -132,6 +204,17 @@ export default (props: Props) => {
           ]}
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
+
+        <FormItem
+          name="shadowDatabase"
+          title="影子数据源"
+          component={Input}
+          rules={[
+            { required: true, whitespace: true, message: '请输入影子数据源' },
+          ]}
+          props={{ maxLength: 200, placeholder: '请输入' }}
+        />
+
         <FormItem
           name="shadowPassword"
           title="影子数据源密码"
@@ -149,55 +232,76 @@ export default (props: Props) => {
             autoComplete: 'new-password',
           }}
         />
+
         <FormItem
-          name="driverClassName"
-          title="驱动"
+          name="businessNodes"
+          title="业务集群地址"
           component={Input}
-          rules={[{ required: true, whitespace: true, message: '请输入驱动' }]}
+          rules={[
+            { required: true, whitespace: true, message: '请输入影子数据源' },
+          ]}
+          props={{
+            maxLength: 200,
+            placeholder: '请输入业务集群地址（多个用逗号隔开）',
+          }}
+        />
+        <FormItem
+          name="performanceTestNodes"
+          title="影子集群地址"
+          component={Input}
+          rules={[
+            { required: true, whitespace: true, message: '请输入影子数据源' },
+          ]}
+          props={{
+            maxLength: 200,
+            placeholder: '请输入影子集群地址（多个用逗号隔开）',
+          }}
+        />
+        <FormItem
+          name="performanceClusterName"
+          title="影子集群名称"
+          component={Input}
+          props={{ maxLength: 200, placeholder: '请输入业务集群名称' }}
+        />
+        <FormItem
+          name="ptUserName"
+          title="影子用户名"
+          component={Input}
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
         <FormItem
-          name="relationApps"
-          title="关联应用"
-          component={Select}
-          rules={[{ required: true, message: '请选择关联应用' }]}
+          name="ptPassword"
+          title="影子密码"
+          component={Password}
           props={{
-            placeholder: '请选择',
-            mode: 'multiple',
-            showSearch: true,
-            filterOption: false,
-            loading: appLoading,
-            onSearch: debounce(
-              (val) =>
-                getAppList({
-                  applicationName: val,
-                  current: 0,
-                }),
-              300
-            )
+            maxLength: 200,
+            placeholder: '请输入',
+            autoComplete: 'new-password',
           }}
-          dataSource={appList}
         />
         <FormItem
-          name="maxActive"
-          title="maxActive"
-          component={Select}
-          rules={[{ required: true, message: '请选择maxActive' }]}
-          props={{ placeholder: '请选择' }}
-        />
-        <FormItem
-          name="initialSize"
-          title="initialSize"
-          component={Select}
-          rules={[{ required: true, message: '请选择initialSize' }]}
-          props={{ placeholder: '请选择' }}
-        />
-        <FormItem
-          name="scheme"
-          title="scheme"
-          component={Select}
-          rules={[{ required: true, message: '请选择scheme' }]}
-          props={{ placeholder: '请选择' }}
+          name="indices"
+          title="索引名称"
+          component={Input}
+          props={{
+            maxLength: 200,
+            placeholder: '请输入索引名称（多个用逗号隔开）',
+          }}
+          help={
+            <Tooltip
+              title={`{
+            "indices":["indexa","indexb"]
+            "businessNodes":"192.168.1.210:9200,192.168.1.193:9200",
+            "performanceTestNodes":"192.168.1.210:9200,192.168.1.193:9200",
+            "businessClusterName":"bizCluster",
+            "performanceClusterName":"ptCluster",
+            "ptUserName":"ptUserName",
+            "ptPassword":"ptPassword"
+        }`}
+            >
+              <a>参考示例</a>
+            </Tooltip>
+          }
         />
       </Form>
     </Modal>

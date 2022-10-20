@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Icon, Form, Input, message, Spin, Tooltip } from 'antd';
+import {
+  Modal,
+  Icon,
+  Form,
+  Input,
+  message,
+  Spin,
+  Tooltip,
+  Upload,
+  Button,
+} from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import styles from '../index.less';
 import classNames from 'classnames';
 import service from '../service';
 import LinkFilter from '../components/LinkFilter';
+import { ImportFile } from 'racc';
 
 interface EditLinkModalProps {
   form?: WrappedFormUtils;
@@ -33,6 +44,12 @@ const EditLinkModal = (props: EditLinkModalProps) => {
         ...data,
       });
     }
+  };
+
+  const uploadFile = (options) => {
+    // TODO 上传文件
+    const { file } = options;
+
   };
 
   const handleSubmit = () => {
@@ -120,38 +137,56 @@ const EditLinkModal = (props: EditLinkModalProps) => {
               })(<LinkFilter />)
               : (detail?.detailInputs || []).map((x) => {
                 return (
-                  <div style={{ marginBottom: 16 }} key={x}>
-                    <div style={{ lineHeight: 1.5 }}>
-                      <div style={{ display: 'flex' }}>
-                        <span
+                    <div style={{ marginBottom: 16 }} key={x}>
+                      <div style={{ lineHeight: 1.5 }}>
+                        <div style={{ display: 'flex' }}>
+                          <span
+                            style={{
+                              fontSize: 12,
+                              color: 'var(--Netural-900, #303336)',
+                              fontWeight: 700,
+                              marginRight: 12,
+                            }}
+                          >
+                            {x.method}
+                          </span>
+                          <div className="truncate" style={{ flex: 1 }}>
+                            {x.entranceName || '-'}
+                          </div>
+                        </div>
+                        <div
+                          className="truncate"
                           style={{
                             fontSize: 12,
-                            color: 'var(--Netural-900, #303336)',
-                            fontWeight: 700,
+                            color: 'var(--Netural-600, #90959A)',
                             marginRight: 12,
+                            cursor: 'pointer',
                           }}
                         >
-                          {x.method}
-                        </span>
-                        <div className="truncate" style={{ flex: 1 }}>
-                          {x.entranceName || '-'}
+                          {x.entranceUrl || '-'}
                         </div>
                       </div>
-                      <div
-                        className="truncate"
-                        style={{
-                          fontSize: 12,
-                          color: 'var(--Netural-600, #90959A)',
-                          marginRight: 12,
-                          cursor: 'pointer',
-                        }}
-                      >
-                        {x.entranceUrl || '-'}
-                      </div>
                     </div>
-                  </div>
                 );
               })}
+          </Form.Item>
+          <Form.Item label="关联脚本">
+            {getFieldDecorator('scriptFile', {
+              valuePropName: 'fileList',
+              getValueFromEvent: (e) => {
+                if (Array.isArray(e)) {
+                  return e;
+                }
+                return e && e.fileList;
+              },
+              // initialValue: 
+            })(
+              <Upload customRequest={uploadFile}>
+                <Button>
+                  <Icon type="upload" /> 点击上传
+                </Button>
+              </Upload>
+            )}
           </Form.Item>
         </Form>
       </Spin>

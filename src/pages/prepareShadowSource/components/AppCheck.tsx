@@ -11,13 +11,14 @@ import {
   Switch,
   message,
 } from 'antd';
-import { PrepareContext } from '../indexPage';
+import { PrepareContext } from '../_layout';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
 import { debounce } from 'lodash';
 import EditAgentCount from './EditAgentCount';
 import { ISOLATE_TYPE } from '../constants';
+import AppErrorListModal from 'src/pages/appManage/modals/AppErrorListModal';
 
 const { Option } = Select;
 
@@ -141,10 +142,33 @@ export default (props) => {
                 />
               ), // 正常
               1: (
-                <StatusDot
-                  color="var(--FunctionNegative-400, #E8695D)"
-                  title="异常"
-                />
+                <>
+                  <StatusDot
+                    color="var(--FunctionNegative-500, #D24D40)"
+                    title="异常"
+                  />
+                  {
+                    record.applicationId && <>
+                      <Divider
+                        type="vertical"
+                        style={{ height: 24, margin: '0 24px' }}
+                      />
+                      <AppErrorListModal
+                        appId={record.applicationId}
+                        btnText={
+                          <Icon
+                            type="file-text"
+                            theme="filled"
+                            style={{
+                              cursor: 'pointer',
+                              color: 'var(--Brandprimary-500, #0FBBD5)',
+                            }}
+                          />
+                        }
+                      />
+                    </>
+                  }
+                </>
               ), // 不正常
             }[record.status] || '-'}
             <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
@@ -225,6 +249,7 @@ export default (props) => {
         }
         return (
           <EditAgentCount
+            editable={false}
             record={record}
             okCallback={() => {
               getList();
@@ -283,7 +308,6 @@ export default (props) => {
       }
     }, 300);
     return () => clearTimeout(timer);
-    
   }, [prepareState.currentLink?.id]);
 
   return (
