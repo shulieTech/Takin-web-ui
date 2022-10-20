@@ -43,8 +43,8 @@ const EditPage = (props) => {
   const actions = useMemo(() => createAsyncFormActions(), []);
   const { dictionaryMap } = props;
   const [businessFlowList, setBusinessFlowList] = useState([]);
-  const [versionList, setVersionList] = useState([]);
-  const [demandList, setDemandList] = useState([]);
+  // const [versionList, setVersionList] = useState([]);
+  // const [demandList, setDemandList] = useState([]);
   const [flatTreeData, setFlatTreeData] = useState([]);
   const [initialValue, setInitialValue] = useState({});
   const [detailLoading, setDetailLoading] = useState(false);
@@ -80,28 +80,28 @@ const EditPage = (props) => {
       setBusinessFlowList(data);
     }
   };
-  /**
-   * 获取版本下拉列表
-   */
-  const getVersionList = async () => {
-    const {
-      data: { success, data },
-    } = await services.versionList({});
-    if (success) {
-      setVersionList(data?.records || []);
-    }
-  };
-  /**
-   * 获取需求下拉列表
-   */
-  const getDemandList = async (params) => {
-    const {
-      data: { success, data },
-    } = await services.demandList(params);
-    if (success) {
-      setDemandList(data);
-    }
-  };
+  // /**
+  //  * 获取版本下拉列表
+  //  */
+  // const getVersionList = async () => {
+  //   const {
+  //     data: { success, data },
+  //   } = await services.versionList({});
+  //   if (success) {
+  //     setVersionList(data?.records || []);
+  //   }
+  // };
+  // /**
+  //  * 获取需求下拉列表
+  //  */
+  // const getDemandList = async (params) => {
+  //   const {
+  //     data: { success, data },
+  //   } = await services.demandList(params);
+  //   if (success) {
+  //     setDemandList(data);
+  //   }
+  // };
 
   /**
    * 根据流程id获取线程树
@@ -326,17 +326,17 @@ const EditPage = (props) => {
       });
     }
 
-    onFieldValueChange$('versionId').subscribe(fieldState => {
-      if (fieldState.value) {
-        getDemandList({
-          versionId: fieldState.value,
-        });
-      }
-    });
+    // onFieldValueChange$('versionId').subscribe(fieldState => {
+    //   if (fieldState.value) {
+    //     getDemandList({
+    //       versionId: fieldState.value,
+    //     });
+    //   }
+    // });
 
-    onFieldInputChange$('versionId').subscribe(fieldState => {
-      setFieldState('demandIds', state => state.value = []);
-    });
+    // onFieldInputChange$('versionId').subscribe(fieldState => {
+    //   setFieldState('demandIds', state => state.value = []);
+    // });
   };
 
   /**
@@ -360,7 +360,7 @@ const EditPage = (props) => {
     Promise.all([
       getBusinessFlowList(),
       getDetailData(),
-      getVersionList(),
+      // getVersionList(),
     ]).then(() => {
       setDetailLoading(false);
     });
@@ -369,8 +369,8 @@ const EditPage = (props) => {
   // 清除编辑时详情数据中前面业务流程的带来的目标数据
   const filteredInitialValue = {
     ...cloneDeep(initialValue),
-    versionId: initialValue.versionId || undefined,
-    demandIds: initialValue.demandIds || [],
+    // versionId: initialValue.versionId || undefined,
+    // demandIds: initialValue.demandIds || [],
   };
   Object.keys(filteredInitialValue?.goal || {}).forEach((x) => {
     if (!flatTreeData.some((y) => y.xpathMd5 === x)) {
@@ -574,7 +574,7 @@ const EditPage = (props) => {
                 loading: false,
               }}
             />
-            <Field
+            {/* <Field
               name="versionId"
               type="number"
               x-component="Select"
@@ -612,7 +612,7 @@ const EditPage = (props) => {
                 label: x.title,
                 value: x.id,
               }))}
-            />
+            /> */}
           </FormLayout>
 
           <FormLayout
