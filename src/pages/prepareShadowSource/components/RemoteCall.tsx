@@ -44,7 +44,7 @@ export default (props) => {
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      id: prepareState.currentLink.id
+      id: prepareState.currentLink.id,
     },
     dataListPath: 'detailInputs',
     isQueryOnMount: false,
@@ -87,42 +87,50 @@ export default (props) => {
       render: (text, record) => {
         return (
           <>
-            {{
-              0: <StatusDot title="未检测" />,
-              1: (
-                <>
-                  <StatusDot
-                    color="var(--FunctionNegative-500, #D24D40)"
-                    title="检测失败"
-                  />
-                  {record.remark && (
+            {/* 放行的不显示检测状态 */}
+            {record.pass !== 0 && (
+              <>
+                {{
+                  0: <StatusDot title="未检测" />,
+                  1: (
                     <>
-                      <Divider
-                        type="vertical"
-                        style={{ height: 24, margin: '0 24px' }}
+                      <StatusDot
+                        color="var(--FunctionNegative-500, #D24D40)"
+                        title="检测失败"
                       />
-                      <Tooltip title={record.remark}>
-                        <Icon
-                          type="file-text"
-                          theme="filled"
-                          style={{
-                            cursor: 'pointer',
-                            color: 'var(--Brandprimary-500, #0FBBD5)',
-                          }}
-                        />
-                      </Tooltip>
+                      {record.remark && (
+                        <>
+                          <Divider
+                            type="vertical"
+                            style={{ height: 24, margin: '0 24px' }}
+                          />
+                          <Tooltip title={record.remark}>
+                            <Icon
+                              type="file-text"
+                              theme="filled"
+                              style={{
+                                cursor: 'pointer',
+                                color: 'var(--Brandprimary-500, #0FBBD5)',
+                              }}
+                            />
+                          </Tooltip>
+                        </>
+                      )}
                     </>
-                  )}
-                </>
-              ),
-              2: (
-                <StatusDot
-                  color="var(--FunctionPositive-300, #2DC396)"
-                  title="检测成功"
+                  ),
+                  2: (
+                    <StatusDot
+                      color="var(--FunctionPositive-300, #2DC396)"
+                      title="检测成功"
+                    />
+                  ),
+                }[record.status] || '-'}
+                <Divider
+                  type="vertical"
+                  style={{ height: 24, margin: '0 24px' }}
                 />
-              ),
-            }[record.status] || '-'}
-            <Divider type="vertical" style={{ height: 24, margin: '0 24px' }} />
+              </>
+            )}
             <div style={{ display: 'inline-flex' }}>
               <div
                 style={{
@@ -208,9 +216,11 @@ export default (props) => {
       render: (text, record) => {
         return (
           <span>
-            <Button type="link" onClick={() => setEditItem(record)}>
-              配置mock
-            </Button>
+            {text !== 0 && (
+              <Button type="link" onClick={() => setEditItem(record)}>
+                配置mock
+              </Button>
+            )}
             <Switch
               style={{ marginLeft: 24 }}
               checked={text === 0} // 0是， 1否
