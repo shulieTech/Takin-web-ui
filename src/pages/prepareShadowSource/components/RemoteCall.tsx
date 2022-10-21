@@ -225,6 +225,9 @@ export default (props) => {
               style={{ marginLeft: 24 }}
               checked={text === 0} // 0是， 1否
               onChange={(checked) => toggleInvovled(checked, record)}
+              disabled={['httpclient5', 'jdk-http', 'OkHttpV3'].includes(
+                record.interfaceChildType
+              )}
             />
           </span>
         );
