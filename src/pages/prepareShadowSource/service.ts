@@ -198,10 +198,10 @@ export default {
     return httpPost(url, data);
   },
   /**
-   * @name 获取响应时间
+   * @name 获取mock模板及响应时间
    */
   async getAvgRt(data = {}) {
-    const url = '/pressureResource/remotecall/avgRt';
+    const url = '/pressureResource/remotecall/config';
     return httpGet(url, data);
   },
   /**

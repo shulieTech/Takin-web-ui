@@ -38,7 +38,10 @@ export default (props: Props) => {
   });
   const [testing, setTesting] = useState(false);
   const [type, setType] = useState(detail?.type || 1);
-  const [avgRt, setAvgRt] = useState(0);
+  const [avgRt, setAvgRt] = useState({
+    request: [],
+    responseTime: 0,
+  });
   let mockObj = detail.mockInfo || {};
   try {
     mockObj = JSON.parse(detail.mockReturnValue);
@@ -66,11 +69,6 @@ export default (props: Props) => {
   //     pageSize: 10,
   //   },
   // });
-
-  const list = [
-    `{\n\t"name1":"测试角色",\n\t"permissionValue":"test_role",\n\t"enabled":true,\n\t"remark":"这是一个测试使用的角色",\n\t"clientToken":"hyc11bzqcjdra4fg",\n\t"psId":"hU2czV4pMR"\n}`,
-    `{\n\t"name2":"测试角色",\n\t"permissionValue":"test_role",\n\t"enabled":true,\n\t"remark":"这是一个测试使用的角色",\n\t"clientToken":"hyc11bzqcjdra4fg",\n\t"psId":"hU2czV4pMR"\n}`,
-  ];
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -109,7 +107,7 @@ export default (props: Props) => {
   };
 
   const chooseTpl = () => {
-    actions.setFieldValue('mockValue', list[selectedTplIndex]);
+    actions.setFieldValue('mockValue', avgRt.request?.[selectedTplIndex]);
     setShowTplDropDown(false);
   };
 
@@ -173,9 +171,9 @@ export default (props: Props) => {
               { label: '脚本格式', value: '1' },
             ]}
             rules={[{ required: true, message: '请选择类型' }]}
-            initialValue={0}
+            initialValue={'0'}
           />
-          {list?.length > 0 && type === '0' && (
+          {avgRt.request?.length > 0 && type === '0' && (
             <div style={{ position: 'relative' }}>
               <div
                 style={{
@@ -211,7 +209,7 @@ export default (props: Props) => {
                             }
                             value={selectedTplIndex}
                           >
-                            {list.map((x, i) => (
+                            {avgRt.request.map((x, i) => (
                               <div
                                 style={{
                                   padding: 16,
@@ -239,7 +237,7 @@ export default (props: Props) => {
                             whiteSpace: 'pre-wrap',
                           }}
                         >
-                          {list[selectedTplIndex]}
+                          {avgRt.request[selectedTplIndex]}
                         </div>
                       </div>
                       <div style={{ padding: '16px 24px', textAlign: 'right' }}>
@@ -328,13 +326,13 @@ export default (props: Props) => {
                 rules={[{ required: true, message: '请输入返回响应时间' }]}
               />
               <span style={{ marginLeft: 8, marginRight: 16 }}>ms</span>
-              {avgRt > 0 && (
+              {avgRt.responseTime > 0 && (
                 <span
                   style={{
                     color: 'var(--Netural-600, #90959A)',
                   }}
                 >
-                  历史相应时间参考：平均{avgRt} ms
+                  历史相应时间参考：平均{avgRt.responseTime} ms
                 </span>
               )}
             </div>
