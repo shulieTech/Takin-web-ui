@@ -40,11 +40,14 @@ export default (props) => {
     getList: getEntryList,
     loading: entryLoading,
   } = useListService({
-    service: service.entryList,
+    service: service.getLinkDetail,
     defaultQuery: {
       current: 0,
       pageSize: 10,
+      id: prepareState.currentLink.id
     },
+    dataListPath: 'detailInputs',
+    isQueryOnMount: false,
   });
 
   const { list, loading, total, query, getList, resetList } = useListService({
@@ -227,6 +230,15 @@ export default (props) => {
     });
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (prepareState.currentLink?.id) {
+        getEntryList({ id: prepareState.currentLink?.id });
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [prepareState.currentLink?.id]);
+
   return (
     <>
       <div
@@ -263,13 +275,13 @@ export default (props) => {
                 })
               }
               dropdownMatchSelectWidth={false}
-              showSearch
-              filterOption={false}
-              placeholder="搜索入口URL"
-              onSearch={debounce(
-                (val) => getEntryList({ current: 0, serviceName: val }),
-                300
-              )}
+              // showSearch
+              // filterOption={false}
+              placeholder="选择入口URL"
+              // onSearch={debounce(
+              //   (val) => getEntryList({ current: 0, serviceName: val }),
+              //   300
+              // )}
               loading={entryLoading}
               optionLabelProp="label"
               allowClear
@@ -282,7 +294,7 @@ export default (props) => {
                     style={{
                       border: '1px solid #F7F8FA',
                     }}
-                    label={x.label}
+                    label={x.entranceUrl}
                   >
                     <div
                       style={{
@@ -293,9 +305,9 @@ export default (props) => {
                       className="truncate"
                     >
                       <span style={{ marginRight: 8, fontWeight: 700 }}>
-                        {x.label}
+                        {x.method}
                       </span>
-                      {x.serviceName}
+                      {x.entranceUrl}
                     </div>
                     <div
                       style={{
@@ -303,7 +315,7 @@ export default (props) => {
                         color: 'var(--Netural-600, #90959A)',
                       }}
                     >
-                      {x.serviceName}
+                      {x.appName}
                     </div>
                   </Option>
                 );
