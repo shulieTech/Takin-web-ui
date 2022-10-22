@@ -109,8 +109,7 @@ const AppDetailHeader: React.FC<Props> = props => {
           <span
             style={{
               color:
-                appConfigStatusColorMap[`${detailData && detailData.accessStatus}`
-]
+                appConfigStatusColorMap[`${detailData && detailData.accessStatus}`]
             }}
           >
             {appConfigStatusMap[`${detailData && detailData.accessStatus}`]}

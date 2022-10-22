@@ -39,9 +39,7 @@ const getInitState = () => ({
   },
   uploadFileList: []
 });
-export const MiddlewareManageContext = useCreateContext<
-  MiddlewareManageState
->();
+export const MiddlewareManageContext = useCreateContext<MiddlewareManageState>();
 export type MiddlewareManageState = ReturnType<typeof getInitState>;
 const MiddlewareManage: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
