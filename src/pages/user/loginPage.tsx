@@ -687,17 +687,17 @@ export default class Login extends DvaComponent<Props, State> {
           <img className={styles.bg1} src={loginPic} />
         ) : (
           <>
-            <img
+            {/* <img
               className={styles.bg1}
               src={require('./../../assets/login_bg.png')}
-            />
+            /> */}
             <img
               className={styles.bg2}
               src={require('./../../assets/login_bg2.png')}
             />
             <img
               className={styles.bg3}
-              src={require('./../../assets/login_img.png')}
+              src={require('./../../assets/login.png')}
             />
             {/* <img
               className={styles.bg4}
@@ -708,7 +708,7 @@ export default class Login extends DvaComponent<Props, State> {
 
         <div className={styles.main}>
           <div className={styles.login}>
-            <p className={styles.sysName}>全链路压测</p>
+            <p className={styles.sysName}>性能测试工具</p>
             {dom}
             {/* <center className={styles.other}>其他登录方式</center>
             <Row className={styles.otherimg} type="flex" justify="center">

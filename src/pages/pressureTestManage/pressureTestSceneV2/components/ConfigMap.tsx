@@ -99,7 +99,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                         </TipTittle>
                       ),
                       'x-component-props': {
-                        placeholder: '请输入1~100,000之间的正整数',
+                        placeholder: '请输入1~2,000,000之间的正整数',
                         style: {
                           width: '100%',
                         },
@@ -112,8 +112,8 @@ const ConfigMap = (props: IFieldMergeState) => {
                         {
                           format: 'integer',
                           minimum: 1,
-                          maximum: 100000,
-                          message: '请输入1~100,000之间的正整数',
+                          maximum: 2000000,
+                          message: '请输入1~2,000,000之间的正整数',
                         },
                       ],
                       default: 1,
