@@ -47,10 +47,10 @@ const state = {
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
-  const disableTenant = getThemeByKeyName('disableTenant');
-  const usernamePlaceholder = disableTenant
-    ? '请输入账号'
-    : '<用户名>@<企业别名>，例如： username@yidongyun';
+  // const disableTenant = getThemeByKeyName('disableTenant');
+  // const usernamePlaceholder = disableTenant
+  //   ? '请输入账号'
+  //   : '<用户名>@<企业别名>，例如： username@yidongyun';
   return [
     {
       key: 'username',
@@ -70,7 +70,7 @@ const getFormData = (that: Login): FormDataType[] => {
           // onChange={that.onBlur}
           prefix={<Icon type="user" className={styles.prefixIcon} />}
           // 人寿没有租户
-          placeholder={usernamePlaceholder}
+          placeholder="请输入账号"
         />
       ),
     },
@@ -426,6 +426,7 @@ export default class Login extends DvaComponent<Props, State> {
       ...value,
       loginType: this.state.keyType,
       password: encryptStr(value.password),
+      username: value.username.indexOf('@') > -1 ? value.username : `${value.username}@default`
     });
     if (success) {
       notification.success({
