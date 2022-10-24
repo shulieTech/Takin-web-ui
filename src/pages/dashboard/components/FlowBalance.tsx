@@ -33,7 +33,7 @@ const FlowBalance: React.FC<Props> = props => {
             </Link>
           </Col>
         </Row>
-        <p className={styles.flowNum}>
+        <div className={styles.flowNum}>
           <span className={styles.number}>
             <Statistic
               value={data.balance || data.balance === 0 ? data.balance : '-'}
@@ -41,7 +41,7 @@ const FlowBalance: React.FC<Props> = props => {
             />
           </span>
           <span style={{ marginLeft: 8 }}>vum</span>
-        </p>
+        </div>
         <Row type="flex" align="middle" style={{ marginTop: 16 }}>
           <Col>
             <Tooltip title="请联系移动云对接人员充值" placement="bottom">
