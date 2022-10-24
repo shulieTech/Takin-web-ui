@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Icon, Button, Table, Input, Dropdown } from 'antd';
+import { Icon, Button, Table, Input, Dropdown, Tooltip } from 'antd';
 import useListService from 'src/utils/useListService';
 import service from '../service';
 import StatusDot from './StatusDot';
@@ -122,13 +122,17 @@ export default (props: Props) => {
               />
             </div>
             <div>
-              <div
-                style={{
-                  color: 'var(--Netural-1000, #141617)',
-                }}
-              >
-                {text}
-              </div>
+              <Tooltip title={text}>
+                <div
+                  style={{
+                    color: 'var(--Netural-1000, #141617)',
+                    maxWidth: 300
+                  }}
+                  className="truncate"
+                >
+                  {text}
+                </div>
+              </Tooltip>
               <div
                 style={{
                   color: 'var(--Netural-600, #90959A)',

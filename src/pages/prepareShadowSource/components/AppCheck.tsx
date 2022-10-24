@@ -196,13 +196,17 @@ export default (props) => {
                 />
               </div>
               <div>
-                <div
-                  style={{
-                    color: 'var(--Netural-1000, #141617)',
-                  }}
-                >
-                  {text}
-                </div>
+                <Tooltip title={text}>
+                  <div
+                    style={{
+                      color: 'var(--Netural-1000, #141617)',
+                      maxWidth: 300
+                    }}
+                    className="truncate"
+                  >
+                    {text}
+                  </div>
+                </Tooltip>
                 <div
                   style={{
                     color: 'var(--Netural-600, #90959A)',
