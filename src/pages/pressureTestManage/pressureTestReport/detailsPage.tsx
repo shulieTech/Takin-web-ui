@@ -340,11 +340,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }} loading={isDownloadingReport}>
         下载压测报告
       </Button>
-      {detailData?.hasJtl && (
+      {/* {detailData?.hasJtl && (
         <Button type="primary" ghost onClick={downloadJtlFile} style={{ marginRight: 8 }} loading={isDownloadingJtl}>
           下载Jtl文件
         </Button>
-      )}
+      )} */}
       <Button
         type="primary"
         onClick={() => window.open(`#/analysisManage?type=report&reportId=${id}`)}
