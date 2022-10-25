@@ -6,9 +6,10 @@ import {
   createAsyncFormActions,
   FormEffectHooks,
 } from '@formily/antd';
-import { Input, Password, Radio } from '@formily/antd-components';
+import { Input, Password, Radio, Select } from '@formily/antd-components';
 import service from '../service';
 import { PrepareContext } from '../_layout';
+import useApplicationSelect from './useApplicationSelect';
 
 interface Props {
   detail: any;
@@ -20,6 +21,12 @@ export default (props: Props) => {
   const { detail, okCallback, cancelCallback, ...rest } = props;
   const actions = useMemo(createAsyncFormActions, []);
   const { prepareState, setPrepareState } = useContext(PrepareContext);
+  const [dataSourceType, setDataSourceType] = useState();
+
+  const selectAppOptions = useApplicationSelect({
+    // TODO 设置初始值回显
+    initialValue: detail?.applicationsNames
+  });
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -46,6 +53,7 @@ export default (props: Props) => {
     );
     const isolateType = prepareState.currentLink?.isolateType;
     onFieldValueChange$('type').subscribe(({ value }) => {
+      setDataSourceType(value);
       actions.setFieldState('*(!type)', (state) => (state.visible = false));
       // isolateType
       // 1: '影子库',
@@ -55,6 +63,7 @@ export default (props: Props) => {
       switch (true) {
         case value === 1 && [1, 2].includes(isolateType):
           visibleFields = [
+            'applications',
             'businessUserName',
             'businessDatabase',
             'shadowUserName',
@@ -73,7 +82,12 @@ export default (props: Props) => {
 
           break;
         case value === 1 && isolateType === 3:
-          visibleFields = ['businessUserName', 'businessDatabase'];
+          visibleFields = [
+            'applications',
+            ,
+            'businessUserName',
+            'businessDatabase',
+          ];
           actions.setFieldState('businessDatabase', (state) => {
             state.props.title = getTooltipTitle(
               '业务数据源',
@@ -85,22 +99,30 @@ export default (props: Props) => {
           });
           break;
         case value === 2:
-          visibleFields = ['businessDatabase', 'shadowDatabase'];
+          visibleFields = [
+            'applications',
+            'businessDatabase',
+            'shadowDatabase',
+            'shadowUserName',
+            'shadowPassword',
+            'dbName',
+          ];
           actions.setFieldState('businessDatabase', (state) => {
             state.props.title = getTooltipTitle(
               '业务数据源',
-              '示例：mongodb://192.168.1.217:27017/test'
+              '示例：mongodb://192.168.1.217:27017'
             );
           });
           actions.setFieldState('shadowDatabase', (state) => {
             state.props.title = getTooltipTitle(
               '影子数据源',
-              '示例：mongodb://192.168.1.217:27017/PT_test'
+              '示例：mongodb://192.168.1.217:27017'
             );
           });
           break;
         case value === 3:
           visibleFields = [
+            'applications',
             'businessNodes',
             'performanceTestNodes',
             'performanceClusterName',
@@ -159,6 +181,18 @@ export default (props: Props) => {
           initialValue={1}
         />
         <FormItem
+          name="applications"
+          title="应用范围"
+          component={Select}
+          rules={[
+            {
+              required: true,
+              message: '请选择应用范围',
+            },
+          ]}
+          {...selectAppOptions}
+        />
+        <FormItem
           name="businessUserName"
           title="业务数据源用户名"
           component={Input}
@@ -192,25 +226,29 @@ export default (props: Props) => {
         />
 
         <FormItem
-          name="shadowUserName"
-          title="影子数据源用户名"
+          name="shadowDatabase"
+          title="影子数据源"
           component={Input}
           rules={[
             {
               required: true,
               whitespace: true,
-              message: '请输入影子数据源用户名',
+              message: '请输入影子数据源',
             },
           ]}
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
 
         <FormItem
-          name="shadowDatabase"
-          title="影子数据源"
+          name="shadowUserName"
+          title="影子数据源用户名"
           component={Input}
           rules={[
-            { required: true, whitespace: true, message: '请输入影子数据源' },
+            {
+              required: dataSourceType !== 2,
+              whitespace: true,
+              message: '请输入影子数据源用户名',
+            },
           ]}
           props={{ maxLength: 200, placeholder: '请输入' }}
         />
@@ -221,7 +259,7 @@ export default (props: Props) => {
           component={Password}
           rules={[
             {
-              required: true,
+              required: dataSourceType !== 2,
               whitespace: true,
               message: '请输入影子数据源密码',
             },
@@ -230,6 +268,22 @@ export default (props: Props) => {
             maxLength: 200,
             placeholder: '请输入',
             autoComplete: 'new-password',
+          }}
+        />
+        <FormItem
+          name="dbName"
+          title="数据库名称"
+          component={Input}
+          rules={[
+            {
+              required: false,
+              whitespace: true,
+              message: '请输入数据库名称',
+            },
+          ]}
+          props={{
+            maxLength: 200,
+            placeholder: '请输入',
           }}
         />
 

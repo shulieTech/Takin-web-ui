@@ -9,6 +9,7 @@ import {
 import { Input, Select, Radio, NumberPicker } from '@formily/antd-components';
 import service from '../service';
 import { PrepareContext } from '../_layout';
+import useApplicationSelect from './useApplicationSelect';
 
 interface Props {
   detail: any;
@@ -24,6 +25,11 @@ export default (props: Props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
 
   const [topicLabel, setTopicLabel] = useState('业务'); // 例如KAFKA-其他 label名叫影子的topic，其他情况叫业务的topic
+
+  const selectAppOptions = useApplicationSelect({
+    // TODO 设置初始值回显
+    initialValue: detail?.applicationsNames
+  });
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -165,6 +171,18 @@ export default (props: Props) => {
         wrapperCol={16}
         effects={formEffects}
       >
+        <FormItem
+          name="applications"
+          title="应用范围"
+          component={Select}
+          rules={[
+            {
+              required: true,
+              message: '请选择应用范围',
+            },
+          ]}
+          {...selectAppOptions}
+        />
         <FormItem
           name="mqType"
           title="MQ类型"
