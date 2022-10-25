@@ -17,8 +17,17 @@ export default ({ initialValue = [] }) => {
     },
   });
 
-  const includeInitialValueList = list.map((x) => ({ label: x.applicationName, value: x.id }));
-  includeInitialValueList.unshift(...initialValue);
+  const includeInitialValueList = list.map((x) => ({
+    label: x.applicationName,
+    value: x.id,
+  }));
+
+  // 如果初始值不在list中，手动插入
+  initialValue.forEach((x) => {
+    if (!includeInitialValueList.some((y) => y.value === x.value)) {
+      includeInitialValueList.unshift(x);
+    }
+  });
 
   return {
     loading,
