@@ -36,7 +36,7 @@ export default (props: Props) => {
     defaultQuery: {
       current: 0,
       pageSize: 10,
-      dsId: detail.id,
+      dsKey: detail.dsKey,
       queryBusinessTableName: undefined,
       status: '',
     },
@@ -58,7 +58,7 @@ export default (props: Props) => {
       const newValue = {
         ...record,
         resourceId: detail.resourceId,
-        dsId: detail.id,
+        dsKey: detail.dsKey,
         ...values,
         shadowTable: `PT_${values.businessTable || record.businessTable}`,
         joinFlag: values.joinFlag ? 0 : 1,
