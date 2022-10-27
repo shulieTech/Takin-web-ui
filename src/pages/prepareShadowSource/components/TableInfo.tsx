@@ -300,7 +300,7 @@ export default (props: Props) => {
   ];
 
   useEffect(() => {
-    if (detail?.id) {
+    if (detail?.dsKey) {
       setBoxStyle({
         top: 0,
       });
