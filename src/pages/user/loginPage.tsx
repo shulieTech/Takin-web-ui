@@ -684,21 +684,28 @@ export default class Login extends DvaComponent<Props, State> {
         )}
 
         <div className={styles.main}>
-          <div className={styles.login}>
-            <p className={styles.sysName}>全链路压测</p>
+          <div 
+            className={styles.login} 
+            style={{
+              paddingBottom: this.state.arr.length > 0 ? 48 : 68
+            }}
+          >
+            <p className={styles.sysName}>Takin</p>
             {dom}
-            <center className={styles.other}>其他登录方式</center>
-            <Row className={styles.otherimg} type="flex" justify="center">
-              {this.state.arr.map((ite) => {
-                return (
-                  <Col key={ite.id} span={3}>
-                    <a onClick={() => this.onClick(ite.id)}>
-                      <img className={styles.img} src={ite.logo} />
-                    </a>
-                  </Col>
-                );
-              })}
-            </Row>
+            {this.state.arr.length > 0 && <>
+              <div className={styles.other}>其他登录方式</div>
+              <Row className={styles.otherimg} type="flex" justify="center">
+                {this.state.arr.map((ite) => {
+                  return (
+                    <Col key={ite.id} span={3}>
+                      <a onClick={() => this.onClick(ite.id)}>
+                        <img className={styles.img} src={ite.logo} />
+                      </a>
+                    </Col>
+                  );
+                })}
+              </Row>
+            </>}
           </div>
         </div>
       </div>
