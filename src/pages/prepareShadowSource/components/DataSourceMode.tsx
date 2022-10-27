@@ -361,6 +361,7 @@ export default (props: Props) => {
       </div>
       <div style={{ flex: 1, overflow: 'auto' }}>
         <Table
+          rowKey={row => row.dsKey || row.id}
           columns={columns}
           dataSource={list}
           pagination={{
