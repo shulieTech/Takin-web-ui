@@ -37,6 +37,7 @@ export default (props: Props) => {
       current: 0,
       pageSize: 10,
       dsKey: detail.dsKey,
+      resourceId: prepareState.currentLink.id,
       queryBusinessTableName: undefined,
       status: '',
     },

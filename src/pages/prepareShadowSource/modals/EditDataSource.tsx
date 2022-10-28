@@ -143,7 +143,7 @@ export default (props: Props) => {
 
   return (
     <Modal
-      title={`${detail.id ? '编辑' : '新增'}数据源`}
+      title={`${detail.dsKey ? '编辑' : '新增'}数据源`}
       width={700}
       visible={!!detail}
       onOk={handleSubmit}
@@ -173,7 +173,7 @@ export default (props: Props) => {
             { label: 'mongodb', value: 2 },
             { label: 'ES', value: 3 },
           ]}
-          editable={!detail.id}
+          editable={!detail.dsKey}
           props={{
             placeholder: '请选择',
           }}
