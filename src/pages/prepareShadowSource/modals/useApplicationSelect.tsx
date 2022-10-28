@@ -4,7 +4,7 @@ import services from 'src/pages/businessActivity/service';
 import { debounce } from 'lodash';
 
 // initialValue为包含所选label，用于编辑时回显
-export default ({ initialValue = [] }) => {
+export default (detail) => {
   const {
     list = [],
     getList,
@@ -22,20 +22,27 @@ export default ({ initialValue = [] }) => {
     value: x.id,
   }));
 
-  // 如果初始值不在list中，手动插入
-  initialValue.forEach((x) => {
-    if (!includeInitialValueList.some((y) => y.value === x.value)) {
-      includeInitialValueList.unshift(x);
-    }
-  });
+  if (detail.applicationId && detail.applicationName) {
+    const initialValue = [
+      { label: detail.applicationName, value: detail.applicationId },
+    ];
+    // 如果初始值不在list中，手动插入
+    initialValue.forEach((x) => {
+      if (!includeInitialValueList.some((y) => y.value === x.value)) {
+        includeInitialValueList.unshift(x);
+      }
+    });
+  }
 
   return {
     loading,
+    editable: !(detail.id || detail.dsKey),
     allowClear: true,
     props: {
       dataSource: includeInitialValueList,
       placeholder: '输入关键字搜索应用',
-      mode: 'multiple',
+      // mode: 'multiple',
+      maxLength: 1,
       showSearch: true,
       filterOption: false,
       onSearch: debounce((val) => {
@@ -51,5 +58,11 @@ export default ({ initialValue = [] }) => {
         });
       },
     },
+    rules: [
+      {
+        required: true,
+        message: '请选择应用范围',
+      },
+    ],
   };
 };

@@ -65,7 +65,7 @@ const DropdowTable = (props) => {
                     title="检测成功"
                   />
                 ),
-              }[text];
+              }[text] || '-';
             },
           },
         ]}

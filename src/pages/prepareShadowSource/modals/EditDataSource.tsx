@@ -23,10 +23,7 @@ export default (props: Props) => {
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [dataSourceType, setDataSourceType] = useState();
 
-  const selectAppOptions = useApplicationSelect({
-    // TODO 设置初始值回显
-    initialValue: detail?.applicationsNames
-  });
+  const selectAppOptions = useApplicationSelect(detail);
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -63,7 +60,7 @@ export default (props: Props) => {
       switch (true) {
         case value === 1 && [1, 2].includes(isolateType):
           visibleFields = [
-            'applications',
+            'applicationId',
             'businessUserName',
             'businessDatabase',
             'shadowUserName',
@@ -83,8 +80,7 @@ export default (props: Props) => {
           break;
         case value === 1 && isolateType === 3:
           visibleFields = [
-            'applications',
-            ,
+            'applicationId',
             'businessUserName',
             'businessDatabase',
           ];
@@ -100,7 +96,7 @@ export default (props: Props) => {
           break;
         case value === 2:
           visibleFields = [
-            'applications',
+            'applicationId',
             'businessDatabase',
             'shadowDatabase',
             'shadowUserName',
@@ -122,7 +118,7 @@ export default (props: Props) => {
           break;
         case value === 3:
           visibleFields = [
-            'applications',
+            'applicationId',
             'businessNodes',
             'performanceTestNodes',
             'performanceClusterName',
@@ -181,15 +177,9 @@ export default (props: Props) => {
           initialValue={1}
         />
         <FormItem
-          name="applications"
+          name="applicationId"
           title="应用范围"
           component={Select}
-          rules={[
-            {
-              required: true,
-              message: '请选择应用范围',
-            },
-          ]}
           {...selectAppOptions}
         />
         <FormItem

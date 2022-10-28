@@ -26,10 +26,7 @@ export default (props: Props) => {
 
   const [topicLabel, setTopicLabel] = useState('业务'); // 例如KAFKA-其他 label名叫影子的topic，其他情况叫业务的topic
 
-  const selectAppOptions = useApplicationSelect({
-    // TODO 设置初始值回显
-    initialValue: detail?.applicationsNames
-  });
+  const selectAppOptions = useApplicationSelect(detail);
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
@@ -172,15 +169,9 @@ export default (props: Props) => {
         effects={formEffects}
       >
         <FormItem
-          name="applications"
+          name="applicationId"
           title="应用范围"
           component={Select}
-          rules={[
-            {
-              required: true,
-              message: '请选择应用范围',
-            },
-          ]}
           {...selectAppOptions}
         />
         <FormItem
