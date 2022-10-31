@@ -58,6 +58,7 @@ interface State {
     serviceName?: string;
   };
   defaultTreeSelectedKey?: string;
+  currentTab: string;
 }
 
 interface Props {
@@ -87,10 +88,10 @@ const PressureTestLive: React.FC<Props> = (props) => {
     stopReasons: null,
     tenantList: [],
     requestListQueryParams: {},
+    currentTab: '0',
   });
 
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
-  const [ticker, setTicker] = useState(0);
 
   const { location } = props;
 
@@ -102,37 +103,20 @@ const PressureTestLive: React.FC<Props> = (props) => {
     queryLiveBusinessActivity(id);
   }, []);
   useEffect(() => {
-    setTicker(ticker + 1);
     reFresh();
     queryLiveDetail(id);
-    queryLiveChartsInfo(id, state.tabKey);
-    queryRequestList();
-    // queryRequestList({
-    //   startTime:
-    //     state.startTime &&
-    //     Date.parse(
-    //       new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-    //     ) !== 0 &&
-    //     !isNaN(
-    //       Date.parse(
-    //         new Date(state.startTime && state.startTime.replace(/-/g, '/'))
-    //       )
-    //     )
-    //       ? Date.parse(state.startTime && state.startTime.replace(/-/g, '/'))
-    //       : null,
-    //   sceneId: id,
-    // });
-    if (ticker % 2 === 0) {
-      // 10秒刷新一次链路图
-      // queryReportGraphInfo(id, state.tabKey);
+    switch (state.currentTab) {
+      case '0':
+        queryLiveChartsInfo(id, state.tabKey);
+        break;
+      case '1':
+        break;
+      case '2':
+        queryRequestList();
+        break;
+      default:
     }
-  }, [state.isReload]);
-
-  useEffect(() => {
-    // 切换tab，立即刷新
-    setState({ isReload: !state.isReload });
-    setTicker(0);
-  }, [state.tabKey]);
+  }, [state.isReload, state.currentTab]);
 
   const tenantList = async (s) => {
     const {
@@ -639,6 +623,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
       <CommonTabs
         dataSource={tabData}
         tabsProps={{ destroyInactiveTabPane: true }}
+        onChange={activeKey => setState({ currentTab: activeKey })}
         onRender={(item, index) => (
           <CommonTabs.TabPane key={index.toString()} tab={item.title}>
             {item.component}
