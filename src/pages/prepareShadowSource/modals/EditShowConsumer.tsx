@@ -101,8 +101,8 @@ export default (props: Props) => {
     onFieldValueChange$('*(mqType, comsumerType, isCluster)').subscribe(() => {
       actions.getFormState((formState) => {
         const { mqType, comsumerType, isCluster } = formState.values || {};
-        // brokerUrl
-        actions.setFieldState('brokerUrl', (state) => {
+        // brokerAddr
+        actions.setFieldState('brokerAddr', (state) => {
           state.visible =
             (['KAFKA'].includes(mqType) && [0].includes(comsumerType)) || // kafka，生产者
             (['KAFKA-其他'].includes(mqType) && // 其他，生产者，非影子集群
@@ -232,7 +232,7 @@ export default (props: Props) => {
           }}
         />
         <FormItem
-          name="brokerUrl"
+          name="brokerAddr"
           title="broker地址"
           visible={false}
           component={Input}
