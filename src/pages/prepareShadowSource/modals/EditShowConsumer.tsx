@@ -21,6 +21,7 @@ interface Props {
 export default (props: Props) => {
   const { detail, okCallback, cancelCallback, mqTypeList, ...rest } = props;
   const actions = useMemo(createAsyncFormActions, []);
+  const [saving, setSaving] = useState(false);
 
   const { prepareState, setPrepareState } = useContext(PrepareContext);
 
@@ -35,9 +36,13 @@ export default (props: Props) => {
       ...values,
       resourceId: prepareState.currentLink.id,
     };
+    setSaving(true);
     const {
       data: { data, success },
-    } = await service[detail.id ? 'updateShdowConsumer' : 'createShdowConsumer'](newValue);
+    } = await service[detail.id ? 'updateShdowConsumer' : 'createShdowConsumer'](newValue)
+      .finally(() => {
+        setSaving(false);
+      });
     if (success) {
       message.success('操作成功');
       cancelCallback();
@@ -152,6 +157,9 @@ export default (props: Props) => {
       visible={!!detail}
       onOk={handleSubmit}
       okText="保存"
+      okButtonProps={{
+        loading:  saving
+      }}
       onCancel={cancelCallback}
       maskClosable={false}
       bodyStyle={{

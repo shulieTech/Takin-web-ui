@@ -22,6 +22,7 @@ export default (props: Props) => {
   const actions = useMemo(createAsyncFormActions, []);
   const { prepareState, setPrepareState } = useContext(PrepareContext);
   const [dataSourceType, setDataSourceType] = useState();
+  const [saving, setSaving] = useState(false);
 
   const selectAppOptions = useApplicationSelect(detail);
 
@@ -144,6 +145,9 @@ export default (props: Props) => {
       visible={!!detail}
       onOk={handleSubmit}
       okText="保存"
+      okButtonProps={{
+        loading: saving
+      }}
       onCancel={cancelCallback}
       maskClosable={false}
       bodyStyle={{
