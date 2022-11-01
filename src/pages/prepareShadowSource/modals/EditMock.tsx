@@ -37,6 +37,7 @@ export default (props: Props) => {
     remark: null,
   });
   const [testing, setTesting] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [type, setType] = useState(detail?.type || 1);
   const [avgRt, setAvgRt] = useState({
     request: [],
@@ -72,6 +73,10 @@ export default (props: Props) => {
 
   const handleSubmit = async () => {
     const { values } = await actions.submit();
+    const mockValueValid = await startTest();
+    if (!mockValueValid) {
+      return;
+    }
     const newValue = {
       ...detail,
       mockInfo: {
@@ -80,9 +85,12 @@ export default (props: Props) => {
       },
       resourceId: prepareState.currentLink.id,
     };
+    setSaving(true);
     const {
       data: { success },
-    } = await service.updateRemoteCall(newValue);
+    } = await service.updateRemoteCall(newValue).finally(() => {
+      setSaving(false);
+    });
     if (success) {
       message.success('操作成功');
       okCallback();
@@ -103,7 +111,9 @@ export default (props: Props) => {
     });
     if (success) {
       setTestResult(data);
+      return data?.success;
     }
+    return false;
   };
 
   const chooseTpl = () => {
@@ -144,6 +154,7 @@ export default (props: Props) => {
       okText="保存"
       okButtonProps={{
         disabled: loading,
+        loading: saving,
       }}
       onCancel={cancelCallback}
       maskClosable={false}
