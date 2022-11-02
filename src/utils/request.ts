@@ -273,7 +273,7 @@ function getErrorMessage(statusCode: number): string | undefined {
     417: 'Expectation Failed/请求头信息期望失败!',
     500: 'Internal Server Error/内部服务器错误!',
     501: 'Not Implemented/未实现!',
-    502: 'Bad Gateway/错误的网关!`',
+    502: 'Bad Gateway/错误的网关!',
     503: 'Service Unavailable/服务无法获得!',
     504: 'Gateway Timeout/网关超时!',
     505: 'HTTP Version Not Supported/不支持的 HTTP 版本!',
