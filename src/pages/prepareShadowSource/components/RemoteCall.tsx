@@ -206,7 +206,17 @@ export default (props) => {
       },
     },
     {
-      title: '类型',
+      title: (
+        <span>
+          类型
+          <Tooltip title="暂不支持中间件类型为httpclient5、jdk-http、OkHttpV3设置为不放行，不能配mock">
+            <Icon
+              type="info-circle"
+              style={{ marginLeft: 8, cursor: 'pointer' }}
+            />
+          </Tooltip>
+        </span>
+      ),
       dataIndex: 'interfaceChildType',
       render: (text, record) => {
         return text ? <Tag>{text}</Tag> : '-';
@@ -225,7 +235,7 @@ export default (props) => {
         ].includes(record.interfaceChildType);
         return (
           <span>
-            {!isUnsupportType && (
+            {text !== 0 && (
               <Button type="link" onClick={() => setEditItem(record)}>
                 配置mock
               </Button>
