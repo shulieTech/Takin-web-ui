@@ -43,12 +43,6 @@ export default (props: Props) => {
     request: [],
     responseTime: 0,
   });
-  let mockObj = detail.mockInfo || {};
-  try {
-    mockObj = JSON.parse(detail.mockReturnValue);
-  } catch (error) {
-    mockObj = detail.mockInfo || {};
-  }
 
   const getAvgRt = async (id) => {
     const {
@@ -79,10 +73,7 @@ export default (props: Props) => {
     }
     const newValue = {
       ...detail,
-      mockInfo: {
-        ...mockObj,
-        ...values,
-      },
+      mockInfo: values,
       resourceId: prepareState.currentLink.id,
     };
     setSaving(true);
@@ -168,7 +159,7 @@ export default (props: Props) => {
       <Spin spinning={loading}>
         <Form
           actions={actions}
-          initialValues={mockObj || {}}
+          initialValues={detail?.mockInfo || {}}
           labelCol={4}
           wrapperCol={18}
           effects={formEffects}
@@ -284,6 +275,7 @@ export default (props: Props) => {
             props={{
               placeholder,
               rows: 10,
+              title: 'Mock数据'
             }}
           />
 

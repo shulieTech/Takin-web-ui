@@ -178,7 +178,7 @@ export default (props) => {
                   <div
                     style={{
                       color: 'var(--Netural-1000, #141617)',
-                      maxWidth: 300
+                      maxWidth: 300,
                     }}
                     className="truncate"
                   >
@@ -218,9 +218,14 @@ export default (props) => {
       fixed: 'right',
       dataIndex: 'pass',
       render: (text, record) => {
+        const isUnsupportType = [
+          'httpclient5',
+          'jdk-http',
+          'OkHttpV3',
+        ].includes(record.interfaceChildType);
         return (
           <span>
-            {text !== 0 && (
+            {!isUnsupportType && (
               <Button type="link" onClick={() => setEditItem(record)}>
                 配置mock
               </Button>
@@ -229,9 +234,7 @@ export default (props) => {
               style={{ marginLeft: 24 }}
               checked={text === 0} // 0是， 1否
               onChange={(checked) => toggleInvovled(checked, record)}
-              disabled={['httpclient5', 'jdk-http', 'OkHttpV3'].includes(
-                record.interfaceChildType
-              )}
+              disabled={isUnsupportType}
             />
           </span>
         );
