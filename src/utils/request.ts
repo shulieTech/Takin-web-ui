@@ -128,20 +128,22 @@ export const getUrl = (url: string, options: any = {}) => {
   if (EXCLUDED_SECURITY_APIS.includes(url)) {
     // 不走安全中心域名的接口
     return `${options?.domain || serverUrl}${url}`;
-  } 
+  }
   if (options?.domain) {
-    return `${options?.domain}${ options?.pathPrefix || '/takin-web/api'}${url}`;
+    return `${options?.domain}${options?.pathPrefix || '/takin-web/api'}${url}`;
   }
   const securityCenterDomain = localStorage.getItem('securityCenterDomain');
   if (securityCenterDomain) {
     // 走安全中心域名
-    return `${securityCenterDomain}${ options?.pathPrefix || '/takin-transform-core/takin-web/api'}${url}`;
+    return `${securityCenterDomain}${
+      options?.pathPrefix || '/takin-transform-core/takin-web/api'
+    }${url}`;
   }
   // 兜底走当前域名
   return `${serverUrl}${url}`;
 };
 
-const getHeaders = options => {
+export const getHeaders = (options = {}) => {
   return {
     'x-token': localStorage.getItem('full-link-token'),
     'Auth-Cookie': localStorage.getItem('auth-cookie'),
@@ -273,7 +275,7 @@ function getErrorMessage(statusCode: number): string | undefined {
     417: 'Expectation Failed/请求头信息期望失败!',
     500: 'Internal Server Error/内部服务器错误!',
     501: 'Not Implemented/未实现!',
-    502: 'Bad Gateway/错误的网关!`',
+    502: 'Bad Gateway/错误的网关!',
     503: 'Service Unavailable/服务无法获得!',
     504: 'Gateway Timeout/网关超时!',
     505: 'HTTP Version Not Supported/不支持的 HTTP 版本!',

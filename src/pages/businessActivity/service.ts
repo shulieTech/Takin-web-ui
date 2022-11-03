@@ -335,6 +335,13 @@ const BusinessActivityService = {
     const url = '/domain/delete';
     return httpDelete(url, {}, { params });
   },
+  /**
+   * @name 导出链路图
+   */
+  async exportGraph(params = {}) {
+    const url = '/application/entrances/topology/export';
+    return httpGet(url, {}, { params });
+  },
 };
 
 export default BusinessActivityService;

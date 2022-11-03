@@ -1,4 +1,4 @@
-import { Button, Dropdown, Menu, Icon, Switch, Tooltip } from 'antd';
+import { Button, Dropdown, Menu, Icon, Switch, Tooltip, message } from 'antd';
 import React, { useContext, useState } from 'react';
 import { BusinessActivityDetailsContext } from '../detailsPage';
 import styles from '../index.less';
@@ -8,6 +8,7 @@ import FlowVerificateModal from '../modals/FlowVerificateModal';
 import ErrorListModal from './ErrorListModal';
 import { FLOW_TYPE_ENUM } from 'src/constants';
 import moment from 'moment';
+import { downloadFileByAjax } from 'src/utils/downloadFile';
 
 interface Props {
   onChangeBottleStatus?: (status: number) => void;
@@ -18,6 +19,25 @@ const HeaderNode: React.FC<Props> = (props) => {
   const [showErrorList, setShowErrorList] = useState(false);
 
   const hasError = state?.details?.topology?.exceptions?.length > 0;
+
+  const exportGragh = async () => {
+    if (!state.details) {
+      return;
+    }
+    const msg = message.loading('下载中');
+    downloadFileByAjax('/application/entrances/topology/export', {
+      label: state.details.entranceName,
+      value: state.details.linkId,
+      method: state.details.method,
+      rpcType: state.details.rpcType,
+      serviceName: state.details.serviceName,
+      applicationName: state.details.applicationName,
+      linkId: state.details.linkId,
+      type: state.details.type,
+    }).finally(() => {
+      msg();
+    });
+  };
 
   return (
     <div
@@ -181,6 +201,9 @@ const HeaderNode: React.FC<Props> = (props) => {
                       去调试
                     </Menu.Item>
                   )}
+                  <Menu.Item onClick={exportGragh}>
+                    导出
+                  </Menu.Item>
                 </Menu>
               }
             >
