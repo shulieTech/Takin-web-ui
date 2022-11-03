@@ -41,12 +41,15 @@ export const downloadFileByAjax = async (url, params = {}) => {
     responseType: 'blob',
     headers: getHeaders(),
   });
+  if (status !== 200) {
+    return Promise.reject('请求出错');
+  }
   const blob = new Blob([data], { type: `` });
   let fileName = '未命名文件';
   const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
   const matches = filenameRegex.exec(headers['content-disposition']);
   if (matches != null && matches[1]) { 
-    fileName = matches[1].replace(/['"]/g, '');
+    fileName = decodeURIComponent(matches[1].replace(/['"]/g, ''));
   }
 
   // 获取heads中的filename文件名
