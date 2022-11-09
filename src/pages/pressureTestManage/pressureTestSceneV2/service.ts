@@ -209,6 +209,11 @@ const PressureTestSceneService = {
     const url = '/c/getDemands';
     return httpGet(url, data);
   },
+  // 获取压力机列表
+  async getCloudMachines(data) {
+    const url = '/scenemanage/machine';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestSceneService;

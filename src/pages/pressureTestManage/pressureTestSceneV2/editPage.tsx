@@ -22,7 +22,7 @@ import {
   Switch,
   DatePicker,
 } from '@formily/antd-components';
-import { Button, message, Spin } from 'antd';
+import { Button, message, Spin, Table } from 'antd';
 import services from './service';
 import TargetMap from './components/TargetMap';
 import ConfigMap from './components/ConfigMap';
@@ -35,6 +35,7 @@ import TipTittle from './components/TipTittle';
 import { cloneDeep, debounce } from 'lodash';
 import moment from 'moment';
 import { CronSelctComponent } from 'src/components/cron-selector/CronSelect';
+import MachineTableSelect from './components/MachineTableSelect';
 
 const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
   FormEffectHooks;
@@ -62,7 +63,7 @@ const EditPage = (props) => {
       if (success) {
         setInitialValue(data);
         // 手动触发一次数据变动，不然isScheduler的联动初始化的时候无法触发
-        actions.setFieldState('basicInfo', state => {
+        actions.setFieldState('basicInfo', (state) => {
           state.value = data?.basicInfo;
         });
       }
@@ -326,6 +327,45 @@ const EditPage = (props) => {
       });
     }
 
+    onFieldInputChange$('config.machineCloudType').subscribe(() => {
+      setFieldState('config.machineSelectType', (state) => (state.value = 1));
+    });
+
+    onFieldValueChange$(
+      'config.*(machineCloudType, machineSelectType)'
+    ).subscribe(
+      debounce(() => {
+        actions.getFormState(async (formState) => {
+          const values = formState.values;
+          const { machineCloudType, machineSelectType } = values?.config || {};
+          // TODO 获取机器列表
+          actions.setFieldState('config.machineSelected', (state) => {
+            state.loading = true;
+          });
+          const {
+            data: { success, data },
+          } = await services.getCloudMachines({
+            machineCloudType,
+            machineSelectType,
+            id: 2150,
+            type: 0,
+          }).finally(() => {
+            actions.setFieldState('config.machineSelected', (state) => {
+              state.loading = false;
+            });
+          });
+          if (success) {
+            actions.setFieldState('config.machineSelected', (state) => {
+              state.props.enum = data;
+              if (machineSelectType === 1 && data?.length > 0) {
+                state.value = data?.[0]?.id;
+              }
+            });
+          }
+        });
+      }, 300)
+    );
+
     // onFieldValueChange$('versionId').subscribe(fieldState => {
     //   if (fieldState.value) {
     //     getDemandList({
@@ -411,6 +451,7 @@ const EditPage = (props) => {
             DatePicker,
             ExcludeApps,
             CronSelctComponent,
+            MachineTableSelect,
             RadioGroup: Radio.Group,
             TextArea: Input.TextArea,
           }}
@@ -448,8 +489,8 @@ const EditPage = (props) => {
                   maxLength: 30,
                   readOnly: !!sceneId,
                   style: {
-                    backgroundColor: !!sceneId ? '#f7f8f9' : undefined
-                  }
+                    backgroundColor: !!sceneId ? '#f7f8f9' : undefined,
+                  },
                 }}
                 title="压测场景名称"
                 x-rules={[
@@ -662,7 +703,17 @@ const EditPage = (props) => {
                   }}
                 />
               </FormLayout>
-
+              <Field
+                name="machineCloudType"
+                type="number"
+                x-component="RadioGroup"
+                title="压力机"
+                enum={[
+                  { label: '云压力机', value: 1 },
+                  { label: '定制压力机', value: 2 },
+                ]}
+                default={1}
+              />
               <Field
                 name="podNum"
                 type="number"
@@ -691,6 +742,32 @@ const EditPage = (props) => {
                 required
                 default={1}
               />
+              <Field
+                name="machineSelectType"
+                type="number"
+                title="指定压力机"
+                x-component="Select"
+                enum={[
+                  { label: '自动选择压力机', value: 1 },
+                  { label: '手动指定压力机', value: 2 },
+                ]}
+                default={1}
+              />
+              <FormLayout name="pannelLayout1" labelCol={4} wrapperCol={16}>
+                <Field
+                  name="machineSelected"
+                  title=" "
+                  x-component="MachineTableSelect"
+                  x-item-props={{
+                    colon: false,
+                  }}
+                  x-component-props={{
+                    style: {
+                      marginTop: -28,
+                    },
+                  }}
+                />
+              </FormLayout>
             </Field>
           </FormLayout>
 
