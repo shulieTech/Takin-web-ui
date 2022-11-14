@@ -21,7 +21,7 @@ import {
   useStateReducer
 } from 'racc';
 import React, { Fragment, useEffect } from 'react';
-import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
+import CustomDetailHeader from 'src/common/custom-detail-header';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import ImportFileModal from 'src/common/import-file-modal/ImportFileModal';
 import CustomTable from 'src/components/custom-table';

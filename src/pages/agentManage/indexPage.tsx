@@ -5,7 +5,7 @@ import { Button, Modal } from 'antd';
 import { useCreateContext, useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
-import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
+import CustomDetailHeader from 'src/common/custom-detail-header';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import { MainPageLayout } from 'src/components/page-layout';
 import { MapBtnAuthority } from 'src/utils/utils';

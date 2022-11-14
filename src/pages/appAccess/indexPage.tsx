@@ -2,7 +2,7 @@
  * @author chuxu
  */
 import React, { Fragment, useEffect } from 'react';
-import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
+import CustomDetailHeader from 'src/common/custom-detail-header';
 import { MainPageLayout } from 'src/components/page-layout';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import { useCreateContext, useStateReducer } from 'racc';

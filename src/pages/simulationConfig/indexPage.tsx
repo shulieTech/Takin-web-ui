@@ -4,7 +4,7 @@ import TakeEffect from './modals/takeEffect';
 import { Input, Form, Button, Row, Col, Select, Radio, Tabs, Badge, Tooltip, Popover } from 'antd';
 import { useStateReducer } from 'racc';
 import configService from './service';
-import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
+import CustomDetailHeader from 'src/common/custom-detail-header';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import styles from './index.less';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';

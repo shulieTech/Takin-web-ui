@@ -3,7 +3,7 @@ import AgentVersin from './modals/AgentVersin';
 import { Input, Form, Button, Row, Col, Select, Pagination } from 'antd';
 import { useStateReducer } from 'racc';
 import agentService from './service';
-import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
+import CustomDetailHeader from 'src/common/custom-detail-header';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import styles from './index.less';
 import { FormItemProps } from 'antd/lib/form';

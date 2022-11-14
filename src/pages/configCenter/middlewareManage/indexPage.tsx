@@ -5,7 +5,7 @@ import { Button, Col, Row, Upload } from 'antd';
 import { ImportFile, useCreateContext, useStateReducer } from 'racc';
 import React, { Fragment } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
-import CustomDetailHeader from 'src/common/custom-detail-header.tsx';
+import CustomDetailHeader from 'src/common/custom-detail-header';
 import CustomIcon from 'src/common/custom-icon/CustomIcon';
 import { MainPageLayout } from 'src/components/page-layout';
 import request, { getUrl } from 'src/utils/request';

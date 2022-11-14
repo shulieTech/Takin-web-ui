@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Fragment } from 'react';
-// import styles from './index.less';
 import { getTakinAuthority } from 'src/utils/utils';
 import TitleComponent from 'src/common/title';
 import UserService from 'src/services/user';

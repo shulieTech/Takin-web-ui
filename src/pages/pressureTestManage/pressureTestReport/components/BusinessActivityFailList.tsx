@@ -4,7 +4,6 @@ import CustomTable from 'src/components/custom-table';
 import styles from './../index.less';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { ColumnProps } from 'antd/lib/table';
-import BusinessActivityPressureTestDetailModal from '../modals/BusinessActivityPressureTestDetailModal';
 
 interface Props {
   data?: any;

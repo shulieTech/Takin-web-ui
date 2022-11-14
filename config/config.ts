@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import theme from './theme';
+import UnusedFilesWebpackPlugin from 'unused-files-webpack-plugin';
 
 const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
 const path = require('path');
@@ -170,6 +171,8 @@ export default {
     config.plugin('replace').use(require('webpack').ContextReplacementPlugin).tap(() => {
       return [/moment[/\\]locale$/, /zh-cn/];
     });
+    // 扫描无用文件，会在控制台打印出来，对png无效
+    config.plugin('sweep').use(new UnusedFilesWebpackPlugin());
   },
   alias: {
     src: resolve(__dirname, '../src')
