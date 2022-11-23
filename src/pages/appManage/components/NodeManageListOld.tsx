@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect } from 'react';
 import { useStateReducer } from 'racc';
 import CustomTable from 'src/components/custom-table';
-import { Divider, Pagination, Checkbox, Row, Col, Button, Input } from 'antd';
+import { Divider, Pagination, Checkbox, Row, Col, Button, Input, Popconfirm, message } from 'antd';
 import styles from './../index.less';
 import AppManageService from '../service';
 import getOldNodeManageListColumns from './NodeManageListColumnOld';
@@ -47,11 +48,11 @@ const NodeManageListOld: React.FC<Props> = props => {
 
   useEffect(() => {
     queryNodeNum();
-  }, []);
+  }, [queryNodeNum]);
 
   useEffect(() => {
     queryNodeManageList({ ip: state.ip, ...state.searchParams });
-  }, [state.isReload, state.searchParams.current, state.searchParams.pageSize]);
+  }, [queryNodeManageList, state.ip, state.isReload, state.searchParams, state.searchParams.pageSize]);
 
   /**
    * @name 获取节点数
@@ -116,6 +117,20 @@ const NodeManageListOld: React.FC<Props> = props => {
     });
   };
 
+  /**
+   * @name 卸载
+   */
+  const handleUninstall = async () => {
+    const {
+        data: { success, data }
+    } = await AppManageService.uninstall({
+        appIds: [id]
+    });
+    if (success) {
+      message.success('卸载成功！');    
+    }
+  };
+
   return (
     <Fragment>
       <div
@@ -145,6 +160,7 @@ const NodeManageListOld: React.FC<Props> = props => {
             />
           </Col>
           <Col
+            span={16}
             style={{
               fontSize: '13px',
               fontWeight: 500,
@@ -172,6 +188,11 @@ const NodeManageListOld: React.FC<Props> = props => {
             <span style={{ color: '#FE7D61', marginLeft: 16 }}>
               {state.errorMsg}
             </span>
+          </Col>
+          <Col>
+          <Popconfirm title="确认卸载吗？" okText="确认" cancelText="取消" onConfirm={() => handleUninstall()}>
+            <Button>卸载</Button>
+          </Popconfirm>
           </Col>
         </Row>
         <CustomTable
