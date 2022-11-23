@@ -133,7 +133,8 @@ const AppDetailTabs: React.FC<Props> = props => {
           action={action}
         />
       ),
-      show: isNewAgent === 1 ? false : true
+      show: true,
+      // show: isNewAgent === 1 ? false : true
     },
     {
       title: '黑名单',

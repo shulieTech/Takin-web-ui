@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect } from 'react';
 import { useStateReducer } from 'racc';
 import CustomTable from 'src/components/custom-table';
-import { Divider, Pagination, Checkbox, Row, Col, Button, Input } from 'antd';
+import { Divider, Pagination, Checkbox, Row, Col, Button, Input, Popconfirm, message } from 'antd';
 import styles from './../index.less';
 import AppManageService from '../service';
 import getOldNodeManageListColumns from './NodeManageListColumnOld';
@@ -47,11 +48,11 @@ const NodeManageListOld: React.FC<Props> = props => {
 
   useEffect(() => {
     queryNodeNum();
-  }, []);
+  }, [queryNodeNum]);
 
   useEffect(() => {
     queryNodeManageList({ ip: state.ip, ...state.searchParams });
-  }, [state.isReload, state.searchParams.current, state.searchParams.pageSize]);
+  }, [queryNodeManageList, state.ip, state.isReload, state.searchParams, state.searchParams.pageSize]);
 
   /**
    * @name 获取节点数
@@ -116,6 +117,34 @@ const NodeManageListOld: React.FC<Props> = props => {
     });
   };
 
+  /**
+   * @name 卸载
+   */
+  const handleUninstall = async () => {
+    const {
+        data: { success }
+    } = await AppManageService.uninstall({
+      appIds: [id]
+    });
+    if (success) {
+      message.success('卸载成功！');    
+    }
+  };
+
+  /**
+   * @name 恢复
+   */
+  const handleRecover = async () => {
+    const {
+        data: { success }
+      } = await AppManageService.recover({
+        appIds: [id]
+      });
+    if (success) {
+      message.success('恢复成功！');
+    }
+  };
+
   return (
     <Fragment>
       <div
@@ -145,6 +174,7 @@ const NodeManageListOld: React.FC<Props> = props => {
             />
           </Col>
           <Col
+            span={17}
             style={{
               fontSize: '13px',
               fontWeight: 500,
@@ -171,6 +201,14 @@ const NodeManageListOld: React.FC<Props> = props => {
             </span>
             <span style={{ color: '#FE7D61', marginLeft: 16 }}>
               {state.errorMsg}
+            </span>
+            <span style={{ float: 'right' }}>
+              <Popconfirm title="确认卸载吗？" okText="确认" cancelText="取消" onConfirm={() => handleUninstall()}>
+                <Button style={{ marginRight: 16 }}>卸载</Button>
+              </Popconfirm>
+              <Popconfirm title="确认恢复吗？" okText="确认" cancelText="取消" onConfirm={() => handleRecover()}>
+                <Button>恢复</Button>
+              </Popconfirm>
             </span>
           </Col>
         </Row>
