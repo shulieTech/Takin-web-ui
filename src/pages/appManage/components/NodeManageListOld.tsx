@@ -122,12 +122,26 @@ const NodeManageListOld: React.FC<Props> = props => {
    */
   const handleUninstall = async () => {
     const {
-        data: { success, data }
+        data: { success }
     } = await AppManageService.uninstall({
-        appIds: [id]
+      appIds: [id]
     });
     if (success) {
       message.success('卸载成功！');    
+    }
+  };
+
+  /**
+   * @name 恢复
+   */
+  const handleRecover = async () => {
+    const {
+        data: { success }
+      } = await AppManageService.recover({
+        appIds: [id]
+      });
+    if (success) {
+      message.success('恢复成功！');
     }
   };
 
@@ -160,7 +174,7 @@ const NodeManageListOld: React.FC<Props> = props => {
             />
           </Col>
           <Col
-            span={16}
+            span={17}
             style={{
               fontSize: '13px',
               fontWeight: 500,
@@ -188,11 +202,14 @@ const NodeManageListOld: React.FC<Props> = props => {
             <span style={{ color: '#FE7D61', marginLeft: 16 }}>
               {state.errorMsg}
             </span>
-          </Col>
-          <Col>
-          <Popconfirm title="确认卸载吗？" okText="确认" cancelText="取消" onConfirm={() => handleUninstall()}>
-            <Button>卸载</Button>
-          </Popconfirm>
+            <span style={{ float: 'right' }}>
+              <Popconfirm title="确认卸载吗？" okText="确认" cancelText="取消" onConfirm={() => handleUninstall()}>
+                <Button style={{ marginRight: 16 }}>卸载</Button>
+              </Popconfirm>
+              <Popconfirm title="确认恢复吗？" okText="确认" cancelText="取消" onConfirm={() => handleRecover()}>
+                <Button>恢复</Button>
+              </Popconfirm>
+            </span>
           </Col>
         </Row>
         <CustomTable
