@@ -62,6 +62,15 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       loading: false
     });
   };
+  
+
+  /**
+   * @name 替换线程组
+   */
+  const handleChange = (record) => {
+    console.log('record',record);
+   console.log("data",state?.data);
+  }
 
   const getReportLinkOverviewColumns = (): ColumnProps<any>[] => {
     return [
@@ -73,7 +82,9 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         render: (text, record) => {
           return <Fragment>
             {text}
-            <CommonSelect onChange={()=>{console.log(record)}} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '1', value: '1' }, { label: '全部', value: '' }]} />
+            <CommonSelect onChange={()=>{
+              handleChange(record)
+            }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '1', value: '1' }, { label: '全部', value: '' }]} />
           </Fragment>;
         }
       },
