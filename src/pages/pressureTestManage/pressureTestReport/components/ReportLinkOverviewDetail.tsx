@@ -1,6 +1,7 @@
-import { Icon, Popover } from 'antd';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Icon, Popover, Radio } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
-import { CommonTable, useStateReducer } from 'racc';
+import { CommonSelect, CommonTable, useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import PressureTestReportService from '../service';
@@ -21,12 +22,14 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
 
   const [state, setState] = useStateReducer<State>({
     data: null,
-    loading: false
+    loading: false,
   });
 
   useEffect(() => {
     queryPressureTestDetailList({ reportId: id });
   }, []);
+
+  console.log('data',state?.data);
 
   useEffect(() => {
     // 数据校准中时5s刷新一次
@@ -66,7 +69,13 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         ...customColumnProps,
         title: '业务活动',
         dataIndex: 'testName',
-        width: 300
+        width: 300,
+        render: (text, record) => {
+          return <Fragment>
+            {text}
+            <CommonSelect onChange={()=>{console.log(record)}} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '1', value: '1' }, { label: '全部', value: '' }]} />
+          </Fragment>;
+        }
       },
       {
         ...customColumnProps,
@@ -117,17 +126,17 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
               <div style={{ display: 'flex', alignItems: 'center', }}>
                 <span style={{ flex: 1, }}>
                   {
-                  dataCheckingText || <span
-                    style={{
-                      color:
-                        Number(text && text.result) >
-                          Number(text && text.value) && text.value !== -1
-                          ? '#FE7D61'
-                          : ''
-                    }}
-                  >
-                    {text.result}ms
-                  </span>
+                    dataCheckingText || <span
+                      style={{
+                        color:
+                          Number(text && text.result) >
+                            Number(text && text.value) && text.value !== -1
+                            ? '#FE7D61'
+                            : ''
+                      }}
+                    >
+                      {text.result}ms
+                    </span>
                   }
                   <span style={{ margin: '0 8px' }}>/</span>
                   <span>{text.value === -1 ? '-' : `${text.value}ms`}</span>

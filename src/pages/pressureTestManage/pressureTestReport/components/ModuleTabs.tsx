@@ -24,7 +24,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
   const { id, detailData, state, setState, reportCountData, failedCount } =
     props;
   const [tabState, setTabState] = useStateReducer<State>({
-    tabKey: 0,
+    tabKey: 2,
   });
   const data = [
     {
