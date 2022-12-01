@@ -2,7 +2,7 @@
 import { Icon, Popover, Radio } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { CommonSelect, CommonTable, useStateReducer } from 'racc';
-import React, { Fragment, useEffect } from 'react';
+import React, { Children, Fragment, useEffect } from 'react';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import PressureTestReportService from '../service';
 import styles from './../index.less';
@@ -29,7 +29,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
     queryPressureTestDetailList({ reportId: id });
   }, []);
 
-  console.log('data',state?.data);
+  console.log('data', state?.data);
 
   useEffect(() => {
     // 数据校准中时5s刷新一次
@@ -63,14 +63,24 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
     });
   };
   
-
   /**
    * @name 替换线程组
    */
   const handleChange = (record) => {
-    console.log('record',record);
-   console.log("data",state?.data);
-  }
+    const newData = [];
+    const a = state?.data?.map((item, k) => {
+      if (item?.children?.[0]?.xpathMd5 === record?.xpathMd5) {
+        return {
+          ...item,
+          children: [{ ...item?.children[0], children: newData }]
+        };
+      }
+      return item;
+    });
+    setState({
+      data: a
+    });
+  };
 
   const getReportLinkOverviewColumns = (): ColumnProps<any>[] => {
     return [
@@ -82,8 +92,8 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         render: (text, record) => {
           return <Fragment>
             {text}
-            <CommonSelect onChange={()=>{
-              handleChange(record)
+            <CommonSelect onChange={() => {
+              handleChange(record);
             }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '1', value: '1' }, { label: '全部', value: '' }]} />
           </Fragment>;
         }
