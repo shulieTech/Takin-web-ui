@@ -66,20 +66,30 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
   /**
    * @name 替换线程组
    */
-  const handleChange = (record) => {
+  const handleChange = async (record, threadNum) => {
     const newData = [];
+    const {
+      data: { success, data }
+    } = await PressureTestReportService.querySummaryThreadGroup({
+      threadNum,
+      reportId: id,
+      xpathMd5: record?.xpathMd5,
+    });
+    // console.log('data.scriptNodeSummaryBeans',data.scriptNodeSummaryBeans);
+
     const a = state?.data?.map((item, k) => {
-      if (item?.children?.[0]?.xpathMd5 === record?.xpathMd5) {
+      if (item?.children?.[k]?.xpathMd5 === record?.xpathMd5) {
         return {
           ...item,
-          children: [{ ...item?.children[0], children: newData }]
+          children: [{ ...item?.children[k], children: newData }]
         };
       }
       return item;
     });
-    setState({
-      data: a
-    });
+
+    // setState({
+    //   data: a
+    // });
   };
 
   const getReportLinkOverviewColumns = (): ColumnProps<any>[] => {
@@ -92,9 +102,10 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         render: (text, record) => {
           return <Fragment>
             {text}
-            <CommonSelect onChange={() => {
-              handleChange(record);
-            }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '1', value: '1' }, { label: '全部', value: '' }]} />
+            {record?.concurrentStageThreadNum&&<CommonSelect onChange={(value) => {
+              handleChange(record,value);
+            }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{label:'全部',value:''}].concat(record?.concurrentStageThreadNum?.map((item)=>{return {label:item,value:item}}))} />}
+            
           </Fragment>;
         }
       },

@@ -9,6 +9,13 @@ const PressureTestReportService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取线程组列表
+   */
+  async querySummaryThreadGroup(data = {}) {
+    const url = '/report/businessActivity/summary/threadGroup';
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取报告详情
    */
   async queryReportDetail(data = {}) {
