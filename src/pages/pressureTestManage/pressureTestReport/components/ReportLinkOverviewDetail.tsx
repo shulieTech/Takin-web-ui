@@ -29,8 +29,6 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
     queryPressureTestDetailList({ reportId: id });
   }, []);
 
-  console.log('data', state?.data);
-
   useEffect(() => {
     // 数据校准中时5s刷新一次
     if (detailData?.calibration === 1) {
@@ -67,7 +65,6 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
    * @name 替换线程组
    */
   const handleChange = async (record, threadNum) => {
-    const newData = [];
     const {
       data: { success, data }
     } = await PressureTestReportService.querySummaryThreadGroup({
@@ -75,21 +72,18 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
       reportId: id,
       xpathMd5: record?.xpathMd5,
     });
-    // console.log('data.scriptNodeSummaryBeans',data.scriptNodeSummaryBeans);
 
-    const a = state?.data?.map((item, k) => {
-      if (item?.children?.[k]?.xpathMd5 === record?.xpathMd5) {
-        return {
-          ...item,
-          children: [{ ...item?.children[k], children: newData }]
-        };
+    const childrenData = state?.data?.[0]?.children?.map((item, k) => {
+      if (item?.xpathMd5 === record?.xpathMd5) {
+        return data || [];
       }
       return item;
     });
+    const newData = [{ ...state?.data?.[0], children: childrenData }];
 
-    // setState({
-    //   data: a
-    // });
+    setState({
+      data: newData
+    });
   };
 
   const getReportLinkOverviewColumns = (): ColumnProps<any>[] => {
@@ -102,9 +96,9 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
         render: (text, record) => {
           return <Fragment>
             {text}
-            {record?.concurrentStageThreadNum&&<CommonSelect onChange={(value) => {
-              handleChange(record,value);
-            }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{label:'全部',value:''}].concat(record?.concurrentStageThreadNum?.map((item)=>{return {label:item,value:item}}))} />}
+            {record?.concurrentStageThreadNum && <CommonSelect onChange={(value) => {
+              handleChange(record, value);
+            }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '全部', value: '' }].concat(record?.concurrentStageThreadNum?.map((item) => {return { label: item, value: item };}))} />}
             
           </Fragment>;
         }
