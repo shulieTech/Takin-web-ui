@@ -98,7 +98,7 @@ const ReportLinkOverviewDetail: React.FC<Props> = props => {
             {text}
             {record?.concurrentStageThreadNum && <CommonSelect onChange={(value) => {
               handleChange(record, value);
-            }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '全部', value: '' }].concat(record?.concurrentStageThreadNum?.map((item) => {return { label: item, value: item };}))} />}
+            }} allowClear={false} defaultValue={''} style={{ marginLeft: 8 }} size="small" dataSource={[{ label: '全过程', value: '' }].concat(record?.concurrentStageThreadNum?.map((item) => {return { label: `${item}并发`, value: item };}))} />}
             
           </Fragment>;
         }
