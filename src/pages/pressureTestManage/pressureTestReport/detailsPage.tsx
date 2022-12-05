@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Alert, Button, Col, Dropdown, Icon, Menu, Row, Statistic } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -63,14 +64,14 @@ const PressureTestReportDetail: React.FC<Props> = props => {
 
   useEffect(() => {
     queryReportBusinessActivity(id);
-  }, [id, queryReportBusinessActivity]);
+  }, [id]);
 
   useEffect(() => {
     queryReportDetail(id);
     // queryReportBusinessActivity(id);
     queryReportCount(id);
     queryRequestCount(id);
-  }, [id, queryReportCount, queryReportDetail, queryRequestCount, state.isReload]);
+  }, [id, state.isReload]);
 
   const tenantList = async (s) => {
     const {
@@ -88,7 +89,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     if (state.tabKey) {
       queryReportChartsInfo(id, state.tabKey);
     }
-  }, [id, queryReportChartsInfo, state.isReload, state.tabKey]);
+  }, [id, state.isReload, state.tabKey]);
 
   /**
    * @name 获取压测报告详情
@@ -263,10 +264,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       suffix: 'ms'
     },
     {
-      label: '成功率',
+      label: '成功率（保留2位）',
       value: detailData.successRate,
       precision: 2,
-      suffix: '%'
+      suffix: '%',
+      hasFail: detailData.successRate === 100 && reportCountData?.warnCount > 0 ? true : false
     },
     {
       label: 'SA',
