@@ -68,9 +68,9 @@ const ScriptFileManageModal: React.FC<Props> = props => {
     /**
      * @name 判断是否是可接受类型
      */
-    function isAcceptType(ext) {
-      return ['jar', 'csv', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'xls', 'xlsx'].indexOf(ext.toLowerCase()) !== -1;
-    }
+    // function isAcceptType(ext) {
+    //   return ['jar', 'csv', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'xls', 'xlsx'].indexOf(ext.toLowerCase()) !== -1;
+    // }
 
     setState({
       uploadFileNum: info.fileList.length
@@ -79,14 +79,14 @@ const ScriptFileManageModal: React.FC<Props> = props => {
     /**
      * @name 待上传的元素含有不可接受类型
      */
-    if (
-      readyToUploadFileName.find(item => {
-        return !isAcceptType(item.substr(item.lastIndexOf('.') + 1));
-      })
-    ) {
-      message.error('上传的文件含有不可接受类型，请检查后上传');
-      return;
-    }
+    // if (
+    //   readyToUploadFileName.find(item => {
+    //     return !isAcceptType(item.substr(item.lastIndexOf('.') + 1));
+    //   })
+    // ) {
+    //   message.error('上传的文件含有不可接受类型，请检查后上传');
+    //   return;
+    // }
 
     /**
      * @name 待上传的元素超过200M大小
@@ -255,9 +255,9 @@ const ScriptFileManageModal: React.FC<Props> = props => {
                 </span>
               </span>
             </p>
-            <p>支持数据文件格式：.csv <br/>
+            {/* <p>支持数据文件格式：.csv <br/>
               支持jar格式：.jar <br/>
-              支持其他附件格式：图片、Excel等</p>
+              支持其他附件格式：图片、Excel等</p> */}
           </ImportFile>
         ),
         extra: (
