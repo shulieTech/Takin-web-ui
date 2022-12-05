@@ -63,14 +63,14 @@ const PressureTestReportDetail: React.FC<Props> = props => {
 
   useEffect(() => {
     queryReportBusinessActivity(id);
-  }, []);
+  }, [id, queryReportBusinessActivity]);
 
   useEffect(() => {
     queryReportDetail(id);
     // queryReportBusinessActivity(id);
     queryReportCount(id);
     queryRequestCount(id);
-  }, [state.isReload]);
+  }, [id, queryReportCount, queryReportDetail, queryRequestCount, state.isReload]);
 
   const tenantList = async (s) => {
     const {
@@ -88,7 +88,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     if (state.tabKey) {
       queryReportChartsInfo(id, state.tabKey);
     }
-  }, [state.isReload, state.tabKey]);
+  }, [id, queryReportChartsInfo, state.isReload, state.tabKey]);
 
   /**
    * @name 获取压测报告详情
@@ -237,7 +237,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       precision: 2
     },
     {
-      label: '实际/目标TPS',
+      label: '实际平均/目标TPS',
       value: `${detailData.avgTps}/${detailData.tps}`,
       precision: 2,
       render: () => (
