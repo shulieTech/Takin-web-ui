@@ -102,7 +102,7 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
     if (action === 'edit') {
       queryPressureTestSceneDetail(id);
     }
-  }, []);
+  }, [action, id, queryBussinessActive, queryBussinessActivityAndScript, queryBussinessFlowAndScript, queryPressureTestSceneDetail]);
 
   useEffect(() => {
     if (state.selectedBussinessActiveList) {
@@ -110,7 +110,7 @@ const PressureTestSceneConfig: React.FC<Props> = props => {
         businessActivityIds: state.selectedBussinessActivityIds
       });
     }
-  }, [state.selectedBussinessActivityIds]);
+  }, [queryMissingDataScriptList, state.selectedBussinessActiveList, state.selectedBussinessActivityIds]);
 
   const formDataSource = [
     BaseInfo(state, setState, props),

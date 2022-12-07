@@ -333,6 +333,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
           </Button>
         </Dropdown>
       }
+      <Button type="primary" ghost style={{ marginRight: 8 }} onClick={() => router.push(`/pressureTestManage/pressureTestReport?current=${query?.current}&pageSize=${query?.pageSize}`)}>返回</Button>
       <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }} loading={isDownloadingReport}>
         下载压测报告
       </Button>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, Fragment } from 'react';
 import SearchTable from 'src/components/search-table';
 
@@ -25,9 +26,9 @@ const PressureTestReport: React.FC<PressureTestReportProps> = (props) => {
   const [state, setState] = useStateReducer<PressureTestReportState>({
     isReload: false,
     searchParams: {
-      current: 0,
-      pageSize: 10,
       ...props.location.query,
+      current: Number(props.location.query?.current) ||  0,
+      pageSize: Number(props.location.query?.pageSize) || 10,
     },
     batchSelectedKeys: [],
     sameScenceId: undefined,
