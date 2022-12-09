@@ -164,12 +164,15 @@ const scriptDebugDetail: React.FC<Props> = props => {
                   totalRt={row.totalRt}
                 />
                 </span>
-               
-              </Fragment>
-             
+              </Fragment> 
             );
           }
-          return '-';
+          // tslint:disable-next-line:jsx-wrap-multiline
+          return  <RequestDetailModal
+            btnText="请求详情"
+            traceId={row.traceId}
+            totalRt={row.totalRt}
+          />;
         }
       }
     ];
