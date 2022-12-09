@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Alert, Icon, message, Pagination, Tabs, Tooltip } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { ColumnProps } from 'antd/lib/table';
@@ -11,6 +12,7 @@ import MissingDataListModal from '../pressureTestManage/pressureTestReport/modal
 import AssertModal from './modals/AssertModal';
 import ScriptManageService from './service';
 import copy from 'copy-to-clipboard';
+import RequestDetailModal from '../pressureTestManage/pressureTestReport/modals/RequestDetailModal';
 interface Props {
   location?: { query?: any };
 }
@@ -153,7 +155,18 @@ const scriptDebugDetail: React.FC<Props> = props => {
         render: (text, row) => {
           if (row.responseStatus !== 0) {
             return (
-              <AssertModal btnText="详情" dataSource={row.assertDetailList} />
+              <Fragment>
+                <AssertModal btnText="详情" dataSource={row.assertDetailList} />
+                <span style={{ marginLeft: 8 }}>
+                <RequestDetailModal
+                  btnText="请求详情"
+                  traceId={row.traceId}
+                  totalRt={row.totalRt}
+                />
+                </span>
+               
+              </Fragment>
+             
             );
           }
           return '-';
