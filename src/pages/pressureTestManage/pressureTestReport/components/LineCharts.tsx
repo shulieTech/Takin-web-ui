@@ -1,6 +1,6 @@
 import ReactEcharts from 'echarts-for-react';
 import React, { ReactNode } from 'react';
-import { Tooltip, Icon } from 'antd';
+import { Tooltip, Icon, Row, Col } from 'antd';
 
 interface Props {
   chartsInfo: any;
@@ -190,7 +190,7 @@ const LineCharts: React.FC<Props> = (props) => {
         </Tooltip>
       )}
       <ReactEcharts
-        style={{ width: '100%', height: 640 }}
+        style={{ width: '100%', height: 620 }}
         onEvents={onEvents}
         option={{
           grid,
@@ -253,58 +253,62 @@ const LineCharts: React.FC<Props> = (props) => {
           },
         }}
       />
-      <ReactEcharts 
-        style={{ width: '50%', height: 320 }} 
-        option={{
-          grid: {
-            left: 40,
-            height: 180,
-            backgroundColor: '#fff',
-            show: true,
-            borderWidth: 80,
-            borderColor: '#fff',
-          },
-          tooltip:{ trigger: 'axis' },
-          xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            axisLine: {
-              onZero: true,
-              lineStyle: {
-                color: '#00BCD4',
+      {chartsThreadInfo && JSON.stringify(chartsThreadInfo) !== '{}' && chartsThreadInfo?.concurrent && chartsThreadInfo?.concurrent?.length > 0 && <Row>
+        <Col span={12}>
+        <ReactEcharts 
+          style={{ width: '100%', height: 320 }} 
+          option={{
+            grid: {
+              left: 40,
+              height: 180,
+              backgroundColor: '#fff',
+              show: true,
+              borderWidth: 80,
+              borderColor: '#fff',
+            },
+            tooltip: { trigger: 'axis' },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              axisLine: {
+                onZero: true,
+                lineStyle: {
+                  color: '#00BCD4',
+                },
+              },
+              axisTick: {
+                show: false,
+              },
+              axisLabel: {
+                color: '#98A1B3',
+              },
+              data: chartsThreadInfo.concurrent,
+            },
+            yAxis: {
+              name: 'TPS',
+              ...commonYaxisConfig,
+              splitLine: {
+                ...commonYaxisConfig.splitLine,
+                show: false,
               },
             },
-            axisTick: {
-              show: false,
-            },
-            axisLabel: {
-              color: '#98A1B3',
-            },
-            data: chartsThreadInfo.concurrent,
-          },
-          yAxis: {
-            name: 'TPS',
-            ...commonYaxisConfig,
-            splitLine: {
-              ...commonYaxisConfig.splitLine,
-              show: false,
-            },
-          },
-          series : [
-            {
-              name: 'TPS',
-              data: chartsThreadInfo.tps,
-              color: '#56A4FF',
-              ...commonSeriyConfig,
-              // ...getAreaLinearConfig('#56A4FF'),
-            }
-          ],
-          backgroundColor: '#F5F7F9',
-          color: ['#00CBBF', '#ffa425', '#e64d03', '#00d77d', '#eaa4a1'],
-        }} 
-      />
-       <ReactEcharts 
-        style={{ width: '50%', height: 320 }} 
+            series : [
+              {
+                name: 'TPS',
+                data: chartsThreadInfo.tps,
+                color: '#56A4FF',
+                ...commonSeriyConfig,
+                // ...getAreaLinearConfig('#56A4FF'),
+              }
+            ],
+            backgroundColor: '#F5F7F9',
+            color: ['#00CBBF', '#ffa425', '#e64d03', '#00d77d', '#eaa4a1'],
+          }} 
+        />
+        </Col>
+        <Col span={12}>
+           <ReactEcharts 
+        style={{ width: '100%', height: 320 }} 
         option={{
           grid: {
             left: 40,
@@ -353,6 +357,10 @@ const LineCharts: React.FC<Props> = (props) => {
           color: ['#00CBBF', '#ffa425', '#e64d03', '#00d77d', '#eaa4a1'],
         }} 
       />
+       
+        </Col>
+      </Row> }
+     
     </div>
   );
 };
