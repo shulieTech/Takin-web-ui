@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Alert, Button, Col, Dropdown, Icon, Menu, Row, Statistic } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -94,7 +95,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
     if (state.tabKey) {
       queryReportChartsInfo(id, state.tabKey);
     }
-  }, [state.isReload, state.tabKey]);
+  }, [id, state.isReload, state.tabKey]);
 
   /**
    * @name 获取压测报告详情
@@ -243,7 +244,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       precision: 2
     },
     {
-      label: '实际/目标TPS',
+      label: '实际平均/目标TPS',
       value: `${detailData.avgTps}/${detailData.tps}`,
       precision: 2,
       render: () => (
@@ -269,10 +270,11 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       suffix: 'ms'
     },
     {
-      label: '成功率',
+      label: '成功率（保留2位）',
       value: detailData.successRate,
       precision: 2,
-      suffix: '%'
+      suffix: '%',
+      hasFail: detailData.successRate === 100 && reportCountData?.warnCount > 0 ? true : false
     },
     {
       label: 'SA',
@@ -337,6 +339,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
           </Button>
         </Dropdown>
       }
+      <Button type="primary" ghost style={{ marginRight: 8 }} onClick={() => router.push(`/pressureTestManage/pressureTestReport?current=${query?.current}&pageSize=${query?.pageSize}`)}>返回</Button>
       <Button type="primary" ghost onClick={downloadReportPdf} style={{ marginRight: 8 }} loading={isDownloadingReport}>
         下载压测报告
       </Button>

@@ -79,7 +79,7 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
         return (
           <Fragment>
             <Link
-              to={`/pressureTestManage/pressureTestReport/details?id=${row.id}`}
+              to={`/pressureTestManage/pressureTestReport/details?id=${row.id}&current=${row?.current}&pageSize=${row?.pageSize}`}
             >
               查看报告
             </Link>

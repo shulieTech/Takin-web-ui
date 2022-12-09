@@ -73,6 +73,7 @@ const Summary: React.FC<Props> = props => {
                     />
                   )}
                 </p>
+                {item?.hasFail && <div style={{ color: 'red' }}>(存在小部分失败<br/>请求，请查看明细)</div>}
               </Col>
             );
           })}

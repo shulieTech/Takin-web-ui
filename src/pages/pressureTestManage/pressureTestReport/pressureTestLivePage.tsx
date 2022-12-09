@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   Col,
@@ -101,7 +102,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
 
   useEffect(() => {
     queryLiveBusinessActivity(id);
-  }, []);
+  }, [id]);
   useEffect(() => {
     reFresh();
     queryLiveDetail(id);
@@ -231,7 +232,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
   /**
    * @name 获取压测实况请求流量列表
    */
-  const queryRequestList = async (value = {}) => {
+  const queryRequestList = useCallback(async (value = {}) => {
     const newValue = {
       ...state.requestListQueryParams,
       ...value,
@@ -254,7 +255,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
         requestList: data,
       });
     }
-  };
+  });
 
   /**
    * @name 获取压测报告链路图信息
@@ -308,7 +309,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
       value: detailData.avgConcurrent,
     },
     {
-      label: '实际/目标TPS',
+      label: '实时/目标TPS',
       precision: 2,
       render: () => (
         <Fragment>
