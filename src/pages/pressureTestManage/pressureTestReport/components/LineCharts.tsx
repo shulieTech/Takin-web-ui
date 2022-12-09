@@ -4,13 +4,14 @@ import { Tooltip, Icon } from 'antd';
 
 interface Props {
   chartsInfo: any;
+  chartsThreadInfo: any;
   isLive?: boolean;
   onEvents?: any;
   columnNum?: number;
   tooltip?: string | ReactNode;
 }
 const LineCharts: React.FC<Props> = (props) => {
-  const { chartsInfo, onEvents, columnNum = 1, tooltip } = props;
+  const { chartsInfo, onEvents, columnNum = 1, tooltip, chartsThreadInfo} = props;
 
   const grid = [];
 
@@ -189,7 +190,7 @@ const LineCharts: React.FC<Props> = (props) => {
         </Tooltip>
       )}
       <ReactEcharts
-        style={{ width: '100%', height: 1110 }}
+        style={{ width: '100%', height: 640 }}
         onEvents={onEvents}
         option={{
           grid,
@@ -251,6 +252,106 @@ const LineCharts: React.FC<Props> = (props) => {
             link: { xAxisIndex: 'all' },
           },
         }}
+      />
+      <ReactEcharts 
+        style={{ width: '50%', height: 320 }} 
+        option={{
+          grid: {
+            left: 40,
+            height: 180,
+            backgroundColor: '#fff',
+            show: true,
+            borderWidth: 80,
+            borderColor: '#fff',
+          },
+          tooltip:{ trigger: 'axis' },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            axisLine: {
+              onZero: true,
+              lineStyle: {
+                color: '#00BCD4',
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              color: '#98A1B3',
+            },
+            data: chartsThreadInfo.concurrent,
+          },
+          yAxis: {
+            name: 'TPS',
+            ...commonYaxisConfig,
+            splitLine: {
+              ...commonYaxisConfig.splitLine,
+              show: false,
+            },
+          },
+          series : [
+            {
+              name: 'TPS',
+              data: chartsThreadInfo.tps,
+              color: '#56A4FF',
+              ...commonSeriyConfig,
+              // ...getAreaLinearConfig('#56A4FF'),
+            }
+          ],
+          backgroundColor: '#F5F7F9',
+          color: ['#00CBBF', '#ffa425', '#e64d03', '#00d77d', '#eaa4a1'],
+        }} 
+      />
+       <ReactEcharts 
+        style={{ width: '50%', height: 320 }} 
+        option={{
+          grid: {
+            left: 40,
+            height: 180,
+            backgroundColor: '#fff',
+            show: true,
+            borderWidth: 80,
+            borderColor: '#fff',
+          },
+          tooltip:{ trigger: 'axis' },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            axisLine: {
+              onZero: true,
+              lineStyle: {
+                color: '#00BCD4',
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              color: '#98A1B3',
+            },
+            data: chartsThreadInfo.concurrent,
+          },
+          yAxis: {
+            name: '平均RT',
+            ...commonYaxisConfig,
+            splitLine: {
+              ...commonYaxisConfig.splitLine,
+              show: false,
+            },
+          },
+          series : [
+            {
+              name: '平均RT',
+              data: chartsThreadInfo.rt,
+              color: '#56A4FF',
+              ...commonSeriyConfig,
+              // ...getAreaLinearConfig('#56A4FF'),
+            }
+          ],
+          backgroundColor: '#F5F7F9',
+          color: ['#00CBBF', '#ffa425', '#e64d03', '#00d77d', '#eaa4a1'],
+        }} 
       />
     </div>
   );

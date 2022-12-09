@@ -58,6 +58,13 @@ const PressureTestReportService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取报告链路趋势图信息（并发数横坐标）
+   */
+  async queryTrendByThreadChartsInfo(data = {}) {
+    const url = '/report/queryReportTrendByThread';
+    return httpGet(url, data);
+  },  
+  /**
    * @name 获取实况详情
    */
   async queryLiveDetail(data = {}) {

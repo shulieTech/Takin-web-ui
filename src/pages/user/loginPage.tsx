@@ -430,6 +430,7 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('isSuper', data.isSuper);
       localStorage.setItem('tenant-code', data.tenantCode);
       localStorage.setItem('env-code', data.envCode);
+      localStorage.setItem('deptId', data.deptId);
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
@@ -470,6 +471,7 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('isSuper', data.isSuper);
       localStorage.setItem('tenant-code', data.tenantCode);
       localStorage.setItem('env-code', data.envCode);
+      localStorage.setItem('deptId', data.deptId);
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');

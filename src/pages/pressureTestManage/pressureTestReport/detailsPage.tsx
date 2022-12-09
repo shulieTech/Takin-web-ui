@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Alert,
   Button,
@@ -32,6 +33,7 @@ interface State {
   detailData: any;
   tabList: any;
   chartsInfo: any;
+  chartsThreadInfo: any;
   tabKey: number;
   riskAppKey: number;
   riskAppName: string;
@@ -53,6 +55,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     detailData: {},
     tabList: [],
     chartsInfo: {},
+    chartsThreadInfo: {}, // 杭州银行新增两个并发数图表
     tabKey: null,
     /** 风险机器应用key */
     riskAppKey: 0,
@@ -108,6 +111,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   useEffect(() => {
     if (state.tabKey) {
       queryReportChartsInfo(id, state.tabKey);
+      queryTrendByThreadChartsInfo(id, state.tabKey);
     }
   }, [state.isReload, state.tabKey]);
 
@@ -202,7 +206,26 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       });
     }
   };
-
+  /**
+   * @name 获取压测报告趋势信息（并发数是横轴）
+   */
+  const queryTrendByThreadChartsInfo = async (reportId, xpathMd5) => {
+    const {
+      data: {
+        data: {  ...chartsThreadInfo },
+        success,
+      },
+    } = await PressureTestReportService.queryTrendByThreadChartsInfo({
+      reportId,
+      xpathMd5,
+    });
+    if (success) {
+      setState({
+        chartsThreadInfo
+      });
+    }
+  };
+  
   const changeTenant = (url) => {
     window.open(url);
   };

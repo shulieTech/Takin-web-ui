@@ -24,7 +24,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
   const { id, detailData, state, setState, reportCountData, failedCount } =
     props;
   const [tabState, setTabState] = useStateReducer<State>({
-    tabKey: 2,
+    tabKey: 0,
   });
   const data = [
     {
@@ -38,6 +38,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
         <LinkCharts
           tabList={state.tabList}
           chartsInfo={state.chartsInfo}
+          chartsThreadInfo={state?.chartsThreadInfo || {}}
           setState={setState}
           state={state}
           graphConfig={{

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { InputNumber, message } from 'antd';
 import { CommonModal } from 'racc';
 import React, { useState, useEffect, ReactNode } from 'react';
@@ -11,6 +12,7 @@ import BusinessActivityTree from './BusinessActivityTree';
 interface Props {
   tabList?: any[];
   chartsInfo?: any;
+  chartsThreadInfo?: any;
   state?: any;
   setState?: (value) => void;
   isLive?: boolean;
@@ -26,7 +28,7 @@ interface Props {
   };
 }
 const LinkCharts: React.FC<Props> = (props) => {
-  const { chartsInfo, setState, state, tabList } = props;
+  const { chartsInfo, setState, state, tabList, chartsThreadInfo } = props;
   const [targetTps, setTargetTps] = useState<number>(undefined);
 
   // 旧版的压测模式pressureType在detailData里，新版的混合场景压测在tree的节点数据里
@@ -137,6 +139,7 @@ const LinkCharts: React.FC<Props> = (props) => {
           columnNum={2}
           isLive={props.isLive}
           chartsInfo={chartsInfo}
+          chartsThreadInfo={chartsThreadInfo}
           {...props.chartConfig}
         />
       </div>

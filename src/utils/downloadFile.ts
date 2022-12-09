@@ -11,6 +11,7 @@ export default async (filePath, fileName) => {
       'Auth-Cookie': localStorage.getItem('auth-cookie'),
       'tenant-code': localStorage.getItem('tenant-code'),
       'env-code': localStorage.getItem('env-code'),
+      'deptId': localStorage.getItem('deptId')
     },
   });
   const blob = new Blob([data], { type: `` });

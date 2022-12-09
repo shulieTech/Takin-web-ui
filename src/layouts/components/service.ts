@@ -5,6 +5,13 @@ const tenantCodeService = {
     const url = '/tenant';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取部门列表
+   */
+  async queryDepartmentList(data = {}) {
+    const url = '/auth/dept/tree';
+    return httpGet(url, data);
+  },
   async tenantSwitch(data = {}) {
     const url = '/tenant/switch';
     return httpPut(url, data);

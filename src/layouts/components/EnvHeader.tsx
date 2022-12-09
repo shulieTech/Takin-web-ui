@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Menu, Icon, Button, message, Tooltip, Modal } from 'antd';
 import { getTakinTenantAuthority } from 'src/utils/utils';
@@ -11,6 +12,7 @@ let path = '';
 const EnvHeader: React.FC<Props> = (props) => {
   const userType: string = localStorage.getItem('troweb-role');
   const [envList, setStateEnvList] = useState([]);
+  const [projectList, setStateProjectList] = useState([]);
   const [tenantList, setTenantList] = useState([]);
   const [desc, setDesc] = useState('');
   const [envEdit, setEnvEdit] = useState<any>();
@@ -27,6 +29,7 @@ const EnvHeader: React.FC<Props> = (props) => {
     if (getTakinTenantAuthority() === 'true') {
       queryTenantList();
     }
+    queryDepartmentList();
   }, []);
 
   const queryTenantList = async () => {
@@ -65,6 +68,18 @@ const EnvHeader: React.FC<Props> = (props) => {
           data[indexs].envs[ind]?.securityCenterDomain || ''
         );
       }
+    }
+  };
+
+  /**
+   * @name 获取部门列表
+   */
+  const queryDepartmentList = async () => {
+    const {
+      data: { data, success }
+    } = await tenantCodeService.queryDepartmentList({});
+    if (success) {
+      setStateProjectList(data);
     }
   };
 
@@ -137,10 +152,28 @@ const EnvHeader: React.FC<Props> = (props) => {
       }
     }
   };
+
+  const changeProject = async (project) => {
+    const { id } = project;
+    localStorage.setItem('deptId', id);
+    if (window.location.hash === '#/dashboard') {
+      window.location.reload();
+    } else {
+      window.location.hash = '#/dashboard';
+      window.location.reload();
+    }
+  };
+
   const index = _.findIndex(envList, [
     'envCode',
     localStorage.getItem('env-code'),
   ]);
+
+  const indexProject = _.findIndex(projectList, [
+    'id',
+    Number(localStorage.getItem('deptId')),
+  ]);
+
   const indexcode = _.findIndex(tenantList, [
     'tenantCode',
     localStorage.getItem('tenant-code'),
@@ -374,6 +407,58 @@ const EnvHeader: React.FC<Props> = (props) => {
               <Icon type="down" />
             </Button>
           </Dropdown>
+          { projectList && projectList?.length > 0 && <Dropdown
+            overlayStyle={{
+              maxWidth: 130,
+            }}
+            overlay={
+              <Menu>
+                {projectList?.map((x, ind) => {
+                  return (
+                    <Menu.Item
+                      key={ind}
+                      onClick={() => changeProject(x)}
+                      className="hover-group"
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div
+                          style={{
+                            flex: 1,
+                            fontWeight:
+                            projectList[indexProject]?.id === x.id
+                                ? 'bold'
+                                : 'normal',
+                          }}
+                          className="truncate"
+                        >
+                          {x.title}
+                        </div>
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+              </Menu>
+            }
+          >
+            <Button
+              type="primary"
+              style={{
+                borderTopLeftRadius: userType === '0' ? '0px' : '4px',
+                borderBottomLeftRadius: userType === '0' ? '0px' : '4px',
+                marginLeft: 8
+              }}
+            >
+              项目：
+              {projectList[indexProject]?.title}
+              <Icon type="down" />
+            </Button>
+          </Dropdown>}
+        
           {isSuper === '1' && (
             <AddTenantModal
               btnText="新增租户"
