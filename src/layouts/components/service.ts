@@ -9,7 +9,7 @@ const tenantCodeService = {
    * @name 获取部门列表
    */
   async queryDepartmentList(data = {}) {
-    const url = '/auth/dept/tree';
+    const url = '/auth/dept/getUserDept';
     return httpGet(url, data);
   },
   async tenantSwitch(data = {}) {
