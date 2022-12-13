@@ -232,7 +232,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
   /**
    * @name 获取压测实况请求流量列表
    */
-  const queryRequestList = useCallback(async (value = {}) => {
+  const queryRequestList = (async (value = {}) => {
     const newValue = {
       ...state.requestListQueryParams,
       ...value,
