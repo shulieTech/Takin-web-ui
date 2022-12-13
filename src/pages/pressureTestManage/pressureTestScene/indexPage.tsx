@@ -40,6 +40,7 @@ export interface PressureTestSceneState {
   pressureStyle: string;
   dataScriptNum: any[];
   tagReloadKey: number;
+  loadingMsg: string;
 }
 const liList = [1, 1, 1, 1, 1, 1, 1, 1];
 const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
@@ -70,6 +71,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     pressureStyle: PressureStyle.从头开始压测,
     dataScriptNum: null, // 数据脚本数
     tagReloadKey: 1,
+    loadingMsg: ''
   });
 
   const [searchTableRef, setSearchTableRef] = useState<any>();
@@ -176,6 +178,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
       if (data.data === 2) {
         setState({
           startStatus: 'success',
+          loadingMsg: ''
         });
         const startTime: any = new Date().getTime();
         localStorage.setItem('startTime', startTime);
@@ -184,6 +187,9 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           `/pressureTestManage/pressureTestReport/pressureTestLive?id=${sceneId}`
         );
       } else if (data.data === 1) {
+        setState({
+          loadingMsg: data.msg
+        });
         setTimeout(() => {
           handleStart(sceneId, reportId);
         }, 500);
@@ -454,7 +460,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
                           state.startStatus === 'ready' ? '#E4EAF0' : '#474C50',
                       }}
                     >
-                      {state.startStatus === 'ready' ? '启动压测' : '启动中'}
+                      {state.startStatus === 'ready' ? '启动压测' : `启动中 ${state.loadingMsg}`}
                     </span>
                   </Col>
                 </Row>
