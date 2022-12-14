@@ -274,7 +274,7 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       value: detailData.successRate,
       precision: 2,
       suffix: '%',
-      hasFail: detailData.successRate === 100 && reportCountData?.warnCount > 0 ? true : false
+      hasFail: detailData.successRate === 100 && state.failedCount > 0 ? true : false
     },
     {
       label: 'SA',
