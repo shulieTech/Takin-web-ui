@@ -6,14 +6,14 @@ import React from 'react';
 const getFailOrderFormData = (): FormDataType[] => {
   return [
     {
-      key: 'nick',
+      key: 'customerName',
       label: '',
       node: <Input placeholder="客户名称" />
     },
     {
-      key: '2',
+      key: 'status',
       label: '',
-      node: <CommonSelect placeholder="当前状态" dataSource={[{ label: '已处理', value: '1' }, { label: '未处理', value: '2' }]}/>
+      node: <CommonSelect placeholder="当前状态" dataSource={[{ label: '已处理', value: '1' }, { label: '未处理', value: '0' }]}/>
     }
   ];
 };

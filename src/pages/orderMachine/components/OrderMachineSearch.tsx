@@ -6,14 +6,14 @@ import React from 'react';
 const getOrderMachineFormData = (): FormDataType[] => {
   return [
     {
-      key: 'nick',
+      key: 'customerName',
       label: '',
       node: <Input placeholder="客户名称" />
     },
     {
-      key: '2',
+      key: 'status',
       label: '',
-      node: <CommonSelect placeholder="机器状态" dataSource={[{ label: '运行中', value: '1' }, { label: '已释放', value: '2' }, { label: '释放中', value: '3' }, { label: '部署中', value: '4' }]}/>
+      node: <CommonSelect placeholder="机器状态" dataSource={[{ label: '订购成功', value: '0' }, { label: '部署中', value: '1' }, { label: '运行中', value: '2' }, { label: '已释放', value: '3' }]}/>
     }
   ];
 };

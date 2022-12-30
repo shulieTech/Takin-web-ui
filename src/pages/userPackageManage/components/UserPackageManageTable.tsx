@@ -6,71 +6,70 @@ import React from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { Badge } from 'antd';
+import { statusMap } from '../enum';
 
 const getUserPackageManageColumns = (state, setState): ColumnProps<any>[] => {
   return [
     {
       ...customColumnProps,
       title: '客户名称',
-      dataIndex: 'nick'
+      dataIndex: 'customerName'
     },
     {
       ...customColumnProps,
       title: '套餐类型',
-      dataIndex: 'key'
+      dataIndex: 'packageType',
+      render: (text) => {
+        return text === 1 ? '次卡' : text === 0 ? '月卡' : '-';
+      }
     },
     {
       ...customColumnProps,
       title: '最大vu',
-      dataIndex: 'key'
+      dataIndex: 'maxVu'
     },
     {
       ...customColumnProps,
       title: '套餐详细信息',
-      dataIndex: 'key'
+      dataIndex: 'packageDesc'
     },
     {
       ...customColumnProps,
       title: '生效时间',
-      dataIndex: 'key'
+      dataIndex: 'startDate'
     },
     {
       ...customColumnProps,
       title: '失效时间',
-      dataIndex: 'key'
+      dataIndex: 'endDate'
     },
     {
       ...customColumnProps,
       title: '次数（次）',
-      dataIndex: 'key'
+      dataIndex: 'times'
     },
     {
       ...customColumnProps,
       title: '剩余次数',
-      dataIndex: 'key'
+      dataIndex: 'timesCurrent'
     },
     {
       ...customColumnProps,
       title: '购买时长/月',
-      dataIndex: 'key'
+      dataIndex: 'duration'
     },
     {
       ...customColumnProps,
       title: '套餐状态',
       dataIndex: 'status',
-      render: (text, row) => {
-        return (
-          <Badge
-            text={text === 0 ? '正常' : '禁用'}
-            color={text === 0 ? '#11BBD5' : '#FE7D61'}
-          />
-        );
+      render: (text) => {
+        return statusMap[text];
       }
     },
     {
       ...customColumnProps,
       title: '失败原因',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'reason'
     },
   ];
 };

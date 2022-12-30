@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
+import moment from 'moment';
 import { CommonDrawer, CommonForm, useStateReducer } from 'racc';
-import React from 'react';
+import React, { useEffect } from 'react';
 import OrderMachineService from '../service';
 import getOrderMachineFormData from './OrderMachineFormData';
 
@@ -13,14 +15,83 @@ interface Props {
 }
 interface State {
   form: any;
-  userDetail: any;
+  tenantList: any[];
+  resourcePoolList: any[];
+  regionList: any[];
+  userPackageList: any[];
 }
 const AddOrderMachineDrawer: React.FC<Props> = (props) => {
   const { action, id, titles } = props;
   const [state, setState] = useStateReducer<State>({
     form: null as WrappedFormUtils,
-    userDetail: {} as any,
+    tenantList: [],
+    resourcePoolList: [],
+    regionList: [],
+    userPackageList: []
   });
+
+  useEffect(() => {
+    queryTenantList();
+    queryResourcePool();
+    queryUserPackage();
+    // queryRegionList();
+  }, []);
+
+  /**
+   * @name 获取租户列表
+   */
+  const queryTenantList = async () => {
+    const {
+          data: { data, success }
+        } = await OrderMachineService.queryTenantList({});
+    if (success) {
+      setState({
+        tenantList: data
+      });
+    }
+  };
+
+  /**
+   * @name 获取资源池列表
+   */
+  const queryResourcePool = async () => {
+    const {
+            data: { data, success }
+          } = await OrderMachineService.queryResourcePool({});
+    if (success) {
+      setState({
+        resourcePoolList: data
+      });
+    }
+  };
+
+  /**
+   * @name 获取可用区列表
+   */
+  const queryRegionList = async () => {
+    const {
+              data: { data, success }
+            } = await OrderMachineService.queryRegion({});
+    if (success) {
+      setState({
+        regionList: data
+      });
+    }
+  };
+
+  /**
+   * @name 获取用户套餐列表
+   */
+  const queryUserPackage = async () => {
+    const {
+                data: { data, success }
+              } = await OrderMachineService.queryUserPackage({});
+    if (success) {
+      setState({
+        userPackageList: data
+      });
+    }
+  };
 
   /**
    * @name 提交
@@ -33,20 +104,23 @@ const AddOrderMachineDrawer: React.FC<Props> = (props) => {
           resolve(false);
           return false;
         }
-
+  
         const result = {
-          ...values
+          ...values,
+          startTime: moment(values?.startTime).format('YYYY-MM-DD HH:mm:ss'),
+          endTime: moment(values?.endTime).format('YYYY-MM-DD HH:mm:ss'),
+          regionName: state?.regionList?.filter(item => item?.region === values?.region)?.[0]?.name,
+          poolName: state?.resourcePoolList?.filter(item => item?.poolId === values?.pool)?.[0]?.poolName
         };
-
         /**
          * @name 增加订购机器
          */
         if (action === 'add') {
           const {
             data: { success, data }
-          } = await OrderMachineService.addUser(result);
+          } = await OrderMachineService.addOrderMachine(result);
           if (success) {
-            message.success('增加客户成功');
+            message.success('增加订购机器成功');
             props.onSccuess();
             resolve(true);
           }
@@ -62,7 +136,7 @@ const AddOrderMachineDrawer: React.FC<Props> = (props) => {
       btnText={titles}
       drawerProps={{
         width: 650,
-        title: '新增用户套餐',
+        title: '新增订购机器',
         maskClosable: false
       }}
       drawerFooterProps={{

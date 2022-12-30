@@ -38,7 +38,7 @@ const OrderMachine: React.FC<OrderMachineProps> = (props) => {
         size: 'small'
       }}
       commonFormProps={{ formData: getOrderMachineFormData(), rowNum: 6 }}
-      ajaxProps={{ url: '/user/list', method: 'GET' }}
+      ajaxProps={{ url: '/ecloud/machine/list', method: 'GET' }}
       searchParams={{ ...state.searchParams }}
       toggleRoload={state.isReload}
       tableAction={<OrderMachineAction state={state} setState={setState} />}

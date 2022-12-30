@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { message } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { CommonDrawer, CommonForm, useStateReducer } from 'racc';
-import React from 'react';
+import React, { useEffect } from 'react';
 import UserPackageManageService from '../service';
 import getUserPackageFormData from './UserPackageFormData';
 
@@ -15,14 +16,51 @@ interface State {
   form: any;
   userDetail: any;
   package: any;
+  tenantList: any;
+  userPackageList: any;
 }
 const AddUserPackageDrawer: React.FC<Props> = props => {
   const { action, id, titles } = props;
   const [state, setState] = useStateReducer<State>({
     form: null as WrappedFormUtils,
     userDetail: {} as any,
-    package: undefined
+    package: undefined,
+    tenantList: [],
+    userPackageList: []
   });
+
+  useEffect(() => {
+    queryTenantList();
+    queryUserPackage();
+  }, []);
+
+  /**
+   * @name 获取租户列表
+   */
+  const queryTenantList = async () => {
+    const {
+          data: { data, success }
+        } = await UserPackageManageService.queryTenantList({});
+    if (success) {
+      setState({
+        tenantList: data
+      });
+    }
+  };
+
+  /**
+   * @name 获取用户套餐列表
+   */
+  const queryUserPackage = async () => {
+    const {
+              data: { data, success }
+            } = await UserPackageManageService.queryUserPackage({});
+    if (success) {
+      setState({
+        userPackageList: data
+      });
+    }
+  };
 
   /**
    * @name 提交
@@ -37,18 +75,23 @@ const AddUserPackageDrawer: React.FC<Props> = props => {
         }
 
         const result = {
-          ...values
+          ...values,
+          // eslint-disable-next-line eqeqeq
+          // tslint:disable-next-line:triple-equals
+          numbers: state?.userPackageList?.filter(item => item?.packageId == values?.packageId)?.[0]?.packageType === 0  ? values?.month : values?.number
         };
+        delete result.number;
+        delete result.month;
 
         /**
-         * @name 增加用户
+         * @name 增加用户套餐
          */
         if (action === 'add') {
           const {
             data: { success, data }
-          } = await UserPackageManageService.addUser(result);
+          } = await UserPackageManageService.addUserPackage(result);
           if (success) {
-            message.success('增加客户成功');
+            message.success('增加用户套餐成功');
             state.form.setFieldsValue({
               package: undefined
             });

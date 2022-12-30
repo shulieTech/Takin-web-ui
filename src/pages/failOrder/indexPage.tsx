@@ -37,7 +37,7 @@ const FailOrder: React.FC<FailOrderProps> = (props) => {
         size: 'small'
       }}
       commonFormProps={{ formData: getFailOrderFormData(), rowNum: 6 }}
-      ajaxProps={{ url: '/user/list', method: 'GET' }}
+      ajaxProps={{ url: '/ecloud/machine/failed/record', method: 'GET' }}
       searchParams={{ ...state.searchParams }}
       toggleRoload={state.isReload}
     />

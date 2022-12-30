@@ -12,62 +12,69 @@ const getFailOrderColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '客户名称',
-      dataIndex: 'nick'
+      dataIndex: 'customerName'
     },
     {
       ...customColumnProps,
       title: '套餐名称',
-      dataIndex: 'key'
+      dataIndex: 'packageName'
     },
     {
       ...customColumnProps,
       title: '订购机器数量',
-      dataIndex: 'key'
+      dataIndex: 'numbers'
     },
     {
       ...customColumnProps,
-      title: '规格',
-      dataIndex: 'key'
+      title: '规格(cpu/ram)',
+      dataIndex: 'cpu',
+      render: (text, record) => {
+        return <span>{`${text}c${record?.ram}g`}</span>;
+      }
     },
     {
       ...customColumnProps,
       title: '宽带',
-      dataIndex: 'key'
+      dataIndex: 'bandwidth'
     },
     {
       ...customColumnProps,
       title: '资源池',
-      dataIndex: 'key'
+      dataIndex: 'poolName'
     },
     {
       ...customColumnProps,
       title: '可用区',
-      dataIndex: 'key'
+      dataIndex: 'regionName'
     },
     {
       ...customColumnProps,
       title: '订购时长/月',
-      dataIndex: 'key'
+      dataIndex: 'duration'
     },
     {
       ...customColumnProps,
       title: '失败原因',
-      dataIndex: 'key'
+      dataIndex: 'reason'
     },
     {
       ...customColumnProps,
       title: '发生时间',
-      dataIndex: 'status',
+      dataIndex: 'createDate',
     },
     {
       ...customColumnProps,
       title: '处理时间',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'dealDate'
     },
     {
       ...customColumnProps,
       title: '当前状态',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'status',
+      render: (text) => {
+        return text === '0' ? '未处理' : text === '1' ? '已处理' : '-';
+      }
+
     },
   ];
 };

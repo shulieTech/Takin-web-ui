@@ -6,83 +6,95 @@ import React from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { Badge } from 'antd';
+import { statusMap } from '../enum';
 
 const getOrderMachineColumns = (state, setState): ColumnProps<any>[] => {
   return [
     {
       ...customColumnProps,
       title: '客户名称',
-      dataIndex: 'nick'
+      dataIndex: 'customerName'
     },
     {
       ...customColumnProps,
       title: '套餐名称',
-      dataIndex: 'key'
+      dataIndex: 'packageName'
     },
     {
       ...customColumnProps,
       title: '机器ID',
-      dataIndex: 'key'
+      dataIndex: 'machineId'
     },
     {
       ...customColumnProps,
       title: '机器名称',
-      dataIndex: 'key'
+      dataIndex: 'machineName'
     },
     {
       ...customColumnProps,
       title: '机器公网IP',
-      dataIndex: 'key'
+      dataIndex: 'ipPublic'
+    },
+    {
+      ...customColumnProps,
+      title: '机器内网IP',
+      dataIndex: 'ipPrivate'
     },
     {
       ...customColumnProps,
       title: '资源池',
-      dataIndex: 'key'
+      dataIndex: 'poolName'
     },
     {
       ...customColumnProps,
       title: '可用区',
-      dataIndex: 'key'
+      dataIndex: 'regionName'
     },
     {
       ...customColumnProps,
       title: 'cpu/c',
-      dataIndex: 'key'
+      dataIndex: 'cpu'
     },
     {
       ...customColumnProps,
       title: 'ram/g',
-      dataIndex: 'key'
+      dataIndex: 'ram'
     },
     {
       ...customColumnProps,
       title: '宽带/m',
-      dataIndex: 'status',
+      dataIndex: 'bandwidth',
     },
     {
       ...customColumnProps,
       title: '订购时间',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'startTime'
     },
     {
       ...customColumnProps,
       title: '到期时间',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'endTime'
     },
     {
       ...customColumnProps,
       title: '订购时长/月',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'duration'
     },
     {
       ...customColumnProps,
       title: '订购类型',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'buyType',
+      render: (text) => {
+        return  text === 0 ? '自动订购' : text === 1 ? '人工订购' : '-';
+      }
     },
     {
       ...customColumnProps,
       title: '机器状态',
-      dataIndex: 'gmtUpdate'
+      dataIndex: 'status',
+      render: (text) => {
+        return statusMap[text];
+      }
     },
   ];
 };
