@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Col, message, Modal, Radio, Row, Switch, Button } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';

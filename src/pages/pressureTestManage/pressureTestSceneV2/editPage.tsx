@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'dva';
 import {
@@ -34,6 +35,7 @@ import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 import { cloneDeep, debounce } from 'lodash';
 import moment from 'moment';
+
 
 const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
   FormEffectHooks;
@@ -357,6 +359,7 @@ const EditPage = (props) => {
             Radio,
             Switch,
             DatePicker,
+            CronSelctComponent,
             ExcludeApps,
             RadioGroup: Radio.Group,
           }}
@@ -429,7 +432,7 @@ const EditPage = (props) => {
                   value: x.id,
                 }))}
               />
-              <Field
+              {/* <Field
                 name="isScheduler"
                 type="boolean"
                 x-component="Switch"
@@ -441,6 +444,30 @@ const EditPage = (props) => {
                     condition: '{{ $self.value }}',
                   },
                 ]}
+              /> */}
+              <Field
+                name="isScheduler"
+                type="number"
+                x-component="RadioGroup"
+                title="执行方式"
+                enum={[
+                  { label: '手动', value: 0 },
+                  { label: '定时', value: 1 },
+                  { label: '周期', value: 2 },
+                ]}
+                x-linkages={[
+                  {
+                    type: 'value:visible',
+                    target: '.executeTime',
+                    condition: '{{ $self.value === 1 }}',
+                  },
+                  {
+                    type: 'value:visible',
+                    target: '.executeCron',
+                    condition: '{{ $self.value === 2 }}',
+                  },
+                ]}
+                default={0}
               />
               <Field
                 name="executeTime"
@@ -448,7 +475,7 @@ const EditPage = (props) => {
                 x-component="DatePicker"
                 title="启动时间"
                 x-component-props={{
-                  style: { width: '100%' },
+                  style: { width: 240 },
                   showTime: { format: 'HH:mm' },
                   format: 'YYYY-MM-DD HH:mm',
                   disabledDate: (currentDate) =>
@@ -468,7 +495,21 @@ const EditPage = (props) => {
                   },
                 ]}
               />
+              <Field
+                name="executeCron"
+                type="string"
+                x-component="CronSelctComponent"
+                title="执行周期"
+                x-rules={[
+                  {
+                    required: true,
+                    message: '请选择执行周期',
+                  },
+                ]}
+                default="* * * * *"
+              />
             </Field>
+            
             <Field
               type="object"
               name="goal"
