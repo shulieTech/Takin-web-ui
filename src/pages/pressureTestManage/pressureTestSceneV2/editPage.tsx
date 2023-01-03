@@ -35,6 +35,7 @@ import { getTakinAuthority } from 'src/utils/utils';
 import TipTittle from './components/TipTittle';
 import { cloneDeep, debounce } from 'lodash';
 import moment from 'moment';
+import { CronSelctComponent } from 'src/components/cron-selector/CronSelect';
 
 
 const { onFieldValueChange$, onFieldInputChange$, onFormMount$ } =
