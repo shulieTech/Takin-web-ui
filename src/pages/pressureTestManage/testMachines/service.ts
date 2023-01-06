@@ -46,4 +46,25 @@ export default {
     const url = '/pressureMachine/deployProgress';
     return httpGet(url, data);
   },
+  /**
+   * @name 导入机器列表 
+   */
+  async importMachineFile(data = {}) {
+    const url = '/pressureMachine/createMachinebByExecl';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 获取机器列表 
+   */
+  async queryTagList(data = {}) {
+    const url = '/pressureMachine/getAllTag';
+    return httpPost(url, data);
+  },
+  /**
+   * @name 批量部署机器 
+   */
+  async deployByTag(data = {}) {
+    const url = '/pressureMachine/benchmarkEnableByTag';
+    return httpPost(url, data);
+  },
 };

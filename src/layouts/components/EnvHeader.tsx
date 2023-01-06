@@ -30,8 +30,8 @@ const EnvHeader: React.FC<Props> = props => {
         'tenantCode',
         localStorage.getItem('tenant-code')
       ]);
-      setEnvList(data[indexs]?.envs);
-      const arr = data[indexs]?.envs.filter(item => {
+      setEnvList(data?.[indexs]?.envs);
+      const arr = data?.[indexs]?.envs?.filter(item => {
         if (item.isDefault) {
           return item;
         }
@@ -44,7 +44,7 @@ const EnvHeader: React.FC<Props> = props => {
           'envCode',
           localStorage.getItem('env-code')
         ]);
-        setDesc(data[indexs].envs[ind]?.desc);
+        setDesc(data?.[indexs]?.envs?.[ind]?.desc);
       }
     }
   };
@@ -191,7 +191,7 @@ const EnvHeader: React.FC<Props> = props => {
             }}
           >
             环境：
-            {envList[index]?.envName}
+            {envList?.[index]?.envName}
             <Icon type="down" />
           </Button>
         </Dropdown>}

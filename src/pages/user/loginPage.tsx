@@ -425,6 +425,7 @@ export default class Login extends DvaComponent<Props, State> {
     } = await UserService.troLogin({
       ...value,
       loginType: this.state.keyType,
+      // password: value.password,
       password: encryptStr(value.password),
       username: value.username.indexOf('@') > -1 ? value.username : `${value.username}@default`
     });

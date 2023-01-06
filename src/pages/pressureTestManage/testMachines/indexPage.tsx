@@ -16,6 +16,8 @@ import service from './service';
 import EditModal from './modals/Edit';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import DeployToBenchmarkModal from './modals/DeployToBenchmark';
+import ImportFileModal from './modals/ImportFileModal';
+import TagDepolyModal from './modals/TagDeployModal';
 
 const DeployStatus = (prop) => {
   const { record } = prop;
@@ -46,8 +48,25 @@ const TestMachineManage = (props) => {
   const [benchmarkDeployItem, setBenchmarkDeployItem] = useState(null);
   const [syncing, setSyncing] = useState(false);
   const [searchTableRef, setSearchTableRef] = useState<any>();
-
+  const [visible, setVisible] = useState(false);
+  const [tagVisible, setTagVisible] = useState(false);
+  const [tagList, setTagList] = useState(false);
   const refHandle = useCallback((ref) => setSearchTableRef(ref), []);
+
+  /**
+   * @name 获取全部机器tag列表
+   */
+  const queryTagList = async () => {
+    const {
+      data: { success , data },
+    } = await service.queryTagList({
+    });
+    if (success) {
+      setTagList(data?.map((item) => {
+        return { tag: item, key: item };
+      }));
+    }
+  };
 
   const deleteItem = async (record) => {
     const {
@@ -126,6 +145,7 @@ const TestMachineManage = (props) => {
 
   const columns = [
     { title: '机器名称', dataIndex: 'machineName' },
+    { title: '标签', dataIndex: 'tag', render: (text) => text || '-'  },
     { title: '机器IP', dataIndex: 'machineIp' },
     { title: 'cpu', dataIndex: 'cpu', render: (text) => text || '-' },
     { title: 'memory', dataIndex: 'memory', render: (text) => text || '-' },
@@ -264,7 +284,7 @@ const TestMachineManage = (props) => {
       }, 10000);
       return () => clearInterval(refreshTimer);
     }
-  }, [JSON.stringify(searchTableRef?.tableState?.dataSource)]);
+  }, [searchTableRef]);
 
   return (
     <>
@@ -280,6 +300,15 @@ const TestMachineManage = (props) => {
         }}
         tableAction={
           <>
+            <Button  style={{ marginRight: 8 }} type="primary" ghost onClick={() => {
+              setTagVisible(true);
+              queryTagList(); }
+              }>
+              标签部署
+            </Button>
+            <Button  style={{ marginRight: 8 }} type="primary" ghost onClick={() => setVisible(true)}>
+              导入机器列表
+            </Button>
             <Button
               type="primary"
               style={{ marginRight: 8 }}
@@ -297,6 +326,23 @@ const TestMachineManage = (props) => {
         commonFormProps={{ formData, rowNum: 6 }}
         ajaxProps={{ url: '/pressureMachine/list', method: 'GET' }}
         toggleRoload={tableReload}
+      />
+      <ImportFileModal
+        btnText="导入机器列表"
+        visible={visible}
+        onSuccess={() => {
+          setTableReload(!tableReload);
+        }}
+        setVisible={setVisible}
+      />
+      <TagDepolyModal
+        btnText="标签部署"
+        visible={tagVisible}
+        onSuccess={() => {
+          setTableReload(!tableReload);
+        }}
+        data={tagList}
+        setVisible={setTagVisible}
       />
       <EditModal
         editItem={editItem}

@@ -133,6 +133,11 @@ const EditMachineModal: React.FC<Props> = (props) => {
             initialValue: editItem?.remark,
           })(<Input.TextArea placeholder="请输入" maxLength={200} />)}
         </FormItem>
+        {isEdit && <FormItem label="标签" {...formItemLayout}>
+          {getFieldDecorator('tag', {
+            initialValue: editItem?.tag,
+          })(<Input placeholder="请输入标签" maxLength={200} />)}
+        </FormItem>}
       </Form>
     </Modal>
   );
