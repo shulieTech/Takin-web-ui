@@ -51,14 +51,14 @@ export default {
    */
   async importMachineFile(data = {}) {
     const url = '/pressureMachine/createMachineByExecl';
-    return httpGet(url, data);
+    return httpPost(url, data);
   },
   /**
    * @name 获取机器列表 
    */
   async queryTagList(data = {}) {
     const url = '/pressureMachine/getAllTag';
-    return httpPost(url, data);
+    return httpGet(url, data);
   },
   /**
    * @name 批量部署机器 
