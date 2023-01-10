@@ -50,7 +50,7 @@ export default {
    * @name 导入机器列表 
    */
   async importMachineFile(data = {}) {
-    const url = '/pressureMachine/createMachinebByExecl';
+    const url = '/createMachineByExecl';
     return httpPost(url, data);
   },
   /**
