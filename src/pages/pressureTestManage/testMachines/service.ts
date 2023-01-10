@@ -51,7 +51,7 @@ export default {
    */
   async importMachineFile(data = {}) {
     const url = '/pressureMachine/createMachineByExecl';
-    return httpPost(url, data);
+    return httpGet(url, data);
   },
   /**
    * @name 获取机器列表 
