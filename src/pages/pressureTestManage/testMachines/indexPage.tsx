@@ -50,7 +50,8 @@ const TestMachineManage = (props) => {
   const [searchTableRef, setSearchTableRef] = useState<any>();
   const [visible, setVisible] = useState(false);
   const [tagVisible, setTagVisible] = useState(false);
-  const [tagList, setTagList] = useState(false);
+  const [tagList, setTagList] = useState([]);
+  const [suiteList, setSuiteList] = useState([]);
   const refHandle = useCallback((ref) => setSearchTableRef(ref), []);
 
   /**
@@ -63,11 +64,28 @@ const TestMachineManage = (props) => {
     });
     if (success) {
       setTagList(data?.map((item) => {
-        return { tag: item, key: item };
+        return { label: item, value: item };
       }));
     }
   };
 
+  /**
+   * @name 获取全部基准测试机列表
+   */
+  const querySuiteList = async () => {
+    const {
+      data: { success , data },
+    } = await service.suiteList({
+      current: 0,
+      pageSize: 99999
+    });
+    if (success) {
+      setSuiteList(data?.map((item) => {
+        return { label: item?.suite, value: item?.suite };
+      }));
+    }
+  };
+  
   const deleteItem = async (record) => {
     const {
       data: { success },
@@ -302,7 +320,9 @@ const TestMachineManage = (props) => {
           <>
             <Button  style={{ marginRight: 8 }} type="primary" ghost onClick={() => {
               setTagVisible(true);
-              queryTagList(); }
+              queryTagList(); 
+              querySuiteList();
+            }
               }>
               标签部署
             </Button>
@@ -342,6 +362,7 @@ const TestMachineManage = (props) => {
           setTableReload(!tableReload);
         }}
         data={tagList}
+        suiteList={suiteList}
         setVisible={setTagVisible}
       />
       <EditModal
