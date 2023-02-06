@@ -192,13 +192,13 @@ const TestMachineManage = (props) => {
         );
       },
     },
-    {
-      title: '可用状态',
-      dataIndex: 'engineStatus',
-      render: (text, record) => {
-        return text || '-';
-      },
-    },
+    // {
+    //   title: '可用状态',
+    //   dataIndex: 'engineStatus',
+    //   render: (text, record) => {
+    //     return text || '-';
+    //   },
+    // },
     {
       title: '部署类型',
       dataIndex: 'deployType',
