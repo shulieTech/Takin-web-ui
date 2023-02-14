@@ -102,7 +102,7 @@ const TestMachineManage = (props) => {
     Modal.confirm({
       title: '提示',
       content:
-        record.status === 2 ? (
+        (record.status === 2 || record.status === 3) ? (
           '确定卸载该节点？'
         ) : (
           <span>
