@@ -179,6 +179,7 @@ const TestMachineManage = (props) => {
                 0: 'default',
                 1: 'processing',
                 2: 'success',
+                3: 'error'
               }[text]
             }
             text={
@@ -186,6 +187,7 @@ const TestMachineManage = (props) => {
                 0: '未部署',
                 1: <DeployStatus record={record} />,
                 2: '已部署',
+                3: '部署失败'
               }[text]
             }
           />
@@ -255,7 +257,7 @@ const TestMachineManage = (props) => {
                 </Button>
               </Popconfirm>
             )}
-            {record.status === 2 && (
+            {(record.status === 2 || record.status === 3) && (
               <Button
                 type="link"
                 style={{ marginRight: 8 }}
