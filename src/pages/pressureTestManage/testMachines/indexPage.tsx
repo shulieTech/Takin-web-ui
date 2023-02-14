@@ -128,7 +128,7 @@ const TestMachineManage = (props) => {
       onOk: async () => {
         const {
           data: { success },
-        } = await service[record.status === 2 ? 'disableEngine' : 'enableEngine']({
+        } = await service[(record.status === 2 || record.status === 3) ? 'disableEngine' : 'enableEngine']({
           id: record.id,
         });
         if (success) {
