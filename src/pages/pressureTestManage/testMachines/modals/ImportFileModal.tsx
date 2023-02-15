@@ -1,4 +1,4 @@
-import { message, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
 import { ImportFile } from 'racc';
 import React, { Fragment } from 'react';
 import service from '../service';
@@ -34,7 +34,15 @@ const ImportFileModal: React.FC<Props> = props => {
 
   return (
     <Modal
-      title={props?.btnText}
+      // title={props?.btnText}
+      title={<span>导入机器列表 
+      <Button 
+        style={{ marginLeft: 8 }}
+        type="link" 
+        onClick={() => {window.location.href = 'https://shulie-daily.oss-cn-hangzhou.aliyuncs.com/yidongyun-hy/%E5%AF%BC%E5%85%A5%E6%9C%BA%E5%99%A8%E5%88%97%E8%A1%A8.xlsx';
+        }}> 模版下载
+      </Button>
+      </span>}
       width={560}
       footer={null}
       visible={props.visible}
