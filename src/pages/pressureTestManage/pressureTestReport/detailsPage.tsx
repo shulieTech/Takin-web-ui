@@ -204,22 +204,22 @@ const PressureTestReportDetail: React.FC<Props> = props => {
       label: '开始时间',
       value: detailData.startTime
     },
-    {
-      label: '消耗流量',
-      value: (
-        <span className={styles.flowValue}>
-          <Statistic
-            style={{
-              display: 'inline-block',
-              padding: 0
-            }}
-            value={detailData.amount}
-            suffix="vum"
-          />
-        </span>
-      ),
-      notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
-    },
+    // {
+    //   label: '消耗流量',
+    //   value: (
+    //     <span className={styles.flowValue}>
+    //       <Statistic
+    //         style={{
+    //           display: 'inline-block',
+    //           padding: 0
+    //         }}
+    //         value={detailData.amount}
+    //         suffix="vum"
+    //       />
+    //     </span>
+    //   ),
+    //   notShow: getTakinAuthority() === 'true' ? false : true // true：不展示，false或不配置：展示
+    // },
     {
       label: '执行人',
       value: detailData.operateName,
