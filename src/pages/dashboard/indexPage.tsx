@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name
  * @author chuxu
@@ -18,6 +19,9 @@ import { useStateReducer } from 'racc';
 import IndexService from './service';
 import { getTakinAuthority } from 'src/utils/utils';
 import { getThemeByKeyName } from 'src/utils/useTheme';
+import PackageStatus from './components/PackageStatus';
+import MaxTpsNumberAndMaxPressTime from './components/MaxTpsNumberAndMaxPressTime';
+import Package from './components/Package';
 
 interface Props { }
 interface State {
@@ -161,17 +165,20 @@ const DashboardPage: React.FC<Props> = props => {
     <BasePageLayout title="工作台">
       <Row type="flex">
         <Col span={6}>
-          <PressureTestSwitch data={switchStatus} />
+          {/* <PressureTestSwitch data={switchStatus} /> */}
+          <PackageStatus data={'生效中'}/>
           {getTakinAuthority() === 'true' && <Blank />}
           {/* 人寿没有流量余额 */}
-          {!disableDashboardFlowBalance && getTakinAuthority() === 'true' && (
+          {/* {!disableDashboardFlowBalance && getTakinAuthority() === 'true' && (
             <FlowBalance data={flowAccountData} />
-          )}
+          )} */}
+          <Package data={flowAccountData}/>
           <Blank />
           <QuickEntry data={quickEntranceData} />
         </Col>
         <Col span={18}>
-          <AppAndFlow data={appAndSystemFlowData} />
+          {/* <AppAndFlow data={appAndSystemFlowData} /> */}
+          <MaxTpsNumberAndMaxPressTime data={appAndSystemFlowData}/>
           <Blank />
           <PressureScene data={pressureTestSceneList} />
           <Blank />
