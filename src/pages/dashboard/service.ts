@@ -39,6 +39,13 @@ const IndexService = {
   async queryFlowAccountInfoDic(data = {}) {
     const url = '/asset/account_book/un_safe';
     return httpGet(url, data);
+  },
+  /**
+   * @name 获取dashboard相关数据
+   */
+  async queryPackageInfo(data = {}) {
+    const url = '/ecloud/package/into/tenant';
+    return httpGet(url, data);
   }
 };
 

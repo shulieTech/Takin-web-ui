@@ -26,7 +26,7 @@ const MaxTpsNumberAndMaxPressTime: React.FC<Props> = props => {
               <span className={styles.blueline} />
               <span className={`${styles.boldTitle}`}>最大并发数量</span>
               <p className={styles.number}>
-                <Statistic value={333} precision={0} />
+                <Statistic value={data?.maxTpsNumber} precision={0} />
               </p>
             </div>
           </Col>
@@ -44,7 +44,7 @@ const MaxTpsNumberAndMaxPressTime: React.FC<Props> = props => {
               <span className={styles.blueline} />
               <span className={`${styles.boldTitle}`}>最大压测时长</span>
               <p className={styles.number}>
-                <span style={{ fontSize: 20, fontWeight: 600, color: '#000' }}>包月套餐：无限制</span>
+                <span style={{ fontSize: 20, fontWeight: 600, color: '#000' }}>{data?.packageType === 0 ? '无限制' : data?.packageType === 1 ? '60分钟' : '-'}</span>
               </p>
             </div>
           </Col>

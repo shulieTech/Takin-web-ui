@@ -31,6 +31,7 @@ interface State {
   pressureTestSceneList: any;
   pressureTestReportList: any;
   appAndSystemFlowData: any;
+  packageData: any;
 }
 
 const DashboardPage: React.FC<Props> = props => {
@@ -40,7 +41,8 @@ const DashboardPage: React.FC<Props> = props => {
     quickEntranceData: null,
     pressureTestSceneList: null,
     pressureTestReportList: null,
-    appAndSystemFlowData: null
+    appAndSystemFlowData: null,
+    packageData: null
   });
 
   const {
@@ -49,7 +51,8 @@ const DashboardPage: React.FC<Props> = props => {
     quickEntranceData,
     pressureTestSceneList,
     pressureTestReportList,
-    appAndSystemFlowData
+    appAndSystemFlowData,
+    packageData
   } = state;
 
   useEffect(() => {
@@ -62,6 +65,7 @@ const DashboardPage: React.FC<Props> = props => {
     queryPressureTestSceneList();
     queryPressureTestReportList();
     queryAppAndSystemFlow();
+    queryPackageData();
   }, []);
   /**
    * @name 获取压测开关状态
@@ -159,6 +163,20 @@ const DashboardPage: React.FC<Props> = props => {
     }
   };
 
+  /**
+   * @name 获取套餐相关信息
+   */
+  const queryPackageData = async () => {
+    const {
+      data: { success, data }
+    } = await IndexService.queryPackageInfo({});
+    if (success) {
+      setState({
+        packageData: data
+      });
+    }
+  };
+  
   const disableDashboardFlowBalance = getThemeByKeyName('disableDashboardFlowBalance');
 
   return (
@@ -166,19 +184,19 @@ const DashboardPage: React.FC<Props> = props => {
       <Row type="flex">
         <Col span={6}>
           {/* <PressureTestSwitch data={switchStatus} /> */}
-          <PackageStatus data={'生效中'}/>
+          <PackageStatus data={packageData}/>
           {getTakinAuthority() === 'true' && <Blank />}
           {/* 人寿没有流量余额 */}
           {/* {!disableDashboardFlowBalance && getTakinAuthority() === 'true' && (
             <FlowBalance data={flowAccountData} />
           )} */}
-          <Package data={flowAccountData}/>
+          <Package data={packageData}/>
           <Blank />
           <QuickEntry data={quickEntranceData} />
         </Col>
         <Col span={18}>
           {/* <AppAndFlow data={appAndSystemFlowData} /> */}
-          <MaxTpsNumberAndMaxPressTime data={appAndSystemFlowData}/>
+          <MaxTpsNumberAndMaxPressTime data={packageData}/>
           <Blank />
           <PressureScene data={pressureTestSceneList} />
           <Blank />

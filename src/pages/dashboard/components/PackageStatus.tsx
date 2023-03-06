@@ -9,11 +9,12 @@ const PackageStatus: React.FC<Props> = props => {
   const { data } = props;
 
   const txt =
-    data === '生效中'
-      ? '生效中'
-      : data === '已失效'
-      ? '已失效'
-      : '-';
+    data?.packageStatus === 0
+      ? '开通中'
+      : data?.packageStatus === 1
+      ? '开通成功' : data?.packageStatus === 2
+      ? '停用或退订' : data?.packageStatus === 3
+  ? '失效' : '-';
 
   if (data) {
     return (

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'dva';
 import {
@@ -640,6 +641,7 @@ const EditPage = (props) => {
                     width: '100%',
                   },
                   min: 1,
+                  max: true ? 60 : undefined,
                   precision: 0,
                   addonAfter: <Button>分</Button>,
                 }}
