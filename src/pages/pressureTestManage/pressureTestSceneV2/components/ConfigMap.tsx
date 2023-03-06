@@ -13,9 +13,11 @@ import FlowPreview from './FlowPreview';
 const { Panel } = Collapse;
 
 const ConfigMap = (props: IFieldMergeState) => {
+  console.log('props', props);
   const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
-  const { flatTreeData = [] } = componentProps;
+  const { flatTreeData = [], packageData } = componentProps;
+  console.log('componentProps', componentProps);
 
   const groupMap = {};
   // 取出线程组
@@ -99,7 +101,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                         </TipTittle>
                       ),
                       'x-component-props': {
-                        placeholder: '请输入1~2,000,000之间的正整数',
+                        placeholder: `请输入1~${packageData?.maxVu}之间的正整数`,
                         style: {
                           width: '100%',
                         },
@@ -107,13 +109,13 @@ const ConfigMap = (props: IFieldMergeState) => {
                       'x-rules': [
                         {
                           required: true,
-                          message: '请输入最大并发',
+                          message: `请输入最大并发，最大并发数量限制为${packageData?.maxVu}`,
                         },
                         {
                           format: 'integer',
                           minimum: 1,
-                          maximum: 2000000,
-                          message: '请输入1~2,000,000之间的正整数',
+                          maximum: packageData?.maxVu,
+                          message: `请输入1~${packageData?.maxVu}之间的正整数`,
                         },
                       ],
                       default: 1,

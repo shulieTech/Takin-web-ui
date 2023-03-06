@@ -50,7 +50,9 @@ const EditPage = (props) => {
   const [initialValue, setInitialValue] = useState({});
   const [detailLoading, setDetailLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-
+  const [packageData, setPackageData] = useState(null);
+  const [maxData, setMaxData] = useState(null);
+ 
   const { id: sceneId, readOnly } = props.location.query;
   /**
    * 获取详情信息
@@ -67,6 +69,18 @@ const EditPage = (props) => {
           state.value = data?.basicInfo;
         });
       }
+    }
+  };
+
+  /**
+   * 获取套餐相关信息
+   */
+  const getPackageData = async () => {
+    const {
+          data: { success, data },
+        } = await services.getPackageData({});
+    if (success) {
+      setPackageData(data);
     }
   };
 
@@ -327,6 +341,16 @@ const EditPage = (props) => {
       });
     }
 
+    // onFieldValueChange$(
+    //   '*(goal.*.tps)'
+    // ).subscribe((fieldState) => {
+    //   console.log('fieldState-----',fieldState);
+    //   if (fieldState.value === '' || !fieldState.valid) {
+    //     return;
+    //   }
+   
+    // });
+
     // onFieldValueChange$('versionId').subscribe(fieldState => {
     //   if (fieldState.value) {
     //     getDemandList({
@@ -361,6 +385,7 @@ const EditPage = (props) => {
     Promise.all([
       getBusinessFlowList(),
       getDetailData(),
+      getPackageData()
       // getVersionList(),
     ]).then(() => {
       setDetailLoading(false);
@@ -509,8 +534,8 @@ const EditPage = (props) => {
                 title="执行方式"
                 enum={[
                   { label: '手动', value: 0 },
-                  { label: '定时', value: 1 },
-                  { label: '周期', value: 2 },
+                  // { label: '定时', value: 1 },
+                  // { label: '周期', value: 2 },
                 ]}
                 x-linkages={[
                   {
@@ -641,7 +666,7 @@ const EditPage = (props) => {
                     width: '100%',
                   },
                   min: 1,
-                  max: true ? 60 : undefined,
+                  max: packageData?.packageType === 1 ? 60 : undefined,
                   precision: 0,
                   addonAfter: <Button>分</Button>,
                 }}
@@ -660,6 +685,7 @@ const EditPage = (props) => {
                   name="threadGroupConfigMap"
                   x-component="ConfigMap"
                   x-component-props={{
+                    packageData,
                     flatTreeData: [],
                   }}
                 />
@@ -670,11 +696,12 @@ const EditPage = (props) => {
                 type="number"
                 x-component="NumberPicker"
                 x-component-props={{
-                  placeholder: '请输入',
+                  placeholder: `请输入,最大pod数量为${packageData?.maxVu / 1000 + 1}`,
                   style: {
                     width: '100%',
                   },
                   min: 1,
+                  max: packageData?.maxVu / 1000 + 1 ,
                   default: 1,
                   addonAfter: <Button>建议Pod数: -</Button>,
                   disabled: getTakinAuthority() !== 'true',
@@ -687,7 +714,7 @@ const EditPage = (props) => {
                 x-rules={[
                   {
                     required: true,
-                    message: '请输入Pod数',
+                    message: `请输入Pod数,最大pod数量为${packageData?.maxVu / 1000 + 1}`,
                   },
                 ]}
                 required

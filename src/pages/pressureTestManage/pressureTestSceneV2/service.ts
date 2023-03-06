@@ -209,6 +209,13 @@ const PressureTestSceneService = {
     const url = '/c/getDemands';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取套餐相关信息
+   */
+  async getPackageData(data) {
+    const url = '/ecloud/package/into/tenant';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestSceneService;
