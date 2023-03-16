@@ -341,15 +341,45 @@ const EditPage = (props) => {
       });
     }
 
-    // onFieldValueChange$(
-    //   '*(goal.*.tps)'
-    // ).subscribe((fieldState) => {
-    //   console.log('fieldState-----',fieldState);
-    //   if (fieldState.value === '' || !fieldState.valid) {
-    //     return;
-    //   }
-   
-    // });
+    onFieldValueChange$(
+      'config.threadGroupConfigMap.*.type'
+    ).subscribe((fieldState) => {
+      // console.log('fieldState', fieldState);
+      if (fieldState.value === '' || !fieldState.valid) {
+        return;
+      }
+      getFieldState('config.threadGroupConfigMap', (configState) => {
+        const configMap = cloneDeep(configState.value);
+        if (!configMap) {
+          return;
+        }
+        getFieldState('goal', async (state) => {
+          Object.keys(configMap || {}).forEach((groupKey) => {
+            let sum = 0;
+            const flatTreeData2 =
+              configState.props['x-component-props'].flatTreeData;
+
+            // 递归tps求和
+            const getTpsSum = (valueMap, parentId) => {
+              flatTreeData2
+                .filter((x) => x.parentId === parentId)
+                .forEach((x) => {
+                  sum += valueMap?.[x.xpathMd5]?.tps || 0;
+                  getTpsSum(valueMap, x.xpathMd5);
+                });
+              return sum;
+            };
+            // setMaxData(getTpsSum(state.value, groupKey));
+            // console.log('getTpsSum(state.value, groupKey)', getTpsSum(state.value, groupKey));
+            if (configState.value === 1 && getTpsSum(state.value, groupKey) > 100) {
+              message.error(`输入的TPS目标值超出套餐限制，最大TPS目标为${packageData?.maxVu * 2}`);
+            }
+      
+          });
+          
+        });
+      });
+    });
 
     // onFieldValueChange$('versionId').subscribe(fieldState => {
     //   if (fieldState.value) {
@@ -684,7 +714,7 @@ const EditPage = (props) => {
                 <Field
                   name="threadGroupConfigMap"
                   x-component="ConfigMap"
-                  x-component-props={{
+                  x-component-props={{    
                     packageData,
                     flatTreeData: [],
                   }}

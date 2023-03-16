@@ -13,11 +13,10 @@ import FlowPreview from './FlowPreview';
 const { Panel } = Collapse;
 
 const ConfigMap = (props: IFieldMergeState) => {
-  console.log('props', props);
   const { value = {}, schema, className, editable, path, mutators } = props;
   const componentProps = schema.getExtendsComponentProps() || {};
-  const { flatTreeData = [], packageData } = componentProps;
-  console.log('componentProps', componentProps);
+  const { flatTreeData = [], packageData , maxData }  = componentProps;
+  // console.log('maxData', maxData);
 
   const groupMap = {};
   // 取出线程组
