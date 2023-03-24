@@ -278,9 +278,9 @@ const MultiFormComponent = ({ form }) => {
             rules: [{ required: true, message: '请输入链路!' }],
           })(<Input placeholder="请输入链路名称" />)}
         </Form.Item>
-        <Form.Item >
+        {/* <Form.Item >
           API数量（生效/总量）:2/2
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item style={{ float: 'right' }}>
           <Button type="link">删除</Button>
         </Form.Item>

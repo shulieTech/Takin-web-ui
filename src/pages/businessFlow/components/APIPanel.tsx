@@ -30,7 +30,7 @@ const APIPanel: React.FC<Props> = props => {
     
   const { form , index, api, action } = props;
   const { getFieldDecorator, validateFields, getFieldValue } = form;
-  console.log('form------',form?.getFieldsValue());
+//   console.log('form------',form?.getFieldsValue());
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false,
@@ -67,7 +67,7 @@ const APIPanel: React.FC<Props> = props => {
     });
   };
 
-  console.log('api', api);
+//   console.log('api', api);
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -115,8 +115,8 @@ const APIPanel: React.FC<Props> = props => {
           <Form.Item >
           {getFieldValue(`${index}_requestUrl`)}
           </Form.Item>
-          <Form.Item>
-            <Button style={{ float: 'right' }} type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
+          <Form.Item style={{ float: 'right' }}>
+            <Button type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
           </Form.Item>
         </Form>
         } key="1">
@@ -152,7 +152,8 @@ const APIPanel: React.FC<Props> = props => {
               </Form.Item>
               <Form.Item label="允许302跳转">
                 {getFieldDecorator(`${index}_allowForward`, {
-                  initialValue: action === 'edit' ? api?.base?.allowForward : undefined,
+                  valuePropName: 'checked',
+                  initialValue: action === 'edit' ? api?.base?.allowForward : false,
                   rules: [{ required: false, message: '请输入超时时间!' }],
                 })(<Switch/>)}
               </Form.Item>
