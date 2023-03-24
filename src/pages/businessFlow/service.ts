@@ -9,6 +9,13 @@ const BusinessFlowService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取业务流程详情
+   */
+  async queryPTSDetail(data = {}) {
+    const url = '/pts/process/detail';
+    return httpGet(url, data);
+  },
+  /**
    * @name 上传jmeter文件
    */
   async uploadJmeter(data = {}) {
@@ -197,6 +204,14 @@ const BusinessFlowService = {
   async queryTestMachine(data) {
     const url = '/scenemanage/machine';
     return httpGet(url, data);
+  },
+
+  /**
+   * @name 新增PTS
+   */
+  async addPTS(data = {}) {
+    const url = '/pts/process/add';
+    return httpPost(url, data);
   },
 };
 

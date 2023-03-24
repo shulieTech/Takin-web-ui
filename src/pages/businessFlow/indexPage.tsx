@@ -79,6 +79,10 @@ const BusinessFlow: React.FC<Props> = props => {
                 {/* <Dropdown overlay={menu} placement="bottomLeft">
                   <Button type="primary">新增</Button>
                 </Dropdown> */}
+                 <Link to="/businessFlow/addPTSScene?action=add">
+                 <Button type="primary" style={{ marginRight: 8 }}>创建PTS场景</Button>
+                 </Link>
+                
                 <AddJmeterModal
                   btnText="Jmeter 扫描新增"
                   onSuccess={() => {

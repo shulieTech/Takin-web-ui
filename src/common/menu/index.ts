@@ -73,6 +73,11 @@ const menuList: MenuBean[] = [
                 title: '编辑业务流程',
                 path: '/businessFlow/details',
                 type: MenuType.NoMenu
+              },
+              {
+                title: '创建PTS场景',
+                path: '/businessFlow/addPTSScene',
+                type: MenuType.NoMenu
               }
             ]
           }

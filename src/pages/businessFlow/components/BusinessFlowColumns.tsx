@@ -174,7 +174,13 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                 >
                   编辑
                 </Link>
-              ) : (
+              ) : row[BusinessFlowBean.来源] === 3 ? (
+              <Link
+                style={{ marginRight: 8 }}
+                to={`/businessFlow/addPTSScene?action=edit&id=${row.id}`}
+              >
+              编辑
+              </Link>) : (
                 <Link
                   style={{ marginRight: 8 }}
                   to={`/businessFlow/details?id=${row.id}`}
