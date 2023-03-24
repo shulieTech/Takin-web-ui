@@ -121,7 +121,7 @@ const APIPanel: React.FC<Props> = props => {
         </Form>
         } key="1">
           <Tabs defaultActiveKey="1" >
-          <TabPane tab="基本请求信息" key="1">)
+          <TabPane tab="基本请求信息" key="1">
            <Form>
               <Form.Item label="压测URL">
                 {getFieldDecorator(`${index}_requestUrl`, {
