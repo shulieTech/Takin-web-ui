@@ -10,6 +10,55 @@ import router from 'umi/router';
 
 const getInitState = () => ({
   details: {} as any,
+  apis: [{
+    apiName: '串联链路',
+    apiType: '',
+    base: {
+      allowForward: true,
+      requestMethod: 'GET',
+      requestTimeout: 0,
+      requestUrl: ''
+    },
+    body: {
+      forms: [
+        {
+          key: '',
+          value: ''
+        }
+      ],
+      rawData: ''
+    },
+    checkAssert: {
+      asserts: [
+        {
+          checkCondition: '',
+          checkContent: '',
+          checkObject: '',
+          checkPointType: ''
+        }
+      ]
+    },
+    header: {
+      headers: [
+        {
+          key: '',
+          value: ''
+        }
+      ]
+    },
+    returnVar: {
+      vars: [
+        {
+          matchIndex: 0,
+          parseExpress: '',
+          testName: '',
+          varName: '',
+          varSource: ''
+        }
+      ]
+    }
+  }
+  ]
 });
 export type State = ReturnType<typeof getInitState>;
 const MultiFormComponent = ({ form }) => {
@@ -122,26 +171,76 @@ const MultiFormComponent = ({ form }) => {
   const addNode = () => {
     const node = [{
       apiName: '串联链路',
+      apiType: '',
       base: {
-        requestMethod: 'GET'
+        allowForward: true,
+        requestMethod: 'GET',
+        requestTimeout: 0,
+        requestUrl: ''
+      },
+      body: {
+        forms: [
+          {
+            key: '',
+            value: ''
+          }
+        ],
+        rawData: ''
+      },
+      checkAssert: {
+        asserts: [
+          {
+            checkCondition: '',
+            checkContent: '',
+            checkObject: '',
+            checkPointType: ''
+          }
+        ]
+      },
+      header: {
+        headers: [
+          {
+            key: '',
+            value: ''
+          }
+        ]
+      },
+      returnVar: {
+        vars: [
+          {
+            matchIndex: 0,
+            parseExpress: '',
+            testName: '',
+            varName: '',
+            varSource: ''
+          }
+        ]
       }
-     
-    }];
+    }
+    ];
+    if (action === 'edit') {
+      setState({
+        details: {
+          ...state?.details,
+          links: [{
+            linkName: state?.details?.links?.[0]?.linkName,
+            apis: state?.details?.links?.[0]?.apis?.concat(node)
+          }]
+        }
+      });
+      return;
+    }
     setState({
-      details: {
-        ...state?.details,
-        links: [{
-          linkName: state?.details?.links?.[0]?.linkName,
-          apis: state?.details?.links?.[0]?.apis?.concat(node)
-        }]
-      }
+      apis: state?.apis?.concat(node)
     });
+   
   };
 
-  const childForms = state?.details?.links?.[0]?.apis?.map((formItem, index) => {
-    return <APIPanel key={index} form={form} index={index} api={formItem} action={action} />;
+  const childForms = action === 'edit' ? state?.details?.links?.[0]?.apis?.map((formItem, index) => {
+    return <APIPanel key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state}/>;
+  }) : state?.apis?.map((formItem, index) => {
+    return <APIPanel key={index} form={form} index={index} api={formItem} setState={setState} state={state}/>;
   });
-
   /**
    * @name 获取线程组内容详情
    */
@@ -154,7 +253,6 @@ const MultiFormComponent = ({ form }) => {
     if (success) {
       setState({
         details: data,
-        apis: state?.details?.links?.[0]?.apis
       });
     }
   };

@@ -14,11 +14,11 @@ interface Props {
   value?: any;
   onChange?: (value: any) => void;
   state?: any;
-  dictionaryMap?: any;
   form?: any;
   index?: any;
   api?: any;
   action?: string;
+  setState?: any;
 }
 interface State {
   list: any[];
@@ -30,6 +30,7 @@ const APIPanel: React.FC<Props> = props => {
     
   const { form , index, api, action } = props;
   const { getFieldDecorator, validateFields, getFieldValue } = form;
+  console.log('form------',form?.getFieldsValue());
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false,
@@ -68,8 +69,32 @@ const APIPanel: React.FC<Props> = props => {
 
   console.log('api', api);
 
-  const handleDelete = (e)=>{
+  const handleDelete = (e) => {
     e.stopPropagation();
+    // console.log('index', index);
+    if (action === 'edit') {
+    //   console.log('props?.state?.details', props?.state?.details);
+      removeApiAtIndex(props?.state?.details, 0, index);
+    //   console.log(' removeApiAtIndex(props?.state?.details, 0, index)', removeApiAtIndex(props?.state?.details, 0, index));
+      props.setState({
+        // details: removeApiAtIndex(props?.state?.details, 0, index)
+      });
+      return; 
+    }
+    // console.log('props?.state?.apis', props?.state?.apis, index);
+
+    // const newArray = props?.state?.apis?.slice(0, index).concat(props?.state?.apis.slice(index + 1));
+    // console.log('newArray', newArray);
+    props?.state?.apis.splice(index, 1);
+    props.setState({
+    //   apis: newArray
+    });
+  };
+
+  function removeApiAtIndex(json, linkIndex, apiIndex) {
+    if (json.links && json.links[linkIndex] && json.links[linkIndex].apis) {
+      json.links[linkIndex].apis.splice(apiIndex, 1);
+    }
   }
 
   return (
@@ -80,8 +105,8 @@ const APIPanel: React.FC<Props> = props => {
             {getFieldDecorator(`${index}_apiName`, {
               initialValue: action === 'edit' ? api?.apiName : undefined,
               rules: [{ required: true, message: '请输入压测API名称!' }],
-            })(<Input placeholder="请输入压测API名称" onClick={(e)=>{
-               e.stopPropagation();
+            })(<Input placeholder="请输入压测API名称" onClick={(e) => {
+              e.stopPropagation();
             }}/>)}
           </Form.Item>
           <Form.Item >
@@ -91,12 +116,12 @@ const APIPanel: React.FC<Props> = props => {
           {getFieldValue(`${index}_requestUrl`)}
           </Form.Item>
           <Form.Item>
-            <Button style={{float:'right'}} type='link' style={{marginBottom:8}} onClick={handleDelete}>删除</Button>
+            <Button style={{ float: 'right' }} type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
           </Form.Item>
         </Form>
-        } key="1"  >
+        } key="1">
           <Tabs defaultActiveKey="1" >
-          <TabPane tab="基本请求信息" key="1">
+          <TabPane tab="基本请求信息" key="1">)
            <Form>
               <Form.Item label="压测URL">
                 {getFieldDecorator(`${index}_requestUrl`, {
