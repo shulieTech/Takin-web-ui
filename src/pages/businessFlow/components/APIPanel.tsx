@@ -34,14 +34,15 @@ const APIPanel: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false,
-    type: 'x-www-form-urlencoded'
+    type: ''
   });
 
   useEffect(() => {
     setState({
-      list: props.value?.length === 0 ? [{ key: '', value: '' }] : props.value
+      list: props.value?.length === 0 ? [{ key: '', value: '' }] : props.value,
+      type: api?.body?.rawData?'raw':'x-www-form-urlencoded'
     });
-  }, [props.value, setState]);
+  }, [api.body.rawData, props.value, setState]);
 
 //   const handleChange = (type, key, value, k) => {
 //     setState({ disabled: value.disabled });
@@ -62,6 +63,7 @@ const APIPanel: React.FC<Props> = props => {
 //   };
 
   const onChange = (e) => {
+    console.log('e.target.value', e.target.value);
     setState({
       type: e.target.value
     });
@@ -168,17 +170,17 @@ const APIPanel: React.FC<Props> = props => {
                 })(<Radio.Group onChange={onChange} >
                   <Radio value={'x-www-form-urlencoded'}>x-www-form-urlencoded</Radio>
                   <Radio value={'raw'}>raw</Radio>
-                  <Radio value={'自定义'}>自定义</Radio>
+                  {/* <Radio value={'自定义'}>自定义</Radio> */}
                 </Radio.Group>)}
               </Form.Item>
-              {state?.type === 'x-www-form-urlencoded' && 
+              {state?.type === 'x-www-form-urlencoded'  && 
               <Form.Item>
                  {getFieldDecorator(`${index}_forms`, {
                    initialValue: action === 'edit' ? api?.body?.forms : [],
                    rules: [{ required: false, message: '不能为空!' }],
                  })(<BodyTable />)}
               </Form.Item> }
-              {(state?.type === 'raw' || state?.type === '自定义') && 
+              {state?.type === 'raw'  && 
               <Form.Item>
                  {getFieldDecorator(`${index}_rawData`, {
                    initialValue: action === 'edit' ? api?.body?.rawData : undefined,
