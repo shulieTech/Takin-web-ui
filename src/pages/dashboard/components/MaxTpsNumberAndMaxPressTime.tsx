@@ -26,7 +26,7 @@ const MaxTpsNumberAndMaxPressTime: React.FC<Props> = props => {
               <span className={styles.blueline} />
               <span className={`${styles.boldTitle}`}>最大并发数量</span>
               <p className={styles.number}>
-                <Statistic value={data?.maxTpsNumber} precision={0} />
+                <Statistic value={data?.maxVu} precision={0} />
               </p>
             </div>
           </Col>
