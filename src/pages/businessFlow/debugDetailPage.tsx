@@ -63,12 +63,12 @@ const DebugDetail: React.FC<Props> = props => {
   ];
    
   return <MainPageLayout title="场景调试">
-      <Row type="flex">
-        <Col>
-        <Table style={{ width: 400 }} columns={columns} size="small" dataSource={detail?.records} pagination={false}/>
+      <Row type="flex" style={{height:'80vh',border:'1px solid #ddd'}}>
+        <Col span={8}>
+        <Table bordered={false}  columns={columns} size="small" dataSource={detail?.records} pagination={false}/>
         </Col>
-        <Col>
-        2
+        <Col  span={16}>
+         
         </Col>
       </Row>
     </MainPageLayout>;
