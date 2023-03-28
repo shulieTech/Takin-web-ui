@@ -89,7 +89,7 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                 value:
                   row[BusinessFlowBean.来源] !== null ? (
                     <Tag>
-                      {row[BusinessFlowBean.来源] === 0 ? '手工' : 'Jmeter'}
+                      {row[BusinessFlowBean.来源] === 0 ? '手工' : row[BusinessFlowBean.来源] === 3 ? 'Takin' : 'Jmeter'}
                     </Tag>
                   ) : (
                     '-'
