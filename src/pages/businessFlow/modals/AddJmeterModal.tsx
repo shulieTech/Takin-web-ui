@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { CommonForm, CommonModal, ImportFile, useStateReducer } from 'racc';
-import { Col, Collapse, Divider, Icon, Input, message, Row, Spin } from 'antd';
+import { Col, Collapse, Divider, Icon, Input, message, Row, Spin, Switch } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormDataType } from 'racc/dist/common-form/type';
 import { customColumnProps } from 'src/components/custom-table/utils';
@@ -71,13 +71,13 @@ const AddJmeterModal: React.FC<Props> = (props) => {
 
   useEffect(() => {
     setScriptFileInfo(detailData.scriptFile || {});
-  }, [JSON.stringify(detailData.scriptFile)]);
+  }, [detailData.scriptFile]);
 
   useEffect(() => {
     if (scriptFileInfo.id || scriptFileInfo.uploadId) {
       queryPluginList();
     }
-  }, [scriptFileInfo.id, scriptFileInfo.uploadId]);
+  }, [queryPluginList, scriptFileInfo.id, scriptFileInfo.uploadId]);
 
   const getColumns = (): ColumnProps<any>[] => {
     return [
@@ -161,6 +161,15 @@ const AddJmeterModal: React.FC<Props> = (props) => {
   const getFormData = (): FormDataType[] => {
     const fieldsArr = [
       {
+        key: 'source',
+        label: '允许在线调试',
+        node: <Switch />,
+        options: {
+          initialValue: true,
+          valuePropName: 'checked',
+        },
+      },
+      {
         key: 'appName',
         label: '上传文件',
         node: (
@@ -240,6 +249,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
         } = await BusinessFlowService.saveAndAnalysis({
           ...values,
           id: props.action === 'edit' ? props.id : null,
+          source: values?.source ? '3' : null,
           scriptFile: {
             ...(state.fileList && state.fileList[0]),
             id: state.fileList && state.fileList[0] && state.fileList[0].id,

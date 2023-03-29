@@ -174,13 +174,7 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                 >
                   编辑
                 </Link>
-              ) : row[BusinessFlowBean.来源] === 3 ? (
-              <Link
-                style={{ marginRight: 8 }}
-                to={`/businessFlow/addPTSScene?action=edit&id=${row.id}`}
-              >
-              编辑
-              </Link>) : (
+              )  : (
                 <Link
                   style={{ marginRight: 8 }}
                   to={`/businessFlow/details?id=${row.id}`}
@@ -188,7 +182,7 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                   编辑
                 </Link>
               )}
-            </AuthorityBtn>
+            </AuthorityBtn> 
             <AuthorityBtn
               isShow={
                 btnAuthority &&
@@ -225,6 +219,20 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
                 下载
               </Button>
             </AuthorityBtn>
+            {row[BusinessFlowBean.来源] === 3 &&  <AuthorityBtn
+              isShow={
+                btnAuthority &&
+                btnAuthority.businessFlow_3_update &&
+                row.canEdit
+              }
+            >
+              <Link
+                style={{ marginRight: 8 }}
+                to={`/businessFlow/addPTSScene?action=edit&id=${row.id}`}
+              >
+              在线调试
+              </Link>
+            </AuthorityBtn>}
           </Fragment>
         );
       }

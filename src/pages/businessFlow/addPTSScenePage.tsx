@@ -7,6 +7,7 @@ import {  useStateReducer } from 'racc';
 import APIPanel from './components/APIPanel';
 import BusinessFlowService from './service';
 import router from 'umi/router';
+import { getUrlParams } from 'src/utils/utils';
 
 const getInitState = () => ({
   details: {} as any,
@@ -136,27 +137,91 @@ const MultiFormComponent = ({ form }) => {
     });
   };
 
+  const handleDebug = async () => {
+    validateFields(async (err, values) => {
+      if (!err) {
+        const formValues = Object.keys(values).reduce((acc, key) => {
+          if (key.includes('_')) {
+            const [formIndex, field] = key.split('_');
+            const index = parseInt(formIndex.replace('form', ''), 10);
+
+            if (!acc[index]) {
+              acc[index] = {};
+            }
+
+            acc[index][field] = values[key];
+          }
+          return acc;
+        }, []);
+        const newFormValues = formValues?.map((item, k) => {
+          return {
+            apiName: item?.apiName,
+            base: {
+              allowForward: item?.allowForward,
+              requestMethod: item?.requestMethod,
+              requestTimeout: item?.requestTimeout,
+              requestUrl: item?.requestUrl
+            },
+            body: {
+              forms: item?.forms,
+              rawData: item?.rawData
+            },
+            checkAssert: {
+              asserts: item?.asserts
+            },
+            header: {
+              headers: item?.headers
+            },
+            returnVar: {
+              vars: item?.vars
+            }
+          };
+        });
+
+        const result = {
+          processName: values?.processName,
+          links: [
+            {linkName: values?.linkName,
+              apis: newFormValues}
+          ]};
+        if (action === 'edit') {
+          const msg = await BusinessFlowService.addPTS({ id, ...result });
+          if (msg?.data?.success) {
+            const res = await BusinessFlowService.debugPTS({ id });
+            if (res?.data?.success) {
+              router.push(`/businessFlow/debugDetail?id=${id}`);
+            }
+          } else {
+            message.error('保存失败');
+          }
+          return;
+        }  
+        const {
+        data: { success, data }
+      } = await BusinessFlowService.addPTS(result);
+        if (success) {
+          const res = await BusinessFlowService.debugPTS({ id: data?.id });
+          if (res?.data?.success) {
+            router.push(`/businessFlow/debugDetail?id=${data?.id}`);
+          }
+        } else {
+          message.error('保存失败');
+        }
+      }
+    });
+  };
+
+  const handleOnlyDebug = async () => {
+    const res = await BusinessFlowService.debugPTS({ id });
+    if (res?.data?.success) {
+      router.push(`/businessFlow/debugDetail?id=${id}`);
+    }
+  };
+
   function removeApiAtIndex(json, linkIndex, apiIndex) {
     if (json.links && json.links[linkIndex] && json.links[linkIndex].apis) {
       json.links[linkIndex].apis.splice(apiIndex, 1);
     }
-  }
-
-  function getUrlParams(url) {
-    const queryString = url.split('?')[1];
-    if (!queryString) {
-      return {};
-    }
-  
-    const params = {};
-    const queryParams = queryString.split('&');
-  
-    queryParams.forEach((param) => {
-      const [key, value] = param.split('=');
-      params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-    });
-  
-    return params;
   }
   
   const id = getUrlParams(window.location.href)?.id;
@@ -269,7 +334,7 @@ const MultiFormComponent = ({ form }) => {
         </Form.Item>
       </Form>
       <Tabs defaultActiveKey="1" type="card" style={{ paddingBottom: 50 }}>
-    <TabPane tab="场景配置" key="1">
+    <TabPane tab="链路配置" key="1">
       <Form style={{ border: '1px solid #ddd', padding: '8px 16px' }}>
       <Form layout="inline">
         <Form.Item >
@@ -293,12 +358,17 @@ const MultiFormComponent = ({ form }) => {
     </TabPane>
   </Tabs>
   <div style={{ position: 'fixed', bottom: 0, padding: 8, background: '#fff', width: '100%' }}>
-      <Button type="primary" onClick={handleSubmit} style={{ marginRight: 8 }}>
-        保存去压测
+      <Button type="primary" onClick={handleDebug} style={{ marginRight: 8 }}>
+        保存并调试
       </Button>
       <Button type="primary" onClick={handleSubmit}>
-        保存配置
+        仅保存
       </Button>
+
+      {action === 'edit' && <Button type="primary" onClick={handleOnlyDebug} style={{ marginLeft: 8 }}>
+        仅调试
+      </Button>}
+     
       </div>
       </div>
     </MainPageLayout>

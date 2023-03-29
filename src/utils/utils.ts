@@ -272,3 +272,20 @@ export const getTableSortQuery = (sorter) => {
     }[sorter.order],
   };
 };
+
+export function getUrlParams(url) {
+  const queryString = url.split('?')[1];
+  if (!queryString) {
+    return {};
+  }
+
+  const params = {};
+  const queryParams = queryString.split('&');
+
+  queryParams.forEach((param) => {
+    const [key, value] = param.split('=');
+    params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+  });
+
+  return params;
+}

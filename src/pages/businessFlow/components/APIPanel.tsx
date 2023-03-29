@@ -34,7 +34,7 @@ const APIPanel: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false,
-    type: ''
+    type: 'raw'
   });
 
   useEffect(() => {
@@ -165,28 +165,18 @@ const APIPanel: React.FC<Props> = props => {
             <Form>
               <Form.Item label="Content-Type">
                 {getFieldDecorator(`${index}_type`, {
-                  initialValue: action === 'edit' ? api?.body?.rawData ? 'raw' : 'x-www-form-urlencoded' : undefined,
+                  initialValue: action === 'edit' ? api?.body?.rawData ? 'raw' : 'x-www-form-urlencoded' : 'raw',
                   rules: [{ required: true, message: 'url不能为空!' }],
                 })(<Radio.Group onChange={onChange} >
-                  <Radio value={'x-www-form-urlencoded'}>x-www-form-urlencoded</Radio>
                   <Radio value={'raw'}>raw</Radio>
-                  {/* <Radio value={'自定义'}>自定义</Radio> */}
                 </Radio.Group>)}
               </Form.Item>
-              {state?.type === 'x-www-form-urlencoded'  && 
-              <Form.Item>
-                 {getFieldDecorator(`${index}_forms`, {
-                   initialValue: action === 'edit' ? api?.body?.forms : [],
-                   rules: [{ required: false, message: '不能为空!' }],
-                 })(<BodyTable />)}
-              </Form.Item> }
-              {state?.type === 'raw'  && 
               <Form.Item>
                  {getFieldDecorator(`${index}_rawData`, {
                    initialValue: action === 'edit' ? api?.body?.rawData : undefined,
                    rules: [{ required: false, message: '不能为空!' }],
                  })(<Input.TextArea style={{ height: 100 }} placeholder="如果服务端（被压测端）需要强校验换行符（\n）或者待加密的部分需要有换行符，请使用unescape解码函数对包含换行符的字符串进行反转义：${sys.escapeJava(text)}"/>)}
-              </Form.Item> }
+              </Form.Item> 
             </Form>
           </TabPane>}
       

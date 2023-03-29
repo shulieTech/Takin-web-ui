@@ -213,6 +213,22 @@ const BusinessFlowService = {
     const url = '/pts/process/add';
     return httpPost(url, data);
   },
+
+  /**
+   * @name 调试场景
+   */
+  async debugPTS(data = {}) {
+    const url = '/pts/process/debug';
+    return httpPost(url, data);
+  },
+
+  /**
+   * @name 调试列表明细
+   */
+  async debugDetail(data = {}) {
+    const url = '/pts/process/debug/record/list';
+    return httpGet(url, data);
+  },
 };
 
 export default BusinessFlowService;
