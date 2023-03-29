@@ -227,8 +227,7 @@ const MultiFormComponent = ({ form }) => {
           if (msg?.data?.success) {
             const res = await BusinessFlowService.debugPTS({ id });
             if (res?.data?.success) {
-              // router.push(`/businessFlow/debugDetail?id=${id}`);
-              window.open(`/businessFlow/debugDetail?id=${id}`, '_blank');
+              router.push(`/businessFlow/debugDetail?id=${id}`);
             }
           } else {
             message.error('保存失败');
