@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect } from 'react';
-import { Form, Input, Button, Tabs, Collapse,  message } from 'antd';
+import { Form, Input, Button, Tabs, Collapse,  message, Dropdown, Menu, Icon } from 'antd';
 import { MainPageLayout } from 'src/components/page-layout';
 import {  useStateReducer } from 'racc';
 
@@ -8,6 +8,7 @@ import APIPanel from './components/APIPanel';
 import BusinessFlowService from './service';
 import router from 'umi/router';
 import { getUrlParams } from 'src/utils/utils';
+import CsvForm from './components/CsvForm';
 
 const getInitState = () => ({
   details: {} as any,
@@ -59,16 +60,19 @@ const getInitState = () => ({
       ]
     }
   }
-  ]
+  ],
+  csvs: []
 });
 export type State = ReturnType<typeof getInitState>;
 const MultiFormComponent = ({ form }) => {
   const { getFieldDecorator, validateFields, getFieldValue } = form;
   const { TabPane } = Tabs;
+  const { Panel } = Collapse;
   const [state, setState] = useStateReducer(getInitState());
 
   const handleSubmit = async () => {
     validateFields(async (err, values) => {
+      console.log('values', values);
       if (!err) {
         const formValues = Object.keys(values).reduce((acc, key) => {
           if (key.includes('_')) {
@@ -83,6 +87,7 @@ const MultiFormComponent = ({ form }) => {
           }
           return acc;
         }, []);
+        console.log('formValues', formValues);
         const newFormValues = formValues?.map((item, k) => {
           return {
             apiName: item?.apiName,
@@ -108,12 +113,29 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
+        const csvs = formValues?.filter((item1, k1) => {
+          if (item1?.fileName) {
+            return item1;
+          }
+        })?.map((ite, j)=>{
+          return {
+            fileName: ite?.fileName,
+            params: ite?.params,
+            ingoreFirstLine: ite?.ingoreFirstLine
+          };
+        });
+
         const result = {
           processName: values?.processName,
           links: [
             {linkName: values?.linkName,
               apis: newFormValues}
-          ]};
+          ],
+          dataSource: {
+            csvs
+          }
+        };
+           
         if (action === 'edit') {
           const msg = await BusinessFlowService.addPTS({ id, ...result });
           if (msg?.data?.success) {
@@ -178,18 +200,35 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
+        const csvs = formValues?.filter((item1, k1) => {
+          if (item1?.fileName) {
+            return item1;
+          }
+        })?.map((ite, j)=>{
+          return {
+            fileName: ite?.fileName,
+            params: ite?.params,
+            ingoreFirstLine: ite?.ingoreFirstLine
+          };
+        });
+
         const result = {
           processName: values?.processName,
           links: [
             {linkName: values?.linkName,
               apis: newFormValues}
-          ]};
+          ],
+          dataSource: {
+            csvs
+          }
+        };
         if (action === 'edit') {
           const msg = await BusinessFlowService.addPTS({ id, ...result });
           if (msg?.data?.success) {
             const res = await BusinessFlowService.debugPTS({ id });
             if (res?.data?.success) {
-              router.push(`/businessFlow/debugDetail?id=${id}`);
+              // router.push(`/businessFlow/debugDetail?id=${id}`);
+              window.open(`/businessFlow/debugDetail?id=${id}`, '_blank');
             }
           } else {
             message.error('保存失败');
@@ -217,13 +256,7 @@ const MultiFormComponent = ({ form }) => {
       router.push(`/businessFlow/debugDetail?id=${id}`);
     }
   };
-
-  function removeApiAtIndex(json, linkIndex, apiIndex) {
-    if (json.links && json.links[linkIndex] && json.links[linkIndex].apis) {
-      json.links[linkIndex].apis.splice(apiIndex, 1);
-    }
-  }
-  
+ 
   const id = getUrlParams(window.location.href)?.id;
   const action = getUrlParams(window.location.href)?.action;
 
@@ -298,7 +331,28 @@ const MultiFormComponent = ({ form }) => {
     setState({
       apis: state?.apis?.concat(node)
     });
-   
+  };
+
+  const handleAddCsv = () => {
+    const csv = [{
+      fileName: '',
+      ingoreFirstLine: true,
+      params: ''
+    }];
+    if (action === 'edit') {
+      setState({
+        details: {
+          ...state?.details,
+          dataSource: {
+            csvs: state?.details?.dataSource?.csvs?.concat(csv)
+          },
+        }
+      });
+      return;
+    }
+    setState({
+      csvs: state?.csvs?.concat(csv)
+    });
   };
 
   const childForms = action === 'edit' ? state?.details?.links?.[0]?.apis?.map((formItem, index) => {
@@ -321,6 +375,7 @@ const MultiFormComponent = ({ form }) => {
       });
     }
   };
+   
 
   return (
     <MainPageLayout>
@@ -335,6 +390,22 @@ const MultiFormComponent = ({ form }) => {
       </Form>
       <Tabs defaultActiveKey="1" type="card" style={{ paddingBottom: 50 }}>
     <TabPane tab="链路配置" key="1">
+    <Collapse defaultActiveKey={['1']} style={{ marginBottom: 12 }}>
+    <Panel header="全局配置" key="1" >
+       <Tabs type="card">
+    <TabPane tab="CSV数据" key="1">
+    { action === 'edit' ? state?.details?.dataSource?.csvs?.map((item, k) => {
+      return <CsvForm key={k} form={form} action={action} csv={item} index={k} setState={setState} state={state}/>;
+    }) : state?.csvs?.map((ite, k1) => {
+      return <CsvForm key={k1} form={form} action={action} csv={ite}  index={k1} setState={setState} state={state}/>;
+    })}
+      <Button onClick={() => { handleAddCsv(); }}>添加CSV数据</Button>
+    </TabPane>
+  </Tabs>
+
+    </Panel>
+   
+  </Collapse>
       <Form style={{ border: '1px solid #ddd', padding: '8px 16px' }}>
       <Form layout="inline">
         <Form.Item >

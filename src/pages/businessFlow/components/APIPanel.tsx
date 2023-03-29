@@ -63,13 +63,10 @@ const APIPanel: React.FC<Props> = props => {
 //   };
 
   const onChange = (e) => {
-    console.log('e.target.value', e.target.value);
     setState({
       type: e.target.value
     });
   };
-
-//   console.log('api', api);
 
   const handleDelete = (e) => {
     e.stopPropagation();

@@ -229,6 +229,13 @@ const BusinessFlowService = {
     const url = '/pts/process/debug/record/list';
     return httpGet(url, data);
   },
+  /**
+   * @name 调试日志
+   */
+  async debugLog(data = {}) {
+    const url = '/pts/process/debug/log';
+    return httpGet(url, data);
+  },
 };
 
 export default BusinessFlowService;

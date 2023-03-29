@@ -4,6 +4,7 @@ import { Button, Col, Collapse, Modal, Row, Table, Tabs } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { MainPageLayout } from 'src/components/page-layout';
 import { getUrlParams } from 'src/utils/utils';
+import { router } from 'umi';
 import BusinessFlowService from './service';
 
 interface Props {}
@@ -15,6 +16,7 @@ const DebugDetail: React.FC<Props> = props => {
   const [detail, setDetail] = useState({});
   const [visible, setVisible] = useState(false);
   const [index, setIndex] = useState(0);
+  const [debugLog, setDebugLog] = useState();
   const id = getUrlParams(window.location.href)?.id;
 
   useEffect(() => {
@@ -37,6 +39,18 @@ const DebugDetail: React.FC<Props> = props => {
       if (data?.hasResult) {
         setDetail(data);
       }
+    }
+  };
+
+  /**
+   * @name 获取调试日志
+   */
+  const queryDebugLog = async () => {
+    const {
+      data: { success, data }
+    } = await BusinessFlowService.debugLog({ id });
+    if (success) {
+      setDebugLog(data);
     }
   };
 
@@ -69,7 +83,10 @@ const DebugDetail: React.FC<Props> = props => {
     },
   ];
   
-  return(<MainPageLayout title="场景调试">
+  return(<MainPageLayout title={<span>业务流程调试 <Button onClick={() => {
+    setVisible(true);
+    queryDebugLog();
+  }} type="link">查看日志</Button> </span>} extra={<Button onClick={() => {router.push(`/businessFlow/addPTSScene?action=edit&id=${id}`); }}>返回</Button>}>
       <Row type="flex" style={{ height: '80vh', border: '1px solid #ddd', marginTop: 8 }}>
         <Col span={10}>
         <Table 
@@ -95,9 +112,7 @@ const DebugDetail: React.FC<Props> = props => {
               <Panel header="General" key="1">
                 <div><span style={{ fontWeight: 500 }}>Request URL：</span><span>{item?.detail?.general?.requestUrl || '-'}</span></div>
                 <div><span style={{ fontWeight: 500 }}>Request Method：</span><span>{item?.detail?.general?.requestMethod || '-'}</span></div>
-                <div><span style={{ fontWeight: 500 }}>Response Code：</span><span>{item?.detail?.general?.responseCode || '-'}</span>{item?.detail?.general?.responseCode === 500 && <Button onClick={() => {setVisible(true); }} type="link">常见错误码解读</Button>} </div>
-                <div><span style={{ fontWeight: 500 }}>Export Content：</span><span>{item?.detail?.general?.exportContent || '-'}</span></div>
-                <div><span style={{ fontWeight: 500 }}>Check Result：</span><span>{item?.detail?.general?.checkResult || '-'}</span></div>
+                <div><span style={{ fontWeight: 500 }}>Response Code：</span><span>{item?.detail?.general?.responseCode || '-'}</span> </div>
                 <Tabs  type="card">
       <TabPane tab="请求详情" key="1">
       <Collapse key={k} defaultActiveKey={['1']} >
@@ -117,6 +132,11 @@ const DebugDetail: React.FC<Props> = props => {
               <Panel header="Response Body结构化" key="2">
                 <div>{item?.detail?.responseData?.responseBody}</div>
               </Panel>
+              <Panel header="断言" key="3">
+                <div>{item?.detail?.responseData?.asserts?.map((ite: any, k) => {
+                  return <div key={k}><span>{ite?.assertName}{ite?.success ? '成功' : '失败'}</span>{!ite?.success && <span>,{ite?.failureMessage}</span>}</div>;
+                })}</div>
+              </Panel>
               </Collapse>
       </TabPane>
     </Tabs>
@@ -128,8 +148,10 @@ const DebugDetail: React.FC<Props> = props => {
           })}
         </Col>
       </Row>
-      <Modal visible={visible} title="常见错误码解读" footer={null}>
-        222
+      <Modal width="90%" bodyStyle={{ height: 500, overflow: 'scroll' }} visible={visible} title="调试日志" footer={null} onCancel={() => {
+        setVisible(false);
+      }}>
+        <pre>{debugLog}</pre>
       </Modal>
     </MainPageLayout>);
 };
