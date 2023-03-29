@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect, useState } from 'react';
 import { CommonForm, CommonModal, ImportFile, useStateReducer } from 'racc';
 import { Col, Collapse, Divider, Icon, Input, message, Row, Spin, Switch } from 'antd';
@@ -77,7 +78,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
     if (scriptFileInfo.id || scriptFileInfo.uploadId) {
       queryPluginList();
     }
-  }, [queryPluginList, scriptFileInfo.id, scriptFileInfo.uploadId]);
+  }, [scriptFileInfo.id, scriptFileInfo.uploadId]);
 
   const getColumns = (): ColumnProps<any>[] => {
     return [
