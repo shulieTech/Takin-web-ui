@@ -59,10 +59,10 @@ const ParamsTable: React.FC<Props> = props => {
                 value={text}
                 dataSource={[
                     { label: 'Body:JSON', value: 'Body:JSON' },
-                    { label: 'Body:TEXT', value: 'Body:TEXT' },
+                    // { label: 'Body:TEXT', value: 'Body:TEXT' },
                     { label: 'Header:K/V', value: 'Header:K/V' },
-                    { label: 'Cookie:K/V', value: 'Cookie:K/V' },
-                    { label: '响应状态码', value: '响应状态码' },
+                    // { label: 'Cookie:K/V', value: 'Cookie:K/V' },
+                    // { label: '响应状态码', value: '响应状态码' },
                 ]}
                 style={{ width: 150 }}
                 onChange={value =>

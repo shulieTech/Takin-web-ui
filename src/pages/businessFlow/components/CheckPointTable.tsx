@@ -44,7 +44,7 @@ const CheckPointTable: React.FC<Props> = props => {
                 value={text}
                 dataSource={[
                     { label: '响应Body', value: '响应Body' },
-                    { label: '响应header', value: '响应header' },
+                    // { label: '响应header', value: '响应header' },
                     { label: '响应状态码', value: '响应状态码' },
                     { label: '出参', value: '出参' },
                 ]}
@@ -82,17 +82,17 @@ const CheckPointTable: React.FC<Props> = props => {
                 dropdownMatchSelectWidth={false}
                 value={text}
                 dataSource={[
-                    { label: '大于', value: '大于' },
-                    { label: '大于等于', value: '大于等于' },
-                    { label: '小于', value: '小于' },
-                    { label: '小于等于', value: '小于等于' },
+                    // { label: '大于', value: '大于' },
+                    // { label: '大于等于', value: '大于等于' },
+                    // { label: '小于', value: '小于' },
+                    // { label: '小于等于', value: '小于等于' },
                     { label: '等于', value: '等于' },
                     { label: '包含', value: '包含' },
-                    { label: '不包含', value: '不包含' },
-                    { label: '属于', value: '属于' },
-                    { label: '不属于', value: '不属于' },
-                    { label: '存在', value: '存在' },
-                    { label: '不存在', value: '不存在' },
+                    // { label: '不包含', value: '不包含' },
+                    // { label: '属于', value: '属于' },
+                    // { label: '不属于', value: '不属于' },
+                    // { label: '存在', value: '存在' },
+                    // { label: '不存在', value: '不存在' },
                     { label: '正则匹配', value: '正则匹配' },
                 ]}
                 style={{ width: 150 }}

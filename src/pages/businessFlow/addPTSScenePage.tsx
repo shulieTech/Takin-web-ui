@@ -326,11 +326,11 @@ const MultiFormComponent = ({ form }) => {
     <MainPageLayout>
       <div style={{ width: '100%' }}>
       <Form layout="inline">
-        <Form.Item label="场景名称">
+        <Form.Item label="业务流程名称">
           {getFieldDecorator('processName', {
             initialValue: action === 'edit' ? state?.details?.processName : undefined,
-            rules: [{ required: true, message: '请输入场景名称!' }],
-          })(<Input placeholder="请输入场景名称" />)}
+            rules: [{ required: true, message: '请输入业务流程名称!' }],
+          })(<Input placeholder="请输入业务流程名称" />)}
         </Form.Item>
       </Form>
       <Tabs defaultActiveKey="1" type="card" style={{ paddingBottom: 50 }}>
@@ -339,7 +339,7 @@ const MultiFormComponent = ({ form }) => {
       <Form layout="inline">
         <Form.Item >
           {getFieldDecorator('linkName', {
-            initialValue: action === 'edit' ? state?.details?.links?.[0]?.linkName : undefined,
+            initialValue: action === 'edit' ? state?.details?.links?.[0]?.linkName : '链路名称',
             rules: [{ required: true, message: '请输入链路!' }],
           })(<Input placeholder="请输入链路名称" />)}
         </Form.Item>
