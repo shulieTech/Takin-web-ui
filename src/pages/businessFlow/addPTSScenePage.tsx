@@ -435,9 +435,9 @@ const MultiFormComponent = ({ form }) => {
         仅保存
       </Button>
 
-      {action === 'edit' && <Button type="primary" onClick={handleOnlyDebug} style={{ marginLeft: 8 }}>
+      {/* {action === 'edit' && <Button type="primary" onClick={handleOnlyDebug} style={{ marginLeft: 8 }}>
         仅调试
-      </Button>}
+      </Button>} */}
      
       </div>
       </div>

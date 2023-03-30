@@ -61,9 +61,9 @@ const DebugDetail: React.FC<Props> = props => {
       key: 'apiName',
     },
     {
-      title: '请求时间',
-      dataIndex: 'requestTime',
-      key: 'requestTime',
+      title: '请求耗时',
+      dataIndex: 'requestCost',
+      key: 'requestCost',
     },
     {
       title: '响应状态',
