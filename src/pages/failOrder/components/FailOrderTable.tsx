@@ -5,7 +5,7 @@
 import React from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import { customColumnProps } from 'src/components/custom-table/utils';
-import { Badge } from 'antd';
+import { Badge, Button } from 'antd';
  
 const getFailOrderColumns = (state, setState): ColumnProps<any>[] => {
   return [
@@ -74,7 +74,14 @@ const getFailOrderColumns = (state, setState): ColumnProps<any>[] => {
       render: (text) => {
         return text === '0' ? '未处理' : text === '1' ? '已处理' : '-';
       }
-
+    },
+    {
+      ...customColumnProps,
+      title: '操作',
+      dataIndex: 'action',
+      render: (text, record) => {
+        return  record?.status === '0' ? <Button>人工处理</Button> : <Button type="link">人工处理</Button>;
+      }
     },
   ];
 };
