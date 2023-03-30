@@ -5,9 +5,23 @@
 import React from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import { customColumnProps } from 'src/components/custom-table/utils';
-import { Badge, Button } from 'antd';
+import { Badge, Button, message, Popconfirm } from 'antd';
+import FailOrderService from '../service';
  
 const getFailOrderColumns = (state, setState): ColumnProps<any>[] => {
+
+  const confirm = async(id) => {
+    const {
+      data: { data, success }
+    } = await FailOrderService.failDeal({ id });
+    if (success) {
+      message.success('人工处理成功!');
+      setState({
+        isReload: !state?.isReload
+      });
+    }
+  };
+
   return [
     {
       ...customColumnProps,
@@ -80,7 +94,14 @@ const getFailOrderColumns = (state, setState): ColumnProps<any>[] => {
       title: '操作',
       dataIndex: 'action',
       render: (text, record) => {
-        return  record?.status === '0' ? <Button>人工处理</Button> : <Button type="link">人工处理</Button>;
+        return  record?.status === '0' ? <Popconfirm
+        title="确认处理完成?"
+        onConfirm={() => confirm(record?.id)}
+        okText="确认"
+        cancelText="取消"
+      >
+        <Button type="link">人工处理</Button>
+      </Popconfirm> : '-';
       }
     },
   ];
