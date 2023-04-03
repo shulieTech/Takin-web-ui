@@ -16,12 +16,20 @@ const BusinessFlowService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取JavaRequest详情
+   */
+  async queryJavaRequestDetail(data = {}) {
+    const url = '/pts/javaRequest/detail';
+    return httpGet(url, data);
+  },
+  /**
    * @name 上传jmeter文件
    */
   async uploadJmeter(data = {}) {
     const url = '/file/upload';
     return httpPost(url, data);
   },
+
   /**
    * @name 保存jmeter并解析
    */

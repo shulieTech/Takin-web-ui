@@ -9,12 +9,14 @@ import BusinessFlowService from './service';
 import router from 'umi/router';
 import { getUrlParams } from 'src/utils/utils';
 import CsvForm from './components/CsvForm';
+import IB2Node from './components/IB2Node';
 
 const getInitState = () => ({
   details: {} as any,
+  javaRequestDetails: {} as any,
   apis: [{
     apiName: '串联链路',
-    apiType: '',
+    apiType: 'HTTP',
     base: {
       allowForward: true,
       requestMethod: 'GET',
@@ -72,7 +74,6 @@ const MultiFormComponent = ({ form }) => {
 
   const handleSubmit = async () => {
     validateFields(async (err, values) => {
-      console.log('values', values);
       if (!err) {
         const formValues = Object.keys(values).reduce((acc, key) => {
           if (key.includes('_')) {
@@ -89,35 +90,56 @@ const MultiFormComponent = ({ form }) => {
         }, []);
         console.log('formValues', formValues);
         const newFormValues = formValues?.map((item, k) => {
-          return {
-            apiName: item?.apiName,
-            base: {
-              allowForward: item?.allowForward,
-              requestMethod: item?.requestMethod,
-              requestTimeout: item?.requestTimeout,
-              requestUrl: item?.requestUrl
-            },
-            body: {
-              forms: item?.forms,
-              rawData: item?.rawData
-            },
-            checkAssert: {
-              asserts: item?.asserts
-            },
-            header: {
-              headers: item?.headers
-            },
-            returnVar: {
-              vars: item?.vars
-            }
-          };
+          if (item?.apiType === 'HTTP') {
+            return {
+              apiName: item?.apiName,
+              apiType: item?.apiType,
+              base: {
+                allowForward: item?.allowForward,
+                requestMethod: item?.requestMethod,
+                requestTimeout: item?.requestTimeout,
+                requestUrl: item?.requestUrl
+              },
+              body: {
+                forms: item?.forms,
+                rawData: item?.rawData
+              },
+              checkAssert: {
+                asserts: item?.asserts
+              },
+              header: {
+                headers: item?.headers
+              },
+              returnVar: {
+                vars: item?.vars
+              }
+            };
+          }
+          if (item?.apiType === 'JAVA') {
+            return {
+              apiName: item?.apiName,
+              apiType: item?.apiType,
+              base: {
+                requestUrl: item?.requestUrl
+              },
+              param: {
+                params: item?.params
+              }
+            };
+          }
+       
+        });
+        const apisArr = newFormValues?.filter((fitem, fk) => {
+          if (fitem?.apiName) {
+            return fitem;
+          }
         });
 
         const csvs = formValues?.filter((item1, k1) => {
           if (item1?.fileName) {
             return item1;
           }
-        })?.map((ite, j)=>{
+        })?.map((ite, j) => {
           return {
             fileName: ite?.fileName,
             params: ite?.params,
@@ -129,12 +151,13 @@ const MultiFormComponent = ({ form }) => {
           processName: values?.processName,
           links: [
             {linkName: values?.linkName,
-              apis: newFormValues}
+              apis: apisArr}
           ],
           dataSource: {
             csvs
           }
         };
+        console.log('resiult', result);
            
         if (action === 'edit') {
           const msg = await BusinessFlowService.addPTS({ id, ...result });
@@ -176,35 +199,52 @@ const MultiFormComponent = ({ form }) => {
           return acc;
         }, []);
         const newFormValues = formValues?.map((item, k) => {
-          return {
-            apiName: item?.apiName,
-            base: {
-              allowForward: item?.allowForward,
-              requestMethod: item?.requestMethod,
-              requestTimeout: item?.requestTimeout,
-              requestUrl: item?.requestUrl
-            },
-            body: {
-              forms: item?.forms,
-              rawData: item?.rawData
-            },
-            checkAssert: {
-              asserts: item?.asserts
-            },
-            header: {
-              headers: item?.headers
-            },
-            returnVar: {
-              vars: item?.vars
-            }
-          };
-        });
+          if (item?.apiType === 'HTTP') {
+            return {
+              apiName: item?.apiName,
+              apiType: item?.apiType,
+              base: {
+                allowForward: item?.allowForward,
+                requestMethod: item?.requestMethod,
+                requestTimeout: item?.requestTimeout,
+                requestUrl: item?.requestUrl
+              },
+              body: {
+                forms: item?.forms,
+                rawData: item?.rawData
+              },
+              checkAssert: {
+                asserts: item?.asserts
+              },
+              header: {
+                headers: item?.headers
+              },
+              returnVar: {
+                vars: item?.vars
+              }
+            };
+          }
+        
+          if (item?.apiType === 'JAVA') {
+            return {
+              apiName: item?.apiName,
+              apiType: item?.apiType,
+              base: {
+                requestUrl: item?.requestUrl
+              },
+              param: {
+                params: item?.params
+              }
+            };
+          }
 
+        });
+        
         const csvs = formValues?.filter((item1, k1) => {
           if (item1?.fileName) {
             return item1;
           }
-        })?.map((ite, j)=>{
+        })?.map((ite, j) => {
           return {
             fileName: ite?.fileName,
             params: ite?.params,
@@ -222,6 +262,7 @@ const MultiFormComponent = ({ form }) => {
             csvs
           }
         };
+     
         if (action === 'edit') {
           const msg = await BusinessFlowService.addPTS({ id, ...result });
           if (msg?.data?.success) {
@@ -265,56 +306,74 @@ const MultiFormComponent = ({ form }) => {
     }
   }, []);
  
-  const addNode = () => {
-    const node = [{
-      apiName: '串联链路',
-      apiType: '',
-      base: {
-        allowForward: true,
-        requestMethod: 'GET',
-        requestTimeout: 0,
-        requestUrl: ''
-      },
-      body: {
-        forms: [
-          {
-            key: '',
-            value: ''
-          }
-        ],
-        rawData: ''
-      },
-      checkAssert: {
-        asserts: [
-          {
-            checkCondition: '',
-            checkContent: '',
-            checkObject: '',
-            checkPointType: ''
-          }
-        ]
-      },
-      header: {
-        headers: [
-          {
-            key: '',
-            value: ''
-          }
-        ]
-      },
-      returnVar: {
-        vars: [
-          {
-            matchIndex: 0,
-            parseExpress: '',
-            testName: '',
-            varName: '',
-            varSource: ''
-          }
-        ]
+  const addNode = (type, defaultName?) => {
+    let node = [];
+    if (type === 'HTTP') {
+      node = [{
+        apiName: '串联链路',
+        apiType: type,
+        base: {
+          allowForward: true,
+          requestMethod: 'GET',
+          requestTimeout: 0,
+          requestUrl: ''
+        },
+        body: {
+          forms: [
+            {
+              key: '',
+              value: ''
+            }
+          ],
+          rawData: ''
+        },
+        checkAssert: {
+          asserts: [
+            {
+              checkCondition: '',
+              checkContent: '',
+              checkObject: '',
+              checkPointType: ''
+            }
+          ]
+        },
+        header: {
+          headers: [
+            {
+              key: '',
+              value: ''
+            }
+          ]
+        },
+        returnVar: {
+          vars: [
+            {
+              matchIndex: 0,
+              parseExpress: '',
+              testName: '',
+              varName: '',
+              varSource: ''
+            }
+          ]
+        }
       }
+      ];
     }
-    ];
+    if (type === 'JAVA') {
+      node = [{
+        apiName: '串联链路',
+        apiType: type,
+        base: {
+          requestUrl: defaultName
+        },
+        param: {
+          params: []
+        },
+        needRequest: true
+      }
+      ];
+    }
+  
     if (action === 'edit') {
       setState({
         details: {
@@ -354,11 +413,38 @@ const MultiFormComponent = ({ form }) => {
     });
   };
 
+  function handleMenuClick(e) {
+    if (e.key === 'HTTP') {
+      addNode('HTTP');
+    }
+    if (e.key === 'JAVA') {
+      queryJavaRequestDetail();
+    }
+  }
+
   const childForms = action === 'edit' ? state?.details?.links?.[0]?.apis?.map((formItem, index) => {
-    return <APIPanel key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state}/>;
+    if (formItem?.apiType === 'HTTP') {
+      return <APIPanel key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state}/>;
+    }
+    return <IB2Node key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state}/>;
   }) : state?.apis?.map((formItem, index) => {
-    return <APIPanel key={index} form={form} index={index} api={formItem} setState={setState} state={state}/>;
+    if (formItem?.apiType === 'HTTP') {
+      return <APIPanel key={index} form={form} index={index} api={formItem} setState={setState} state={state}/>;
+    }
+    return <IB2Node key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state}/>;
   });
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="HTTP">
+        HTTP压测节点
+      </Menu.Item>
+      <Menu.Item key="JAVA">
+        IB2压测节点
+      </Menu.Item>
+    </Menu>
+  );
+
   /**
    * @name 获取线程组内容详情
    */
@@ -375,6 +461,22 @@ const MultiFormComponent = ({ form }) => {
     }
   };
    
+  /**
+   * @name 获取JavaRequest详情
+   */
+  const queryJavaRequestDetail = async () => {
+    const {
+          data: { success, data }
+        } = await BusinessFlowService.queryJavaRequestDetail({
+          javaType: 'IB2',   
+        });
+    if (success) {
+      setState({
+        javaRequestDetails: data,
+      });
+      addNode('JAVA', data?.className);
+    }
+  };
 
   return (
     <MainPageLayout>
@@ -385,6 +487,15 @@ const MultiFormComponent = ({ form }) => {
             initialValue: action === 'edit' ? state?.details?.processName : undefined,
             rules: [{ required: true, message: '请输入业务流程名称!' }],
           })(<Input placeholder="请输入业务流程名称" />)}
+        </Form.Item>
+        <Form.Item style={{ float: 'right' }}>
+          <Button 
+            onClick={() => {
+              router.push('/businessFlow');
+            }}
+          >
+            返回列表
+          </Button>
         </Form.Item>
       </Form>
       <Tabs defaultActiveKey="1" type="card" style={{ paddingBottom: 50 }}>
@@ -413,16 +524,15 @@ const MultiFormComponent = ({ form }) => {
             rules: [{ required: true, message: '请输入链路!' }],
           })(<Input placeholder="请输入链路名称" />)}
         </Form.Item>
-        {/* <Form.Item >
-          API数量（生效/总量）:2/2
-        </Form.Item> */}
         <Form.Item style={{ float: 'right' }}>
           <Button type="link">删除</Button>
         </Form.Item>
       </Form>
        {childForms}
   <div style={{ marginTop: 20 }}>
-      <Button type="primary" onClick={addNode}>添加压测节点</Button>
+    <Dropdown.Button onClick={() => addNode('HTTP')} overlay={menu}>
+      HTTP压测节点
+    </Dropdown.Button>
   </div>
       </Form>
     </TabPane>

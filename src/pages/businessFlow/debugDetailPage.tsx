@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-no-undef */
-import { Button, Col, Collapse, Modal, Row, Table, Tabs } from 'antd';
+import { Button, Col, Collapse, Modal, Row, Spin, Table, Tabs } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { MainPageLayout } from 'src/components/page-layout';
 import { getUrlParams } from 'src/utils/utils';
@@ -17,6 +17,7 @@ const DebugDetail: React.FC<Props> = props => {
   const [visible, setVisible] = useState(false);
   const [index, setIndex] = useState(0);
   const [debugLog, setDebugLog] = useState();
+  const [loading, setLoading] = useState(true);
   const id = getUrlParams(window.location.href)?.id;
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const DebugDetail: React.FC<Props> = props => {
    * @name 获取调试详情
    */
   const queryDebugDetail = async () => {
+    setLoading(true);
     const {
       data: { success, data }
     } = await BusinessFlowService.debugDetail({ id });
@@ -35,11 +37,15 @@ const DebugDetail: React.FC<Props> = props => {
         setTimeout(() => {
           queryDebugDetail();
         }, 5000);
+        return;
       }
       if (data?.hasResult) {
+        setLoading(false);
         setDetail(data);
+        return;
       }
     }
+    setLoading(false);
   };
 
   /**
@@ -83,10 +89,14 @@ const DebugDetail: React.FC<Props> = props => {
     },
   ];
   
-  return(<MainPageLayout title={<span>业务流程调试 <Button onClick={() => {
-    setVisible(true);
-    queryDebugLog();
-  }} type="link">查看日志</Button> </span>} extra={<Button onClick={() => {router.push(`/businessFlow/addPTSScene?action=edit&id=${id}`); }}>返回</Button>}>
+  return(<MainPageLayout title={<span>业务流程调试 
+     <Button onClick={() => {
+       setVisible(true);
+       queryDebugLog();
+     }} 
+      type="link"
+      >查看日志</Button> </span>} extra={<Button onClick={() => {router.push(`/businessFlow/addPTSScene?action=edit&id=${id}`); }}>返回</Button>}>
+        {loading ? <Spin style={{marginTop:200,marginLeft: '50%'}} tip="Loading..."/>:
       <Row type="flex" style={{ height: '80vh', border: '1px solid #ddd', marginTop: 8 }}>
         <Col span={10}>
         <Table 
@@ -147,7 +157,7 @@ const DebugDetail: React.FC<Props> = props => {
          
           })}
         </Col>
-      </Row>
+      </Row>}
       <Modal width="90%" bodyStyle={{ height: 500, overflow: 'scroll' }} visible={visible} title="调试日志" footer={null} onCancel={() => {
         setVisible(false);
       }}>

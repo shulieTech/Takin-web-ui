@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useState, useEffect } from 'react';
 import StepsComponent from 'src/common/steps';
 import { StepdColumnsData } from './enum';

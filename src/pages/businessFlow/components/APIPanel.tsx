@@ -97,7 +97,7 @@ const APIPanel: React.FC<Props> = props => {
   }
 
   return (
-    <Collapse expandIconPosition="right" style={{ marginBottom: 8 }}>
+    <Collapse expandIconPosition="left" style={{ marginBottom: 8 }}>
     <Panel header={
         <Form layout="inline">
           <Form.Item >
@@ -127,6 +127,12 @@ const APIPanel: React.FC<Props> = props => {
                   initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
                   rules: [{ required: true, message: 'url不能为空!' }],
                 })(<Input.TextArea placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v" />)}
+              </Form.Item>
+              <Form.Item style={{ display: 'none' }}>
+                {getFieldDecorator(`${index}_apiType`, {
+                  initialValue: 'HTTP',
+                  rules: [{ required: false, message: '' }],
+                })(<Input placeholder="请输入类名" />)}
               </Form.Item>
               <Form.Item label="请求方式">
                 {getFieldDecorator(`${index}_requestMethod`, {
