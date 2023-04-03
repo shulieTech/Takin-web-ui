@@ -12,6 +12,7 @@ interface Props {
 }
 const LineCharts: React.FC<Props> = (props) => {
   const { chartsInfo, onEvents, columnNum = 1, tooltip, chartsThreadInfo} = props;
+  console.log('chartsInfo',chartsInfo);
 
   const grid = [];
 
@@ -253,6 +254,56 @@ const LineCharts: React.FC<Props> = (props) => {
           },
         }}
       />
+
+<div style={{ width: '100%', height: '400px' }}>
+<ReactEcharts 
+  option={{
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+      },
+    },
+    legend: {
+      data: ['TPS', 'RT'],
+    },
+    xAxis: {
+      type: 'category',
+      data: chartsInfo?.concurrent,
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: 'TPS',
+        axisLabel: {
+          formatter: '{value}',
+        },
+      },
+      {
+        type: 'value',
+        name: 'RT',
+        axisLabel: {
+          formatter: '{value}',
+        },
+      },
+    ],
+  series: [
+    {
+      name: 'TPS',
+      type: 'line',
+      data: chartsInfo?.tps,
+    },
+    {
+      name: 'RT',
+      type: 'line',
+      yAxisIndex: 1, // 使用第二个纵坐标
+      data: chartsInfo?.rt,
+    },
+  ],
+  }} 
+  />
+</div>
+
       {chartsThreadInfo && JSON.stringify(chartsThreadInfo) !== '{}' && chartsThreadInfo?.concurrent && chartsThreadInfo?.concurrent?.length > 0 && <Row>
         <Col span={12}>
         <ReactEcharts 
@@ -307,7 +358,7 @@ const LineCharts: React.FC<Props> = (props) => {
         />
         </Col>
         <Col span={12}>
-           <ReactEcharts 
+      <ReactEcharts 
         style={{ width: '100%', height: 320 }} 
         option={{
           grid: {
@@ -318,7 +369,7 @@ const LineCharts: React.FC<Props> = (props) => {
             borderWidth: 80,
             borderColor: '#fff',
           },
-          tooltip:{ trigger: 'axis' },
+          tooltip: { trigger: 'axis' },
           xAxis: {
             type: 'category',
             boundaryGap: false,
@@ -357,10 +408,8 @@ const LineCharts: React.FC<Props> = (props) => {
           color: ['#00CBBF', '#ffa425', '#e64d03', '#00d77d', '#eaa4a1'],
         }} 
       />
-       
         </Col>
-      </Row> }
-     
+      </Row>}
     </div>
   );
 };
