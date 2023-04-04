@@ -114,7 +114,7 @@ const IB2Node: React.FC<Props> = props => {
            <Form>
               <Form.Item label="类名">
                 {getFieldDecorator(`${index}_requestUrl`, {
-                  initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
+                  initialValue: action === 'edit' && api?.needRequest  ? props?.state?.javaRequestDetails?.className : action === 'edit' ? api?.base?.requestUrl : props?.state?.javaRequestDetails?.className,
                   rules: [{ required: true, message: '请输入类名!' }],
                 })(<Input placeholder="请输入类名" />)}
               </Form.Item>

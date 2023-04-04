@@ -86,6 +86,7 @@ const EditJmeterModal: React.FC<Props> = (props) => {
         } = await BusinessFlowService.saveAndAnalysis({
           ...values,
           id: props.id,
+          source: values?.source ? '3' : null,
           scriptFile: {
             ...fileData,
             scriptContent: state.scriptCode,
