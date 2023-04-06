@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Form, Input, Button, Tabs, Row, Col, Collapse, Divider, InputNumber, Switch, Radio } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { CommonSelect, CommonTable, useStateReducer } from 'racc';
@@ -23,26 +24,27 @@ interface Props {
 interface State {
   list: any[];
   disabled: boolean;
+  type: string;
 }
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 const APIPanel: React.FC<Props> = props => {
     
   const { form , index, api, action } = props;
-  const { getFieldDecorator, validateFields, getFieldValue } = form;
+  const { getFieldDecorator, validateFields, getFieldValue, setFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false,
-    type: 'raw'
+    type: ''
   });
 
   useEffect(() => {
     setState({
       list: props.value?.length === 0 ? [{ key: '', value: '' }] : props.value,
-      type: api?.body?.rawData?'raw':'x-www-form-urlencoded'
+      type: api?.body?.contentType
     });
-  }, [api.body.rawData, props.value, setState]);
+  }, [props.value]);
 
 //   const handleChange = (type, key, value, k) => {
 //     setState({ disabled: value.disabled });
@@ -66,6 +68,11 @@ const APIPanel: React.FC<Props> = props => {
     setState({
       type: e.target.value
     });
+    form?.setFieldsValue({
+      [`${index}_contentType`]: e.target.value 
+    });
+    // form?.setFieldsValue(`${index}_contentType`, e.target.value);
+    console.log('getFieldValue', getFieldValue(`${index}_contentType`));
   };
 
   const handleDelete = (e) => {
@@ -167,19 +174,29 @@ const APIPanel: React.FC<Props> = props => {
           {getFieldValue(`${index}_requestMethod`) === 'POST' &&    <TabPane tab="Body定义" key="5">
             <Form>
               <Form.Item label="Content-Type">
-                {getFieldDecorator(`${index}_type`, {
-                  initialValue: action === 'edit' ? api?.body?.rawData ? 'raw' : 'x-www-form-urlencoded' : 'raw',
+                {getFieldDecorator(`${index}_contentType`, {
+                  initialValue: action === 'edit' ? api?.body?.contentType : undefined,
                   rules: [{ required: true, message: 'url不能为空!' }],
                 })(<Radio.Group onChange={onChange} >
-                  <Radio value={'raw'}>raw</Radio>
+                  <Radio value={'JSON'}>JSON</Radio>
+                  <Radio value={'form-data'}>form-data</Radio>
+                  <Radio value={'x-www-form-urlencoded'}>x-www-form-urlencoded</Radio>
                 </Radio.Group>)}
               </Form.Item>
+              {getFieldValue(`${index}_contentType`) === 'JSON' && 
               <Form.Item>
                  {getFieldDecorator(`${index}_rawData`, {
                    initialValue: action === 'edit' ? api?.body?.rawData : undefined,
                    rules: [{ required: false, message: '不能为空!' }],
                  })(<Input.TextArea style={{ height: 100 }} placeholder="如果服务端（被压测端）需要强校验换行符（\n）或者待加密的部分需要有换行符，请使用unescape解码函数对包含换行符的字符串进行反转义：${sys.escapeJava(text)}"/>)}
-              </Form.Item> 
+              </Form.Item>}
+              {(getFieldValue(`${index}_contentType`) === 'form-data' || getFieldValue(`${index}_contentType`) === 'x-www-form-urlencoded') && 
+              <Form.Item>
+                 {getFieldDecorator(`${index}_forms`, {
+                   initialValue: action === 'edit' ? api?.body?.forms : [],
+                   rules: [{ required: false, message: '不能为空!' }],
+                 })(<BodyTable/>)}
+              </Form.Item>}
             </Form>
           </TabPane>}
       

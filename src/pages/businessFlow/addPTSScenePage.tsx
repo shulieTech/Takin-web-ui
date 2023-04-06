@@ -102,7 +102,8 @@ const MultiFormComponent = ({ form }) => {
               },
               body: {
                 forms: item?.forms,
-                rawData: item?.rawData
+                rawData: item?.rawData,
+                contentType: item?.contentType
               },
               checkAssert: {
                 asserts: item?.asserts
@@ -211,7 +212,8 @@ const MultiFormComponent = ({ form }) => {
               },
               body: {
                 forms: item?.forms,
-                rawData: item?.rawData
+                rawData: item?.rawData,
+                contentType: item?.contentType
               },
               checkAssert: {
                 asserts: item?.asserts
