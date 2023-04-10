@@ -17,7 +17,7 @@ interface State {
   disabled: boolean;
 }
 
-const HeaderTable: React.FC<Props> = props => {
+const GlobalHeaderTable: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false
@@ -99,7 +99,7 @@ const HeaderTable: React.FC<Props> = props => {
     } else if (type === 'plus') {
       state.list.push({
         key: '',
-        value: ''
+        value: '',
       });
     } else {
       state.list.splice(k, 1);
@@ -111,14 +111,12 @@ const HeaderTable: React.FC<Props> = props => {
   };
 
   return (
-    // <Card title={props.title}>
       <CommonTable
         rowKey={(row, index) => index.toString()}
         columns={getColumns()}
         size="small"
         dataSource={state.list}
       />
-    // </Card>
   );
 };
-export default HeaderTable;
+export default GlobalHeaderTable;

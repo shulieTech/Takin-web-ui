@@ -20,6 +20,7 @@ interface Props {
   api?: any;
   action?: string;
   setState?: any;
+  linkIndex?:any;
 }
 interface State {
   list: any[];
@@ -29,7 +30,7 @@ const { TabPane } = Tabs;
 const { Panel } = Collapse;
 const IB2Node: React.FC<Props> = props => {
     
-  const { form , index, api, action } = props;
+  const { form , index, api, action,linkIndex } = props;
   const { getFieldDecorator, validateFields, getFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
 //   const [state, setState] = useStateReducer<State>({
@@ -86,9 +87,9 @@ const IB2Node: React.FC<Props> = props => {
     });
   };
 
-  function removeApiAtIndex(json, linkIndex, apiIndex) {
-    if (json.links && json.links[linkIndex] && json.links[linkIndex].apis) {
-      json.links[linkIndex].apis.splice(apiIndex, 1);
+  function removeApiAtIndex(json, linkIndexs, apiIndex) {
+    if (json.links && json.links[linkIndexs] && json.links[linkIndexs].apis) {
+      json.links[linkIndexs].apis.splice(apiIndex, 1);
     }
   }
 
@@ -97,7 +98,7 @@ const IB2Node: React.FC<Props> = props => {
     <Panel header={
         <Form layout="inline">
           <Form.Item >
-            {getFieldDecorator(`${index}_apiName`, {
+            {getFieldDecorator(`${linkIndex}_${index}_apiName`, {
               initialValue: action === 'edit' ? api?.apiName : undefined,
               rules: [{ required: true, message: '请输入压测API名称!' }],
             })(<Input placeholder="请输入压测API名称" onClick={(e) => {
@@ -113,13 +114,13 @@ const IB2Node: React.FC<Props> = props => {
           <TabPane tab="基本请求信息" key="1">
            <Form>
               <Form.Item label="类名">
-                {getFieldDecorator(`${index}_requestUrl`, {
+                {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
                   initialValue: action === 'edit' && api?.needRequest  ? props?.state?.javaRequestDetails?.className : action === 'edit' ? api?.base?.requestUrl : props?.state?.javaRequestDetails?.className,
                   rules: [{ required: true, message: '请输入类名!' }],
                 })(<Input placeholder="请输入类名" />)}
               </Form.Item>
               <Form.Item style={{ display: 'none' }}>
-                {getFieldDecorator(`${index}_apiType`, {
+                {getFieldDecorator(`${linkIndex}_${index}_apiType`, {
                   initialValue: 'JAVA',
                   rules: [{ required: false, message: '' }],
                 })(<Input placeholder="请输入类名" />)}
@@ -130,7 +131,7 @@ const IB2Node: React.FC<Props> = props => {
           <TabPane tab="参数定义" key="2">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${index}_params`, {
+                {getFieldDecorator(`${linkIndex}_${index}_params`, {
                   initialValue: action === 'edit' && api?.needRequest ? props?.state?.javaRequestDetails?.params?.map((item, k) => {
                     return { ...item, allowEdit: false };
                   }) : action === 'edit' ? api?.param?.params : props?.state?.javaRequestDetails?.params?.map((item, k) => {

@@ -17,7 +17,7 @@ interface State {
   disabled: boolean;
 }
 
-const HeaderTable: React.FC<Props> = props => {
+const GlobalUserVars: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false
@@ -25,7 +25,7 @@ const HeaderTable: React.FC<Props> = props => {
 
   useEffect(() => {
     setState({
-      list: props.value?.length === 0 ? [{ key: '', value: '' }] : props.value
+      list: props.value?.length === 0 ? [{ key: '', value: '', desc: '' }] : props.value
     });
   }, [props.value]);
 
@@ -39,7 +39,7 @@ const HeaderTable: React.FC<Props> = props => {
         render: (text, row, index) => {
           return (
                 <Input
-                  placeholder="请输入Header Key"
+                  placeholder="请输入Key"
                   value={text}
                   onChange={e =>
                     handleChange('change', 'key', e.target.value, index)
@@ -55,10 +55,26 @@ const HeaderTable: React.FC<Props> = props => {
         render: (text, row, index) => {
           return (
             <Input
-              placeholder="请输入Header Value"
+              placeholder="请输入Value"
               value={text}
               onChange={e =>
                 handleChange('change', 'value', e.target.value, index)
+              }
+            />
+          );
+        }
+      },
+      {
+        ...customColumnProps,
+        title: '描述',
+        dataIndex: 'desc',
+        render: (text, row, index) => {
+          return (
+            <Input
+              placeholder="请输入描述"
+              value={text}
+              onChange={e =>
+                handleChange('change', 'desc', e.target.value, index)
               }
             />
           );
@@ -99,7 +115,8 @@ const HeaderTable: React.FC<Props> = props => {
     } else if (type === 'plus') {
       state.list.push({
         key: '',
-        value: ''
+        value: '',
+        desc: '' 
       });
     } else {
       state.list.splice(k, 1);
@@ -111,14 +128,12 @@ const HeaderTable: React.FC<Props> = props => {
   };
 
   return (
-    // <Card title={props.title}>
       <CommonTable
         rowKey={(row, index) => index.toString()}
         columns={getColumns()}
         size="small"
         dataSource={state.list}
       />
-    // </Card>
   );
 };
-export default HeaderTable;
+export default GlobalUserVars;

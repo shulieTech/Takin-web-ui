@@ -20,6 +20,7 @@ interface Props {
   api?: any;
   action?: string;
   setState?: any;
+  linkIndex?:any;
 }
 interface State {
   list: any[];
@@ -30,9 +31,10 @@ const { TabPane } = Tabs;
 const { Panel } = Collapse;
 const APIPanel: React.FC<Props> = props => {
     
-  const { form , index, api, action } = props;
+  const { form , index, api, action ,linkIndex} = props;
   const { getFieldDecorator, validateFields, getFieldValue, setFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
+  // console.log('api', api);
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false,
@@ -69,10 +71,10 @@ const APIPanel: React.FC<Props> = props => {
       type: e.target.value
     });
     form?.setFieldsValue({
-      [`${index}_contentType`]: e.target.value 
+      [`${linkIndex}_${index}_contentType`]: e.target.value 
     });
-    // form?.setFieldsValue(`${index}_contentType`, e.target.value);
-    console.log('getFieldValue', getFieldValue(`${index}_contentType`));
+    // form?.setFieldsValue(`${linkIndex}_${index}_contentType`, e.target.value);
+    console.log('getFieldValue', getFieldValue(`${linkIndex}_${index}_contentType`));
   };
 
   const handleDelete = (e) => {
@@ -97,9 +99,9 @@ const APIPanel: React.FC<Props> = props => {
     });
   };
 
-  function removeApiAtIndex(json, linkIndex, apiIndex) {
-    if (json.links && json.links[linkIndex] && json.links[linkIndex].apis) {
-      json.links[linkIndex].apis.splice(apiIndex, 1);
+  function removeApiAtIndex(json, linksIndex, apiIndex) {
+    if (json.links && json.links[linksIndex] && json.links[linksIndex].apis) {
+      json.links[linksIndex].apis.splice(apiIndex, 1);
     }
   }
 
@@ -108,7 +110,7 @@ const APIPanel: React.FC<Props> = props => {
     <Panel header={
         <Form layout="inline">
           <Form.Item >
-            {getFieldDecorator(`${index}_apiName`, {
+            {getFieldDecorator(`${linkIndex}_${index}_apiName`, {
               initialValue: action === 'edit' ? api?.apiName : undefined,
               rules: [{ required: true, message: '请输入压测API名称!' }],
             })(<Input placeholder="请输入压测API名称" onClick={(e) => {
@@ -116,10 +118,10 @@ const APIPanel: React.FC<Props> = props => {
             }}/>)}
           </Form.Item>
           <Form.Item >
-         {getFieldValue(`${index}_requestMethod`)}
+         {getFieldValue(`${linkIndex}_${index}_requestMethod`)}
           </Form.Item>
           <Form.Item >
-          {getFieldValue(`${index}_requestUrl`)}
+          {getFieldValue(`${linkIndex}_${index}_requestUrl`)}
           </Form.Item>
           <Form.Item style={{ float: 'right' }}>
             <Button type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
@@ -130,19 +132,19 @@ const APIPanel: React.FC<Props> = props => {
           <TabPane tab="基本请求信息" key="1">
            <Form>
               <Form.Item label="压测URL">
-                {getFieldDecorator(`${index}_requestUrl`, {
+                {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
                   initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
                   rules: [{ required: true, message: 'url不能为空!' }],
                 })(<Input.TextArea placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v" />)}
               </Form.Item>
               <Form.Item style={{ display: 'none' }}>
-                {getFieldDecorator(`${index}_apiType`, {
+                {getFieldDecorator(`${linkIndex}_${index}_apiType`, {
                   initialValue: 'HTTP',
                   rules: [{ required: false, message: '' }],
                 })(<Input placeholder="请输入类名" />)}
               </Form.Item>
               <Form.Item label="请求方式">
-                {getFieldDecorator(`${index}_requestMethod`, {
+                {getFieldDecorator(`${linkIndex}_${index}_requestMethod`, {
                   initialValue: action === 'edit' ? api?.base?.requestMethod : undefined,
                   rules: [{ required: true, message: '请输入请求方式!' }],
                 })(<CommonSelect dataSource={[
@@ -157,13 +159,13 @@ const APIPanel: React.FC<Props> = props => {
                 ]}/>)}
               </Form.Item>
               <Form.Item label="超时时间">
-                {getFieldDecorator(`${index}_requestTimeout`, {
+                {getFieldDecorator(`${linkIndex}_${index}_requestTimeout`, {
                   initialValue: action === 'edit' ? api?.base?.requestTimeout : undefined,
                   rules: [{ required: false, message: '请输入超时时间!' }],
                 })(<InputNumberPro style={{ width: 200 }} addonAfter="毫秒" placeholder="请输入超时时间"/>)}
               </Form.Item>
               <Form.Item label="允许302跳转">
-                {getFieldDecorator(`${index}_allowForward`, {
+                {getFieldDecorator(`${linkIndex}_${index}_allowForward`, {
                   valuePropName: 'checked',
                   initialValue: action === 'edit' ? api?.base?.allowForward : false,
                   rules: [{ required: false, message: '请输入超时时间!' }],
@@ -171,10 +173,10 @@ const APIPanel: React.FC<Props> = props => {
               </Form.Item>
             </Form>
           </TabPane>
-          {getFieldValue(`${index}_requestMethod`) === 'POST' &&    <TabPane tab="Body定义" key="5">
+          {getFieldValue(`${linkIndex}_${index}_requestMethod`) === 'POST' &&    <TabPane tab="Body定义" key="5">
             <Form>
               <Form.Item label="Content-Type">
-                {getFieldDecorator(`${index}_contentType`, {
+                {getFieldDecorator(`${linkIndex}_${index}_contentType`, {
                   initialValue: action === 'edit' ? api?.body?.contentType : undefined,
                   rules: [{ required: true, message: 'url不能为空!' }],
                 })(<Radio.Group onChange={onChange} >
@@ -183,16 +185,16 @@ const APIPanel: React.FC<Props> = props => {
                   <Radio value={'x-www-form-urlencoded'}>x-www-form-urlencoded</Radio>
                 </Radio.Group>)}
               </Form.Item>
-              {getFieldValue(`${index}_contentType`) === 'JSON' && 
+              {getFieldValue(`${linkIndex}_${index}_contentType`) === 'JSON' && 
               <Form.Item>
-                 {getFieldDecorator(`${index}_rawData`, {
+                 {getFieldDecorator(`${linkIndex}_${index}_rawData`, {
                    initialValue: action === 'edit' ? api?.body?.rawData : undefined,
                    rules: [{ required: false, message: '不能为空!' }],
                  })(<Input.TextArea style={{ height: 100 }} placeholder="如果服务端（被压测端）需要强校验换行符（\n）或者待加密的部分需要有换行符，请使用unescape解码函数对包含换行符的字符串进行反转义：${sys.escapeJava(text)}"/>)}
               </Form.Item>}
-              {(getFieldValue(`${index}_contentType`) === 'form-data' || getFieldValue(`${index}_contentType`) === 'x-www-form-urlencoded') && 
+              {(getFieldValue(`${linkIndex}_${index}_contentType`) === 'form-data' || getFieldValue(`${linkIndex}_${index}_contentType`) === 'x-www-form-urlencoded') && 
               <Form.Item>
-                 {getFieldDecorator(`${index}_forms`, {
+                 {getFieldDecorator(`${linkIndex}_${index}_forms`, {
                    initialValue: action === 'edit' ? api?.body?.forms : [],
                    rules: [{ required: false, message: '不能为空!' }],
                  })(<BodyTable/>)}
@@ -203,7 +205,7 @@ const APIPanel: React.FC<Props> = props => {
           <TabPane tab="Header定义" key="2">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${index}_headers`, {
+                {getFieldDecorator(`${linkIndex}_${index}_headers`, {
                   initialValue: action === 'edit' ? api?.header?.headers : [],
                   rules: [{ required: false, message: 'url不能为空!' }],
                 })(<HeaderTable />)}
@@ -213,7 +215,7 @@ const APIPanel: React.FC<Props> = props => {
           <TabPane tab="出参定义" key="3">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${index}_vars`, {
+                {getFieldDecorator(`${linkIndex}_${index}_vars`, {
                   initialValue: action === 'edit' ? api?.returnVar?.vars : [],
                   rules: [{ required: false, message: '' }],
                 })(<ParamsTable />)}
@@ -223,7 +225,7 @@ const APIPanel: React.FC<Props> = props => {
           <TabPane tab="检查点（断言）" key="4">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${index}_asserts`, {
+                {getFieldDecorator(`${linkIndex}_${index}_asserts`, {
                   initialValue: action === 'edit' ? api?.checkAssert?.asserts : [],
                   rules: [{ required: false, message: '' }],
                 })(<CheckPointTable />)}
