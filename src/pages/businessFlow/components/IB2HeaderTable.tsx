@@ -1,4 +1,4 @@
-import { Button, Card, Icon, Input, message, Upload } from 'antd';
+import { Button, Card, Icon, Input, message, Modal, Upload } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { CommonSelect, CommonTable, useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
@@ -15,12 +15,18 @@ interface Props {
 interface State {
   list: any[];
   disabled: boolean;
+  visible: boolean;
+  textValue: string;
+  modalIndex: string;
 }
 
 const IB2HeaderTable: React.FC<Props> = props => {
   const [state, setState] = useStateReducer<State>({
     list: [],
-    disabled: false
+    disabled: false,
+    visible: false,
+    textValue: undefined,
+    modalIndex: undefined
   });
 
   useEffect(() => {
@@ -44,6 +50,27 @@ const IB2HeaderTable: React.FC<Props> = props => {
       message.success('上传文件成功！');
       handleChange('change', 'paramValue', msg?.data?.data?.[0]?.downloadUrl, index);
     }
+  };
+
+  const handleClickModal = (text, index) => {
+    setState({
+      visible: true,
+      textValue: text,
+      modalIndex: index
+    });
+  };
+ 
+  const handleChangeModalValue = (e) => {
+    setState({
+      textValue: e.target.value,
+    });
+  };
+
+  const handleConfirm = () => {
+    handleChange('change', 'paramValue', state?.textValue, state?.modalIndex);
+    setState({
+      visible: false
+    });
   };
 
   /** @name header定义 */
@@ -74,13 +101,17 @@ const IB2HeaderTable: React.FC<Props> = props => {
           return (
             <div>
             <Input
-              style={{width: '80%'}}
+              style={{ width: '80%' }}
               placeholder="请输入参数 Value"
               value={text}
               onChange={e =>
                 handleChange('change', 'paramValue', e.target.value, index)
               }
             />
+            {row?.paramType === 'text' && <Button
+              style={{ marginLeft: 8 }}
+              size="small" 
+              onClick={() => handleClickModal(text, index)}>...</Button>}
             {row?.paramType === 'file' &&  
              <Upload
               showUploadList={false}
@@ -105,8 +136,6 @@ const IB2HeaderTable: React.FC<Props> = props => {
           return (
             <Fragment>
              {text} 
-             
-
             </Fragment>
             
           );
@@ -163,12 +192,28 @@ const IB2HeaderTable: React.FC<Props> = props => {
   };
 
   return (
-      <CommonTable
+    <Fragment>
+       <CommonTable
         rowKey={(row, index) => index.toString()}
         columns={getColumns()}
         size="small"
         dataSource={state.list}
       />
+      <Modal 
+        onOk={() => {
+          handleConfirm();
+        }}
+        onCancel={() => {
+          setState({
+            visible: false
+          });
+        }} 
+        visible={state?.visible} 
+        bodyStyle={{ height: 300 }}>
+        <Input.TextArea onChange={handleChangeModalValue} value={state?.textValue}  style={{ height: 250, marginTop: 20 }}/>
+      </Modal>
+    </Fragment>
+     
   );
 };
 export default IB2HeaderTable;
