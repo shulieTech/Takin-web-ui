@@ -498,10 +498,10 @@ const MultiFormComponent = ({ form }) => {
         checkAssert: {
           asserts: [
             {
-              checkCondition: '',
-              checkContent: '',
-              checkObject: '',
-              checkPointType: ''
+              checkCondition: undefined,
+              checkContent: undefined,
+              checkObject: undefined,
+              checkPointType: undefined,
             }
           ]
         },
@@ -537,7 +537,17 @@ const MultiFormComponent = ({ form }) => {
         param: {
           params: []
         },
-        needRequest: true
+        needRequest: true,
+        checkAssert: {
+          asserts: [
+            {
+              checkCondition: undefined,
+              checkContent: undefined,
+              checkObject: undefined,
+              checkPointType: undefined
+            }
+          ]
+        },
       }
       ];
     }
