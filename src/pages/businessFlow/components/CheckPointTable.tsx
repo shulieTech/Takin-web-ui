@@ -62,6 +62,7 @@ const CheckPointTable: React.FC<Props> = props => {
         render: (text, row, index) => {
           return (
                 <Input
+                  disabled={row?.checkObjectDisabled}
                   placeholder="请输入检查对象"
                   value={text}
                   onChange={e =>
@@ -80,20 +81,11 @@ const CheckPointTable: React.FC<Props> = props => {
               <CommonSelect
                 dropdownMatchSelectWidth={false}
                 value={text}
-                dataSource={[
-                    // { label: '大于', value: '大于' },
-                    // { label: '大于等于', value: '大于等于' },
-                    // { label: '小于', value: '小于' },
-                    // { label: '小于等于', value: '小于等于' },
+                dataSource={row?.checkPointType === '响应Body' ? [
                     { label: '等于', value: '等于' },
                     { label: '包含', value: '包含' },
-                    // { label: '不包含', value: '不包含' },
-                    // { label: '属于', value: '属于' },
-                    // { label: '不属于', value: '不属于' },
-                    // { label: '存在', value: '存在' },
-                    // { label: '不存在', value: '不存在' },
                     { label: '正则匹配', value: '正则匹配' },
-                ]}
+                ] : [{ label: '等于', value: '等于' }]}
                 style={{ width: 150 }}
                 onChange={value =>
                   handleChange('change', 'checkCondition', value, index)
@@ -149,17 +141,27 @@ const CheckPointTable: React.FC<Props> = props => {
   const handleChange = (type, key, value, k) => {
     setState({ disabled: value.disabled });
 
-    if (key === 'checkPointType') {
-      if (value === '响应Body') {
-
-      }
-    }
-
     if (type === 'change') {
-      state.list.splice(k, 1, { ...state.list[k], [key]: value });
+      if (key === 'checkPointType') {
+        if (value === '响应Body') {
+          state.list.splice(k, 1, { ...state.list[k], checkObject: '整个body', [key]: value, checkObjectDisabled: true, checkCondition: undefined });
+        } else if (value === '响应状态码') {
+          state.list.splice(k, 1, { ...state.list[k], checkObject: '状态码', [key]: value, checkObjectDisabled: true, checkCondition: undefined });
+        }  else {
+          state.list.splice(k, 1, { ...state.list[k], [key]: value, checkCondition: undefined });
+        }
+      } else {
+        if (value === '响应Body') {
+          state.list.splice(k, 1, { ...state.list[k], checkObject: '整个body', [key]: value, checkObjectDisabled: true, });
+        } else if (value === '响应状态码') {
+          state.list.splice(k, 1, { ...state.list[k], checkObject: '状态码', [key]: value, checkObjectDisabled: true });
+        } else {
+          state.list.splice(k, 1, { ...state.list[k], [key]: value });
+        }
+      }    
     } else if (type === 'plus') {
       state.list.push({
-        checkObject: undefined, checkPointType: undefined, checkCondition: undefined, checkContent: undefined
+        checkObject: undefined, checkPointType: undefined, checkCondition: undefined, checkContent: undefined, checkObjectDisabled: false
       });
     } else {
       state.list.splice(k, 1);
