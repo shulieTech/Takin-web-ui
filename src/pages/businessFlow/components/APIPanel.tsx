@@ -20,7 +20,7 @@ interface Props {
   api?: any;
   action?: string;
   setState?: any;
-  linkIndex?:any;
+  linkIndex?: any;
 }
 interface State {
   list: any[];
@@ -31,7 +31,7 @@ const { TabPane } = Tabs;
 const { Panel } = Collapse;
 const APIPanel: React.FC<Props> = props => {
     
-  const { form , index, api, action ,linkIndex} = props;
+  const { form , index, api, action , linkIndex } = props;
   const { getFieldDecorator, validateFields, getFieldValue, setFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
   // console.log('api', api);
@@ -229,6 +229,36 @@ const APIPanel: React.FC<Props> = props => {
                   initialValue: action === 'edit' ? api?.checkAssert?.asserts : [],
                   rules: [{ required: false, message: '' }],
                 })(<CheckPointTable />)}
+              </Form.Item>
+            </Form>
+          </TabPane>
+          <TabPane tab="定时器" key="5">
+          <Form layout="inline">
+              <Form.Item label="线程延迟（毫秒）">
+                {getFieldDecorator(`${linkIndex}_${index}_delay`, {
+                  initialValue: action === 'edit' ? api?.timer?.delay : undefined,
+                  rules: [{ required: false, message: '' }],
+                })(<InputNumber min={0} precision={0}/>)}
+              </Form.Item>
+            </Form>
+          </TabPane>
+          <TabPane tab="BeanShell预处理程序" key="6">
+          <Form>
+              <Form.Item label="脚本">
+                {getFieldDecorator(`${linkIndex}_${index}_beanShellPre`, {
+                  initialValue: action === 'edit' ? api?.beanShellPre?.script?.[0] : undefined,
+                  rules: [{ required: false, message: '' }],
+                })(<Input.TextArea style={{ height: 200 }}/>)}
+              </Form.Item>
+            </Form>
+          </TabPane>
+          <TabPane tab="BeanShell后置处理程序" key="7">
+          <Form>
+              <Form.Item label="脚本">
+                {getFieldDecorator(`${linkIndex}_${index}_beanShellPost`, {
+                  initialValue: action === 'edit' ? api?.beanShellPost?.script?.[0] : undefined,
+                  rules: [{ required: false, message: '' }],
+                })(<Input.TextArea style={{ height: 200 }}/>)}
               </Form.Item>
             </Form>
           </TabPane>

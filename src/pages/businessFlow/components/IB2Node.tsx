@@ -142,6 +142,16 @@ const IB2Node: React.FC<Props> = props => {
               </Form.Item>
             </Form>
           </TabPane>
+          <TabPane tab="检查点（断言）" key="3">
+          <Form>
+              <Form.Item>
+                {getFieldDecorator(`${linkIndex}_${index}_asserts`, {
+                  initialValue: action === 'edit' ? api?.checkAssert?.asserts : [],
+                  rules: [{ required: false, message: '' }],
+                })(<CheckPointTable />)}
+              </Form.Item>
+            </Form>
+          </TabPane>
         </Tabs>
     </Panel>
     </Collapse>

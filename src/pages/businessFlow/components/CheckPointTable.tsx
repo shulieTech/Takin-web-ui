@@ -1,4 +1,4 @@
-import { Card, Icon, Input } from 'antd';
+import { Card, Icon, Input, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { CommonSelect, CommonTable, useStateReducer } from 'racc';
 import React, { useEffect } from 'react';
@@ -17,7 +17,6 @@ interface State {
 }
 
 const CheckPointTable: React.FC<Props> = props => {
-  const { dictionaryMap } = props;
   const [state, setState] = useStateReducer<State>({
     list: [],
     disabled: false
@@ -58,7 +57,7 @@ const CheckPointTable: React.FC<Props> = props => {
       }, 
       {
         ...customColumnProps,
-        title: '检查对象',
+        title: <span>检查对象<Tooltip  title={<div><div>当检查点类型=出参时，检查对象填写参数表达式：</div><div>  JSON表达式：示例$.data.code</div><div>    正则表达式：示例"code":"(.*?)"</div></div>}><Icon style={{ marginLeft: 8 }} type="question-circle" /></Tooltip></span>,
         dataIndex: 'checkObject',
         render: (text, row, index) => {
           return (
@@ -105,7 +104,7 @@ const CheckPointTable: React.FC<Props> = props => {
       }, 
       {
         ...customColumnProps,
-        title: '检查内容',
+        title: <span>检查内容<Tooltip  title={`当检查条件=包含或正则匹配时，检查内容可填写正则表达式`}><Icon style={{ marginLeft: 8 }} type="question-circle" /></Tooltip></span>,
         dataIndex: 'checkContent',
         render: (text, row, index) => {
           return (

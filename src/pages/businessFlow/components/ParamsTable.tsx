@@ -1,7 +1,8 @@
-import { Card, Icon, Input } from 'antd';
+import { Card, Icon, Input, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { CommonSelect, CommonTable, useStateReducer } from 'racc';
 import React, { useEffect } from 'react';
+import ToolTipIcon from 'src/common/tooltip-icon';
 import { customColumnProps } from 'src/components/custom-table/utils';
 
 interface Props {
@@ -53,12 +54,12 @@ const ParamsTable: React.FC<Props> = props => {
         title: '来源',
         dataIndex: 'varSource',
         render: (text, row, index) => {
-            return (
+          return (
               <CommonSelect
                 dropdownMatchSelectWidth={false}
                 value={text}
                 dataSource={[
-                    { label: 'Body:JSON', value: 'Body:JSON' },
+                    { label: 'Body:JSON|TEXT', value: 'Body:JSON|TEXT' },
                     // { label: 'Body:TEXT', value: 'Body:TEXT' },
                     { label: 'Header:K/V', value: 'Header:K/V' },
                     // { label: 'Cookie:K/V', value: 'Cookie:K/V' },
@@ -70,11 +71,11 @@ const ParamsTable: React.FC<Props> = props => {
                 }
               />
             );
-          }
+        }
       }, 
       {
         ...customColumnProps,
-        title: '解析表达式',
+        title: <span>解析表达式<Tooltip title={<div><div>支持两种表达式：</div><div>  JSON表达式：示例$.data.code</div><div>    正则表达式：示例"code":"(.*?)"</div></div>}><Icon type="question-circle" /></Tooltip></span>,
         dataIndex: 'parseExpress',
         render: (text, row, index) => {
           return (
@@ -90,7 +91,7 @@ const ParamsTable: React.FC<Props> = props => {
       },
       {
         ...customColumnProps,
-        title: '第几个匹配项',
+        title: <span>第几个匹配项 <Tooltip title="匹配数字，0代表随机"><Icon type="question-circle" /></Tooltip></span>,
         dataIndex: 'matchIndex',
         render: (text, row, index) => {
           return (

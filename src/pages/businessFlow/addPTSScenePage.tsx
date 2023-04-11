@@ -18,7 +18,7 @@ const getInitState = () => ({
   details: {} as any,
   javaRequestDetails: {} as any,
   apis: [{
-    apiName: '串联链路',
+    apiName: '',
     apiType: 'HTTP',
     base: {
       allowForward: true,
@@ -70,7 +70,7 @@ const getInitState = () => ({
     { 
       linkName: '串联链路1',
       apis: [{
-        apiName: '串联链路',
+        apiName: '',
         apiType: 'HTTP',
         base: {
           allowForward: true,
@@ -210,6 +210,15 @@ const MultiFormComponent = ({ form }) => {
                   },
                   returnVar: {
                     vars: item?.vars
+                  },
+                  timer: {
+                    delay: item?.delay
+                  },
+                  beanShellPre: {
+                    script: [item?.beanShellPre]
+                  },
+                  beanShellPost: {
+                    script: [item?.beanShellPost]
                   }
                 };
               }
@@ -222,7 +231,10 @@ const MultiFormComponent = ({ form }) => {
                   },
                   param: {
                     params: item?.params
-                  }
+                  },
+                  checkAssert: {
+                    asserts: item?.asserts
+                  },
                 };
               }
             })
@@ -239,11 +251,11 @@ const MultiFormComponent = ({ form }) => {
         //   }
         // });
 
-        const csvs = formValues?.filter((item1, k1) => {
+        const csvs = formValues?.filter((item1: any, k1) => {
           if (item1?.fileName) {
             return item1;
           }
-        })?.map((ite, j) => {
+        })?.map((ite: any, j) => {
           return {
             fileName: ite?.fileName,
             params: ite?.params,
@@ -251,11 +263,11 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
-        const counters = formValues?.filter((item2, k1) => {
+        const counters = formValues?.filter((item2:any, k1) => {
           if (item2?.start) {
             return item2;
           }
-        })?.map((it, j) => {
+        })?.map((it: any, j) => {
           return {
             end: it?.end,
             format: it?.format,
@@ -285,6 +297,7 @@ const MultiFormComponent = ({ form }) => {
             headers: values?.globalHeader
           },
           userVars: values?.userVars,
+          
         };
         console.log('resiult', result);
            
@@ -440,7 +453,7 @@ const MultiFormComponent = ({ form }) => {
     let node = [];
     if (type === 'HTTP') {
       node = [{
-        apiName: '串联链路',
+        apiName: '',
         apiType: type,
         base: {
           allowForward: true,
@@ -491,7 +504,7 @@ const MultiFormComponent = ({ form }) => {
     }
     if (type === 'JAVA') {
       node = [{
-        apiName: '串联链路',
+        apiName: '',
         apiType: type,
         base: {
           requestUrl: defaultName
@@ -533,7 +546,7 @@ const MultiFormComponent = ({ form }) => {
     linkNode = [{ 
       linkName: undefined,
       apis: [{
-        apiName: '串联链路',
+        apiName: '',
         apiType: 'HTTP',
         base: {
           allowForward: true,
@@ -721,7 +734,7 @@ const MultiFormComponent = ({ form }) => {
     })}
 <div style={{ marginTop: 20 }}>
   <Dropdown.Button onClick={() => addNode('HTTP', linkIndex)} overlay={() =>  menu(linkIndex)}>
-    HTTP压测节点
+    添加压测节点
   </Dropdown.Button>
 </div>
     </Form>;
