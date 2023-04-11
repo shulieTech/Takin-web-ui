@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'dva';
 import {
@@ -629,11 +630,11 @@ const EditPage = (props) => {
                 }
                 x-rules={[
                   {
-                    required: true,
+                    required: false,
                     message: '请输入时间间隔',
                   },
                 ]}
-                required
+                // required
               />
               <Field
                 name="content"

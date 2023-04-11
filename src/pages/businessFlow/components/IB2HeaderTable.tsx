@@ -72,25 +72,16 @@ const IB2HeaderTable: React.FC<Props> = props => {
         dataIndex: 'paramValue',
         render: (text, row, index) => {
           return (
+            <div>
             <Input
+              style={{width: '80%'}}
               placeholder="请输入参数 Value"
               value={text}
               onChange={e =>
                 handleChange('change', 'paramValue', e.target.value, index)
               }
             />
-          );
-        }
-      },
-      {
-        ...customColumnProps,
-        title: '类型',
-        dataIndex: 'paramType',
-        render: (text, row, index) => {
-          return (
-            <Fragment>
-             {text} 
-             {text === 'file' &&  
+            {row?.paramType === 'file' &&  
              <Upload
               showUploadList={false}
               beforeUpload={() => false}
@@ -98,10 +89,23 @@ const IB2HeaderTable: React.FC<Props> = props => {
                 handleChanegeInfo(info, index);
               }}
              >
-             <Button type="link" style={{ marginRight: 8 }}>
-              上传文件
+             <Button type="link" style={{ marginLeft: 8 }}>
+              上传
             </Button>
              </Upload>}
+             </div>
+          );
+        }
+      },
+      {
+        ...customColumnProps,
+        title: '备注',
+        dataIndex: 'paramCNDesc',
+        render: (text, row, index) => {
+          return (
+            <Fragment>
+             {text} 
+             
 
             </Fragment>
             

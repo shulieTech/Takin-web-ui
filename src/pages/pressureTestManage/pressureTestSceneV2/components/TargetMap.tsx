@@ -85,7 +85,7 @@ const TargetMap = (props) => {
                   ...fieldProps,
                 },
                 'x-rules': [
-                  { required: true, message: `请输入${fieldLabel}` },
+                  { required: false, message: `请输入${fieldLabel}` },
                   ...moreRules,
                 ],
               })
