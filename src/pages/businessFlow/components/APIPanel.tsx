@@ -130,48 +130,60 @@ const APIPanel: React.FC<Props> = props => {
         } key="1">
           <Tabs defaultActiveKey="1" >
           <TabPane tab="基本请求信息" key="1">
-           <Form>
-              <Form.Item label="压测URL">
-                {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
-                  initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
-                  rules: [{ required: true, message: 'url不能为空!' }],
-                })(<Input.TextArea placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v" />)}
-              </Form.Item>
-              <Form.Item style={{ display: 'none' }}>
-                {getFieldDecorator(`${linkIndex}_${index}_apiType`, {
-                  initialValue: 'HTTP',
-                  rules: [{ required: false, message: '' }],
-                })(<Input placeholder="请输入类名" />)}
-              </Form.Item>
-              <Form.Item label="请求方式">
-                {getFieldDecorator(`${linkIndex}_${index}_requestMethod`, {
-                  initialValue: action === 'edit' ? api?.base?.requestMethod : undefined,
-                  rules: [{ required: true, message: '请输入请求方式!' }],
-                })(<CommonSelect dataSource={[
-                  {
-                    label: 'GET',
-                    value: 'GET'
-                  },
-                  {
-                    label: 'POST',
-                    value: 'POST'
-                  }
-                ]}/>)}
-              </Form.Item>
-              <Form.Item label="超时时间">
-                {getFieldDecorator(`${linkIndex}_${index}_requestTimeout`, {
-                  initialValue: action === 'edit' ? api?.base?.requestTimeout : undefined,
-                  rules: [{ required: false, message: '请输入超时时间!' }],
-                })(<InputNumberPro style={{ width: 200 }} addonAfter="毫秒" placeholder="请输入超时时间"/>)}
-              </Form.Item>
-              <Form.Item label="允许302跳转">
-                {getFieldDecorator(`${linkIndex}_${index}_allowForward`, {
-                  valuePropName: 'checked',
-                  initialValue: action === 'edit' ? api?.base?.allowForward : false,
-                  rules: [{ required: false, message: '请输入超时时间!' }],
-                })(<Switch/>)}
-              </Form.Item>
-            </Form>
+          <Form>
+  <Row>
+    <Col span={24}>
+      <Form.Item label="压测URL">
+        {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
+          initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
+          rules: [{ required: true, message: 'url不能为空!' }],
+        })(<Input.TextArea placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v" />)}
+      </Form.Item>
+    </Col>
+  </Row>
+  <Row>
+    <Col span={5}>
+      <Form.Item label="请求方式">
+        {getFieldDecorator(`${linkIndex}_${index}_requestMethod`, {
+          initialValue: action === 'edit' ? api?.base?.requestMethod : undefined,
+          rules: [{ required: true, message: '请输入请求方式!' }],
+        })(<CommonSelect dataSource={[
+          {
+            label: 'GET',
+            value: 'GET'
+          },
+          {
+            label: 'POST',
+            value: 'POST'
+          }
+        ]}/>)}
+      </Form.Item>
+    </Col>
+    <Col offset={3} span={8}>
+      <Form.Item label="超时时间">
+        {getFieldDecorator(`${linkIndex}_${index}_requestTimeout`, {
+          initialValue: action === 'edit' ? api?.base?.requestTimeout : undefined,
+          rules: [{ required: false, message: '请输入超时时间!' }],
+        })(<InputNumberPro style={{ width: 200 }} addonAfter="毫秒" placeholder="请输入超时时间"/>)}
+      </Form.Item>
+    </Col>
+    <Col span={8}>
+      <Form.Item label="允许302跳转">
+        {getFieldDecorator(`${linkIndex}_${index}_allowForward`, {
+          valuePropName: 'checked',
+          initialValue: action === 'edit' ? api?.base?.allowForward : false,
+          rules: [{ required: false, message: '请输入超时时间!' }],
+        })(<Switch/>)}
+      </Form.Item>
+    </Col>
+  </Row>
+  <Form.Item style={{ display: 'none' }}>
+    {getFieldDecorator(`${linkIndex}_${index}_apiType`, {
+      initialValue: 'HTTP',
+      rules: [{ required: false, message: '' }],
+    })(<Input placeholder="请输入类名" />)}
+  </Form.Item>
+</Form>
           </TabPane>
           {getFieldValue(`${linkIndex}_${index}_requestMethod`) === 'POST' &&    <TabPane tab="Body定义" key="5">
             <Form>
