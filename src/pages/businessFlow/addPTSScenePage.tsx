@@ -306,9 +306,7 @@ const MultiFormComponent = ({ form }) => {
           if (msg?.data?.success) {
             message.success('保存成功');
             router.push('/businessFlow');
-          } else {
-            message.error('保存失败');
-          }
+          } 
           return;
         }  
         const {
@@ -317,9 +315,7 @@ const MultiFormComponent = ({ form }) => {
         if (success) {
           message.success('保存成功');
           router.push('/businessFlow');
-        } else {
-          message.error('保存失败');
-        }
+        } 
       }
     });
   };
@@ -446,9 +442,7 @@ const MultiFormComponent = ({ form }) => {
             if (res?.data?.success) {
               router.push(`/businessFlow/debugDetail?id=${id}`);
             }
-          } else {
-            message.error('保存失败');
-          }
+          } 
           return;
         }  
         const {
@@ -459,9 +453,7 @@ const MultiFormComponent = ({ form }) => {
           if (res?.data?.success) {
             router.push(`/businessFlow/debugDetail?id=${data?.id}`);
           }
-        } else {
-          message.error('保存失败');
-        }
+        } 
       }
     });
   };
