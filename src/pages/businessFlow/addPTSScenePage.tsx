@@ -327,67 +327,73 @@ const MultiFormComponent = ({ form }) => {
   const handleDebug = async () => {
     validateFields(async (err, values) => {
       if (!err) {
-        const formValues = Object.keys(values).reduce((acc, key) => {
-          if (key.includes('_')) {
-            const [formIndex, field] = key.split('_');
-            const index = parseInt(formIndex.replace('form', ''), 10);
-
-            if (!acc[index]) {
-              acc[index] = {};
-            }
-
-            acc[index][field] = values[key];
-          }
-          return acc;
-        }, []);
-        const newFormValues = formValues?.map((item, k) => {
-          if (item?.apiType === 'HTTP') {
-            return {
-              apiName: item?.apiName,
-              apiType: item?.apiType,
-              base: {
-                allowForward: item?.allowForward,
-                requestMethod: item?.requestMethod,
-                requestTimeout: item?.requestTimeout,
-                requestUrl: item?.requestUrl
-              },
-              body: {
-                forms: item?.forms,
-                rawData: item?.rawData,
-                contentType: item?.contentType
-              },
-              checkAssert: {
-                asserts: item?.asserts
-              },
-              header: {
-                headers: item?.headers
-              },
-              returnVar: {
-                vars: item?.vars
+        const formValues = transformData(values);
+        const newFormValues = formValues?.map((itemLink, kLink) => {
+          return {
+            linkName: itemLink?.linkName,
+            apis: itemLink?.apis?.map((item, k) => {
+              if (item?.apiType === 'HTTP') {
+                return {
+                  apiName: item?.apiName,
+                  apiType: item?.apiType,
+                  base: {
+                    allowForward: item?.allowForward,
+                    requestMethod: item?.requestMethod,
+                    requestTimeout: item?.requestTimeout,
+                    requestUrl: item?.requestUrl
+                  },
+                  body: {
+                    forms: item?.forms,
+                    rawData: item?.rawData,
+                    contentType: item?.contentType
+                  },
+                  checkAssert: {
+                    asserts: item?.asserts
+                  },
+                  header: {
+                    headers: item?.headers
+                  },
+                  returnVar: {
+                    vars: item?.vars
+                  },
+                  timer: {
+                    delay: item?.delay
+                  },
+                  beanShellPre: {
+                    script: [item?.beanShellPre]
+                  },
+                  beanShellPost: {
+                    script: [item?.beanShellPost]
+                  }
+                };
               }
-            };
-          }
-        
-          if (item?.apiType === 'JAVA') {
-            return {
-              apiName: item?.apiName,
-              apiType: item?.apiType,
-              base: {
-                requestUrl: item?.requestUrl
-              },
-              param: {
-                params: item?.params
+              if (item?.apiType === 'JAVA') {
+                return {
+                  apiName: item?.apiName,
+                  apiType: item?.apiType,
+                  base: {
+                    requestUrl: item?.requestUrl
+                  },
+                  param: {
+                    params: item?.params
+                  },
+                  checkAssert: {
+                    asserts: item?.asserts
+                  },
+                };
               }
-            };
+            })
+          };
+        }).filter((fItem, fK) => {
+          if (fItem?.linkName) {
+            return fItem;
           }
-
         });
-        
-        const csvs = formValues?.filter((item1, k1) => {
+        const csvs = formValues?.filter((item1: any, k1) => {
           if (item1?.fileName) {
             return item1;
           }
-        })?.map((ite, j) => {
+        })?.map((ite: any, j) => {
           return {
             fileName: ite?.fileName,
             params: ite?.params,
@@ -395,16 +401,43 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
+        const counters = formValues?.filter((item2:any, k1) => {
+          if (item2?.start) {
+            return item2;
+          }
+        })?.map((it: any, j) => {
+          return {
+            end: it?.end,
+            format: it?.format,
+            incr: it?.incr,
+            name: it?.name,
+            start: it?.start
+          };
+        });
+
+        const globalHttp = {
+          contentEncoding: values?.contentEncoding,
+          domain: values?.domain,
+          path: values?.path,
+          port: values?.port,
+          protocol: values?.protocol
+        };
+
         const result = {
+          globalHttp,
+          counters,
           processName: values?.processName,
-          links: [
-            {linkName: values?.linkName,
-              apis: newFormValues}
-          ],
+          links: newFormValues ,
           dataSource: {
             csvs
-          }
+          },
+          globalHeader: {
+            headers: values?.globalHeader
+          },
+          userVars: values?.userVars,
+          
         };
+       
      
         if (action === 'edit') {
           const msg = await BusinessFlowService.addPTS({ id, ...result });

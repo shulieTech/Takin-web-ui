@@ -148,13 +148,18 @@ const CheckPointTable: React.FC<Props> = props => {
 
   const handleChange = (type, key, value, k) => {
     setState({ disabled: value.disabled });
+
+    if (key === 'checkPointType') {
+      if (value === '响应Body') {
+
+      }
+    }
+
     if (type === 'change') {
       state.list.splice(k, 1, { ...state.list[k], [key]: value });
     } else if (type === 'plus') {
       state.list.push({
-        1: '',
-        2: '',
-        3: ''
+        checkObject: undefined, checkPointType: undefined, checkCondition: undefined, checkContent: undefined
       });
     } else {
       state.list.splice(k, 1);
