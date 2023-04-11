@@ -683,7 +683,7 @@ const MultiFormComponent = ({ form }) => {
       addNode('HTTP', linkIndex);
     }
     if (e.key === 'JAVA') {
-      queryJavaRequestDetail();
+      queryJavaRequestDetail(linkIndex);
     }
   }
 
@@ -718,7 +718,7 @@ const MultiFormComponent = ({ form }) => {
   /**
    * @name 获取JavaRequest详情
    */
-  const queryJavaRequestDetail = async () => {
+  const queryJavaRequestDetail = async (linkIndex) => {
     const {
           data: { success, data }
         } = await BusinessFlowService.queryJavaRequestDetail({
@@ -728,7 +728,7 @@ const MultiFormComponent = ({ form }) => {
       setState({
         javaRequestDetails: data,
       });
-      addNode('JAVA', data?.className);
+      addNode('JAVA', linkIndex, data?.className);
     }
   };
 
