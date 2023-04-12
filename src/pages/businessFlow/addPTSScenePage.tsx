@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect } from 'react';
-import { Form, Input, Button, Tabs, Collapse,  message, Dropdown, Menu, Icon } from 'antd';
+import { Form, Input, Button, Tabs, Collapse,  message, Dropdown, Menu, Icon, Switch } from 'antd';
 import { MainPageLayout } from 'src/components/page-layout';
-import {  useStateReducer } from 'racc';
+import {  CommonSelect, useStateReducer } from 'racc';
 
 import APIPanel from './components/APIPanel';
 import BusinessFlowService from './service';
@@ -263,7 +263,7 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
-        const counters = formValues?.filter((item2:any, k1) => {
+        const counters = formValues?.filter((item2: any, k1) => {
           if (item2?.start) {
             return item2;
           }
@@ -397,7 +397,7 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
-        const counters = formValues?.filter((item2:any, k1) => {
+        const counters = formValues?.filter((item2: any, k1) => {
           if (item2?.start) {
             return item2;
           }
@@ -434,7 +434,6 @@ const MultiFormComponent = ({ form }) => {
           
         };
        
-     
         if (action === 'edit') {
           const msg = await BusinessFlowService.addPTS({ id, ...result });
           if (msg?.data?.success) {
@@ -752,6 +751,32 @@ const MultiFormComponent = ({ form }) => {
           rules: [{ required: true, message: '请输入链路!' }],
         })(<Input placeholder="请输入链路名称" />)}
       </Form.Item>
+      <Form.Item >
+        {getFieldDecorator(`${linkIndex}_linkType`, {
+          initialValue: action === 'edit' ? linkNode?.linkType : '链路名称',
+          rules: [{ required: true, message: '请选择链路类型!' }],
+        })(<CommonSelect style={{width:160}} dataSource={[
+          {
+            label: '普通线程组',
+            value: 'normal'
+          },
+          {
+            label: 'setUp线程组',
+            value: 'setUp'
+          },
+          {
+            label: 'tearDown线程组',
+            value: 'tearDown'
+          }
+        ]}/>)}
+      </Form.Item>
+      <Form.Item >
+        {getFieldDecorator(`${linkIndex}_enabled`, {
+          valuePropName: 'checked',
+          initialValue: action === 'edit' ? linkNode?.enabled : undefined,
+          rules: [{ required: true, message: '请输入链路!' }],
+        })(<Switch />)}
+      </Form.Item>
       <Form.Item style={{ float: 'right' }}>
         <Button type="link">删除</Button>
       </Form.Item>
@@ -848,7 +873,6 @@ const MultiFormComponent = ({ form }) => {
   </TabPane>
 </Tabs>
   </Panel>
- 
 </Collapse>  
   </TabPane>
 </Tabs>

@@ -141,33 +141,33 @@ const IB2HeaderTable: React.FC<Props> = props => {
           );
         }
       },
-      {
-        ...customColumnProps,
-        title: '操作',
-        dataIndex: 'action',
-        render: (text, row, index) => {
-          return (
-            <span>
-              {index <= state.list.length - 1 && state.list.length !== 1 && row?.allowEdit && (
-                <Button type="link" onClick={() => handleChange('minus', '', '', index)}>
-                 <Icon
-                  type="minus-circle"
-                  style={{ color: '#11BBD5', marginLeft: 5 }}
-                 />
-                </Button>
-              )}
-              {index === state.list.length - 1 && (
-                <Button type="link" disabled={false}  onClick={() => handleChange('plus', '', '', index)}>
-                <Icon
-                  type="plus-circle"
-                  style={{ color: '#11BBD5', marginLeft: 5 }}             
-                />
-                </Button>
-              )}
-            </span>
-          );
-        }
-      }
+      // {
+      //   ...customColumnProps,
+      //   title: '操作',
+      //   dataIndex: 'action',
+      //   render: (text, row, index) => {
+      //     return (
+      //       <span>
+      //         {index <= state.list.length - 1 && state.list.length !== 1 && row?.allowEdit && (
+      //           <Button type="link" onClick={() => handleChange('minus', '', '', index)}>
+      //            <Icon
+      //             type="minus-circle"
+      //             style={{ color: '#11BBD5', marginLeft: 5 }}
+      //            />
+      //           </Button>
+      //         )}
+      //         {index === state.list.length - 1 && (
+      //           <Button type="link" disabled={false}  onClick={() => handleChange('plus', '', '', index)}>
+      //           <Icon
+      //             type="plus-circle"
+      //             style={{ color: '#11BBD5', marginLeft: 5 }}             
+      //           />
+      //           </Button>
+      //         )}
+      //       </span>
+      //     );
+      //   }
+      // }
     ];
   };
 
