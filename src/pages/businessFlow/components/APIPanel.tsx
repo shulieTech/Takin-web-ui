@@ -244,7 +244,7 @@ const APIPanel: React.FC<Props> = props => {
               </Form.Item>
             </Form>
           </TabPane>
-          <TabPane tab="定时器" key="5">
+          <TabPane tab="定时器" key="6">
           <Form layout="inline">
               <Form.Item label="线程延迟（毫秒）">
                 {getFieldDecorator(`${linkIndex}_${index}_delay`, {
@@ -254,7 +254,7 @@ const APIPanel: React.FC<Props> = props => {
               </Form.Item>
             </Form>
           </TabPane>
-          <TabPane tab="BeanShell预处理程序" key="6">
+          <TabPane tab="BeanShell预处理程序" key="7">
           <Form>
               <Form.Item label="脚本">
                 {getFieldDecorator(`${linkIndex}_${index}_beanShellPre`, {
@@ -264,7 +264,7 @@ const APIPanel: React.FC<Props> = props => {
               </Form.Item>
             </Form>
           </TabPane>
-          <TabPane tab="BeanShell后置处理程序" key="7">
+          <TabPane tab="BeanShell后置处理程序" key="8">
           <Form>
               <Form.Item label="脚本">
                 {getFieldDecorator(`${linkIndex}_${index}_beanShellPost`, {
