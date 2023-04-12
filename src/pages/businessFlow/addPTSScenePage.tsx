@@ -17,6 +17,7 @@ import CountForm from './components/CountForm';
 const getInitState = () => ({
   details: {} as any,
   javaRequestDetails: {} as any,
+  loading: false,
   apis: [{
     apiName: '',
     apiType: 'HTTP',
@@ -244,13 +245,6 @@ const MultiFormComponent = ({ form }) => {
             return fItem;
           }
         });
-        console.log('newFormValues', newFormValues);
-        // const apisArr = newFormValues?.filter((fitem, fk) => {
-        //   if (fitem?.apiName) {
-        //     return fitem;
-        //   }
-        // });
-
         const csvs = formValues?.filter((item1: any, k1) => {
           if (item1?.fileName) {
             return item1;
@@ -302,20 +296,41 @@ const MultiFormComponent = ({ form }) => {
         console.log('resiult', result);
            
         if (action === 'edit') {
+          setState({
+            loading: true
+          });
           const msg = await BusinessFlowService.addPTS({ id, ...result });
           if (msg?.data?.success) {
             message.success('保存成功');
             router.push('/businessFlow');
+            setState({
+              loading: false
+            });
+            return;
           } 
+          setState({
+            loading: false
+          });
           return;
-        }  
+         
+        } 
+        setState({
+          loading: true
+        }); 
         const {
         data: { success, data }
       } = await BusinessFlowService.addPTS(result);
         if (success) {
+          setState({
+            loading: false
+          });
           message.success('保存成功');
           router.push('/businessFlow');
+          return;
         } 
+        setState({
+          loading: false
+        });
       }
     });
   };
@@ -435,15 +450,28 @@ const MultiFormComponent = ({ form }) => {
         };
        
         if (action === 'edit') {
+          setState({
+            loading: true
+          });
           const msg = await BusinessFlowService.addPTS({ id, ...result });
           if (msg?.data?.success) {
             const res = await BusinessFlowService.debugPTS({ id });
             if (res?.data?.success) {
               router.push(`/businessFlow/debugDetail?id=${id}`);
+              setState({
+                loading: false
+              });
+              return;
             }
           } 
+          setState({
+            loading: false
+          });
           return;
-        }  
+        } 
+        setState({
+          loading: true
+        }); 
         const {
         data: { success, data }
       } = await BusinessFlowService.addPTS(result);
@@ -451,7 +479,15 @@ const MultiFormComponent = ({ form }) => {
           const res = await BusinessFlowService.debugPTS({ id: data?.id });
           if (res?.data?.success) {
             router.push(`/businessFlow/debugDetail?id=${data?.id}`);
+            setState({
+              loading: false
+            });
+            return;
           }
+          setState({
+            loading: false
+          });
+          return;
         } 
       }
     });
@@ -755,7 +791,7 @@ const MultiFormComponent = ({ form }) => {
         {getFieldDecorator(`${linkIndex}_linkType`, {
           initialValue: action === 'edit' ? linkNode?.linkType : '链路名称',
           rules: [{ required: true, message: '请选择链路类型!' }],
-        })(<CommonSelect style={{width:160}} dataSource={[
+        })(<CommonSelect style={{ width: 160 }} dataSource={[
           {
             label: '普通线程组',
             value: 'normal'
@@ -891,10 +927,10 @@ const MultiFormComponent = ({ form }) => {
         </Button>
       </div>
 <div style={{ position: 'fixed', bottom: 0, padding: 8, background: '#fff', width: '100%' }}>
-    <Button type="primary" onClick={handleDebug} style={{ marginRight: 8 }}>
+    <Button loading={state?.loading} type="primary" onClick={handleDebug} style={{ marginRight: 8 }}>
       保存并调试
     </Button>
-    <Button type="primary" onClick={handleSubmit}>
+    <Button loading={state?.loading} type="primary" onClick={handleSubmit}>
       仅保存
     </Button>
 
