@@ -56,7 +56,7 @@ const CsvForm: React.FC<Props> = props => {
             {getFieldDecorator(`${index}_params`, {
               initialValue: action === 'edit' ? csv?.params : undefined,
               rules: [{ required: true, message: '请输入变量名!' }],
-            })(<Input placeholder="请输入文件名" style={{ width: 350 }}/>)}
+            })(<Input placeholder="请输入变量名（西文逗号间隔" style={{ width: 350 }}/>)}
           </Form.Item>
           <Form.Item  label="首行忽略">
             {getFieldDecorator(`${index}_ingoreFirstLine`, {

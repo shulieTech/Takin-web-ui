@@ -39,7 +39,7 @@ const GlobalHeaderTable: React.FC<Props> = props => {
         render: (text, row, index) => {
           return (
                 <Input
-                  placeholder="请输入Header Key"
+                  placeholder="请输入Key"
                   value={text}
                   onChange={e =>
                     handleChange('change', 'key', e.target.value, index)
@@ -55,7 +55,7 @@ const GlobalHeaderTable: React.FC<Props> = props => {
         render: (text, row, index) => {
           return (
             <Input
-              placeholder="请输入Header Value"
+              placeholder="请输入Value"
               value={text}
               onChange={e =>
                 handleChange('change', 'value', e.target.value, index)

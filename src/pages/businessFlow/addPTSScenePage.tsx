@@ -184,9 +184,11 @@ const MultiFormComponent = ({ form }) => {
         const formValues = transformData(values);
         console.log('formValues', transformData(values));
 
-        const newFormValues = formValues?.map((itemLink, kLink) => {
+        const newFormValues = formValues?.map((itemLink: any, kLink) => {
           return {
             linkName: itemLink?.linkName,
+            linkType: itemLink?.linkType,
+            enabled: itemLink?.enabled,
             apis: itemLink?.apis?.map((item, k) => {
               if (item?.apiType === 'HTTP') {
                 return {
@@ -220,7 +222,8 @@ const MultiFormComponent = ({ form }) => {
                   },
                   beanShellPost: {
                     script: [item?.beanShellPost]
-                  }
+                  },
+                  enabled: item?.enabled
                 };
               }
               if (item?.apiType === 'JAVA') {
@@ -236,6 +239,7 @@ const MultiFormComponent = ({ form }) => {
                   checkAssert: {
                     asserts: item?.asserts
                   },
+                  enabled: item?.enabled
                 };
               }
             })
@@ -291,7 +295,6 @@ const MultiFormComponent = ({ form }) => {
             headers: values?.globalHeader
           },
           userVars: values?.userVars,
-          
         };
         console.log('resiult', result);
            
@@ -339,9 +342,11 @@ const MultiFormComponent = ({ form }) => {
     validateFields(async (err, values) => {
       if (!err) {
         const formValues = transformData(values);
-        const newFormValues = formValues?.map((itemLink, kLink) => {
+        const newFormValues = formValues?.map((itemLink: any, kLink) => {
           return {
             linkName: itemLink?.linkName,
+            linkType: itemLink?.linkType,
+            enabled: itemLink?.enabled,
             apis: itemLink?.apis?.map((item, k) => {
               if (item?.apiType === 'HTTP') {
                 return {
@@ -375,7 +380,8 @@ const MultiFormComponent = ({ form }) => {
                   },
                   beanShellPost: {
                     script: [item?.beanShellPost]
-                  }
+                  },
+                  enabled: item?.enabled
                 };
               }
               if (item?.apiType === 'JAVA') {
@@ -391,6 +397,7 @@ const MultiFormComponent = ({ form }) => {
                   checkAssert: {
                     asserts: item?.asserts
                   },
+                  enabled: item?.enabled
                 };
               }
             })
@@ -809,8 +816,8 @@ const MultiFormComponent = ({ form }) => {
       <Form.Item >
         {getFieldDecorator(`${linkIndex}_enabled`, {
           valuePropName: 'checked',
-          initialValue: action === 'edit' ? linkNode?.enabled : undefined,
-          rules: [{ required: true, message: '请输入链路!' }],
+          initialValue: action === 'edit' ? linkNode?.enabled : true,
+          rules: [{ required: true, message: '' }],
         })(<Switch />)}
       </Form.Item>
       <Form.Item style={{ float: 'right' }}>

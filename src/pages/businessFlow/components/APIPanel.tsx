@@ -115,8 +115,16 @@ const APIPanel: React.FC<Props> = props => {
               rules: [{ required: true, message: '请输入压测API名称!' }],
             })(<Input placeholder="请输入压测API名称" onClick={(e) => {
               e.stopPropagation();
+            // tslint:disable-next-line:jsx-alignment
             }}/>)}
           </Form.Item>
+          <Form.Item >
+        {getFieldDecorator(`${linkIndex}_${index}_enabled`, {
+          valuePropName: 'checked',
+          initialValue: action === 'edit' ? api?.enabled : true,
+          rules: [{ required: true, message: '' }],
+        })(<Switch onChange={(checked, e) => { e.stopPropagation(); }}/>)}
+      </Form.Item>
           <Form.Item >
          {getFieldValue(`${linkIndex}_${index}_requestMethod`)}
           </Form.Item>

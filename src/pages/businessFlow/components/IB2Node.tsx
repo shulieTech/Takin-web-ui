@@ -20,7 +20,7 @@ interface Props {
   api?: any;
   action?: string;
   setState?: any;
-  linkIndex?:any;
+  linkIndex?: any;
 }
 interface State {
   list: any[];
@@ -30,7 +30,7 @@ const { TabPane } = Tabs;
 const { Panel } = Collapse;
 const IB2Node: React.FC<Props> = props => {
     
-  const { form , index, api, action,linkIndex } = props;
+  const { form , index, api, action, linkIndex } = props;
   const { getFieldDecorator, validateFields, getFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
 //   const [state, setState] = useStateReducer<State>({
@@ -103,8 +103,16 @@ const IB2Node: React.FC<Props> = props => {
               rules: [{ required: true, message: '请输入压测API名称!' }],
             })(<Input placeholder="请输入压测API名称" onClick={(e) => {
               e.stopPropagation();
+            // tslint:disable-next-line:jsx-alignment
             }}/>)}
           </Form.Item>
+          <Form.Item >
+        {getFieldDecorator(`${linkIndex}_${index}_enabled`, {
+          valuePropName: 'checked',
+          initialValue: action === 'edit' ? api?.enabled : true,
+          rules: [{ required: true, message: '' }],
+        })(<Switch onChange={(checked, e) => { e.stopPropagation(); }}/>)}
+      </Form.Item>
           <Form.Item style={{ float: 'right' }}>
             <Button type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
           </Form.Item>
