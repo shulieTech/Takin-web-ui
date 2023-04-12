@@ -171,7 +171,7 @@ const APIPanel: React.FC<Props> = props => {
       <Form.Item label="允许302跳转">
         {getFieldDecorator(`${linkIndex}_${index}_allowForward`, {
           valuePropName: 'checked',
-          initialValue: action === 'edit' ? api?.base?.allowForward : false,
+          initialValue: action === 'edit' ? api?.base?.allowForward : true,
           rules: [{ required: false, message: '请输入超时时间!' }],
         })(<Switch/>)}
       </Form.Item>

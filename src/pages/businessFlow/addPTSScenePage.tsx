@@ -23,7 +23,7 @@ const getInitState = () => ({
     base: {
       allowForward: true,
       requestMethod: 'GET',
-      requestTimeout: 0,
+      requestTimeout: undefined,
       requestUrl: ''
     },
     body: {
@@ -75,7 +75,7 @@ const getInitState = () => ({
         base: {
           allowForward: true,
           requestMethod: 'GET',
-          requestTimeout: 0,
+          requestTimeout: undefined,
           requestUrl: ''
         },
         body: {
@@ -482,7 +482,7 @@ const MultiFormComponent = ({ form }) => {
         base: {
           allowForward: true,
           requestMethod: 'GET',
-          requestTimeout: 0,
+          requestTimeout: undefined,
           requestUrl: ''
         },
         body: {
@@ -585,7 +585,7 @@ const MultiFormComponent = ({ form }) => {
         base: {
           allowForward: true,
           requestMethod: 'GET',
-          requestTimeout: 0,
+          requestTimeout: undefined,
           requestUrl: ''
         },
         body: {
