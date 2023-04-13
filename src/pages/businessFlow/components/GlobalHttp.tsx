@@ -27,7 +27,7 @@ const GlobalHttp: React.FC<Props> = props => {
             {getFieldDecorator(`protocol`, {
               initialValue: action === 'edit' ? globalHttp?.protocol : undefined,
               rules: [{ required: false, message: '请输入协议!' }],
-            })(<Input placeholder="请输入协议" style={{ width: 200 }}/>)}
+            })(<Input placeholder="请输入协议，http或https" style={{ width: 200 }}/>)}
           </Form.Item>
           <Form.Item  label="服务器名称或IP" >
             {getFieldDecorator(`domain`, {

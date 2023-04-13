@@ -5,7 +5,7 @@ import styles from '../index.less';
 
 export default (props) => {
   return (
-    <Link to="/prepareShadowSource">
+    <Link to="/businessFlow">
       <div className={styles['introduce-guide']}>
         <div style={{ display: 'inline-block' }}>
           <div
