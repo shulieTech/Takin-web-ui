@@ -554,19 +554,19 @@ const MultiFormComponent = ({ form }) => {
         header: {
           headers: [
             {
-              key: '',
-              value: ''
+              key: undefined,
+              value: undefined
             }
           ]
         },
         returnVar: {
           vars: [
             {
-              matchIndex: 0,
-              parseExpress: '',
-              testName: '',
-              varName: '',
-              varSource: ''
+              matchIndex: undefined,
+              parseExpress: undefined,
+              testName: undefined,
+              varName: undefined,
+              varSource: undefined
             }
           ]
         }
