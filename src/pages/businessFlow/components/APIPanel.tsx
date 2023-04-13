@@ -77,15 +77,54 @@ const APIPanel: React.FC<Props> = props => {
     console.log('getFieldValue', getFieldValue(`${linkIndex}_${index}_contentType`));
   };
 
+  const removePropertiesStartingWith = (obj, prefix) => {
+    Object.keys(obj).forEach((key) => {
+      if (key.startsWith(prefix)) {
+        delete obj[key];
+      }
+    });
+  };
+
+  function resetFieldsErrors(keys) {
+
+    const fields = keys.reduce((acc, key) => {
+      acc[key] = {
+        value: undefined,
+        errors: null
+      };
+      return acc;
+    }, {});
+    console.log('hahahahhaha这是files', fields);
+  
+    form.setFieldsValue(fields);
+  }
+
+  const resetFieldsStartingWith = (prefix, obj) => {
+    const fieldsToReset = Object.keys(obj).filter(key => key.startsWith(prefix));
+    console.log('fieldsToReset', fieldsToReset);
+    resetFieldsErrors(fieldsToReset);
+    form.resetFields(fieldsToReset);
+  };
+  
   const handleDelete = (e) => {
     e.stopPropagation();
     // console.log('index', index);
+    console.log('here-?????????执行');
+    // const allFields = Object.keys(form.getFieldsValue());
     if (action === 'edit') {
-    //   console.log('props?.state?.details', props?.state?.details);
-      removeApiAtIndex(props?.state?.details, 0, index);
-    //   console.log(' removeApiAtIndex(props?.state?.details, 0, index)', removeApiAtIndex(props?.state?.details, 0, index));
+      // resetFieldsStartingWith(`${linkIndex}_${index}`, form.getFieldsValue());
+      const fields = form.getFieldsValue();
+      const newFields = Object.keys(fields).reduce((result, key) => {
+        if (!key.startsWith(`${linkIndex}_${index}`)) {
+          result[key] = fields[key];
+        }
+        return result;
+      }, {});
+   
+
       props.setState({
-        // details: removeApiAtIndex(props?.state?.details, 0, index)
+        formFields: Object.keys(newFields),
+        details: deleteApiAtIndexWithoutMutation(props?.state?.details, linkIndex, index)
       });
       return; 
     }
@@ -100,9 +139,32 @@ const APIPanel: React.FC<Props> = props => {
   };
 
   function removeApiAtIndex(json, linksIndex, apiIndex) {
+    console.log('linksIndex-----', json, linksIndex, apiIndex);
     if (json.links && json.links[linksIndex] && json.links[linksIndex].apis) {
-      json.links[linksIndex].apis.splice(apiIndex, 1);
+      // json.links[linksIndex].apis.splice(apiIndex, 1);
+      json.links[linksIndex].apis?.filter((item, k) => {
+        if (k !== apiIndex) {
+          return item;
+        }
+      });
     }
+  }
+
+  function deleteApiAtIndexWithoutMutation(object, linksIndex, apiIndex) {
+    const newObject = JSON.parse(JSON.stringify(object));
+  
+    if (
+      newObject &&
+      newObject.links &&
+      newObject.links[linksIndex] &&
+      newObject.links[linksIndex].apis
+    ) {
+      newObject.links[linksIndex].apis.splice(apiIndex, 1);
+      return newObject;
+    } 
+    console.error('Invalid indices or object structure.');
+    return object;
+    
   }
 
   return (
@@ -144,7 +206,7 @@ const APIPanel: React.FC<Props> = props => {
       <Form.Item label="压测URL">
         {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
           initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
-          rules: [{ required: true, message: 'url不能为空!' }],
+          rules: [{ required: false, message: 'url不能为空!' }],
         })(<Input.TextArea placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v" />)}
       </Form.Item>
     </Col>

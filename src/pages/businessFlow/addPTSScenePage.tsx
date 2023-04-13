@@ -120,10 +120,10 @@ const getInitState = () => ({
       }
       ]
     }
-
   ],
   csvs: [],
-  counters: []
+  counters: [],
+  formFields: []
 });
 export type State = ReturnType<typeof getInitState>;
 const MultiFormComponent = ({ form }) => {
@@ -177,7 +177,8 @@ const MultiFormComponent = ({ form }) => {
   }
 
   const handleSubmit = async () => {
-    validateFields(async (err, values) => {
+
+    await validateFields(async (err, values) => {
       if (!err) {
         console.log('values-----', values);
         
@@ -189,7 +190,7 @@ const MultiFormComponent = ({ form }) => {
             linkName: itemLink?.linkName,
             linkType: itemLink?.linkType,
             enabled: itemLink?.enabled,
-            apis: itemLink?.apis?.map((item, k) => {
+            apis: itemLink?.apis?.filter((ite) => {if (ite?.apiName) {return ite; }})?.map((item, k) => {
               if (item?.apiType === 'HTTP') {
                 return {
                   apiName: item?.apiName,
@@ -287,7 +288,7 @@ const MultiFormComponent = ({ form }) => {
           globalHttp,
           counters,
           processName: values?.processName,
-          links: newFormValues ,
+          links: newFormValues,
           dataSource: {
             csvs
           },
@@ -347,7 +348,7 @@ const MultiFormComponent = ({ form }) => {
             linkName: itemLink?.linkName,
             linkType: itemLink?.linkType,
             enabled: itemLink?.enabled,
-            apis: itemLink?.apis?.map((item, k) => {
+            apis: itemLink?.apis?.filter((ite) => {if (ite?.apiName) {return ite; }})?.map((item, k) => {
               if (item?.apiType === 'HTTP') {
                 return {
                   apiName: item?.apiName,
@@ -522,6 +523,7 @@ const MultiFormComponent = ({ form }) => {
       node = [{
         apiName: '',
         apiType: type,
+        enabled: true,
         base: {
           allowForward: true,
           requestMethod: 'GET',
@@ -573,6 +575,7 @@ const MultiFormComponent = ({ form }) => {
       node = [{
         apiName: '',
         apiType: type,
+        enabled: true,
         base: {
           requestUrl: defaultName
         },
@@ -599,6 +602,8 @@ const MultiFormComponent = ({ form }) => {
         if (k === linkIndex) {
           return {
             linkName: item?.linkName,
+            linkType: item?.linkType,
+            enabled: item?.enabled,
             apis: item?.apis?.concat(node)
           };
         }
@@ -622,9 +627,12 @@ const MultiFormComponent = ({ form }) => {
     let linkNode = [];
     linkNode = [{ 
       linkName: undefined,
+      linkType: undefined,
+      enabled: true,
       apis: [{
         apiName: '',
         apiType: 'HTTP',
+        enabled: true,
         base: {
           allowForward: true,
           requestMethod: 'GET',
@@ -683,6 +691,21 @@ const MultiFormComponent = ({ form }) => {
     }
     setState({
       links: state?.links?.concat(linkNode)
+    });
+  };
+
+  const handleDeleteLink = (linkIndex) => {
+    if (action === 'edit') {
+      setState({
+        details: {
+          ...state?.details,
+          links: state?.details?.links?.splice(linkIndex, 1)
+        }});
+      return;
+    }
+    state?.links?.splice(linkIndex, 1);
+    setState({
+      links: state?.links
     });
   };
 
@@ -821,7 +844,7 @@ const MultiFormComponent = ({ form }) => {
         })(<Switch />)}
       </Form.Item>
       <Form.Item style={{ float: 'right' }}>
-        <Button type="link">删除</Button>
+        <Button onClick={() => {handleDeleteLink(linkIndex); }} type="link">删除</Button>
       </Form.Item>
     </Form>
     {action === 'edit' ? linkNode?.apis?.map((formItem, index) => {
@@ -919,7 +942,9 @@ const MultiFormComponent = ({ form }) => {
 </Collapse>  
   </TabPane>
 </Tabs>
-{action === 'edit' ? state?.details?.links?.map((item, k) => {
+
+{console.log('state?.details?.links-----', state?.details?.links)}
+{action === 'edit' && state?.details?.links ? state?.details?.links?.map((item, k) => {
   return renderLink(item, k); 
 }) : state?.links?.map((item1, k1) => {
   return renderLink(item1, k1);
