@@ -166,7 +166,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
         label: '允许在线调试',
         node: <Switch />,
         options: {
-          initialValue: true,
+          initialValue: props.action === 'edit' ? detailData?.scriptType === 3 ? true : false : true,
           valuePropName: 'checked',
         },
       },
