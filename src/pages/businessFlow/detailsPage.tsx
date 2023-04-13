@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @author chuxu
  */
@@ -392,14 +393,14 @@ const BusinessFlowDetail: React.FC<Props> = props => {
             }
             extra={
               <div style={{ float: 'right' }}>
-                <span style={{ marginRight: 8 }}>
+                {detailData?.scriptType !== 3 && <span style={{ marginRight: 8 }}>
                   <DebugScriptRecordModal
                     btnText="调试历史"
                     id={id}
                     scriptDeployId={detailData.scriptDeployId}
                   />
-                </span>
-                <span style={{ marginRight: 8 }}>
+                </span>}
+                {detailData?.scriptType !== 3 &&  <span style={{ marginRight: 8 }}>
                   <DebugScriptModal
                     btnText="调试"
                     id={id}
@@ -407,7 +408,7 @@ const BusinessFlowDetail: React.FC<Props> = props => {
                     setState={setState}
                     scriptDeployId={detailData.scriptDeployId}
                   />
-                </span>
+                </span>}
                 <span style={{ marginRight: 8 }}>
                   <ScriptFileManageModal
                     onSuccess={() => {
