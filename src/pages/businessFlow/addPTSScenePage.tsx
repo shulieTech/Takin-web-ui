@@ -69,7 +69,7 @@ const getInitState = () => ({
   ],
   links: [
     { 
-      linkName: '串联链路1',
+      linkName: '链路名称',
       linkType: 'normal',
       enabled: true,
       apis: [{
@@ -628,7 +628,7 @@ const MultiFormComponent = ({ form }) => {
   const addLink = () => {
     let linkNode = [];
     linkNode = [{ 
-      linkName: undefined,
+      linkName: '链路名称',
       linkType: 'normal',
       enabled: true,
       apis: [{
