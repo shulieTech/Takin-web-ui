@@ -70,6 +70,8 @@ const getInitState = () => ({
   links: [
     { 
       linkName: '串联链路1',
+      linkType: 'normal',
+      enabled: true,
       apis: [{
         apiName: '',
         apiType: 'HTTP',
@@ -627,7 +629,7 @@ const MultiFormComponent = ({ form }) => {
     let linkNode = [];
     linkNode = [{ 
       linkName: undefined,
-      linkType: undefined,
+      linkType: 'normal',
       enabled: true,
       apis: [{
         apiName: '',
@@ -694,13 +696,24 @@ const MultiFormComponent = ({ form }) => {
     });
   };
 
+  function deleteIndexWithoutMutation(object, linksIndex) {
+    const newObject = JSON.parse(JSON.stringify(object));
+  
+    if (
+      newObject &&
+      newObject.links 
+    ) {
+      newObject.links.splice(linksIndex, 1);
+      return newObject;
+    } 
+    console.error('Invalid indices or object structure.');
+    return object;
+    
+  }
+
   const handleDeleteLink = (linkIndex) => {
     if (action === 'edit') {
-      setState({
-        details: {
-          ...state?.details,
-          links: state?.details?.links?.splice(linkIndex, 1)
-        }});
+      setState({ details: deleteIndexWithoutMutation(state?.details, linkIndex) });
       return;
     }
     state?.links?.splice(linkIndex, 1);
@@ -819,7 +832,7 @@ const MultiFormComponent = ({ form }) => {
       </Form.Item>
       <Form.Item >
         {getFieldDecorator(`${linkIndex}_linkType`, {
-          initialValue: action === 'edit' ? linkNode?.linkType : '链路名称',
+          initialValue: action === 'edit' ? linkNode?.linkType : 'normal',
           rules: [{ required: true, message: '请选择链路类型!' }],
         })(<CommonSelect style={{ width: 160 }} dataSource={[
           {
