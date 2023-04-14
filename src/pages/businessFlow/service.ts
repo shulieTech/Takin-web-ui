@@ -244,6 +244,20 @@ const BusinessFlowService = {
     const url = '/pts/process/debug/log';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取函数列表
+   */
+  async queryFunctionList(data = {}) {
+    const url = '/pts/function/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取函数列表
+   */
+  async functionDebug(data = {}) {
+    const url = '/pts/function/debug';
+    return httpPost(url, data);
+  },
 };
 
 export default BusinessFlowService;

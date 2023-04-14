@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect } from 'react';
-import { Form, Input, Button, Tabs, Collapse,  message, Dropdown, Menu, Icon, Switch } from 'antd';
+import { Form, Input, Button, Tabs, Collapse,  message, Dropdown, Menu, Icon, Switch, Modal, Table } from 'antd';
 import { MainPageLayout } from 'src/components/page-layout';
 import {  CommonSelect, useStateReducer } from 'racc';
 
@@ -13,11 +13,16 @@ import IB2Node from './components/IB2Node';
 import GlobalHeaderTable from './components/GlobalHeaderTable';
 import GlobalHttp from './components/GlobalHttp';
 import CountForm from './components/CountForm';
+import copy from 'copy-to-clipboard';
 
 const getInitState = () => ({
   details: {} as any,
   javaRequestDetails: {} as any,
   loading: false,
+  visible: true,
+  functionList: [],
+  selectedFunction: undefined,
+  functionExample: undefined,
   apis: [{
     apiName: '',
     apiType: 'HTTP',
@@ -517,6 +522,7 @@ const MultiFormComponent = ({ form }) => {
     if (action === 'edit') {
       queryPTSDetail();
     }
+    queryFunctionList();
   }, []);
  
   const addNode = (type, linkIndex, defaultName?) => {
@@ -820,6 +826,56 @@ const MultiFormComponent = ({ form }) => {
     }
   };
 
+  /**
+   * @name 获取函数列表
+   */
+  const queryFunctionList = async () => {
+    const {
+          data: { success, data }
+        } = await BusinessFlowService.queryFunctionList({});
+    if (success) {
+      setState({
+        functionList: data,
+      });
+    }
+  };
+
+  const handleClickFunctionList = () => { 
+    setState({
+      visible: true
+    });
+    queryFunctionList();
+  };
+
+  const handleSelectFunction = (value) => {
+    setState({
+      selectedFunction: value,
+      functionExample: state?.functionList?.filter(item => {return item?.functionName === value; })?.[0]?.functionExample
+    });
+  };
+
+  const handleCheck = async () => {
+    const {
+          data: { success, data }
+        } = await BusinessFlowService.functionDebug({
+          funcStr: state?.functionExample
+        });
+    if (success) {
+      message.success('校验成功');
+    }
+  };
+
+  /**
+   * @name 复制
+   */
+  const handleCopy = async value => {
+    if (copy(value)) {
+      message.success('复制成功');
+    } else {
+      message.error('复制失败');
+    }
+  };
+
   const renderLink = (linkNode, linkIndex) => {
     // tslint:disable-next-line:jsx-wrap-multiline
     return   <Form style={{ border: '1px solid #ddd', padding: '8px 16px', marginBottom: 20 }}>
@@ -956,7 +1012,6 @@ const MultiFormComponent = ({ form }) => {
   </TabPane>
 </Tabs>
 
-{console.log('state?.details?.links-----', state?.details?.links)}
 {action === 'edit' && state?.details?.links ? state?.details?.links?.map((item, k) => {
   return renderLink(item, k); 
 }) : state?.links?.map((item1, k1) => {
@@ -971,6 +1026,61 @@ const MultiFormComponent = ({ form }) => {
           + 添加串联链路
         </Button>
       </div>
+      <Modal title="函数列表" visible={state?.visible} width={'80%'} footer={null}>
+        <div style={{minHeight:300,maxHeight:500,overflow:'scroll'}}>
+          <CommonSelect
+            onChange={handleSelectFunction}
+            placeholder="请选择函数"
+            style={{ width: '100%' }}
+            dataSource={state?.functionList} 
+            onRender={item => (
+              <CommonSelect.Option key={item.functionName} value={item.functionName}>
+               {item?.functionName}:{item.functionDesc}
+              </CommonSelect.Option>
+            )} 
+          />
+          {state?.functionExample&& <div>
+          <h5 style={{ marginTop: 12 }}>函数参数说明</h5>
+          <Table 
+            rowKey="param"
+            pagination={false}
+            size="small"
+            dataSource={state?.functionList?.filter(item => {return item?.functionName === state?.selectedFunction; })?.[0]?.functionParams}
+            columns={[{
+              title: '参数示例值',
+              dataIndex: 'param',
+            },
+              {
+                title: '参数说明',
+                dataIndex: 'describe',
+              },
+              {
+                title: '是否必填',
+                dataIndex: 'required',
+                render: (text) => {
+                  return  text ? '是' : '否';
+                }
+              },
+            ]}
+          />
+          <h5 style={{ marginTop: 12 }}>函数表达式</h5>
+          <Input 
+            value={state?.functionExample} 
+            onChange={(e) => {
+              setState({
+                functionExample: e?.target?.value
+              });
+            }}
+          />
+          <div style={{ marginTop: 12 }}>
+            <Button onClick={handleCheck}>校验</Button>
+            <Button onClick={() => { handleCopy(state?.functionExample); }} style={{ marginLeft: 8 }}>复制函数表达式</Button>
+          </div>
+          </div>}
+         
+        </div>
+        
+      </Modal>
 <div style={{ position: 'fixed', bottom: 0, padding: 8, background: '#fff', width: '100%' }}>
     <Button loading={state?.loading} type="primary" onClick={handleDebug} style={{ marginRight: 8 }}>
       保存并调试
@@ -978,6 +1088,13 @@ const MultiFormComponent = ({ form }) => {
     <Button loading={state?.loading} type="primary" onClick={handleSubmit}>
       仅保存
     </Button>
+    <Button 
+      style={{ marginLeft: 20 }} 
+      onClick={() => {
+        handleClickFunctionList();
+      }}>
+        查看函数表达式
+      </Button>
 
     {/* {action === 'edit' && <Button type="primary" onClick={handleOnlyDebug} style={{ marginLeft: 8 }}>
       仅调试
