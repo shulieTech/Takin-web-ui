@@ -200,8 +200,6 @@ const ReportDetails: React.FC<Props> = (props) => {
     }
   };
 
-
-
   /**
    * @name 获取风险容器列表
    */
@@ -327,7 +325,7 @@ const ReportDetails: React.FC<Props> = (props) => {
   /**
    * @name 获取问题诊断
    */
-  const queryVlProblemCheck = async ( serviceName, startTime, endTime) => {
+  const queryVlProblemCheck = async (serviceName, startTime, endTime) => {
     const {
         data: { data, success },
       } = await PressureTestReportService.queryProblemCheck({
@@ -660,7 +658,15 @@ const ReportDetails: React.FC<Props> = (props) => {
         />
         <div className={styles.detailCardTitle}>
           问题诊断
-          <CustomTable style={{ marginTop: 8 }} columns={getproblemCheckColumns()} dataSource={state?.instancePerformanceList || []}/>
+          {detailData?.businessActivities?.map((item, k) => {
+            return  <div key={k}>
+              <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex" justify="space-between">
+                <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{item?.businessActivityName}</Col>
+              </Row>
+              <CustomTable style={{ marginTop: 8 }} columns={getproblemCheckColumns()} dataSource={state?.allProblemCheckData?.[k] || []}/> 
+            </div>; 
+          })}
+         
         </div>
          <div className={styles.detailCardWarp}>
             <div className={styles.detailCardListTitle}>瓶颈接口</div>
