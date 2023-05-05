@@ -314,6 +314,14 @@ const PressureTestReportService = {
     const url = '/vlt/report/node/compare';
     return httpGet(url, data);
   },
+
+  /**
+   * @name 获取问题诊断列表
+   */
+  async queryProblemCheck(data = {}) {
+    const url = '/vlt/report/problemCheck/list';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;

@@ -53,6 +53,7 @@ interface State {
   hasMissingData: number;
   graphData?: GraphData;
   tenantList: any;
+  allProblemCheckData: any;
   
   bottleneckList: any;
   riskMachineList: any;
@@ -91,6 +92,7 @@ const ReportDetails: React.FC<Props> = (props) => {
       /** 是否漏数 */
       hasMissingData: null,
       tenantList: [],
+      allProblemCheckData: [],
 
       bottleneckList: [],
       riskMachineList: [],
@@ -109,9 +111,7 @@ const ReportDetails: React.FC<Props> = (props) => {
   const { location } = props;
   const { query } = location;
   const { id } = query;
-  const { detailData, reportCountData, hasMissingData } = state;
-  const [isDownloadingJtl, setIsDownloadingJtl] = useState(false);
-  const [isDownloadingReport, setIsDownloadingReport] = useState(false);
+  const { detailData } = state;
 
   useEffect(() => {
     queryVltReportDetail(id);
@@ -178,10 +178,11 @@ const ReportDetails: React.FC<Props> = (props) => {
       queryAllMessageCode(data);
       queryAllCompareData(data, [data?.reportId]);
       queryAllTopologyData(data);
+      queryAllProblemCheckData(data);
     }
   };
 
-    /**
+  /**
    * @name 获取瓶颈接口列表
    */
   const queryVltBottleneck = async (value) => {
@@ -198,6 +199,8 @@ const ReportDetails: React.FC<Props> = (props) => {
       });
     }
   };
+
+
 
   /**
    * @name 获取风险容器列表
@@ -322,6 +325,22 @@ const ReportDetails: React.FC<Props> = (props) => {
   };
 
   /**
+   * @name 获取问题诊断
+   */
+  const queryVlProblemCheck = async ( serviceName, startTime, endTime) => {
+    const {
+        data: { data, success },
+      } = await PressureTestReportService.queryProblemCheck({
+        serviceName,
+        startTime,
+        endTime
+      });
+    if (success) {
+      return data;
+    }
+  };
+
+  /**
    * @name 获取应用趋势图
    */
   const queryTrendData = async (value) => {
@@ -386,6 +405,22 @@ const ReportDetails: React.FC<Props> = (props) => {
           allCompareData: res,
         });
       });
+  };
+
+    /**
+     * 
+     * @name 获取全部问题诊断
+     */
+  const queryAllProblemCheckData = async (detailDataValue) => {
+    await Promise.all(
+            detailDataValue?.businessActivities?.map((item) =>
+            queryVlProblemCheck(item?.serviceName, detailDataValue?.startTime, detailDataValue?.endTime)
+            )
+          ).then((res) => {
+            setState({
+              allProblemCheckData: res,
+            });
+          });
   };
 
     /**
@@ -623,6 +658,10 @@ const ReportDetails: React.FC<Props> = (props) => {
               </Row>
             </Col>}
         />
+        <div className={styles.detailCardTitle}>
+          问题诊断
+          <CustomTable style={{ marginTop: 8 }} columns={getproblemCheckColumns()} dataSource={state?.instancePerformanceList || []}/>
+        </div>
          <div className={styles.detailCardWarp}>
             <div className={styles.detailCardListTitle}>瓶颈接口</div>
             <CustomTable style={{ marginTop: 8 }} columns={getBottleneckColumns()} dataSource={state?.bottleneckList || []}/>
@@ -1041,6 +1080,45 @@ const getAppInstancePerformanceColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '平均TPS',
       dataIndex: 'avgTps'
+    }
+  ];
+};
+
+const getproblemCheckColumns = (): ColumnProps<any>[] => {
+  return [
+    {
+      ...customColumnProps,
+      title: '风险序号',
+      dataIndex: 'seqNo'
+    },
+    {
+      ...customColumnProps,
+      title: '节点ID',
+      dataIndex: 'nodeId'
+    }, {
+      ...customColumnProps,
+      title: '节点名称',
+      dataIndex: 'nodeName'
+    },
+    {
+      ...customColumnProps,
+      title: '技术风险名称',
+      dataIndex: 'techRiskName'
+    },
+    {
+      ...customColumnProps,
+      title: '诊断结果',
+      dataIndex: 'checkResult'
+    }, 
+    {
+      ...customColumnProps,
+      title: '当前值',
+      dataIndex: 'currentValue'
+    },
+    {
+      ...customColumnProps,
+      title: '应用名称',
+      dataIndex: 'appName'
     }
   ];
 };
