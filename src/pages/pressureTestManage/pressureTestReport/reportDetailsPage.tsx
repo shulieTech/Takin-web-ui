@@ -38,6 +38,7 @@ import CompareNodeModal from './components/CompareNodeModal';
 import BarChart from './components/BarCharts';
 import LineChartWrap from './components/LineChartWrap';
 import RequestDetailModal from './components/RequestDetailModal';
+import TrendChart from './components/TrendCharts';
 
 interface State {
   isReload?: boolean;
@@ -292,15 +293,16 @@ const ReportDetails: React.FC<Props> = (props) => {
   /**
    * @name 获取业务活动拓扑图
    */
-  const queryVlTopologyData = async (sceneId, startTime, endTime, reportId, xpathMd5) => {
+  const queryVlTopologyData = async (activityId) => {
     const {
           data: { data, success },
         } = await PressureTestReportService.queryVlTopologyData({
-          sceneId,
-          startTime,
-          endTime,
-          reportId,
-          xpathMd5
+          activityId
+          // sceneId,
+          // startTime,
+          // endTime,
+          // reportId,
+          // xpathMd5
         });
     if (success) {
       return data;
@@ -428,11 +430,7 @@ const ReportDetails: React.FC<Props> = (props) => {
   const queryAllTopologyData = async (detailDataValue) => {
     await Promise.all(
         detailDataValue?.businessActivities?.map((item) =>
-        queryVlTopologyData(detailDataValue?.sceneId,
-          detailDataValue?.startTime,
-          detailDataValue?.endTime,
-          detailDataValue?.reportId,
-          item?.xpathMd5)
+        queryVlTopologyData(item?.businessActivityId)
         )
       ).then((res) => {
         setState({
@@ -514,8 +512,8 @@ const ReportDetails: React.FC<Props> = (props) => {
     },
     {
       label: '最大并发',
-      value: detailData.concurrent,
-      precision: 0,
+      value: detailData.maxConcurrent,
+      precision: 2,
     },
     {
       label: '平均并发数',
@@ -524,29 +522,39 @@ const ReportDetails: React.FC<Props> = (props) => {
     },
     {
       label: '实际/目标TPS',
-      value: `${detailData.avgTps}/${detailData.tps}`,
+      value: `${detailData.realTps}/${detailData.targetTps}`,
       precision: 2,
       render: () => (
         <Fragment>
           <Statistic
             style={{ display: 'inline-block' }}
-            value={detailData.avgTps || 0}
+            value={detailData.realTps || 0}
             precision={0}
           />
           /
           <Statistic
             style={{ display: 'inline-block' }}
-            value={detailData.tps || 0}
+            value={detailData.targetTps || 0}
             precision={0}
           />
         </Fragment>
       ),
     },
     {
+      label: '最大TPS',
+      value: detailData.maxTps,
+      precision: 0,
+    },
+    {
       label: '平均RT',
       value: detailData.avgRt,
       precision: 2,
       suffix: 'ms',
+    },
+    {
+      label: '最大RT',
+      value: detailData.maxRt,
+      precision: 0,
     },
     {
       label: '成功率',
@@ -576,20 +584,20 @@ const ReportDetails: React.FC<Props> = (props) => {
         校准中
       </span>
     );
-    summaryList = summaryList.map((x) => ({
-      ...x,
-      value: 0,
-      render: () =>
-        x.label === '实际/目标TPS' ? (
-          <>
-            {checkTxt}/{detailData.tps || 0}
-          </>
-        ) : (
-          checkTxt
-        ),
-      precision: 0,
-      suffix: undefined,
-    }));
+    // summaryList = summaryList.map((x) => ({
+    //   ...x,
+    //   value: 0,
+    //   render: () =>
+    //     x.label === '实际/目标TPS' ? (
+    //       <>
+    //         {checkTxt}/{detailData.tps || 0}
+    //       </>
+    //     ) : (
+    //       checkTxt
+    //     ),
+    //   precision: 0,
+    //   suffix: undefined,
+    // }));
   }
 
   const extra = (
@@ -668,10 +676,10 @@ const ReportDetails: React.FC<Props> = (props) => {
           })}
          
         </div>
-         <div className={styles.detailCardWarp}>
+         {/* <div className={styles.detailCardWarp}>
             <div className={styles.detailCardListTitle}>瓶颈接口</div>
             <CustomTable style={{ marginTop: 8 }} columns={getBottleneckColumns()} dataSource={state?.bottleneckList || []}/>
-        </div>
+        </div> */}
         <div className={styles.detailCardWarp} >
             <div className={styles.detailCardListTitle}>风险容器</div>
             <CustomTable style={{ marginTop: 8 }} columns={getRiskColumns()} dataSource={state?.riskMachineList || []}/>
@@ -682,7 +690,7 @@ const ReportDetails: React.FC<Props> = (props) => {
                 <div style={{ float: 'right' }}>
                     <span style={{ padding: '5px 12px', border: '1px solid #eef0f2', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>{`压测报告${detailData?.reportId}`}（当前）</span>
                     <span style={{ margin: '0 8px' }}>🆚</span>
-                    <CommonSelect onChange={handleChangeReportId} placeholder="请选择要对比的压测报告" style={{ width: 400 }} dataSource={detailData?.reports?.map((item) => {return { label: `压测报告${item?.reportId}（并发数）${item?.maxConcurrent},${item?.startTime}`, value: item?.reportId }; })}/>
+                    <CommonSelect onChange={handleChangeReportId} placeholder="请选择要对比的压测报告" style={{ width: 400 }} dataSource={detailData?.reports?.map((item) => { return { label: `压测报告${item?.reportId}（并发数）${item?.maxConcurrent},${item?.startTime}`, value: item?.reportId }; })}/>
                 </div>
             </div>
             {detailData?.businessActivities?.map((item, k) => {
@@ -760,10 +768,6 @@ const ReportDetails: React.FC<Props> = (props) => {
                 <RequestDetailModal
                   btnText={state?.allMessageDetailList?.[k]?.traceId}
                   traceId={state?.allMessageDetailList?.[k]?.traceId}
-                  // btnText='0100007f16822286171551035d1ca80001'
-                  // traceId='0100007f16822286171551035d1ca80001'
-                // traceId={row.traceId}
-                // totalRt={row.totalRt}
               /></Descriptions.Item>
             <Descriptions.Item label="请求头"  span={3}>{state?.allMessageDetailList?.[k]?.requestHeader || '-'}</Descriptions.Item>
             <Descriptions.Item label="请求体" span={3}>
@@ -904,7 +908,8 @@ const getIndexColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '压测时长',
       dataIndex: 'pressureTestTime'
-    }, {
+    }, 
+    {
       ...customColumnProps,
       title: '请求数',
       dataIndex: 'totalRequest'
@@ -932,17 +937,23 @@ const getIndexColumns = (): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: 'SA',
-      dataIndex: 'sa'
+      dataIndex: 'sa',
+      render: (text) => {
+        return <span>{text}%</span>;
+      }
     },
     {
       ...customColumnProps,
       title: '成功率',
-      dataIndex: 'successRate'
+      dataIndex: 'successRate',
+      render: (text) => {
+        return <span>{text}%</span>;
+      }
     },
     {
       ...customColumnProps,
       title: '压测时间',
-      dataIndex: 'pressureTestTime'
+      dataIndex: 'startTime'
     }
   ];
 };
@@ -953,6 +964,16 @@ const getRtColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '报告ID',
       dataIndex: 'reportId'
+    },
+    {
+      ...customColumnProps,
+      title: '压测时长',
+      dataIndex: 'pressureTestTime'
+    },
+    {
+      ...customColumnProps,
+      title: '平均RT（ms）',
+      dataIndex: 'avgRt'
     },
     {
       ...customColumnProps,
@@ -997,7 +1018,8 @@ const getAppPerformanceColumns = (): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '应用名称',
-      dataIndex: 'appName'
+      dataIndex: 'appName',
+      width: 200
     },
     {
       ...customColumnProps,

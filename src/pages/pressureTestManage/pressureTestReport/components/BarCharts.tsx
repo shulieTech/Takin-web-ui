@@ -17,10 +17,10 @@ const BarChart = (props) => {
     return id?.push(item?.reportId);
   });
   data?.map((item) => {
-    return avgRt?.push(item?.avgRt);
+    return avgRt?.push(item?.rt);
   });
   data?.map((item) => {
-    return avgTps?.push(item?.avgTps);
+    return avgTps?.push(item?.tps);
   });
   data?.map((item) => {
     return successRate?.push(item?.successRate);

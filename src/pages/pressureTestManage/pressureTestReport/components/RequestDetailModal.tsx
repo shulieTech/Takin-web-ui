@@ -1,4 +1,4 @@
-import { message, Row, Tooltip } from 'antd';
+import { Button, message, Row, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import copy from 'copy-to-clipboard';
 import { CommonModal, useStateReducer } from 'racc';
@@ -11,6 +11,8 @@ import { router } from 'umi';
 import Header from '../components/Header';
 import PressureTestReportService from '../service';
 import styles from './../index.less';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface Props {
   btnText: any;
@@ -33,6 +35,7 @@ interface State {
   totalRt?: number;
 }
 const RequestDetailModal: React.FC<Props> = (props) => {
+  const contentRef = React.createRef();
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     data: null,
@@ -119,7 +122,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       {
         ...customColumnProps,
         title: '服务',
-        dataIndex: 'serviceName',
+        dataIndex: 'interfaceName',
         ellipsis: true,
         // width: 300,
         render: text => {
@@ -135,7 +138,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       {
         ...customColumnProps,
         title: '关联应用',
-        dataIndex: 'appName',
+        dataIndex: 'applicationName',
         // width: 100
       },
       {
@@ -148,7 +151,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       {
         ...customColumnProps,
         title: '请求体',
-        dataIndex: 'request',
+        dataIndex: 'params',
         width: 150,
         render: text => {
           return text ? (
@@ -202,8 +205,8 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       {
         ...customColumnProps,
         title: '结果',
-        dataIndex: 'status',
-        // width: 70,
+        dataIndex: 'succeeded',
+        width: 70,
         render: (text) => {
           return (
             <Fragment>
@@ -217,16 +220,9 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       {
         ...customColumnProps,
         title: '总耗时ms',
-        dataIndex: 'totalCost',
-        // width: 100
-      },
-      {
-        ...customColumnProps,
-        title: '流量来源',
-        dataIndex: 'clusterTest',
-        // width: 50,
-        render: text => text ? <span>压测</span> : <span>业务</span>
-      },   
+        dataIndex: 'costTime',
+        width: 100
+      } 
     ];
     return columns;
   };
@@ -269,28 +265,16 @@ const RequestDetailModal: React.FC<Props> = (props) => {
     return data;
   }
 
-  const requestHeadList = [
-    {
-      label: '调用链路入口',
-      value: state.entryHostIp,
-    },
-    {
-      label: '开始时间',
-      value: state.startTime && timestampToTime(state.startTime),
-    },
-    {
-      label: '总耗时',
-      value: state.totalRt ? `${state.totalRt}ms` : null,
-    },
-    {
-      label: '网络耗时',
-      value: `${Math.max(state.totalRt - state.totalCost, 0)}ms`,
-    },
-    {
-      label: '接口耗时',
-      value: state.totalCost ? `${state.totalCost}ms` : null,
-    },
-  ];
+  const exportToPDF = async () => {
+    const contentCanvas = await html2canvas(contentRef.current, {
+      backgroundColor: 'white',
+      scale: 1, // 调整 scale 参数以适应内容宽度
+    });
+
+    const pdf = new jsPDF('p', 'pt', [contentCanvas.width, contentCanvas.height]);
+    pdf.addImage(contentCanvas.toDataURL('image/png'), 'PNG', 0, 0, contentCanvas.width, contentCanvas.height);
+    pdf.save('exported-file.pdf');
+  };
 
   return (
     <CommonModal
@@ -302,9 +286,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
         title: (
           <p style={{ fontSize: 16 }}>
             请求详情
-            <span style={{ color: '#a2a6b1', fontSize: 12, marginLeft: 16 }}>
-              (请求日志数据仅保留3天，3天后将无法查看，请知晓。)
-            </span>
+            <Button  onClick={() => { exportToPDF(); }} style={{ float: 'right', marginRight: 20 }}>导出</Button>
           </p>
         ),
       }}
@@ -313,6 +295,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       onClick={() => handleClick()}
     >
       <div
+        ref={contentRef}
         style={{ height: document.body.clientHeight - 200, overflow: 'auto' }}
       >
         <div style={{ marginBottom: 26 }}>
@@ -324,7 +307,6 @@ const RequestDetailModal: React.FC<Props> = (props) => {
               </span>
             )}
           </div>
-          <Header list={requestHeadList} isExtra={false} />
         </div>
         {state.data && state.data[0] && !state.loading ? (
           <div className={styles.detailTable}>
