@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import {
   Col,
   Icon,
@@ -670,10 +671,10 @@ export default class Login extends DvaComponent<Props, State> {
               className={styles.bg1}
               src={require('./../../assets/login_bg.png')}
             />
-            <img
+            {/* <img
               className={styles.bg2}
               src={require('./../../assets/login_bg2.png')}
-            />
+            /> */}
             <img
               className={styles.bg3}
               src={require('./../../assets/login_img.png')}
@@ -687,7 +688,8 @@ export default class Login extends DvaComponent<Props, State> {
 
         <div className={styles.main}>
           <div className={styles.login}>
-            <p className={styles.sysName}>全链路压测</p>
+          <div className={styles.sysName}>欢迎登录Takin</div>
+            <div style={{ color: 'rgba(0, 0, 0, 0.45)', fontSize: 16, marginBottom: 20, marginTop: 8 }}>构建分布式系统稳定性主动防御体系</div>
             {dom}
             <center className={styles.other}>其他登录方式</center>
             <Row className={styles.otherimg} type="flex" justify="center">
