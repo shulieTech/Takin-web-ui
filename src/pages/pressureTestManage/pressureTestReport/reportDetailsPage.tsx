@@ -507,7 +507,7 @@ const ReportDetails: React.FC<Props> = (props) => {
     }
   };
 
-  let summaryList = [
+  const summaryList = [
     {
       label: '请求总数',
       value: detailData.totalRequest,
@@ -693,7 +693,13 @@ const ReportDetails: React.FC<Props> = (props) => {
                 <div style={{ float: 'right' }}>
                     <span style={{ padding: '5px 12px', border: '1px solid #eef0f2', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>{`压测报告${detailData?.reportId}`}（当前）</span>
                     <span style={{ margin: '0 8px' }}>🆚</span>
-                    <CommonSelect onChange={handleChangeReportId} placeholder="请选择要对比的压测报告" style={{ width: 400 }} dataSource={detailData?.reports?.map((item) => { return { label: `压测报告${item?.reportId}（并发数）${item?.maxConcurrent},${item?.startTime}`, value: item?.reportId }; })}/>
+                    <CommonSelect 
+                      onChange={handleChangeReportId} 
+                      placeholder="请选择要对比的压测报告" 
+                      style={{ width: 400 }} 
+                      dataSource={detailData?.reports?.filter((item) => { if (item?.reportId !== detailData?.reportId) {return item; } })?.map((item2) => {
+                        return { label: `压测报告${item2?.reportId}（并发数）${item2?.maxConcurrent},${item2?.startTime}`, value: item2?.reportId };
+                      })}/>
                 </div>
             </div>
             {detailData?.businessActivities?.map((item, k) => {
