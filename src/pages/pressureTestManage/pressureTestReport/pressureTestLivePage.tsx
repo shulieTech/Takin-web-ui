@@ -103,7 +103,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
 
   useEffect(() => {
     queryLiveBusinessActivity(id);
-  }, []);
+  }, [id, queryLiveBusinessActivity]);
   useEffect(() => {
     setTicker(ticker + 1);
     reFresh();
@@ -129,13 +129,13 @@ const PressureTestLive: React.FC<Props> = (props) => {
       // 10秒刷新一次链路图
       // queryReportGraphInfo(id, state.tabKey);
     }
-  }, [state.isReload]);
+  }, [id, queryLiveChartsInfo, queryLiveDetail, queryRequestList, reFresh, state.isReload, state.tabKey, ticker]);
 
   useEffect(() => {
     // 切换tab，立即刷新
     setState({ isReload: !state.isReload });
     setTicker(0);
-  }, [state.tabKey]);
+  }, [setState, state.isReload, state.tabKey]);
 
   const tenantList = async (s) => {
     const {
@@ -249,7 +249,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
   /**
    * @name 获取压测实况请求流量列表
    */
-  const queryRequestList = async (value = {}) => {
+  const queryRequestList = useCallback(async (value = {}) => {
     const newValue = {
       ...state.requestListQueryParams,
       ...value,
@@ -272,7 +272,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
         requestList: data,
       });
     }
-  };
+  });
 
   /**
    * @name 获取压测报告链路图信息
@@ -369,7 +369,7 @@ const PressureTestLive: React.FC<Props> = (props) => {
    */
   const handleOk = () => {
     router.push(
-      `/pressureTestManage/pressureTestReport/details?id=${detailData.id}&sceneId=${detailData.sceneId}`
+      `/pressureTestManage/pressureTestReport/reportDetails?id=${detailData.id}&sceneId=${detailData.sceneId}`
     );
   };
 
