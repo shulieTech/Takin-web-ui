@@ -698,7 +698,7 @@ const ReportDetails: React.FC<Props> = (props) => {
               <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex" justify="space-between">
                 <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{item?.businessActivityName}</Col>
                 <Col>
-                <CompareNodeModal activityName={item?.businessActivityName} btnText="查看节点对比" reportIds={state?.compareReportId ? [state?.detailData?.reportId, state?.compareReportId] : [state?.detailData?.reportId]}/>
+                <CompareNodeModal activityId={item?.businessActivityId} activityName={item?.businessActivityName} btnText="查看节点对比" reportIds={state?.compareReportId ? [state?.detailData?.reportId, state?.compareReportId] : [state?.detailData?.reportId]}/>
                 
                 </Col>
               </Row>

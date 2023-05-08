@@ -22,6 +22,7 @@ interface Props {
   reportIds?: any;
   startTime?: any;
   traceId?: any;
+  activityId:any;
 }
 
 interface State {
@@ -32,7 +33,7 @@ interface State {
   reportIds: any;
 }
 const CompareNodeModal: React.FC<Props> = props => {
-  const { reportIds } = props;
+  const { reportIds ,activityId} = props;
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     data: null,
@@ -43,7 +44,8 @@ const CompareNodeModal: React.FC<Props> = props => {
   const { activityName } = props;
   const handleClick = () => {
     queryRequestDetail({
-      reportIds
+      reportIds,
+      activityId
     });
   };
 
