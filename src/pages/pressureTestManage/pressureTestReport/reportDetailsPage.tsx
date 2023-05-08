@@ -440,7 +440,10 @@ const ReportDetails: React.FC<Props> = (props) => {
   };
 
   const handleChangeReportId = (value) => {
-    queryAllCompareData(state?.detailData, [state?.detailData?.reportId, value]);
+    setState({
+      compareReportId: value
+    });
+    queryAllCompareData(state?.detailData, value ? [state?.detailData?.reportId, value] : [state?.detailData?.reportId]);
   };
 
   /**
@@ -787,7 +790,7 @@ const ReportDetails: React.FC<Props> = (props) => {
           {state?.trendData?.map((item, k) => {
             return <div key={k}>
               <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex">
-              <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{item?.applicationName - item?.agentId}</Col>
+              <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{`${item?.applicationName} - ${item?.agentId}`}</Col>
              </Row>
              <TrendChart data={item?.tpsTarget}/>
               </div>;
@@ -1048,12 +1051,18 @@ const getAppPerformanceColumns = (): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '成功率',
-      dataIndex: 'successRate'
+      dataIndex: 'successRate',
+      render: (text) => {
+        return <span>{text}%</span>;
+      }
     },
     {
       ...customColumnProps,
       title: 'SA',
-      dataIndex: 'sa'
+      dataIndex: 'sa',
+      render: (text) => {
+        return <span>{text}%</span>;
+      }
     }, 
     {
       ...customColumnProps,
@@ -1077,12 +1086,19 @@ const getAppInstancePerformanceColumns = (): ColumnProps<any>[] => {
     }, {
       ...customColumnProps,
       title: 'CPU平均利用率',
-      dataIndex: 'avgCpuUsageRate'
+      dataIndex: 'avgCpuUsageRate',
+      render: (text) => {
+        return <span>{text}%</span>;
+      }
+
     },
     {
       ...customColumnProps,
       title: '内存平均利用率',
-      dataIndex: 'avgMemUsageRate'
+      dataIndex: 'avgMemUsageRate',
+      render: (text) => {
+        return <span>{text}%</span>;
+      }
     },
     {
       ...customColumnProps,

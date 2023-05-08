@@ -972,7 +972,7 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
         help={tooltip}
       />
       <div>
-        {originData.nodes.length > 0 && (
+        {/* {originData.nodes.length > 0 && (
           <Dropdown overlay={dataStaticsDropdownContent}>
             <div
               className={styles.dropdownBtn}
@@ -994,7 +994,7 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
               </span>
             </div>
           </Dropdown>
-        )}
+        )} */}
         {!props.freezeExpand && (
           <div
             style={{

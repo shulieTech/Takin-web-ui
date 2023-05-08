@@ -33,7 +33,7 @@ interface State {
   reportIds: any;
 }
 const CompareNodeModal: React.FC<Props> = props => {
-  const { reportIds ,activityId} = props;
+  const { reportIds , activityId } = props;
   const [state, setState] = useStateReducer<State>({
     isReload: false,
     data: null,
@@ -103,7 +103,7 @@ const CompareNodeModal: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '方法名/服务名',
-        dataIndex: 'methodName',
+        dataIndex: 'service',
       },
       {
         ...customColumnProps,
@@ -153,7 +153,7 @@ const CompareNodeModal: React.FC<Props> = props => {
               rowKey="id"
               columns={getColumns()}
               size="small"
-              dataSource={state.data}
+              dataSource={[state.data]}
               defaultExpandAllRows={true}
               childrenColumnName="nodes"
             />
