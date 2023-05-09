@@ -19,7 +19,7 @@ const getInitState = () => ({
   details: {} as any,
   javaRequestDetails: {} as any,
   loading: false,
-  visible: true,
+  visible: false,
   functionList: [],
   selectedFunction: undefined,
   functionExample: undefined,
@@ -1027,7 +1027,7 @@ const MultiFormComponent = ({ form }) => {
         </Button>
       </div>
       <Modal title="函数列表" visible={state?.visible} width={'80%'} footer={null}>
-        <div style={{minHeight:300,maxHeight:500,overflow:'scroll'}}>
+        <div style={{ minHeight: 300, maxHeight: 500, overflow: 'scroll'}}>
           <CommonSelect
             onChange={handleSelectFunction}
             placeholder="请选择函数"
@@ -1039,7 +1039,7 @@ const MultiFormComponent = ({ form }) => {
               </CommonSelect.Option>
             )} 
           />
-          {state?.functionExample&& <div>
+          {state?.functionExample && <div>
           <h5 style={{ marginTop: 12 }}>函数参数说明</h5>
           <Table 
             rowKey="param"

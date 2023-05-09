@@ -166,6 +166,7 @@ const APIPanel: React.FC<Props> = props => {
     return object;
     
   }
+  console.log('api-------', api);
 
   return (
     <Collapse expandIconPosition="left" style={{ marginBottom: 8 }}>
@@ -188,16 +189,16 @@ const APIPanel: React.FC<Props> = props => {
         })(<Switch onChange={(checked, e) => { e.stopPropagation(); }}/>)}
       </Form.Item>
           <Form.Item >
-         {getFieldValue(`${linkIndex}_${index}_requestMethod`)}
+            {getFieldValue(`${linkIndex}_${index}_requestMethod`)}
           </Form.Item>
           <Form.Item >
-          {getFieldValue(`${linkIndex}_${index}_requestUrl`)}
+             {getFieldValue(`${linkIndex}_${index}_requestUrl`)}
           </Form.Item>
           <Form.Item style={{ float: 'right' }}>
             <Button type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
           </Form.Item>
         </Form>
-        } key="1">
+        } >
           <Tabs defaultActiveKey="1" >
           <TabPane tab="基本请求信息" key="1">
           <Form>
