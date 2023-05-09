@@ -861,7 +861,7 @@ const MultiFormComponent = ({ form }) => {
           funcStr: state?.functionExample
         });
     if (success) {
-      message.success('校验成功');
+      message.success(`校验成功,${data}`);
     }
   };
 
