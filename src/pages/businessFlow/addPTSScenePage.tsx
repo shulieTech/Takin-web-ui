@@ -1026,8 +1026,17 @@ const MultiFormComponent = ({ form }) => {
           + 添加串联链路
         </Button>
       </div>
-      <Modal title="函数列表" visible={state?.visible} width={'80%'} footer={null}>
-        <div style={{ minHeight: 300, maxHeight: 500, overflow: 'scroll'}}>
+      <Modal 
+        onCancel={() => {
+          setState({
+            visible: false
+          });
+        }} 
+        title="函数列表" 
+        visible={state?.visible} 
+        width={'80%'} 
+        footer={null}>
+        <div style={{ minHeight: 300, maxHeight: 500, overflow: 'scroll' }}>
           <CommonSelect
             onChange={handleSelectFunction}
             placeholder="请选择函数"
