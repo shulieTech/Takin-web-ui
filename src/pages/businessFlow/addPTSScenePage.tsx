@@ -1056,7 +1056,7 @@ const MultiFormComponent = ({ form }) => {
             size="small"
             dataSource={state?.functionList?.filter(item => {return item?.functionName === state?.selectedFunction; })?.[0]?.functionParams}
             columns={[{
-              title: '参数示例值',
+              title: '参数',
               dataIndex: 'param',
             },
               {
