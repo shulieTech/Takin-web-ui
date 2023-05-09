@@ -1123,7 +1123,7 @@ const getAppInstancePerformanceColumns = (): ColumnProps<any>[] => {
     },
     {
       ...customColumnProps,
-      title: 'GC平均耗时（ms）',
+      title: 'GC耗时（ms）',
       dataIndex: 'gcCost'
     }, 
     {
