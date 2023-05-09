@@ -796,7 +796,7 @@ const ReportDetails: React.FC<Props> = (props) => {
           {state?.trendData?.map((item, k) => {
             return <div key={k}>
               <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex">
-              <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{`${item?.applicationName} - ${item?.agentId}`}</Col>
+              <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{`${item?.applicationName}|${item?.agentId}`}</Col>
              </Row>
              <TrendChart data={item?.tpsTarget}/>
               </div>;
