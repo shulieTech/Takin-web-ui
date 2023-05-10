@@ -33,12 +33,12 @@ import jsPDF from 'jspdf';
 import CustomTable from 'src/components/custom-table';
 import { ColumnProps } from 'antd/lib/table';
 import { customColumnProps } from 'src/components/custom-table/utils';
-import GraphNode from 'src/components/g6-graph/GraphNode';
 import CompareNodeModal from './components/CompareNodeModal';
 import BarChart from './components/BarCharts';
 import LineChartWrap from './components/LineChartWrap';
 import RequestDetailModal from './components/RequestDetailModal';
 import TrendChart from './components/TrendCharts';
+import GraphNode from 'src/components/g6-graph-report/GraphNode';
 
 interface State {
   isReload?: boolean;

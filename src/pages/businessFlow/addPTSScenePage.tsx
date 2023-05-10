@@ -850,7 +850,7 @@ const MultiFormComponent = ({ form }) => {
   const handleSelectFunction = (value) => {
     setState({
       selectedFunction: value,
-      functionExample: state?.functionList?.filter(item => {return item?.functionName === value; })?.[0]?.functionExample
+      functionExample: state?.functionList?.filter(item => { return item?.functionName === value; })?.[0]?.functionExample
     });
   };
 
@@ -890,20 +890,22 @@ const MultiFormComponent = ({ form }) => {
         {getFieldDecorator(`${linkIndex}_linkType`, {
           initialValue: action === 'edit' ? linkNode?.linkType : 'normal',
           rules: [{ required: true, message: '请选择链路类型!' }],
-        })(<CommonSelect style={{ width: 160 }} dataSource={[
-          {
-            label: '普通线程组',
-            value: 'normal'
-          },
-          {
-            label: 'setUp线程组',
-            value: 'setUp'
-          },
-          {
-            label: 'tearDown线程组',
-            value: 'tearDown'
-          }
-        ]}/>)}
+        })(<CommonSelect 
+            style={{ width: 160 }} 
+            dataSource={[
+              {
+                label: '普通线程组',
+                value: 'normal'
+              },
+              {
+                label: 'setUp线程组',
+                value: 'setUp'
+              },
+              {
+                label: 'tearDown线程组',
+                value: 'tearDown'
+              }
+            ]} />)}
       </Form.Item>
       <Form.Item >
         {getFieldDecorator(`${linkIndex}_enabled`, {

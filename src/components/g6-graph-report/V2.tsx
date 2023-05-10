@@ -53,12 +53,12 @@ interface GraphProps {
 const GraphComponent = (props: GraphProps, ref: any) => {
   const {
     data,
-    showMiniMap = false,
-    showToolBar = false,
+    showMiniMap = true,
+    showToolBar = true,
     showGrid = true,
     g6Option = {},
     onReady,
-    canDragNode = false,
+    canDragNode = true,
   } = props;
   const containerRef: MutableRefObject<any> = useRef();
   const [graph, setGraph] = useState<Graph>();
@@ -130,7 +130,7 @@ const GraphComponent = (props: GraphProps, ref: any) => {
       );
     }
 
-    const defaultMode = ['drag-canvas'];
+    const defaultMode = ['drag-canvas', 'zoom-canvas'];
     const defaultNodeTooltipConfig = {
       type: 'tooltip',
       shouldBegin: (evt: any) => {
