@@ -273,7 +273,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
 
     const pdf = new jsPDF('p', 'pt', [contentCanvas.width, contentCanvas.height]);
     pdf.addImage(contentCanvas.toDataURL('image/png'), 'PNG', 0, 0, contentCanvas.width, contentCanvas.height);
-    pdf.save('exported-file.pdf');
+    pdf.save(`请求详情：${traceId}`);
   };
 
   return (
