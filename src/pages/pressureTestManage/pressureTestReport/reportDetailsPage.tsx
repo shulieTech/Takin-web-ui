@@ -476,7 +476,7 @@ const ReportDetails: React.FC<Props> = (props) => {
     const pdfHeight = contentHeight * scaleFactor;
     const pdf = new jsPDF('p', 'pt', [a4WidthInPixels, pdfHeight]);
     pdf.addImage(contentCanvas.toDataURL('image/png'), 'PNG', 0, 0, a4WidthInPixels, pdfHeight);
-    pdf.save('exported-file.pdf');
+    pdf.save(`${detailData?.sceneName}-${detailData?.reportId}`);
   };
 
   const handleChangeCode = async (serviceName, startTime, endTime, statusCode, jobId, key) => {
