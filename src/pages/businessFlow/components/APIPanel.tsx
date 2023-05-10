@@ -32,6 +32,7 @@ const { Panel } = Collapse;
 const APIPanel: React.FC<Props> = props => {
     
   const { form , index, api, action , linkIndex } = props;
+  console.log('api-index',api,index);
   const { getFieldDecorator, validateFields, getFieldValue, setFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
   // console.log('api', api);
@@ -121,7 +122,6 @@ const APIPanel: React.FC<Props> = props => {
         return result;
       }, {});
    
-
       props.setState({
         formFields: Object.keys(newFields),
         details: deleteApiAtIndexWithoutMutation(props?.state?.details, linkIndex, index)
@@ -166,7 +166,6 @@ const APIPanel: React.FC<Props> = props => {
     return object;
     
   }
-  console.log('api-------', api);
 
   return (
     <Collapse expandIconPosition="left" style={{ marginBottom: 8 }}>
@@ -188,12 +187,30 @@ const APIPanel: React.FC<Props> = props => {
           rules: [{ required: true, message: '' }],
         })(<Switch onChange={(checked, e) => { e.stopPropagation(); }}/>)}
       </Form.Item>
+         <Form.Item >
+            {getFieldDecorator(`${linkIndex}_${index}_requestMethod`, {
+              initialValue: action === 'edit' ? api?.base?.requestMethod : undefined,
+              rules: [{ required: true, message: '请输入压测API名称!' }],
+            })(<Input  
+                style={{width:80}}
+                disabled={true} 
+              />)}
+          </Form.Item>
           <Form.Item >
+            {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
+              initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
+              rules: [{ required: true, message: '请输入压测API名称!' }],
+            })(<Input  
+                style={{ minWidth: 500 }}
+                disabled={true} 
+              />)}
+          </Form.Item>
+          {/* <Form.Item >
             {getFieldValue(`${linkIndex}_${index}_requestMethod`)}
-          </Form.Item>
-          <Form.Item >
+          </Form.Item> */}
+          {/* <Form.Item >
              {getFieldValue(`${linkIndex}_${index}_requestUrl`)}
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item style={{ float: 'right' }}>
             <Button type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
           </Form.Item>
