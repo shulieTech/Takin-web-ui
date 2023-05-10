@@ -62,7 +62,7 @@ const CompareNodeModal: React.FC<Props> = props => {
           const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
     
           pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight); // 将图片添加到PDF文档中
-          pdf.save('download.pdf'); // 保存并下载PDF文档
+          pdf.save(`${activityName}-报告${state?.reportIds?.[0]}-报告${state?.reportIds?.[1]}`); // 保存并下载PDF文档
         })
         .catch((err) => {
           console.error('Error exporting PDF:', err);
