@@ -3,7 +3,7 @@ import React, { useCallback, useState, useEffect, ReactNode } from 'react';
 import G6GraphV2, {
   RestGraphOption,
   defaultEdgeLabelCfg,
-} from 'src/components/g6-graph/V2';
+} from 'src/components/g6-graph-report/V2';
 import { Dropdown, Divider, Icon } from 'antd';
 import styles from './index.less';
 import { GraphData, IG6GraphEvent } from '@antv/g6/lib/types';
@@ -247,7 +247,7 @@ export interface GraphComponentProps {
   onNodeBottleneckBtnClick?: (ev: IG6GraphEvent, originModel: any) => void;
   beforeHeaderNode?: React.ReactNode;
 }
-const GraphNode: React.FC<GraphComponentProps> = (props) => {
+const GraphNodeReport: React.FC<GraphComponentProps> = (props) => {
   const {
     graphData,
     // defaultLabelSetting = ['1', '2', '3', '4'],
@@ -1045,4 +1045,4 @@ const GraphNode: React.FC<GraphComponentProps> = (props) => {
     </div>
   );
 };
-export default GraphNode;
+export default GraphNodeReport;

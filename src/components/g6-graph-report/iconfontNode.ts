@@ -145,61 +145,61 @@ export default () => {
       }
 
       // 下面TPS/RT
-      let subTitleShape = titleShape;
-      if (subLabel && label !== '入口') {
-        const titleShapeBB = titleShape.getBBox();
-        subTitleShape = group.addShape('text', {
-          attrs: {
-            x: -totalWidth / 2 + w / 2,
-            y: titleShapeBB.y + titleShapeBB.height + 10,
-            text: fittingString(subLabel, totalWidth * 2, 13),
-            textBaseline: 'top',
-            textAlign: 'center',
-            fill: '#24282E',
-            fontSize: 14,
-            fontWeight: 'bold',
-          },
-          draggable: true,
-          name: 'subtitle-shape',
-        });
-      }
+      // let subTitleShape = titleShape;
+      // if (subLabel && label !== '入口') {
+      //   const titleShapeBB = titleShape.getBBox();
+      //   subTitleShape = group.addShape('text', {
+      //     attrs: {
+      //       x: -totalWidth / 2 + w / 2,
+      //       y: titleShapeBB.y + titleShapeBB.height + 10,
+      //       text: fittingString(subLabel, totalWidth * 2, 13),
+      //       textBaseline: 'top',
+      //       textAlign: 'center',
+      //       fill: '#24282E',
+      //       fontSize: 14,
+      //       fontWeight: 'bold',
+      //     },
+      //     draggable: true,
+      //     name: 'subtitle-shape',
+      //   });
+      // }
 
       // 下方瓶颈显示
-      if (bottleneckMap.showBottleneckBtn && bottleneckMap.count > 0) {
-        const subTitleShapeBB = subTitleShape.getBBox();
-        const bottleneckBtnShape = group.addShape('rect', {
-          attrs: {
-            x: rectShapeBB.x,
-            y: subTitleShapeBB.y + subTitleShapeBB.height + 10,
-            width: rectShapeBB.width,
-            height: 24,
-            fill: {
-              1: '#FFA800',
-              2: '#ED6047'
-            }[bottleneckMap.type || '1'] ,
-            radius: 12,
-            cursor: 'pointer',
-          },
-          draggable: true,
-          name: 'bottleneck-shape',
-        });
-        const bottleneckBtnShapeBB = bottleneckBtnShape.getBBox();
-        group.addShape('text', {
-          attrs: {
-            x: -totalWidth / 2 + w / 2,
-            y: bottleneckBtnShapeBB.y + 6,
-            text: fittingString(`瓶颈 ${bottleneckMap.count}`, bottleneckBtnShapeBB.width, 12),
-            textBaseline: 'top',
-            textAlign: 'center',
-            fill: '#fff',
-            fontSize: 12,
-            lineHeight: 24,
-            cursor: 'pointer',
-          },
-          draggable: true,
-          name: 'bottleneck-txt-shape',
-        });
-      }
+      // if (bottleneckMap.showBottleneckBtn && bottleneckMap.count > 0) {
+      //   const subTitleShapeBB = subTitleShape.getBBox();
+      //   const bottleneckBtnShape = group.addShape('rect', {
+      //     attrs: {
+      //       x: rectShapeBB.x,
+      //       y: subTitleShapeBB.y + subTitleShapeBB.height + 10,
+      //       width: rectShapeBB.width,
+      //       height: 24,
+      //       fill: {
+      //         1: '#FFA800',
+      //         2: '#ED6047'
+      //       }[bottleneckMap.type || '1'] ,
+      //       radius: 12,
+      //       cursor: 'pointer',
+      //     },
+      //     draggable: true,
+      //     name: 'bottleneck-shape',
+      //   });
+      //   const bottleneckBtnShapeBB = bottleneckBtnShape.getBBox();
+      //   group.addShape('text', {
+      //     attrs: {
+      //       x: -totalWidth / 2 + w / 2,
+      //       y: bottleneckBtnShapeBB.y + 6,
+      //       text: fittingString(`瓶颈 ${bottleneckMap.count}`, bottleneckBtnShapeBB.width, 12),
+      //       textBaseline: 'top',
+      //       textAlign: 'center',
+      //       fill: '#fff',
+      //       fontSize: 12,
+      //       lineHeight: 24,
+      //       cursor: 'pointer',
+      //     },
+      //     draggable: true,
+      //     name: 'bottleneck-txt-shape',
+      //   });
+      // }
 
       const expanderBoxHeight = expanderTypeCounts * 16;
       let expanderTextY = 16 + (h - expanderBoxHeight) / 2;

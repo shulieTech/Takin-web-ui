@@ -53,8 +53,8 @@ interface GraphProps {
 const GraphComponent = (props: GraphProps, ref: any) => {
   const {
     data,
-    showMiniMap = true,
-    showToolBar = true,
+    showMiniMap = false,
+    showToolBar = false,
     showGrid = true,
     g6Option = {},
     onReady,
@@ -130,7 +130,7 @@ const GraphComponent = (props: GraphProps, ref: any) => {
       );
     }
 
-    const defaultMode = ['drag-canvas', 'zoom-canvas'];
+    const defaultMode = ['drag-canvas'];
     const defaultNodeTooltipConfig = {
       type: 'tooltip',
       shouldBegin: (evt: any) => {
@@ -146,13 +146,7 @@ const GraphComponent = (props: GraphProps, ref: any) => {
         // tslint:disable-next-line: max-line-length
         return `<div style="padding: 8px;box-shadow:  0px 10px 35px rgba(0, 0, 0, 0.1);background: #2E333B;max-width: 448px;border-radius: 4px;word-break:break-all;color:#fff;font-size:12px;">
         应用名称：${model.label}<br/>
-        ${hasServiceOpened
-            ? `${`调用量：${model.serviceAllTotalCount || 0}<br/>`}
-          ${`TPS：${model.serviceAllTotalTps || 0}<br/>`}
-          ${`RT：${model.serviceRt || 0}<br/>`}
-          ${`成功率：${fixNum(model.serviceAllSuccessRate * 100)}%<br/>`}`
-            : ''
-          }
+        
 
       </div>`;
       },
