@@ -243,57 +243,57 @@ const EditPage = (props) => {
       changeUint
     );
 
-    if (getTakinAuthority() === 'true') {
-      // 获取建议pod数
-      onFieldValueChange$(
-        // '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
-        'config.threadGroupConfigMap.*.threadNum'
-      ).subscribe((fieldState) => {
-        if (fieldState.value === '' || !fieldState.valid) {
-          return;
-        }
-        // 获取建议pod数
-        // debounce(() => {
-        getFieldState('config.threadGroupConfigMap', (configState) => {
-          const configMap = cloneDeep(configState.value);
-          if (!configMap) {
-            return;
-          }
-          getFieldState('goal', async (state) => {
-            Object.keys(configMap || {}).forEach((groupKey) => {
-              let sum = 0;
-              const flatTreeData2 =
-                configState.props['x-component-props'].flatTreeData;
+    // if (getTakinAuthority() === 'true') {
+    //   // 获取建议pod数
+    //   onFieldValueChange$(
+    //     // '*(goal.*.tps, config.threadGroupConfigMap.*.threadNum)'
+    //     'config.threadGroupConfigMap.*.threadNum'
+    //   ).subscribe((fieldState) => {
+    //     if (fieldState.value === '' || !fieldState.valid) {
+    //       return;
+    //     }
+    //     // 获取建议pod数
+    //     // debounce(() => {
+    //     getFieldState('config.threadGroupConfigMap', (configState) => {
+    //       const configMap = cloneDeep(configState.value);
+    //       if (!configMap) {
+    //         return;
+    //       }
+    //       getFieldState('goal', async (state) => {
+    //         Object.keys(configMap || {}).forEach((groupKey) => {
+    //           let sum = 0;
+    //           const flatTreeData2 =
+    //             configState.props['x-component-props'].flatTreeData;
 
-              // 递归tps求和
-              const getTpsSum = (valueMap, parentId) => {
-                flatTreeData2
-                  .filter((x) => x.parentId === parentId)
-                  .forEach((x) => {
-                    sum += valueMap?.[x.xpathMd5]?.tps || 0;
-                    getTpsSum(valueMap, x.xpathMd5);
-                  });
-                return sum;
-              };
-              configMap[groupKey].tpsSum = getTpsSum(state.value, groupKey);
-            });
-            const {
-              data: { success, data },
-            } = await services.querySuggestPodNum(configMap);
-            if (success) {
-              setFieldState('config.podNum', (podState) => {
-                podState.props['x-component-props'].addonAfter = (
-                  <Button>
-                    建议Pod数: {data?.min !== data?.max ? `${data?.min}-${data?.max}` : data?.min || '-'}
-                  </Button>
-                );
-              });
-            }
-          });
-        });
-        // }, 200)
-      });
-    }
+    //           // 递归tps求和
+    //           const getTpsSum = (valueMap, parentId) => {
+    //             flatTreeData2
+    //               .filter((x) => x.parentId === parentId)
+    //               .forEach((x) => {
+    //                 sum += valueMap?.[x.xpathMd5]?.tps || 0;
+    //                 getTpsSum(valueMap, x.xpathMd5);
+    //               });
+    //             return sum;
+    //           };
+    //           configMap[groupKey].tpsSum = getTpsSum(state.value, groupKey);
+    //         });
+    //         const {
+    //           data: { success, data },
+    //         } = await services.querySuggestPodNum(configMap);
+    //         if (success) {
+    //           setFieldState('config.podNum', (podState) => {
+    //             podState.props['x-component-props'].addonAfter = (
+    //               <Button>
+    //                 建议Pod数: {data?.min !== data?.max ? `${data?.min}-${data?.max}` : data?.min || '-'}
+    //               </Button>
+    //             );
+    //           });
+    //         }
+    //       });
+    //     });
+    //     // }, 200)
+    //   });
+    // }
   };
 
   /**
@@ -540,7 +540,7 @@ const EditPage = (props) => {
                   },
                   min: 1,
                   default: 1,
-                  addonAfter: <Button>建议Pod数: -</Button>,
+                  // addonAfter: <Button>建议Pod数: -</Button>,
                   disabled: getTakinAuthority() !== 'true',
                 }}
                 title={
