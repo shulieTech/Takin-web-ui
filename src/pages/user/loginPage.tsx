@@ -50,7 +50,7 @@ const getFormData = (that: Login): FormDataType[] => {
   const disableTenant = getThemeByKeyName('disableTenant');
   const usernamePlaceholder = disableTenant
     ? '请输入账号'
-    : '<用户名>@<企业别名>，例如： username@shulie';
+    : '<用户名>@<企业别名>';
   return [
     {
       key: 'username',
@@ -531,10 +531,10 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          tabBarExtraContent={
-            <Popover content={this.content()} trigger="click" placement="top">
-              <a>申请账号</a>
-            </Popover>}
+          // tabBarExtraContent={
+          //   <Popover content={this.content()} trigger="click" placement="top">
+          //     <a>申请账号</a>
+          //   </Popover>}
         >
           <TabPane tab="SSO登录" key="1">
             <CommonForm
@@ -681,18 +681,18 @@ export default class Login extends DvaComponent<Props, State> {
             />
             <img
               className={styles.bg4}
-              src={require('./../../assets/logo.png')}
+              src={require('./../../assets/logohzbank.png')}
             />
           </>
         )}
 
         <div className={styles.main}>
           <div className={styles.login}>
-          <div className={styles.sysName}>欢迎登录Takin</div>
+          <div className={styles.sysName}>欢迎登录性能测试平台PTS</div>
             <div style={{ color: 'rgba(0, 0, 0, 0.45)', fontSize: 16, marginBottom: 20, marginTop: 8 }}>构建分布式系统稳定性主动防御体系</div>
             {dom}
-            <center className={styles.other}>其他登录方式</center>
-            <Row className={styles.otherimg} type="flex" justify="center">
+            {/* <center className={styles.other}>其他登录方式</center> */}
+            {/* <Row className={styles.otherimg} type="flex" justify="center">
               {this.state.arr.map((ite) => {
                 return (
                   <Col key={ite.id} span={3}>
@@ -702,7 +702,7 @@ export default class Login extends DvaComponent<Props, State> {
                   </Col>
                 );
               })}
-            </Row>
+            </Row> */}
           </div>
         </div>
       </div>

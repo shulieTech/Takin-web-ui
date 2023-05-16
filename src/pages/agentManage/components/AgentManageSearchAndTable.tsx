@@ -31,13 +31,7 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
       agentStatus: state.agentStatus,
       probeStatus: state.probeStatus
     });
-  }, [
-    state.isReload,
-    state.agentStatus,
-    state.probeStatus,
-    state.searchParams.current,
-    state.searchParams.pageSize,
-  ]);
+  }, [state.isReload, state.agentStatus, state.probeStatus, state.searchParams.pageSize, queryAgentManageList, state.searchParams]);
 
   /**
    * @name 获取探针列表
@@ -170,7 +164,7 @@ const AgentManageSearchAndTable: React.FC<Props> = props => {
         <div>
           <EmptyNode
             title="暂无探针,请先接入应用"
-            desc="您需要至少接入一台服务节点，才能使用Takin哦～"
+            desc="您需要至少接入一台服务节点，才能使用PTS哦～"
             extra={
               <AuthorityBtn
                 isShow={

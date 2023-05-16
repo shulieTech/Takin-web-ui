@@ -213,7 +213,7 @@ const getPressureTestSceneColumns = (
       ...customColumnProps,
       title: '来源',
       render: (text, record) => {
-        return <Tag style={{ marginRight: 8 }}>{record.configId ? 'Takin' : 'Jmeter'}</Tag>;
+        return <Tag style={{ marginRight: 8 }}>{record.configId ? 'PTS' : 'Jmeter'}</Tag>;
       }
     },
     {

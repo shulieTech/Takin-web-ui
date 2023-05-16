@@ -69,7 +69,7 @@ export default (props) => {
                   marginRight: 8,
                 }}
               />
-              Takin已为该链路梳理出{data.totalSize}
+              PTS已为该链路梳理出{data.totalSize}
               个应用，请尽快检查各应用节点总数是否正确
             </span>
           ) : undefined,
@@ -308,7 +308,7 @@ export default (props) => {
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [prepareState.currentLink?.id]);
+  }, [getAppSummaryInfo, getList, prepareState.currentLink.id]);
 
   return (
     <>

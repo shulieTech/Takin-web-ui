@@ -90,14 +90,14 @@ export default (props: SelectTypeModalProps) => {
                     lineHeight: '24px',
                   }}
                 >
-                  接入应用后，Takin会自动获取接口数据，您可以通过手工串联入口的方式进行链路创建。
+                  接入应用后，PTS会自动获取接口数据，您可以通过手工串联入口的方式进行链路创建。
                 </div>
                 <div>
                   适用于
                   <Tag style={{ margin: '0 16px 0 24px' }}>
                     无现成Jmeter脚本
                   </Tag>
-                  <Tag>Takin压测方式</Tag>
+                  <Tag>PTS压测方式</Tag>
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default (props: SelectTypeModalProps) => {
                     lineHeight: '24px',
                   }}
                 >
-                  已有jmeter脚本可以使用此种模式新建，Takin会自动匹配接口 <br />
+                  已有jmeter脚本可以使用此种模式新建，PTS会自动匹配接口 <br />
                   {/* <span style={{ color: '#FFA73B' }}>本期暂无，敬请期待</span> */}
                 </div>
                 <div>

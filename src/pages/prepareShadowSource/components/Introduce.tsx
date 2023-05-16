@@ -135,10 +135,10 @@ export default (props: Props) => {
               icon: 'icon-a-ziyuanzhunbeishuoming05-02zaiTakinzhongshezhilianlugelifangan',
               text: (
                 <>
-                  在Takin中设置链路隔离方案
+                  在PTS中设置链路隔离方案
                   <br />
                   初始化链路需要进行链路隔离方案设置，设置后
-                  Takin自动识别数据源信息和链接状态
+                  PTS自动识别数据源信息和链接状态
                 </>
               ),
             },

@@ -170,7 +170,7 @@ export default (props) => {
                   marginBottom: 24,
                 }}
               >
-                DBA根据Takin导出的隔离配置信息进行数据配置
+                DBA根据PTS导出的隔离配置信息进行数据配置
               </div>
             </div>
           </div>
@@ -205,7 +205,7 @@ export default (props) => {
                   marginBottom: 8,
                 }}
               >
-                4、查看Takin检测结果
+                4、查看PTS检测结果
               </div>
               <div
                 style={{
@@ -214,7 +214,7 @@ export default (props) => {
                   marginBottom: 24,
                 }}
               >
-                Takin每10分钟检测一次 数据源是否创建
+                PTS每10分钟检测一次 数据源是否创建
               </div>
             </div>
           </div>

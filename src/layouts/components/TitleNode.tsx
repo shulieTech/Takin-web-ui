@@ -70,7 +70,7 @@ const TitleNode: React.FC<Props> = (props) => {
               <span className="iconfont icon-Logo" style={{ fontSize: 30, }}/>
 
               {!props.collapsedStatus && (
-                <span className={styles.logoName}>Takin</span>
+                <span className={styles.logoName}>PTS</span>
               )}
             </>
           )}
