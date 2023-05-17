@@ -6,7 +6,7 @@ interface VenomConfigBean extends VenomBasicConfig {
 }
 
 const venomBasicConfig: VenomConfigBean = {
-  title: '全链路压测平台',
+  title: 'PTS',
   headerHeight: 50,
   siderWidth: 160,
   contentBg: '#1D2530',
