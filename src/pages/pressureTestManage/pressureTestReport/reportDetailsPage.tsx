@@ -463,6 +463,8 @@ const ReportDetails: React.FC<Props> = (props) => {
     }
   };
 
+  const data = { traceId: '250014ac16843793551755183d0000z01', cost: '26082', requestHeader: null, request: '{    "encoding": "UTF-8",    "signMethod": "01",    "sdkAppId": "201701",    "certId": "17010100001",    "txnType": "1006",    "txnSubType": "100611",    "merId": "8201802260000002",    "aesWay": "04",    "secMerAppId": "wxf752f4b1f204d1b3",    "backEndUrl": "http://127.0.0.1:8083/ifsp-paydemo2/payNotify.do",    "txnOrderId": "168437935517675898",    "txnOrderTime": "20230518110915",    "txnOrderBody": "YW",    "txnAmt": "1",    "txnCcyType": "156",    "txnAccType": "02",    "txnSubOpenid": "o5QhE5ej6b1J6phG6yQrXLPf23Zw",    "mchtLicnType": "00",    "extendFlag": "00",    "conTerm": "2",    "setlType": "01",    "settDate": 31,    "mchtProdList": []}', responseHeader: null, response: '{"respData":"{\\"timeStamp\\":\\"1683770936\\",\\"package\\":\\"prepay_id=wx2b094fbf-b637-4539-9814-e26cb8327346\\",\\"paySign\\":\\"j2cp6JCrZZN8AIg4tzAzkbPY0k7WqvAu/m6blvsyj4t/7o3G4t1PsYJiZYAikccxgDipiBRtAPS0W7U7huzs/1Z4m18YECNTT5619LipS4bLex1frxq3HZ1JnpxbFSasHaNdSLPgwsXSKYe1ak7u8Ii9ezqqyZw8t8A3lcebqcrHkCop+ZM/kT9cRaQgaiq5WORCP30JQqzUGD2bpOI7fnmkgYGNpffuE4DvLNSdVgd7Kw2/zIHt7hKE/UfnP+aK2kp4lbRM7fDN4Cwp4450cAykStJ93kQSbUvs09xcNt/VSnAiQFXg1RxE1uPFvzYuFJos35BZj819kn5j6dd2vw==\\",\\"appId\\":\\"wxe2b6a0965aa8df6d\\",\\"signType\\":\\"RSA\\",\\"pagy_channel_txn_ssn\\":\\"30277307405291838705809308217302\\",\\"nonceStr\\":\\"bd1fe28b8b464323bbd4270d6dc22b9d\\"}","respMsg":"交易受理成功，请尽快发起交易支付","txnOrderId":"168437935517675898","respCode":"0000","respTxnSsn":"82023051811171628666142924408742","respTxnTime":"20230518111716"}', startDate: '1684379355000' };
+
   const contentRef = React.createRef();
   const exportToPDF = async () => {
     const contentCanvas = await html2canvas(contentRef.current, {
@@ -771,25 +773,25 @@ const ReportDetails: React.FC<Props> = (props) => {
               allowClear={false} value={state?.statusCode?.[k]} style={{ width: 200 }} dataSource={state?.allMessageCodeList?.[k]?.map((item) => {return { label: item?.statusName, value: item?.statusCode }; })}/></Col>
           </Row>
           <Descriptions bordered size="small">
-            <Descriptions.Item label="服务入口">{item?.serviceName}</Descriptions.Item>
-            <Descriptions.Item label="请求方式">{item?.requestMethod}</Descriptions.Item>
-            <Descriptions.Item label="Trace ID">（{state?.allMessageDetailList?.[k]?.cost}ms）
-                <RequestDetailModal
+            <Descriptions.Item label="服务入口">{item?.serviceName || '-'}</Descriptions.Item>
+            <Descriptions.Item label="请求方式">{item?.requestMethod || '-'}</Descriptions.Item>
+            <Descriptions.Item label="Trace ID">{state?.allMessageDetailList?.[k]?.cost ? `（${state?.allMessageDetailList?.[k]?.cost}ms）` : '-'}
+               {state?.allMessageDetailList?.[k]?.traceId || <RequestDetailModal
                   btnText={state?.allMessageDetailList?.[k]?.traceId}
                   traceId={state?.allMessageDetailList?.[k]?.traceId}
-              /></Descriptions.Item>
+              />} 
+            </Descriptions.Item>
             <Descriptions.Item label="请求头"  span={3}>{state?.allMessageDetailList?.[k]?.requestHeader || '-'}</Descriptions.Item>
             <Descriptions.Item label="请求体" span={3}>
-            {state?.allMessageDetailList?.[k]?.request}
+            <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', wordWrap: 'break-word' }}> {state?.allMessageDetailList?.[k]?.request}</div>
              </Descriptions.Item>  
              <Descriptions.Item label="响应头"  span={3}>{state?.allMessageDetailList?.[k]?.responseHeader || '-'}</Descriptions.Item>
             <Descriptions.Item label="响应体" span={3}>
-            {state?.allMessageDetailList?.[k]?.response}
+            <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', wordWrap: 'break-word' }}>{state?.allMessageDetailList?.[k]?.response}</div>
              </Descriptions.Item>  
           </Descriptions>
               </div>;
           })}
-          
         </div>
         <div className={styles.detailCardTitle}>
           趋势图
