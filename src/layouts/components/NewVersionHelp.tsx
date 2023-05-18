@@ -90,7 +90,7 @@ const NewVersionHelp: React.FC = (props) => {
           }
         />
       )}
-      {isShowNewVersion && (
+      {/* {isShowNewVersion && (
         <Alert
           type="info"
           banner
@@ -106,10 +106,10 @@ const NewVersionHelp: React.FC = (props) => {
           message={
             <div>
               <span style={{ fontSize: 16, marginRight: 8, marginLeft: 8 }}>
-                Takin版本升级通知
+              PTS版本升级通知
               </span>
               <span style={{ color: '#666', marginRight: 8 }}>
-                亲，您的Takin版本已是最新版，您可以点击链接查看功能变化
+                亲，您的PTS版本已是最新版，您可以点击链接查看功能变化
               </span>
               <a
                 href={DOC_UPDATE_URL}
@@ -122,7 +122,7 @@ const NewVersionHelp: React.FC = (props) => {
             </div>
           }
         />
-      )}
+      )} */}
       <div
         style={{
           position: 'fixed',

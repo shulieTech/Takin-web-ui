@@ -80,7 +80,7 @@ const BusinessFlow: React.FC<Props> = props => {
                   <Button type="primary">新增</Button>
                 </Dropdown> */}
                  <Link to="/businessFlow/addPTSScene?action=add">
-                 <Button type="primary" style={{ marginRight: 8 }}>创建Takin流程</Button>
+                 <Button type="primary" style={{ marginRight: 8 }}>创建PTS流程</Button>
                  </Link>
                 
                 <AddJmeterModal
