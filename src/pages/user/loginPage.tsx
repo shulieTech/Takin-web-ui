@@ -416,7 +416,7 @@ export default class Login extends DvaComponent<Props, State> {
     }
     const {
       data: { success, data },
-    } = await UserService.troLogin({ ...value, loginType: this.state.keyType });
+    } = await UserService.troLogin({ ...value, password: btoa(value?.password), loginType: this.state.keyType });
     if (success) {
       notification.success({
         message: '通知',
