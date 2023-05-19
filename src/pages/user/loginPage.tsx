@@ -109,7 +109,7 @@ const getFormData = (that: Login): FormDataType[] => {
       },
       node: (
         <Input
-          style={{ width: 232 }}
+          style={{ width: 312 }}
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="验证码"
@@ -546,7 +546,7 @@ export default class Login extends DvaComponent<Props, State> {
                 isSubmitBtn: true,
                 submitText: '登录',
                 submitBtnProps: {
-                  style: { width: 329, marginTop: 20 },
+                  style: { width: 409, marginTop: 20 },
                   type: 'primary',
                 },
               }}

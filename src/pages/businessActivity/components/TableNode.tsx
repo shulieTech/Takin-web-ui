@@ -185,12 +185,12 @@ const getColumns = (
               </Button>
             </Link>
           )}
-          <span style={{ marginLeft: 8 }}>
+          {/* <span style={{ marginLeft: 8 }}>
             <MissingDataScriptModal
               btnText="数据验证脚本"
               businessActivityId={row.activityId}
             />
-          </span>
+          </span> */}
         </Fragment>
       ),
     },
