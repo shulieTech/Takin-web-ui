@@ -93,6 +93,10 @@ const UserService = {
     const url = '/thirdParty/callback';
     return httpGet(url, data);
   },
+  async hzbankLogin(data) {
+    const url = '/login/hangzhou_bank';
+    return httpPost(url, data);
+  },
 };
 
 export default UserService;

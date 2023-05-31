@@ -149,6 +149,7 @@ const getHeaders = options => {
     'tenant-code': localStorage.getItem('tenant-code'),
     'env-code': localStorage.getItem('env-code'),
     'deptId': localStorage.getItem('deptId'),
+    'accessToken': localStorage.getItem('accessToken'),
     ...(options?.headers || {}),
   };
 };

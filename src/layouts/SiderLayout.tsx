@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name 基础布局Layout
  * @author MingShined
@@ -89,6 +90,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       }
     }
   };
+
+  
 
   const loginout = async () => {
     // const { data: json } = await axios.get('./version.json');

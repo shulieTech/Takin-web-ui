@@ -254,7 +254,8 @@ export default class Login extends DvaComponent<Props, State> {
   componentDidMount = () => {
     this.queryMenuList();
     this.serverConfig();
-    this.thirdParty(location.hash.split('=')[1]);
+    // this.thirdParty(location.hash.split('=')[1]);
+    this.hzbankPartylogin();
   };
 
   refresh = () => {
@@ -408,6 +409,34 @@ export default class Login extends DvaComponent<Props, State> {
       takinAuthority: 'true',
     });
     localStorage.setItem('Access-Token', headers['access-token']);
+  };
+
+  hzbankPartylogin = async () => {
+    if (new URLSearchParams(window.location.hash.split('?')[1])?.get('token')) {
+      const {
+        data: { success, data },
+      } = await UserService.hzbankLogin({
+        accessToken: new URLSearchParams(window.location.hash.split('?')[1])?.get('token'),
+      });
+      if (success) {
+        console.log(data);
+        localStorage.setItem('troweb-userName', data.name);
+        localStorage.setItem('troweb-userId', data.id);
+        localStorage.setItem('troweb-role', data.userType);
+        localStorage.setItem('isAdmin', data.isAdmin);
+        localStorage.setItem('isSuper', data.isSuper);
+        localStorage.setItem('tenant-code', data.tenantCode);
+        localStorage.setItem('env-code', data.envCode);
+        localStorage.setItem('deptId', data.deptId);
+        localStorage.setItem('full-link-token', data.xToken);
+        localStorage.setItem('troweb-expire', data.expire);
+        localStorage.setItem('accessToken', new URLSearchParams(window.location.hash.split('?')[1])?.get('token'));
+        localStorage.removeItem('Access-Token');
+
+        router.push('/');
+        return;
+      }
+    }
   };
 
   handleSubmit = async (err, value) => {
