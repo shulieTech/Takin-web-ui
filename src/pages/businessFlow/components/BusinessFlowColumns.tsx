@@ -21,6 +21,7 @@ import BusinessFlowService from '../service';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import { getTakinAuthority } from 'src/utils/utils';
 import downloadFile from 'src/utils/downloadFile';
+import AppDistributeModal from 'src/modals/AppDistributeModal';
 
 declare var serverUrl: string;
 const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
@@ -145,12 +146,27 @@ const getBusinessFlowColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
-            {localStorage.isAdmin === 'true' &&
+            {/* {localStorage.isAdmin === 'true' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>
                   <AdminDistributeModal
                     dataId={row.id}
                     btnText="分配给"
+                    menuCode="BUSINESS_FLOW"
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                  />
+                </span>
+              )} */}
+               {localStorage.isAdmin === 'true' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8 }}>
+                  <AppDistributeModal
+                    dataId={row.id}
+                    btnText="分配"
                     menuCode="BUSINESS_FLOW"
                     onSccuess={() => {
                       setState({

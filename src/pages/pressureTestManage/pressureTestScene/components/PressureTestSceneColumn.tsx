@@ -27,6 +27,7 @@ import { PressureTestSceneEnum } from '../enum';
 import AddTagsModal from '../modals/AddTagsModal';
 import PressureTestSceneService from '../service';
 import moment from 'moment';
+import AppDistributeModal from 'src/modals/AppDistributeModal';
 
 const getPressureTestSceneColumns = (
   state,
@@ -406,7 +407,7 @@ const getPressureTestSceneColumns = (
                 查看报告
               </Link>
             )}
-            {userType === 'true' &&
+            {/* {userType === 'true' &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>
@@ -417,6 +418,22 @@ const getPressureTestSceneColumns = (
                     onSccuess={() => {
                       setState({
                         isReload: !state.isReload,
+                      });
+                    }}
+                  />
+                </span>
+              )} */}
+                {userType === 'true' &&
+              expire === 'false' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8 }}>
+                  <AppDistributeModal
+                    dataId={row.id}
+                    btnText="分配"
+                    menuCode="SCENE_MANAGE"
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
                       });
                     }}
                   />
