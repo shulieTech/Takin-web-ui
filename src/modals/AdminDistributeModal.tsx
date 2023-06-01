@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect } from 'react';
 import { CommonForm, CommonModal, CommonSelect, useStateReducer } from 'racc';
 import { Cascader, Input, message } from 'antd';

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, createRef } from 'react';
 import SearchTable from 'src/components/search-table';
 import getColumns from './components/AppManageTable';
