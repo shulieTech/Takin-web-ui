@@ -100,7 +100,7 @@ const FlowPreview: React.FC<Props> = (props) => {
       .catch(() => {
         setEstimateFlow(null);
       });
-  }, [duration, ...Object.values(pressConfig)]);
+  }, [checkValid, duration, getEstimateFlow, pressConfig.mode, pressConfig.rampUp, pressConfig.steps, pressConfig.threadNum, pressConfig.type]);
 
   return (
     <div
@@ -119,9 +119,9 @@ const FlowPreview: React.FC<Props> = (props) => {
         }}
       >
         <div style={{ flex: 1 }}>
-          流量预估
+          并发数
           <Tooltip
-            title="流量预估是根据施压配置参数模拟的压力图与预计消耗流量，最终计费以实际施压情况为准"
+            title="并发数是根据施压配置参数模拟的压力图与预计消耗流量，最终计费以实际施压情况为准"
             placement="right"
             trigger="click"
           >
