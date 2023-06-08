@@ -202,14 +202,14 @@ const NodeManageListOld: React.FC<Props> = props => {
             <span style={{ color: '#FE7D61', marginLeft: 16 }}>
               {state.errorMsg}
             </span>
-            <span style={{ float: 'right' }}>
+            {/* <span style={{ float: 'right' }}>
               <Popconfirm title="确认卸载吗？" okText="确认" cancelText="取消" onConfirm={() => handleUninstall()}>
                 <Button style={{ marginRight: 16 }}>卸载</Button>
               </Popconfirm>
               <Popconfirm title="确认恢复吗？" okText="确认" cancelText="取消" onConfirm={() => handleRecover()}>
                 <Button>恢复</Button>
               </Popconfirm>
-            </span>
+            </span> */}
           </Col>
         </Row>
         <CustomTable
