@@ -59,7 +59,7 @@ const DashboardPage: React.FC<Props> = props => {
     queryPressureTestSceneList();
     queryPressureTestReportList();
     queryAppAndSystemFlow();
-  }, []);
+  }, [queryAppAndSystemFlow, queryFlowAccountInfo, queryPressureTestReportList, queryPressureTestSceneList, queryQucikEnterance, querySwitchStatus]);
   /**
    * @name 获取压测开关状态
    */
@@ -182,9 +182,9 @@ const DashboardPage: React.FC<Props> = props => {
           <PressureTestSwitch data={switchStatus} />
           {getTakinAuthority() === 'true' && <Blank />}
           {/* 人寿没有流量余额 */}
-          {!disableDashboardFlowBalance && getTakinAuthority() === 'true' && (
+          {/* {!disableDashboardFlowBalance && getTakinAuthority() === 'true' && (
             <FlowBalance data={flowAccountData} />
-          )}
+          )} */}
           <Blank />
           <QuickEntry data={quickEntranceData} />
         </Col>
