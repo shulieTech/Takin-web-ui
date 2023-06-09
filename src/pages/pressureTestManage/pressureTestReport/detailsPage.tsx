@@ -16,7 +16,7 @@ import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
 import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
-import { router } from 'umi';
+import { Link, router } from 'umi';
 import { TestMode } from '../pressureTestScene/enum';
 import Header from './components/Header';
 import ModuleTabs from './components/ModuleTabs';
@@ -423,7 +423,14 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           </Button>
         </Dropdown>
       )}
-      <button onClick={exportPDF}>导出为PDF</button>
+      <Link to={`/pressureTestManage/pressureTestReport/reportDetails?id=${id}&sceneId=${detailData?.sceneId}`}>
+        <Button 
+          type="primary"
+          ghost 
+          style={{ marginRight: 8 }}
+        >
+            导出报告
+        </Button></Link>
       {detailData?.calibration !== 1 && (
         <Button
           type="primary"

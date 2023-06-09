@@ -17,7 +17,7 @@ import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
 import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
-import { router } from 'umi';
+import { Link, router } from 'umi';
 import { TestMode } from '../pressureTestScene/enum';
 import Header from './components/Header';
 import ModuleTabs from './components/ModuleTabs';
@@ -607,6 +607,9 @@ const ReportDetails: React.FC<Props> = (props) => {
 
   const extra = (
     <>
+      <Link to={`/pressureTestManage/pressureTestReport/details?id=${id}&sceneId=${state?.detailData?.sceneId}`}>
+       <Button style={{ marginRight: 8 }}>返回</Button>   
+      </Link>
       <Button onClick={exportToPDF}>导出为PDF</Button>   
     </>
   );
@@ -985,6 +988,11 @@ const getRtColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '平均RT（ms）',
       dataIndex: 'avgRt'
+    },
+    {
+      ...customColumnProps,
+      title: '并发数',
+      dataIndex: 'concurrent'
     },
     {
       ...customColumnProps,
