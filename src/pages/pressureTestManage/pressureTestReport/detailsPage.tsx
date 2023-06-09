@@ -431,7 +431,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
         >
             导出报告
         </Button></Link>
-      {detailData?.calibration !== 1 && (
+      {/* {detailData?.calibration !== 1 && (
         <Button
           type="primary"
           ghost
@@ -441,7 +441,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
         >
           下载压测报告
         </Button>
-      )}
+      )} */}
       { detailData?.hasJtl && detailData.ptlPath && (
         <Popover
           title="Jtl文件路径"
