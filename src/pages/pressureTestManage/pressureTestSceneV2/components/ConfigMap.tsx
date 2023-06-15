@@ -218,7 +218,7 @@ const ConfigMap = (props: IFieldMergeState) => {
                       'x-rules': [
                         {
                           required: true,
-                          message: '请输入阶梯层数',
+                          message: '请输入阶梯层数,建议能被最大并发整除',
                         },
                         {
                           format: 'integer',

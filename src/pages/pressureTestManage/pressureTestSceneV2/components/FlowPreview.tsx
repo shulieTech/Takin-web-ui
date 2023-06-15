@@ -131,7 +131,7 @@ const FlowPreview: React.FC<Props> = (props) => {
             />
           </Tooltip>
         </div>
-        <span>预计消耗：</span>
+        {/* <span>预计消耗：</span>
         {estimateFlow ? (
           <span>
             <Statistic
@@ -160,7 +160,7 @@ const FlowPreview: React.FC<Props> = (props) => {
           </span>
         ) : (
           '-- vum'
-        )}
+        )} */}
       </div>
       {/* 固定压力模式 */}
       {pressConfig.mode === 1 && (
