@@ -350,6 +350,7 @@ const MultiFormComponent = ({ form }) => {
     validateFields(async (err, values) => {
       if (!err) {
         const formValues = transformData(values);
+
         const newFormValues = formValues?.map((itemLink: any, kLink) => {
           return {
             linkName: itemLink?.linkName,
@@ -453,7 +454,7 @@ const MultiFormComponent = ({ form }) => {
           globalHttp,
           counters,
           processName: values?.processName,
-          links: newFormValues ,
+          links: newFormValues,
           dataSource: {
             csvs
           },
@@ -461,7 +462,6 @@ const MultiFormComponent = ({ form }) => {
             headers: values?.globalHeader
           },
           userVars: values?.userVars,
-          
         };
        
         if (action === 'edit') {
