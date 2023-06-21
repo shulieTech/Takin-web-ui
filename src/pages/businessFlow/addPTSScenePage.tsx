@@ -287,13 +287,25 @@ const MultiFormComponent = ({ form }) => {
           counters = state?.details?.counters;
         }
 
-        const globalHttp = {
+        let globalHttp = {
           contentEncoding: values?.contentEncoding,
           domain: values?.domain,
           path: values?.path,
           port: values?.port,
           protocol: values?.protocol
         };
+
+        if (action === 'edit' && (values?.contentEncoding || values?.domain || values?.path || values?.port ||  values?.protocol)) {
+          globalHttp = {
+            contentEncoding: values?.contentEncoding,
+            domain: values?.domain,
+            path: values?.path,
+            port: values?.port,
+            protocol: values?.protocol
+          };
+        } else {
+          globalHttp = state?.details?.globalHttp;
+        }
 
         const result = {
           globalHttp,
@@ -450,13 +462,25 @@ const MultiFormComponent = ({ form }) => {
           counters = state?.details?.counters;
         }
 
-        const globalHttp = {
+        let globalHttp = {
           contentEncoding: values?.contentEncoding,
           domain: values?.domain,
           path: values?.path,
           port: values?.port,
           protocol: values?.protocol
         };
+
+        if (action === 'edit' && (values?.contentEncoding || values?.domain || values?.path || values?.port ||  values?.protocol)) {
+          globalHttp = {
+            contentEncoding: values?.contentEncoding,
+            domain: values?.domain,
+            path: values?.path,
+            port: values?.port,
+            protocol: values?.protocol
+          };
+        } else {
+          globalHttp = state?.details?.globalHttp;
+        }
 
         const result = {
           globalHttp,
