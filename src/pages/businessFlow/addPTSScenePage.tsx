@@ -269,7 +269,7 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
-        const counters = formValues?.filter((item2: any, k1) => {
+        let counters = formValues?.filter((item2: any, k1) => {
           if (item2?.start) {
             return item2;
           }
@@ -282,6 +282,10 @@ const MultiFormComponent = ({ form }) => {
             start: it?.start
           };
         });
+
+        if (action === 'edit' && counters?.length === 0) {
+          counters = state?.details?.counters;
+        }
 
         const globalHttp = {
           contentEncoding: values?.contentEncoding,
@@ -428,7 +432,7 @@ const MultiFormComponent = ({ form }) => {
           };
         });
 
-        const counters = formValues?.filter((item2: any, k1) => {
+        let counters = formValues?.filter((item2: any, k1) => {
           if (item2?.start) {
             return item2;
           }
@@ -441,6 +445,10 @@ const MultiFormComponent = ({ form }) => {
             start: it?.start
           };
         });
+
+        if (action === 'edit' && counters?.length === 0) {
+          counters = state?.details?.counters;
+        }
 
         const globalHttp = {
           contentEncoding: values?.contentEncoding,
@@ -806,6 +814,7 @@ const MultiFormComponent = ({ form }) => {
       setState({
         details: data,
       });
+      
     }
   };
    

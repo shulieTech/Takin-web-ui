@@ -32,7 +32,6 @@ const { Panel } = Collapse;
 const APIPanel: React.FC<Props> = props => {
     
   const { form , index, api, action , linkIndex } = props;
-  console.log('api-index',api,index);
   const { getFieldDecorator, validateFields, getFieldValue, setFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
   // console.log('api', api);

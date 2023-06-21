@@ -93,6 +93,8 @@ const IB2Node: React.FC<Props> = props => {
     }
   }
 
+  console.log('IB@中api--------', api);
+
   return (
     <Collapse expandIconPosition="left" style={{ marginBottom: 8 }}>
     <Panel header={
@@ -112,6 +114,13 @@ const IB2Node: React.FC<Props> = props => {
           initialValue: action === 'edit' ? api?.enabled : true,
           rules: [{ required: true, message: '' }],
         })(<Switch onChange={(checked, e) => { e.stopPropagation(); }}/>)}
+         <Form.Item >
+         {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, 
+           {
+             initialValue: action === 'edit' && api?.needRequest  ? props?.state?.javaRequestDetails?.className : action === 'edit' ? api?.base?.requestUrl : props?.state?.javaRequestDetails?.className,
+             rules: [{ required: true, message: '请输入类名!' }],
+           })(<Input placeholder="请输入类名" disabled={true} style={{minWidth: 500, marginLeft: 20 }}/>)}
+        </Form.Item>
       </Form.Item>
           <Form.Item style={{ float: 'right' }}>
             <Button type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
