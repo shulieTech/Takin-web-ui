@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import {
   Col,
   Icon,
@@ -50,7 +49,7 @@ const getFormData = (that: Login): FormDataType[] => {
   const disableTenant = getThemeByKeyName('disableTenant');
   const usernamePlaceholder = disableTenant
     ? '请输入账号'
-    : '<用户名>@<企业别名>';
+    : '<用户名>@<企业别名>，例如： username@shulie';
   return [
     {
       key: 'username',
@@ -109,7 +108,7 @@ const getFormData = (that: Login): FormDataType[] => {
       },
       node: (
         <Input
-          style={{ width: 312 }}
+          style={{ width: 205 }}
           className={styles.inputStyle}
           prefix={<Icon type="safety" className={styles.prefixIcon} />}
           placeholder="验证码"
@@ -118,7 +117,13 @@ const getFormData = (that: Login): FormDataType[] => {
       ),
       extra: (
         <div style={{ display: 'inline-block' }}>
-          <img style={{ marginLeft: 16, cursor: 'pointer' }} src={that.state.imgSrc} onClick={that.refresh}/>
+          <img style={{ marginLeft: 16 }} src={that.state.imgSrc} />
+          <span
+            style={{ marginLeft: 8, cursor: 'pointer' }}
+            onClick={that.refresh}
+          >
+            <Icon type="redo" />
+          </span>
         </div>
       ),
     },
@@ -254,8 +259,7 @@ export default class Login extends DvaComponent<Props, State> {
   componentDidMount = () => {
     this.queryMenuList();
     this.serverConfig();
-    // this.thirdParty(location.hash.split('=')[1]);
-    this.hzbankPartylogin();
+    this.thirdParty(location.hash.split('=')[1]);
   };
 
   refresh = () => {
@@ -411,41 +415,13 @@ export default class Login extends DvaComponent<Props, State> {
     localStorage.setItem('Access-Token', headers['access-token']);
   };
 
-  hzbankPartylogin = async () => {
-    if (new URLSearchParams(window.location.hash.split('?')[1])?.get('token')) {
-      const {
-        data: { success, data },
-      } = await UserService.hzbankLogin({
-        accessToken: new URLSearchParams(window.location.hash.split('?')[1])?.get('token'),
-      });
-      if (success) {
-        console.log(data);
-        localStorage.setItem('troweb-userName', data.name);
-        localStorage.setItem('troweb-userId', data.id);
-        localStorage.setItem('troweb-role', data.userType);
-        localStorage.setItem('isAdmin', data.isAdmin);
-        localStorage.setItem('isSuper', data.isSuper);
-        localStorage.setItem('tenant-code', data.tenantCode);
-        localStorage.setItem('env-code', data.envCode);
-        localStorage.setItem('deptId', data.deptId);
-        localStorage.setItem('full-link-token', data.xToken);
-        localStorage.setItem('troweb-expire', data.expire);
-        localStorage.setItem('accessToken', new URLSearchParams(window.location.hash.split('?')[1])?.get('token'));
-        localStorage.removeItem('Access-Token');
-
-        router.push('/');
-        return;
-      }
-    }
-  };
-
   handleSubmit = async (err, value) => {
     if (err) {
       return;
     }
     const {
       data: { success, data },
-    } = await UserService.troLogin({ ...value, password: btoa(value?.password), loginType: this.state.keyType });
+    } = await UserService.troLogin({ ...value, loginType: this.state.keyType });
     if (success) {
       notification.success({
         message: '通知',
@@ -460,7 +436,6 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('isSuper', data.isSuper);
       localStorage.setItem('tenant-code', data.tenantCode);
       localStorage.setItem('env-code', data.envCode);
-      localStorage.setItem('deptId', data.deptId);
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
@@ -501,7 +476,6 @@ export default class Login extends DvaComponent<Props, State> {
       localStorage.setItem('isSuper', data.isSuper);
       localStorage.setItem('tenant-code', data.tenantCode);
       localStorage.setItem('env-code', data.envCode);
-      localStorage.setItem('deptId', data.deptId);
       localStorage.setItem('full-link-token', data.xToken);
       localStorage.setItem('troweb-expire', data.expire);
       localStorage.removeItem('Access-Token');
@@ -560,10 +534,10 @@ export default class Login extends DvaComponent<Props, State> {
         <Tabs
           tabBarGutter={0}
           onChange={this.callback}
-          // tabBarExtraContent={
-          //   <Popover content={this.content()} trigger="click" placement="top">
-          //     <a>申请账号</a>
-          //   </Popover>}
+          tabBarExtraContent={
+            <Popover content={this.content()} trigger="click" placement="top">
+              <a>申请账号</a>
+            </Popover>}
         >
           <TabPane tab="SSO登录" key="1">
             <CommonForm
@@ -575,7 +549,7 @@ export default class Login extends DvaComponent<Props, State> {
                 isSubmitBtn: true,
                 submitText: '登录',
                 submitBtnProps: {
-                  style: { width: 409, marginTop: 20 },
+                  style: { width: 329, marginTop: 20 },
                   type: 'primary',
                 },
               }}
@@ -700,10 +674,10 @@ export default class Login extends DvaComponent<Props, State> {
               className={styles.bg1}
               src={require('./../../assets/login_bg.png')}
             />
-            {/* <img
+            <img
               className={styles.bg2}
               src={require('./../../assets/login_bg2.png')}
-            /> */}
+            />
             <img
               className={styles.bg3}
               src={require('./../../assets/login_img.png')}
@@ -717,11 +691,10 @@ export default class Login extends DvaComponent<Props, State> {
 
         <div className={styles.main}>
           <div className={styles.login}>
-          <div className={styles.sysName}>欢迎登录性能测试平台PTS</div>
-            <div style={{ color: 'rgba(0, 0, 0, 0.45)', fontSize: 16, marginBottom: 20, marginTop: 8 }}>构建分布式系统稳定性主动防御体系</div>
+            <p className={styles.sysName}>全链路压测</p>
             {dom}
-            {/* <center className={styles.other}>其他登录方式</center> */}
-            {/* <Row className={styles.otherimg} type="flex" justify="center">
+            <center className={styles.other}>其他登录方式</center>
+            <Row className={styles.otherimg} type="flex" justify="center">
               {this.state.arr.map((ite) => {
                 return (
                   <Col key={ite.id} span={3}>
@@ -731,7 +704,7 @@ export default class Login extends DvaComponent<Props, State> {
                   </Col>
                 );
               })}
-            </Row> */}
+            </Row>
           </div>
         </div>
       </div>
