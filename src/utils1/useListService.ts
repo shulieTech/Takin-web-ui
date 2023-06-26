@@ -5,7 +5,7 @@ interface Props {
   service: (params: any) => Promise<any>;
   defaultQuery?: any;
   isQueryOnMount?: boolean;
-  afterSearchCallback?: (res: any, query?: any) => void;
+  afterSearchCallback?: (res: any) => void;
   dataListPath?: string;
 }
 
@@ -24,12 +24,12 @@ const useListService = (props: Props) => {
   const [loading, setLoading] = useState(false);
 
   const resetList = () => {
-    return getList(defaultQuery, false);
+    return getList(defaultQuery);
   };
 
-  const getList = async (params = {}, isMergeParams = true) => {
+  const getList = async (params = {}) => {
     setLoading(true);
-    const newQuery = isMergeParams ? { ...query, ...params } : params;
+    const newQuery = { ...query, ...params };
     try {
       const res = await service(newQuery);
       const {
@@ -49,7 +49,7 @@ const useListService = (props: Props) => {
         setTotal(totalCount || data.count || data.total);
       }
       if (typeof afterSearchCallback === 'function') {
-        afterSearchCallback(res, newQuery);
+        afterSearchCallback(res);
       }
       return res;
     } finally {
