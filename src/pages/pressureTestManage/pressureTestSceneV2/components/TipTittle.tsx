@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Icon, Tooltip } from 'antd';
 
 export default (props: {
   tips: string | ReactNode;
@@ -11,7 +10,7 @@ export default (props: {
     <span>
       {children}
       <Tooltip title={tips}>
-        <QuestionCircleOutlined style={{ cursor: 'pointer', marginLeft: 4 }} />
+        <Icon type="question-circle" style={{ cursor: 'pointer', marginLeft: 4 }}/>
       </Tooltip>
     </span>
   );
