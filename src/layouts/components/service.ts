@@ -1,8 +1,31 @@
-import { httpGet, httpPost, httpDelete, httpPut } from 'src/utils/request';
+import { httpDelete, httpGet, httpPost, httpPut } from 'src/utils/request';
 
 const tenantCodeService = {
   async tenant(data = {}) {
     const url = '/tenant';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取部门列表
+   */
+  async queryDepartmentList(data = {}) {
+    const url = '/auth/dept/getUserDept';
+    return httpGet(url, data);
+  },
+
+  /**
+   * @name 获取项目列表
+   */
+  async queryProjectList(data = {}) {
+    const url = '/dept/project/switch/list';
+    return httpGet(url, data);
+  },
+
+  /**
+   * @name 切换项目
+   */
+  async changeProject(data = {}) {
+    const url = '/dept/project/switch';
     return httpGet(url, data);
   },
   async tenantSwitch(data = {}) {
