@@ -26,13 +26,6 @@ const Demo: React.FC<Props> = props => {
     if (!SESSION && !localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
     }
-
-    if (token && envCode && tenantCode) {
-      localStorage.setItem('full-link-token', token);
-      localStorage.setItem('env-code', envCode);
-      localStorage.setItem('tenant-code', tenantCode);
-      router.push('/');
-    }
   }, []);
 
   /**

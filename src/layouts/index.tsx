@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name 主入口
  */
@@ -17,11 +18,14 @@ import withRouter from 'umi/withRouter';
 import SiderLayout from './SiderLayout';
 import useTheme from 'src/utils/useTheme';
 import services from 'src/services/app';
+import ThirdLogin from 'src/pages/user/thirdLoginPage';
 
 moment.locale('zh-cn');
 
 const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
   const { children, location } = props;
+  const { query } = location;
+  const { token, envCode, tenantCode } = query;
   let layout = null;
 
   const [initing, setIniting] = useState(true);
@@ -29,8 +33,11 @@ const IndexLayout: React.FC<Basic.BaseProps> = (props) => {
   const { setTheme, resetTheme, loadThemeConfig } = useTheme();
 
   // 权限判断
+
   if (getTakinAuthority() !== 'false' && location.pathname === '/login') {
     layout = <LoginPage />;
+  } else if (getTakinAuthority() !== 'false' && location.pathname === '/thirdLogin') {
+    layout = <ThirdLogin />;
   } else {
     // 跳转到首页
     if (location.pathname === '/login') {
