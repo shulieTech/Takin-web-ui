@@ -16,12 +16,14 @@ const ThirdLogin: React.FC<Props> = props => {
   const token = getURLParameter('token');
   const envCode = getURLParameter('envCode');
   const tenantCode = getURLParameter('tenantCode');
+  const departId = getURLParameter('departId');
 
   useEffect(() => {
     if (token && envCode && tenantCode) {
       localStorage.setItem('full-link-token', token);
       localStorage.setItem('env-code', envCode);
       localStorage.setItem('tenant-code', tenantCode);
+      localStorage.setItem('deptId', departId);
       router.push('/');
     }
   }, []);

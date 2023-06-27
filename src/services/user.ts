@@ -93,6 +93,13 @@ const UserService = {
     const url = '/thirdParty/callback';
     return httpGet(url, data);
   },
+  /**
+   * @name 获取用户信息
+   */
+  async userInfo(data) {
+    const url = '/sso/loginStatus';
+    return httpGet(url, data);
+  },
 };
 
 export default UserService;

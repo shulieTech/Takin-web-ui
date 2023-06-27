@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name 基础布局Layout
  * @author MingShined
@@ -39,6 +40,8 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
   useEffect(() => {
     if (thirdPartyLoginFlag) {
       thirdPartylogin();
+    } else if (!localStorage.getItem('troweb-userName')) {
+      getUserInfo();
     } else {
       setState({ request: true });
     }
@@ -87,6 +90,21 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
         });
         setState({ request: false });
       }
+    }
+  };
+
+  const getUserInfo = async () => {
+    const {
+      data: { success, data },
+    } = await UserService.userInfo({
+    });
+    if (success) {
+      localStorage.setItem('troweb-userName', data.name);
+      localStorage.setItem('troweb-userId', data.id);
+      localStorage.setItem('troweb-role', data.userType);
+      localStorage.setItem('isAdmin', data.isAdmin);
+      localStorage.setItem('isSuper', data.isSuper);
+      localStorage.setItem('troweb-expire', data.expire);
     }
   };
 
