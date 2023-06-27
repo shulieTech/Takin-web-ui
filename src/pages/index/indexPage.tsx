@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect } from 'react';
 import UserService from 'src/services/user';
 import router from 'umi/router';
@@ -9,7 +10,7 @@ interface Props {
 const Demo: React.FC<Props> = props => {
   const { location } = props;
   const { query } = location;
-  const { SESSION } = query;
+  const { SESSION , token, envCode, tenantCode } = query;
 
   useEffect(() => {
     if (SESSION) {
@@ -24,6 +25,13 @@ const Demo: React.FC<Props> = props => {
 
     if (!SESSION && !localStorage.getItem('trowebBtnResource')) {
       queryBtnResource();
+    }
+
+    if (token && envCode && tenantCode) {
+      localStorage.setItem('full-link-token', token);
+      localStorage.setItem('env-code', envCode);
+      localStorage.setItem('tenant-code', tenantCode);
+      router.push('/');
     }
   }, []);
 
