@@ -11,6 +11,7 @@ import { Badge } from 'antd';
 import { appConfigStatusMap, appConfigStatusColorMap } from '../enum';
 import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import { getTakinAuthority } from 'src/utils/utils';
+import AppDistributeModal from 'src/modals/AppDistributeModal';
 
 const getColumns = (state, setState): ColumnProps<any>[] => {
   const userType: string = localStorage.getItem('isAdmin');
@@ -53,13 +54,29 @@ const getColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
-            {userType === 'true' &&
+            {/* {userType === 'true' &&
               expire === 'false' &&
               getTakinAuthority() === 'true' && (
                 <span style={{ marginRight: 8 }}>
                   <AdminDistributeModal
                     dataId={row.id}
                     btnText="分配给"
+                    menuCode="APPLICATION_MNT"
+                    onSccuess={() => {
+                      setState({
+                        isReload: !state.isReload
+                      });
+                    }}
+                  />
+                </span>
+              )} */}
+               {userType === 'true' &&
+              expire === 'false' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8 }}>
+                  <AppDistributeModal
+                    dataId={row.id}
+                    btnText="分配"
                     menuCode="APPLICATION_MNT"
                     onSccuess={() => {
                       setState({

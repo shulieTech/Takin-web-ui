@@ -16,6 +16,7 @@ import { ChangeStatus } from '../enum';
 import AddEditActivityModal from '../modals/AddEditActivityModal';
 import MissingDataScriptModal from '../modals/MissingDataScriptModal';
 import BusinessActivityService from '../service';
+import AppDistributeModal from 'src/modals/AppDistributeModal';
 
 const getColumns = (
   systemFlowState,
@@ -111,7 +112,7 @@ const getColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType === 'true' &&
+          {/* {userType === 'true' &&
             expire === 'false' &&
             getTakinAuthority() === 'true' && (
               <span style={{ marginRight: 8 }}>
@@ -125,6 +126,22 @@ const getColumns = (
                     });
                   }}
                 />
+              </span>
+            )} */}
+               {userType === 'true' &&
+            expire === 'false' &&
+            getTakinAuthority() === 'true' && (
+              <span style={{ marginRight: 8 }}>
+                <AppDistributeModal
+                    dataId={row.activityId}
+                    btnText="分配"
+                    menuCode="BUSINESS_ACTIVITY"
+                    onSccuess={() => {
+                      setSystemFlowState({
+                        isReload: !systemFlowState.isReload
+                      });
+                    }}
+                  />
               </span>
             )}
           {row.canDelete === 0 ? (

@@ -15,6 +15,7 @@ import AdminDistributeModal from 'src/modals/AdminDistributeModal';
 import MissingDataScriptModal from '../modals/MissingDataScriptModal';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import { getTakinAuthority } from 'src/utils/utils';
+import AppDistributeModal from 'src/modals/AppDistributeModal';
 
 const getBusinessActivityColumns = (
   BusinessActivityState,
@@ -109,7 +110,7 @@ const getBusinessActivityColumns = (
       dataIndex: 'action',
       render: (text, row, index) => (
         <Fragment>
-          {userType === 'true' &&
+          {/* {userType === 'true' &&
             expire === 'false' &&
             getTakinAuthority() === 'true' && (
               <span style={{ marginRight: 8 }}>
@@ -124,7 +125,23 @@ const getBusinessActivityColumns = (
                   }}
                 />
               </span>
-            )}
+            )} */}
+             {userType === 'true' &&
+              expire === 'false' &&
+              getTakinAuthority() === 'true' && (
+                <span style={{ marginRight: 8 }}>
+                  <AppDistributeModal
+                    dataId={row.activityId}
+                    btnText="分配"
+                    menuCode="BUSINESS_ACTIVITY"
+                    onSccuess={() => {
+                      setBusinessActivityState({
+                        isReload: !BusinessActivityState.isReload
+                      });
+                    }}
+                  />
+                </span>
+              )}
           <span style={{ marginRight: 8 }}>
             <MissingDataScriptModal
               btnText="数据验证脚本"
