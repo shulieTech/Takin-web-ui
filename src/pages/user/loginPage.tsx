@@ -571,15 +571,22 @@ export default class Login extends DvaComponent<Props, State> {
               rowNum={1}
               onSubmit={this.handleSubmit}
               btnProps={{
-                isResetBtn: false,
+                isResetBtn: true,
                 isSubmitBtn: true,
                 submitText: '登录',
+                resetText: '员工统一登录',
                 submitBtnProps: {
+                  style: { width: 409, marginTop: 20 },
+                  type: 'primary',
+                },
+                resetBtnProps: {
                   style: { width: 409, marginTop: 20 },
                   type: 'primary',
                 },
               }}
             />
+
+            
           </TabPane>
         </Tabs>
       );
