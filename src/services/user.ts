@@ -11,6 +11,10 @@ const UserService = {
     const url = '/login';
     return httpPost(url, data);
   },
+  async troLoginGuocai(data) {
+    const url = '/login/guocai';
+    return httpGet(url, data);
+  },
   async trov2Login(data) {
     const url = '/v2/login';
     return httpPost(url, data);

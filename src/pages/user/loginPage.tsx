@@ -477,6 +477,12 @@ export default class Login extends DvaComponent<Props, State> {
     this.refresh();
   };
 
+  handleReset = async () => {
+    const {
+      data: { success, data },
+    } = await UserService.troLoginGuocai({});
+  };
+
   handleSubmits = async (err, value) => {
     if (err) {
       return;
@@ -570,6 +576,7 @@ export default class Login extends DvaComponent<Props, State> {
               formData={getFormData(this)}
               rowNum={1}
               onSubmit={this.handleSubmit}
+              onReset={this.handleReset}
               btnProps={{
                 isResetBtn: true,
                 isSubmitBtn: true,
