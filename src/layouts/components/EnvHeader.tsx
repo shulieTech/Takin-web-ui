@@ -236,7 +236,7 @@ const EnvHeader: React.FC<Props> = (props) => {
       },
     });
   };
-
+  
   return (
     <div
       style={{
@@ -263,6 +263,10 @@ const EnvHeader: React.FC<Props> = (props) => {
           {desc}
         </span>
       </Tooltip>
+      <a href='' download>
+       <Button>下载录制工具</Button>
+      </a>
+     
       <span>
         <Button.Group>
           { projectList && projectList?.length > 0 && <Dropdown
