@@ -576,24 +576,26 @@ export default class Login extends DvaComponent<Props, State> {
               formData={getFormData(this)}
               rowNum={1}
               onSubmit={this.handleSubmit}
-              onReset={this.handleReset}
+              // onReset={this.handleReset}
               btnProps={{
-                isResetBtn: true,
+                isResetBtn: false,
                 isSubmitBtn: true,
                 submitText: '登录',
-                resetText: '员工统一登录',
+                // resetText: '员工统一登录',
                 submitBtnProps: {
                   style: { width: 409, marginTop: 20 },
                   type: 'primary',
                 },
-                resetBtnProps: {
-                  style: { width: 409, marginTop: 20 },
-                  type: 'primary',
-                },
+                // resetBtnProps: {
+                //   style: { width: 409, marginTop: 20 },
+                //   type: 'primary',
+                // },
               }}
             />
-
-            
+            <a href="http://9.1.202.236/takin-web/api/login/guocai">
+             <Button style={{ width: 409, marginTop: 20 }} type="primary">员工统一登录</Button>
+            </a>
+          
           </TabPane>
         </Tabs>
       );
