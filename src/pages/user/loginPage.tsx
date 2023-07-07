@@ -712,7 +712,7 @@ export default class Login extends DvaComponent<Props, State> {
         {loginPic ? (
           <>
            <img className={styles.bg1} src={loginPic} />
-           <img className={styles.bg4} src={loginLogo} />
+           <img className={styles.bg5} src={loginLogo} />
           </>
          
         ) : (
