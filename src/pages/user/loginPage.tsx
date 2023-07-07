@@ -705,11 +705,16 @@ export default class Login extends DvaComponent<Props, State> {
     }
 
     const loginPic = getThemeByKeyName('loginPic');
+    const loginLogo = getThemeByKeyName('loginLogo');
 
     return (
       <div className={styles.mainWrap}>
         {loginPic ? (
-          <img className={styles.bg1} src={loginPic} />
+          <>
+           <img className={styles.bg1} src={loginPic} />
+           <img className={styles.bg4} src={loginLogo} />
+          </>
+         
         ) : (
           <>
             <img
