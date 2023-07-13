@@ -591,11 +591,12 @@ export default class Login extends DvaComponent<Props, State> {
                 //   type: 'primary',
                 // },
               }}
-            />
+            />  
+          </TabPane>
+          <TabPane tab="统一登录" key="2">
             <a href="http://9.1.202.236/takin-web/api/login/guocai">
              <Button style={{ width: 409, marginTop: 20 }} type="primary">员工统一登录</Button>
             </a>
-          
           </TabPane>
         </Tabs>
       );
