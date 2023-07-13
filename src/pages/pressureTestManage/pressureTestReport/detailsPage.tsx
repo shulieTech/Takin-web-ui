@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Alert,
   Button,
@@ -15,7 +16,7 @@ import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
 import { getTakinAuthority, checkMenuByPath } from 'src/utils/utils';
-import { router } from 'umi';
+import { Link, router } from 'umi';
 import { TestMode } from '../pressureTestScene/enum';
 import Header from './components/Header';
 import ModuleTabs from './components/ModuleTabs';
@@ -67,7 +68,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
 
   const { location } = props;
   const { query } = location;
-  const { id } = query;
+  const { id , sceneId } = query;
   const { detailData, reportCountData, hasMissingData } = state;
   const [isDownloadingJtl, setIsDownloadingJtl] = useState(false);
   const [isDownloadingReport, setIsDownloadingReport] = useState(false);
@@ -379,15 +380,24 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
         </Dropdown>
       )}
       {detailData?.calibration !== 1 && (
-        <Button
-          type="primary"
-          ghost
-          onClick={downloadReportPdf}
-          style={{ marginRight: 8 }}
-          loading={isDownloadingReport}
-        >
-          下载压测报告
-        </Button>
+        // <Button
+        //   type="primary"
+        //   ghost
+        //   onClick={downloadReportPdf}
+        //   style={{ marginRight: 8 }}
+        //   loading={isDownloadingReport}
+        // >
+        //   下载压测报告
+        // </Button>
+        <Link to={`/pressureTestManage/pressureTestReport/reportDetails?id=${id}&sceneId=${sceneId}`}>
+          <Button
+            type="primary"
+            ghost
+            style={{ marginRight: 8 }}
+          >
+            下载压测报告
+          </Button>
+      </Link>
       )}
       { detailData?.hasJtl && detailData.ptlPath && (
         <Popover

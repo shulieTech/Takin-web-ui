@@ -221,6 +221,99 @@ const PressureTestReportService = {
     const url = '/report/export';
     return httpGet(url, data);
   },
+
+  /**
+   * @name 获取报告基本信息
+   */
+  async queryVltReportDetail(data = {}) {
+    const url = '/vlt/report/getReportById';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取瓶颈接口
+   */
+  async queryVltBottleneck(data = {}) {
+    const url = '/vlt/report/bottleneckInterface/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取风险容器
+   */
+  async queryVlRiskMachine(data = {}) {
+    const url = '/vlt/report/risk/machine/list';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取状态码列表
+   */
+  async queryVlMessageCode(data = {}) {
+    const url = '/vlt/report/message/code';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取报文详情
+   */
+  async queryVlMessageDetail(data = {}) {
+    const url = '/vlt/report/message/detail';
+    return httpGet(url, data);
+  },
+ /**
+  * @name 获取报告对比
+  */
+  async queryVlCompare(data = {}) {
+    const url = '/vlt/report/compare';
+    return httpGet(url, data);
+  },
+/**
+ * @name 获取业务活动链路图
+ */
+  async queryVlTopologyData(data = {}) {
+    const url = '/vlt/report/getLinkDiagram';
+    return httpGet(url, data);
+  },
+/**
+ * @name 获取应用性能列表
+ */
+  async queryVltPerformanceList(data = {}) {
+    const url = '/vlt/report/application/performanceList';
+    return httpGet(url, data);
+  },
+/**
+ * @name 获取实例性能列表
+ */
+  async queryVltInstancePerformanceList(data = {}) {
+    const url = '/vlt/report/application/instance/performanceList';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取实例趋势图
+   */
+  async queryTrendData(data = {}) {
+    const url = '/vlt/report/application/instance/trendMap';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取应用趋势图
+   */
+  async queryAppTrendData(data = {}) {
+    const url = '/vlt/report/application/trendMap';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取节点对比
+   */
+  async queryNodeCompare(data = {}) {
+    const url = '/vlt/report/node/compare';
+    return httpGet(url, data);
+  },
+
+  /**
+   * @name 获取列表
+   */
+  async queryTraceFlowManage(data = {}) {
+    const url = '/apm/traceFlowManage/detail';
+    return httpGet(url, data);
+  },
 };
 
 export default PressureTestReportService;
