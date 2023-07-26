@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name
  * @author MingShined
@@ -200,6 +201,11 @@ const AddEditForm: React.FC<AddEditFormProps> = props => {
                 serviceName: Array.isArray(options?.props?.children)
                   ? options?.props?.children[options?.props?.children.length - 1]
                   : options?.props?.children,
+                rpcType: props.serviceList?.filter((item, k) => { 
+                  if (item?.value === service) {
+                    return item; 
+                  }
+                })?.[0]?.rpcType
               });
             }}
             placeholder="请选择服务"

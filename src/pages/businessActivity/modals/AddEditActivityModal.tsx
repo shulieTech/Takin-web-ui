@@ -34,6 +34,7 @@ const getInitState = () => ({
   showModal: false,
   virtualEntrance: null,
   details: {},
+  rpcType: ''
 });
 const { confirm } = Modal;
 export type AddEditActivityModalState = ReturnType<typeof getInitState>;
@@ -62,7 +63,8 @@ const AddEditActivityModal: React.FC<Props> = props => {
         isCore: data.isCore,
         link_level: data.link_level,
         businessDomain: data.businessDomain,
-        virtualEntrance: data.virtualEntrance
+        virtualEntrance: data.virtualEntrance,
+        rpcType: data?.rpcType
       });
     }
   };
@@ -133,6 +135,7 @@ const AddEditActivityModal: React.FC<Props> = props => {
       entranceName: state.serviceName,
       linkId: state.service,
       type: state.serviceType,
+      rpcType: state?.rpcType,
       ...values,
       ...getEntranceInfo(state.serviceList, state.service)
     });
@@ -152,6 +155,7 @@ const AddEditActivityModal: React.FC<Props> = props => {
       entranceName: state.serviceName,
       linkId: state.service,
       type: state.serviceType,
+      rpcType: state?.rpcType,
       activityId: props.id,
       isCore: state.isCore,
       link_level: state.link_level,
