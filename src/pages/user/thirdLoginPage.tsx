@@ -18,6 +18,22 @@ const ThirdLogin: React.FC<Props> = props => {
   const tenantCode = getURLParameter('tenantCode');
   const departId = getURLParameter('departId');
 
+  const storageList = [
+    'troweb-role',
+    'isAdmin',
+    'troweb-userName',
+    'full-link-token',
+    'trowebUserResource',
+    'trowebBtnResource',
+    'auth-cookie',
+    'troweb-expire',
+    'troweb-userId',
+    'trowebUserMenu',
+    'takinAuthority',
+    'Access-Token',
+  ];
+  storageList.forEach((item) => localStorage.removeItem(item));
+
   useEffect(() => {
     if (token && envCode && tenantCode) {
       localStorage.setItem('full-link-token', token);

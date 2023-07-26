@@ -5,7 +5,7 @@ const ToolDownloadService = {
    * @name 工具下载
    */
   async toolDownload(data = {}) {
-    const url = '/api/tool/list';
+    const url = '/file/list';
     return httpGet(url, data);
   }
 };

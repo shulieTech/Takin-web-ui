@@ -37,7 +37,7 @@ const ToolDownload: React.FC<Props> = props => {
       {
         ...customColumnProps,
         title: '操作',
-        dataIndex: 'downloadUrl',
+        dataIndex: 'filePath',
         render: (text, row) => {
           return <a href={text} download>下载</a>;
         }
