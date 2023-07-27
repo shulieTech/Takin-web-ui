@@ -392,7 +392,7 @@ const EditPage = (props) => {
                 x-component="Input"
                 x-component-props={{
                   placeholder: '请输入',
-                  maxLength: 30,
+                  // maxLength: 1000,
                 }}
                 title="压测场景名称"
                 x-rules={[
