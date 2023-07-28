@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'dva';
 import {
@@ -429,7 +430,7 @@ const EditPage = (props) => {
                   value: x.id,
                 }))}
               />
-              <Field
+              {/* <Field
                 name="isScheduler"
                 type="boolean"
                 x-component="Switch"
@@ -467,7 +468,7 @@ const EditPage = (props) => {
                     },
                   },
                 ]}
-              />
+              /> */}
             </Field>
             <Field
               type="object"
