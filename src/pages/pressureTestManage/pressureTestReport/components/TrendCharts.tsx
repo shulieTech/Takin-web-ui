@@ -83,7 +83,7 @@ const TrendChart = (props) => {
         },
       },
       grid: {
-        left: '3%',
+        left: '7%',
         right: '8%',
         bottom: '3%',
         containLabel: true,
