@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name
  * @author MingShined
@@ -30,7 +31,7 @@ const AnalysisDetails: React.FC<Props> = props => {
     if (success) {
       setInfo(data);
       setState({
-        agentId: data[AnalysisEnum.AgentId]
+        agentId: data?.[AnalysisEnum.AgentId]
       });
     }
   };

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name
  * @author MingShined
@@ -25,9 +26,9 @@ const ThreadChart: React.FC<Props> = ({
     // });
 
     chartRef.current.on('element:click', conf => {
-      if (conf.data.shape === 'circle') {
+      if (conf?.data?.shape === 'circle') {
         setThreadState({
-          time: conf.data.data.time
+          time: conf?.data?.data?.time
         });
       }
     });
