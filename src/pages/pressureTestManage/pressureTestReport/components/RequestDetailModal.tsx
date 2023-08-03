@@ -298,7 +298,7 @@ const RequestDetailModal: React.FC<Props> = props => {
           title: (
             <p style={{ fontSize: 16 }}>
               请求详情
-              <Button  onClick={() => {exportToPDF(); }} style={{ float: 'right', marginRight: 20 }}>导出</Button>
+              {/* <Button  onClick={() => {exportToPDF(); }} style={{ float: 'right', marginRight: 20 }}>导出</Button> */}
             </p>
           ),
           getContainer: () => window.parent.document.body,
