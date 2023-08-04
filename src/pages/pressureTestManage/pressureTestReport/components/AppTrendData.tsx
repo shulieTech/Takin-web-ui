@@ -69,6 +69,10 @@ const AppTrendData = (props) => {
       xAxis: {
         type: 'category',
         data: data?.[0]?.xcost,
+        axisLabel: {
+          interval: 0,  // 设置间隔为0，强制显示所有标签
+          rotate: 45,   // 如果标签过长，可以适当调整旋转角度避免重叠
+        },
       },
       yAxis: {
         type: 'value',
