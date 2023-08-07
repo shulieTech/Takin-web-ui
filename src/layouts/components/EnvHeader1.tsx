@@ -89,8 +89,8 @@ const EnvHeader: React.FC<Props> = (props) => {
    */
   const queryProjectList = async () => {
     const {
-        data: { data, success }
-      } = await tenantCodeService.queryProjectList({ userId: localStorage.getItem('troweb-userId') });
+      data: { data, success }
+    } = await tenantCodeService.queryProjectList({ userId: localStorage.getItem('troweb-userId') });
     if (success) {
       setStateProjectList(data);
     }
@@ -236,6 +236,7 @@ const EnvHeader: React.FC<Props> = (props) => {
       },
     });
   };
+  
   return (
     <div
       style={{
@@ -262,168 +263,12 @@ const EnvHeader: React.FC<Props> = (props) => {
           {desc}
         </span>
       </Tooltip>
+      {/* <a href='' download>
+       <Button>下载录制工具</Button>
+      </a> */}
+     
       <span>
-        {/* {isAdmin && (
-          <Button style={{ marginRight: 8 }} onClick={() => setEnvEdit({})}>
-            新增环境
-          </Button>
-        )} */}
         <Button.Group>
-          {/* <Dropdown
-            overlay={
-              <Menu>
-                {tenantList.map((x) => (
-                  <Menu.Item
-                    key={x.tenantId}
-                    onClick={() => changeTenant(x.tenantCode)}
-                  >
-                    <span
-                      style={{
-                        fontWeight:
-                          tenantList[indexcode]?.tenantCode === x.tenantCode
-                            ? 'bold'
-                            : 'normal',
-                      }}
-                    >
-                      {x.tenantNick}
-                    </span>
-                  </Menu.Item>
-                ))}
-              </Menu>
-            }
-          >
-            <Button
-              type="primary"
-              style={{
-                display: userType === '0' ? 'inline-block' : 'none',
-              }}
-            >
-              租户：
-              {tenantList[indexcode]?.tenantNick}
-              <Icon type="down" />
-            </Button>
-          </Dropdown> */}
-
-          <Dropdown
-            overlayStyle={{
-              maxWidth: 130,
-            }}
-            overlay={
-              <Menu>
-                {envList?.map((x, ind) => {
-                  const isSystemEnv = x?.source === 0;
-                  return (
-                    <Menu.Item
-                      key={ind}
-                      onClick={() => changeEnv(x)}
-                      className="hover-group"
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            flex: 1,
-                            fontWeight:
-                              envList[index]?.envCode === x.envCode
-                                ? 'bold'
-                                : 'normal',
-                          }}
-                          className="truncate"
-                        >
-                          {x.envName}
-                        </div>
-                        <span
-                          style={{
-                            alignSelf: 'end',
-                            marginLeft: 8,
-                          }}
-                        >
-                          <span className="hover-inline-block">
-                            {/* 判断是否可编辑和删除 */}
-                            {isAdmin && !isSystemEnv && (
-                              <>
-                                <Tooltip title="编辑">
-                                  <Icon
-                                    type="edit"
-                                    style={{
-                                      fontSize: 12,
-                                      // marginRight: 8,
-                                      cursor: 'pointer',
-                                      display: 'inline-block',
-                                      padding: 4,
-                                    }}
-                                    onClick={(e) => editEnv(e, x)}
-                                  />
-                                </Tooltip>
-                                <Tooltip title="删除">
-                                  <Icon
-                                    type="delete"
-                                    style={{
-                                      fontSize: 12,
-                                      // marginRight: 8,
-                                      cursor: 'pointer',
-                                      display: 'inline-block',
-                                      padding: 4,
-                                    }}
-                                    onClick={(e) => deleteEnv(e, x)}
-                                  />
-                                </Tooltip>
-                              </>
-                            )}
-                            {!x.isDefault && (
-                              <Tooltip title="设为默认">
-                                <Icon
-                                  type="star"
-                                  style={{
-                                    fontSize: 12,
-                                    // marginRight: 8,
-                                    cursor: 'pointer',
-                                    display: 'inline-block',
-                                    padding: 4,
-                                  }}
-                                  onClick={(e) => setDefaultEnv(e, x)}
-                                />
-                              </Tooltip>
-                            )}
-                          </span>
-                          {x.isDefault && (
-                            <Tooltip title="当前默认环境">
-                              <Icon
-                                type="star"
-                                style={{
-                                  fontSize: 12,
-                                  // marginRight: 8,
-                                  color: 'var(--BrandPrimary-500)',
-                                  display: 'inline-block',
-                                  padding: 4,
-                                }}
-                              />
-                            </Tooltip>
-                          )}
-                        </span>
-                      </div>
-                    </Menu.Item>
-                  );
-                })}
-              </Menu>
-            }
-          >
-            <Button
-              type="primary"
-              style={{
-                borderTopLeftRadius: userType === '0' ? '0px' : '4px',
-                borderBottomLeftRadius: userType === '0' ? '0px' : '4px',
-              }}
-            >
-              环境：
-              {envList[index]?.envName}
-              <Icon type="down" />
-            </Button>
-          </Dropdown>
           { projectList && projectList?.length > 0 && <Dropdown
             overlayStyle={{
               maxWidth: 130,
@@ -475,15 +320,6 @@ const EnvHeader: React.FC<Props> = (props) => {
               <Icon type="down" />
             </Button>
           </Dropdown>}
-
-          {/* {isSuper === '1' && (
-            <AddTenantModal
-              btnText="新增租户"
-              onSuccess={() => {
-                queryTenantList();
-              }}
-            />
-          )} */}
         </Button.Group>
       </span>
       {envEdit && (
