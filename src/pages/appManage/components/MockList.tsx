@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect } from 'react';
 import { CommonSelect, useStateReducer } from 'racc';
 import CustomTable from 'src/components/custom-table';
