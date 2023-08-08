@@ -322,6 +322,13 @@ const PressureTestReportService = {
     const url = '/vlt/report/problemCheck/list';
     return httpGet(url, data);
   },
+  /**
+   * @name 删除报告
+   */
+  async deleteReport(data = {}) {
+    const url = '/report/delete';
+    return httpPost(url, data);
+  },
 };
 
 export default PressureTestReportService;

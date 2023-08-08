@@ -2,14 +2,32 @@
  * @name
  * @author chuxu
  */
-import { Badge } from 'antd';
+import { Badge, Button, Popconfirm, message } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { getTakinAuthority } from 'src/utils/utils';
 import Link from 'umi/link';
+import PressureTestReportService from '../service';
 
 const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
+
+  /**
+   * @name 删除黑名单(单个)
+   */
+  const handleDelete = async id => {
+    const {
+        data: { data, success }
+      } = await PressureTestReportService.deleteReport({
+        id
+      });
+    if (success) {
+      message.success(`删除成功`);
+      setState({
+        isReload: !state.isReload
+      });
+    }
+  };
   return [
     {
       ...customColumnProps,
@@ -78,6 +96,14 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
+            <Popconfirm
+                onConfirm={() => handleDelete(row.id)}
+                title="确认删除报告吗?"
+            >
+                <Button style={{ marginRight: 8 }} type="link">
+                  删除
+                </Button>
+              </Popconfirm>
             <Link
               to={`/pressureTestManage/pressureTestReport/reportDetails?id=${row.id}&sceneId=${row.sceneId}`}
             >
