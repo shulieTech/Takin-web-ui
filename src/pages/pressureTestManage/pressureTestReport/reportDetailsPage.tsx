@@ -729,9 +729,9 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
             <span style={{ fontSize: 20 }}>
               {detailData.sceneName ? detailData.sceneName : '-'}
             </span>
-            <div style={{ fontSize: 12, fontWeight: 400 }}>
+            {/* <div style={{ fontSize: 12, fontWeight: 400 }}>
             备注名称：<Paragraph  style={{ display: 'inline-block', marginLeft: 8 }} editable={{ onChange: (value) => {handleChangeRemark(id, value);} }}>{detailData?.reportRemarks || '-'}</Paragraph>
-           </div>
+           </div> */}
           </div>}
       >
        
