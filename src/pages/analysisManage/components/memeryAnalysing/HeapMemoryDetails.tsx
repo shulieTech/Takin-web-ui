@@ -35,7 +35,7 @@ const HeapMemoryDetails: React.FC<MemeryAnalysingState> = props => {
       data: { data, success }
     } = await AnalysisService.confirmDumpMemory({ agentId: state.agentId });
     if (success) {
-      if (data.path) {
+      if (data?.path) {
         notification.open({
           message: 'dump成功',
           description: `文件位置：${data.path}`,
@@ -72,7 +72,7 @@ const HeapMemoryDetails: React.FC<MemeryAnalysingState> = props => {
       <Line
         yAxis={{ label: { formatter: text => `${text}MB` } }}
         height={400}
-        data={props.chartMap.heapMemory || []}
+        data={props?.chartMap?.heapMemory || []}
         smooth
         xField="time"
         yField="value"
