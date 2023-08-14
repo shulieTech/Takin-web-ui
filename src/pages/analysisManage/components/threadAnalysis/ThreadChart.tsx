@@ -26,9 +26,9 @@ const ThreadChart: React.FC<Props> = ({
     // });
 
     chartRef.current.on('element:click', conf => {
-      if (conf?.data?.shape === 'circle') {
+      if (conf.data.shape === 'circle') {
         setThreadState({
-          time: conf?.data?.data?.time
+          time: conf.data.data.time
         });
       }
     });
@@ -102,7 +102,7 @@ const ThreadChart: React.FC<Props> = ({
             const keys = Object.keys(data);
             return {
               name: labelMap[keys[1]],
-              value: data.threadCount || (data.cpuRate ? `${data.cpuRate}%` : 0),
+              value: data.threadCount || `${data.cpuRate}%`
             };
           },
           crosshairs: {

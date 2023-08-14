@@ -47,7 +47,6 @@ const AnalysisManage: React.FC<Props> = props => {
       component: <MethodTrack query={query} />
     }
   ];
-
   return (
     <ThreadContext.Provider value={{ state, setState }}>
       <div style={{ paddingBottom: 24 }}>
@@ -58,7 +57,7 @@ const AnalysisManage: React.FC<Props> = props => {
           <AnalysisDetails query={query} />
           {isReport && !state.processName ? (
             <EmptyNode />
-          ) : (    
+          ) : (
             <CommonTabs
               dataSource={tabDataSource}
               tabsProps={{
@@ -67,7 +66,7 @@ const AnalysisManage: React.FC<Props> = props => {
               }}
               onRender={item => (
                 <CommonTabs.TabPane key={item.key} tab={item.tab}>
-                  {item?.component}
+                  {item.component}
                 </CommonTabs.TabPane>
               )}
             />
