@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name
  * @author MingShined
@@ -101,7 +102,7 @@ const ThreadChart: React.FC<Props> = ({
             const keys = Object.keys(data);
             return {
               name: labelMap[keys[1]],
-              value: data.threadCount || `${data.cpuRate}%`
+              value: data.threadCount && data.threadCount !== 0 || `${data.cpuRate}%`
             };
           },
           crosshairs: {
