@@ -144,7 +144,8 @@ const GraphComponent = (props: GraphProps, ref: any) => {
         );
 
         // tslint:disable-next-line: max-line-length
-        return `<div style="padding: 8px;box-shadow:  0px 10px 35px rgba(0, 0, 0, 0.1);background: #2E333B;max-width: 448px;border-radius: 4px;word-break:break-all;color:#fff;font-size:12px;">
+       
+        return model?.nodeType === 'APP' ? `<div style="padding: 8px;box-shadow:  0px 10px 35px rgba(0, 0, 0, 0.1);background: #2E333B;max-width: 448px;border-radius: 4px;word-break:break-all;color:#fff;font-size:12px;">
         应用名称：${model.label}<br/>
         ${hasServiceOpened
             ? `${`调用量：${model.serviceAllTotalCount || 0}<br/>`}
@@ -153,8 +154,9 @@ const GraphComponent = (props: GraphProps, ref: any) => {
           ${`成功率：${fixNum(model.serviceAllSuccessRate * 100)}%<br/>`}`
             : ''
           }
-
-      </div>`;
+      </div>` : `<div style="padding: 8px;box-shadow:  0px 10px 35px rgba(0, 0, 0, 0.1);background: #2E333B;max-width: 448px;border-radius: 4px;word-break:break-all;color:#fff;font-size:12px;">
+      应用名称：${model.label}<br/>
+    </div>`;
       },
     };
 
