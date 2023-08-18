@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Col, message, Modal, Radio, Row, Switch, Button } from 'antd';
 import { connect } from 'dva';
 import { useStateReducer } from 'racc';
@@ -246,15 +247,15 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     const needRefresh = searchTableRef?.tableState?.dataSource.some(
       (x) => x.isScheduler || x.status !== 0
     );
-    if (needRefresh) {
-      const { queryList } = searchTableRef;
-      setRefreshTimer(
-        setInterval(() => {
-          queryList();
-        }, 10000)
-      );
-      return () => clearInterval(refreshTimer);
-    }
+    // if (needRefresh) {
+    //   const { queryList } = searchTableRef;
+    //   setRefreshTimer(
+    //     setInterval(() => {
+    //       queryList();
+    //     }, 10000)
+    //   );
+    //   return () => clearInterval(refreshTimer);
+    // }
   }, [JSON.stringify(searchTableRef?.tableState?.dataSource)]);
 
   return (
