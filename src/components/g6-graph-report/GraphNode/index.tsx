@@ -148,7 +148,7 @@ export const transformNodes = ({
       hasOppositeLine,
       ...x,
       // TPS/RT值
-      subLabel: hasServiceOpened //
+      subLabel: hasServiceOpened && x?.nodeType === 'APP' 
         ? `${x.serviceAllTotalCount || 0}/${x.serviceAllTotalTps || 0}/${
             x.serviceRt || 0
           }/${fixNum(x.serviceAllSuccessRate * 100)}%`
