@@ -35,12 +35,13 @@ const ThirdLogin: React.FC<Props> = props => {
   storageList.forEach((item) => localStorage.removeItem(item));
 
   useEffect(() => {
+    storageList.forEach((item) => localStorage.removeItem(item));
     if (token && envCode && tenantCode) {
       localStorage.setItem('full-link-token', token);
       localStorage.setItem('env-code', envCode);
       localStorage.setItem('tenant-code', tenantCode);
       localStorage.setItem('deptId', departId);
-      router.push('/');
+      router.push('#/');
     }
   }, []);
 
