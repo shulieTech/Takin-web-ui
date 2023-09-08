@@ -42,6 +42,7 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
       thirdPartylogin();
     } else if (!localStorage.getItem('troweb-userName')) {
       getUserInfo();
+      setState({ request: true });
     } else {
       setState({ request: true });
     }
