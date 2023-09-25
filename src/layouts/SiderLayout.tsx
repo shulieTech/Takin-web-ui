@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name 基础布局Layout
  * @author MingShined
@@ -67,31 +68,31 @@ const SiderLayout: React.FC<SiderLayoutProps> = (props) => {
     });
     if (success) {
       if (!data.errorMessage) {
-        if (data.thirdPartyIsCallback === 0) {
+        // if (data.thirdPartyIsCallback === 0) {
           // notification.success({
           //   message: '通知',
           //   description: '登录成功',
           //   duration: 1.5
           // });
-          localStorage.setItem('troweb-userName', data.name);
-          localStorage.setItem('troweb-userId', data.id);
-          localStorage.setItem('troweb-role', data.userType);
-          localStorage.setItem('isAdmin', data.isAdmin);
-          localStorage.setItem('isSuper', data.isSuper);
-          localStorage.setItem('tenant-code', data.tenantCode);
-          localStorage.setItem('env-code', data.envCode);
-          localStorage.setItem('full-link-token', data.xToken);
-          localStorage.setItem('troweb-expire', data.expire);
-          localStorage.removeItem('Access-Token');
+        localStorage.setItem('troweb-userName', data.name);
+        localStorage.setItem('troweb-userId', data.id);
+        localStorage.setItem('troweb-role', data.userType);
+        localStorage.setItem('isAdmin', data.isAdmin);
+        localStorage.setItem('isSuper', data.isSuper);
+        localStorage.setItem('tenant-code', data.tenantCode);
+        localStorage.setItem('env-code', data.envCode);
+        localStorage.setItem('full-link-token', data.xToken);
+        localStorage.setItem('troweb-expire', data.expire);
+        localStorage.removeItem('Access-Token');
 
           // 支持登录后跳转到指定页面
-          if (redirectUrl && data.xCode) {
+        if (redirectUrl && data.xCode) {
             window.location.href = `${redirectUrl}${redirectUrl.indexOf('?') > -1 ? '&' : '?'}code=${data.xCode}`;
             return;
           }
 
-          setState({ request: true });
-        }
+        setState({ request: true });
+        // }
       } else {
         Modal.error({
           title: '登录失败',
