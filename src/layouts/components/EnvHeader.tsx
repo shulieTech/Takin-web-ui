@@ -26,25 +26,25 @@ const EnvHeader: React.FC<Props> = props => {
     });
     if (success) {
       setTenantList(data);
-      const indexs = _.findIndex(data, [
+      const indexs = _?.findIndex(data, [
         'tenantCode',
         localStorage.getItem('tenant-code')
       ]);
-      setEnvList(data[indexs]?.envs);
-      const arr = data[indexs]?.envs.filter(item => {
-        if (item.isDefault) {
+      setEnvList(data?.[indexs]?.envs);
+      const arr = data?.[indexs]?.envs.filter(item => {
+        if (item?.isDefault) {
           return item;
         }
       });
       if (localStorage.getItem('env-code') === null) {
-        localStorage.setItem('env-code', arr[indexs]?.envCode);
-        setDesc(arr[indexs]?.desc);
+        localStorage.setItem('env-code', arr?.[indexs]?.envCode);
+        setDesc(arr?.[indexs]?.desc);
       } else {
-        const ind = _.findIndex(data[indexs].envs, [
+        const ind = _?.findIndex(data?.[indexs]?.envs, [
           'envCode',
           localStorage.getItem('env-code')
         ]);
-        setDesc(data[indexs].envs[ind]?.desc);
+        setDesc(data?.[indexs]?.envs[ind]?.desc);
       }
     }
   };
