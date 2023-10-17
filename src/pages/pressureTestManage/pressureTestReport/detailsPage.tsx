@@ -27,8 +27,8 @@ import PressureTestReportService from './service';
 import { GraphData } from '@antv/g6';
 import downloadFile from 'src/utils/downloadFile';
 import PressTestMachines from './components/PressTestMachines';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// import html2canvas from 'html2canvas';
+// import jsPDF from 'jspdf';
 
 interface State {
   isReload?: boolean;
@@ -228,25 +228,25 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     }
   };
 
-  const exportPDF = () => {
-    const input = document.getElementById('content-to-export'); // 获取需要导出的内容的DOM节点
+  // const exportPDF = () => {
+  //   const input = document.getElementById('content-to-export'); // 获取需要导出的内容的DOM节点
   
-    html2canvas(input)
-      .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4'); // 创建一个新的PDF文档，设置纸张大小为A4
+  //   html2canvas(input)
+  //     .then((canvas) => {
+  //       const imgData = canvas.toDataURL('image/png');
+  //       const pdf = new jsPDF('p', 'mm', 'a4'); // 创建一个新的PDF文档，设置纸张大小为A4
   
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  //       const imgProps = pdf.getImageProperties(imgData);
+  //       const pdfWidth = pdf.internal.pageSize.getWidth();
+  //       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
   
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight); // 将图片添加到PDF文档中
-        pdf.save('download.pdf'); // 保存并下载PDF文档
-      })
-      .catch((err) => {
-        console.error('Error exporting PDF:', err);
-      });
-  };
+  //       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight); // 将图片添加到PDF文档中
+  //       pdf.save('download.pdf'); // 保存并下载PDF文档
+  //     })
+  //     .catch((err) => {
+  //       console.error('Error exporting PDF:', err);
+  //     });
+  // };
   
   const changeTenant = (url) => {
     window.open(url);

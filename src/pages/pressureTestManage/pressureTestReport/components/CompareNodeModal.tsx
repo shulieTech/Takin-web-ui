@@ -22,7 +22,7 @@ interface Props {
   reportIds?: any;
   startTime?: any;
   traceId?: any;
-  activityId:any;
+  activityId: any;
 }
 
 interface State {

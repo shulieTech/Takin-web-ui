@@ -200,6 +200,7 @@ const IB2HeaderTable: React.FC<Props> = props => {
         dataSource={state.list}
       />
       <Modal 
+        width={'calc(100% - 40px)'} 
         onOk={() => {
           handleConfirm();
         }}

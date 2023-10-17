@@ -1,7 +1,7 @@
 /**
  * @author chuxu
  */
-import { Button, Col, Dropdown, Menu, Row, Upload } from 'antd';
+import { Button, Col, Dropdown, Menu, Row, Upload, message } from 'antd';
 import { ImportFile, useCreateContext, useStateReducer } from 'racc';
 import React, { Fragment } from 'react';
 import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
@@ -13,6 +13,7 @@ import BusinessFlowBottom from './components/BusinessFlowBottom';
 
 import styles from './index.less';
 import AddJmeterModal from './modals/AddJmeterModal';
+import BusinessFlowService from './service';
 
 interface Props {}
 const getInitState = () => ({
@@ -60,6 +61,16 @@ const BusinessFlow: React.FC<Props> = props => {
   //   </Menu>
   // );
 
+  const handleDownload = async () => {
+    const {
+        data: { code, data }
+      } = await BusinessFlowService.download({ configCode: 'IB2_JAR_DOWNLOAD_PATH' });
+    if (code === 200) {
+      window.location.href = data?.configValue;
+      message.success('下载成功');
+    }
+  };
+
   return (
     <BusinessFlowContext.Provider value={{ state, setState }}>
       <MainPageLayout>
@@ -79,6 +90,13 @@ const BusinessFlow: React.FC<Props> = props => {
                 {/* <Dropdown overlay={menu} placement="bottomLeft">
                   <Button type="primary">新增</Button>
                 </Dropdown> */}
+                 <Button 
+                   onClick={() => {
+                     handleDownload();
+                   }}  
+                   style={{ marginRight: 8 }}>
+                    IB2依赖包下载
+                  </Button>
                  <Link to="/businessFlow/addPTSScene?action=add">
                  <Button type="primary" style={{ marginRight: 8 }}>创建PTS流程</Button>
                  </Link>

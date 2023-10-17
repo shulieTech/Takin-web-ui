@@ -258,6 +258,14 @@ const BusinessFlowService = {
     const url = '/pts/function/debug';
     return httpPost(url, data);
   },
+  /**
+   * @name 下载
+   */
+  async download(data = {}) {
+    const url = '/confcenter/takinConfig/queryGlobalConfig';
+    return httpGet(url, data);
+  },
+  
 };
 
 export default BusinessFlowService;
