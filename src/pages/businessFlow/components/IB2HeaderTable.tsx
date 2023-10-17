@@ -204,14 +204,15 @@ const IB2HeaderTable: React.FC<Props> = props => {
         onOk={() => {
           handleConfirm();
         }}
+        centered
         onCancel={() => {
           setState({
             visible: false
           });
         }} 
         visible={state?.visible} 
-        bodyStyle={{ height: 300 }}>
-        <Input.TextArea onChange={handleChangeModalValue} value={state?.textValue}  style={{ height: 250, marginTop: 20 }}/>
+        bodyStyle={{ height: '90vh' }}>
+        <Input.TextArea onChange={handleChangeModalValue} value={state?.textValue}  style={{ height: '85vh',maxHeight:'85vh',minHeight:'85vh', marginTop: 20,overflow:'scroll' }}/>
       </Modal>
     </Fragment>
      
