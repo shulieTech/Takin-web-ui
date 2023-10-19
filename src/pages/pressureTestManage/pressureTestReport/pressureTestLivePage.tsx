@@ -316,11 +316,11 @@ const PressureTestLive: React.FC<Props> = (props) => {
 
   const summaryList = [
     {
-      label: '警告',
-      value: detailData.totalWarn,
+      label: '请求数',
+      value: detailData.totalRequest,
       precision: 0,
-      color: '#FE7D61',
-      suffix: '次',
+      // color: '#FE7D61',
+      suffix: '',
     },
     {
       label: '实际并发数',
