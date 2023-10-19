@@ -263,11 +263,11 @@ const EnvHeader: React.FC<Props> = (props) => {
         </span>
       </Tooltip>
       <span>
-        {/* {isAdmin && (
+        {isAdmin && (
           <Button style={{ marginRight: 8 }} onClick={() => setEnvEdit({})}>
             新增环境
           </Button>
-        )} */}
+        )}
         <Button.Group>
           {/* <Dropdown
             overlay={
