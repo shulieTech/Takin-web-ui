@@ -576,7 +576,7 @@ const EditPage = (props) => {
                   <span style={{ fontSize: 16 }}>
                     终止条件
                     <span style={{ color: '#f7917a', marginLeft: 8 }}>
-                      为保证安全压测，所有业务活动需配置含「RT」和「成功率」的终止条件
+                      为保证安全压测，建议所有业务活动需配置含「RT」和「成功率」的终止条件
                     </span>
                   </span>
                 ),
