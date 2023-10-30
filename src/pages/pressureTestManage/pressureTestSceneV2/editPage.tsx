@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'dva';
 import {
@@ -360,7 +361,7 @@ const EditPage = (props) => {
     Promise.all([
       getBusinessFlowList(),
       getDetailData(),
-      getVersionList(),
+      // getVersionList(),
     ]).then(() => {
       setDetailLoading(false);
     });
@@ -574,7 +575,7 @@ const EditPage = (props) => {
                 loading: false,
               }}
             />
-            <Field
+            {/* <Field
               name="versionId"
               type="number"
               x-component="Select"
@@ -592,8 +593,8 @@ const EditPage = (props) => {
                 label: x.name,
                 value: x.id,
               }))}
-            />
-            <Field
+            /> */}
+            {/* <Field
               name="demandIds"
               type="number"
               x-component="Select"
@@ -612,7 +613,7 @@ const EditPage = (props) => {
                 label: x.title,
                 value: x.id,
               }))}
-            />
+            /> */}
           </FormLayout>
 
           <FormLayout
