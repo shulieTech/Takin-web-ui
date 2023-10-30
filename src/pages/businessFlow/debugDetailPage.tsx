@@ -115,7 +115,7 @@ const DebugDetail: React.FC<Props> = props => {
           }}
           rowKey={(record, indexs) => indexs} />
         </Col>
-        <Col  span={14}>
+        <Col  span={14} style={{height:'100%',overflow:'scroll'}}>
           {detail?.records?.map((item, k) => {
             if (index === k) {
               return   <Collapse key={k} defaultActiveKey={['1']} >
@@ -125,22 +125,22 @@ const DebugDetail: React.FC<Props> = props => {
                 <div><span style={{ fontWeight: 500 }}>Response Code：</span><span>{item?.detail?.general?.responseCode || '-'}</span> </div>
                 <Tabs  type="card">
       <TabPane tab="请求详情" key="1">
-      <Collapse key={k} defaultActiveKey={['1']} >
+      <Collapse key={k} defaultActiveKey={['1']} style={{ overflow: 'scroll' }}>
       <Panel header="Request Headers" key="1">
         <pre>{item?.detail?.requestData?.requestHeaders}</pre>
               </Panel>
               <Panel header="Request Body结构化" key="2">
-                <div>{item?.detail?.requestData?.requestBody}</div>
+                <div style={{ wordBreak: 'break-word', overflowWrap: 'break-word', overflow: 'scroll', maxHeight: 300 }}>{item?.detail?.requestData?.requestBody}</div>
               </Panel>
               </Collapse>
       </TabPane>
       <TabPane tab="响应详情" key="2">
-      <Collapse key={k} defaultActiveKey={['1']} >
+      <Collapse key={k} defaultActiveKey={['1']} style={{ overflow: 'scroll' }}>
       <Panel header="Response Headers" key="1">
       <pre>{item?.detail?.responseData?.responseHeaders}</pre>
               </Panel>
               <Panel header="Response Body结构化" key="2">
-                <div>{item?.detail?.responseData?.responseBody}</div>
+                <div style={{ wordBreak: 'break-word', overflowWrap: 'break-word', overflow: 'scroll', maxHeight: 300 }}>{item?.detail?.responseData?.responseBody}</div>
               </Panel>
               <Panel header="断言" key="3">
                 <div>{item?.detail?.responseData?.asserts?.map((ite: any, k) => {
