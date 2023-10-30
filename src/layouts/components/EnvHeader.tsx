@@ -268,6 +268,8 @@ const EnvHeader: React.FC<Props> = (props) => {
           { projectList && projectList?.length > 0 && <Dropdown
             overlayStyle={{
               maxWidth: 130,
+              maxHeight: 400,
+              overflow: 'scroll'
             }}
             overlay={
               <Menu>
