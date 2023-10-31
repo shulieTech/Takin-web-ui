@@ -144,6 +144,10 @@ const EnvHeader: React.FC<Props> = props => {
 
       <Button.Group>
         <Dropdown
+          overlayStyle={{
+            maxHeight: 500,
+            overflow: 'scroll'
+          }}
           overlay={
             <Menu>
               {tenantList.map(x => (
