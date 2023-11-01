@@ -997,9 +997,37 @@ const MultiFormComponent = ({ form }) => {
      <Tabs type="card">
   <TabPane tab="CSV数据" key="1">
   { action === 'edit' ? state?.details?.dataSource?.csvs?.map((item, k) => {
-    return <CsvForm key={k} form={form} action={action} csv={item} index={k} setState={setState} state={state}/>;
+    return <CsvForm 
+      onChange={(result) => {
+        setState({
+          details: result
+        });
+      }} 
+      value={item} 
+      key={k} 
+      form={form} 
+      action={action} 
+      csv={item} 
+      index={k} 
+      setState={setState} 
+      state={state}
+    />;
   }) : state?.csvs?.map((ite, k1) => {
-    return <CsvForm key={k1} form={form} action={action} csv={ite}  index={k1} setState={setState} state={state}/>;
+    return <CsvForm
+      onChange={(result) => {
+        setState({
+          csvs: result
+        });
+      }} 
+      value={ite} 
+      key={k1} 
+      form={form} 
+      action={action} 
+      csv={ite}  
+      index={k1} 
+      setState={setState} 
+      state={state}
+    />;
   })}
     <Button onClick={() => { handleAddCsv(); }}>添加CSV数据</Button>
   </TabPane>
