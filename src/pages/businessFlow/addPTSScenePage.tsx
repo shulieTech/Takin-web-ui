@@ -130,7 +130,14 @@ const getInitState = () => ({
   ],
   csvs: [],
   counters: [],
-  formFields: []
+  formFields: [],
+  globalHttp: {
+    contentEncoding: null,
+    domain:  null,
+    path: null,
+    port:  null,
+    protocol: null
+  }
 });
 export type State = ReturnType<typeof getInitState>;
 const MultiFormComponent = ({ form }) => {
@@ -260,26 +267,7 @@ const MultiFormComponent = ({ form }) => {
 
         const csvs = action === 'edit' ? state?.details?.dataSource?.csvs : state?.csvs;
         const counters = action === 'edit' ? state?.details?.counters : state?.counters;
-
-        let globalHttp = {
-          contentEncoding: values?.contentEncoding,
-          domain: values?.domain,
-          path: values?.path,
-          port: values?.port,
-          protocol: values?.protocol
-        };
-
-        if (action === 'edit' && (values?.contentEncoding || values?.domain || values?.path || values?.port ||  values?.protocol)) {
-          globalHttp = {
-            contentEncoding: values?.contentEncoding,
-            domain: values?.domain,
-            path: values?.path,
-            port: values?.port,
-            protocol: values?.protocol
-          };
-        } else {
-          globalHttp = state?.details?.globalHttp;
-        }
+        const globalHttp = action === 'edit' ? state?.details?.globalHttp : state?.globalHttp;
 
         const result = {
           globalHttp,
@@ -692,7 +680,6 @@ const MultiFormComponent = ({ form }) => {
       newObject.links.splice(linksIndex, 1);
       return newObject;
     } 
-    console.error('Invalid indices or object structure.');
     return object;
     
   }
@@ -984,14 +971,19 @@ const MultiFormComponent = ({ form }) => {
   </Form>
   </TabPane>
   <TabPane tab="http请求" key="3">
-  <Form>
-  <Form.Item >
-        {getFieldDecorator('globalHttp', {
-          initialValue: action === 'edit' ? state?.details?.globalHttp : undefined,
-          rules: [{ required: false, message: '请输入!' }],
-        })(<GlobalHttp form={form} action={action}/>)}
-      </Form.Item>
-  </Form>
+        <GlobalHttp 
+          onChange={action === 'edit' ? (result) => {
+            setState({
+              details: result
+            });
+          } : (result) => {
+            setState({
+              globalHttp: result
+            });
+          }} 
+          value={action === 'edit' ? state?.details?.globalHttp : state?.globalHttp}
+          action={action}
+        />
   </TabPane>
   <TabPane tab="用户变量" key="4">
   <Form>
