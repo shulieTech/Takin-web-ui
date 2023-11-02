@@ -257,35 +257,9 @@ const MultiFormComponent = ({ form }) => {
             return fItem;
           }
         });
-        const csvs = formValues?.filter((item1: any, k1) => {
-          if (item1?.fileName) {
-            return item1;
-          }
-        })?.map((ite: any, j) => {
-          return {
-            fileName: ite?.fileName,
-            params: ite?.params,
-            ingoreFirstLine: ite?.ingoreFirstLine
-          };
-        });
 
-        let counters = formValues?.filter((item2: any, k1) => {
-          if (item2?.start) {
-            return item2;
-          }
-        })?.map((it: any, j) => {
-          return {
-            end: it?.end,
-            format: it?.format,
-            incr: it?.incr,
-            name: it?.name,
-            start: it?.start
-          };
-        });
-
-        if (action === 'edit' && counters?.length === 0) {
-          counters = state?.details?.counters;
-        }
+        const csvs = action === 'edit' ? state?.details?.dataSource?.csvs : state?.csvs;
+        const counters = action === 'edit' ? state?.details?.counters : state?.counters;
 
         let globalHttp = {
           contentEncoding: values?.contentEncoding,
@@ -432,35 +406,9 @@ const MultiFormComponent = ({ form }) => {
             return fItem;
           }
         });
-        const csvs = formValues?.filter((item1: any, k1) => {
-          if (item1?.fileName) {
-            return item1;
-          }
-        })?.map((ite: any, j) => {
-          return {
-            fileName: ite?.fileName,
-            params: ite?.params,
-            ingoreFirstLine: ite?.ingoreFirstLine
-          };
-        });
-
-        let counters = formValues?.filter((item2: any, k1) => {
-          if (item2?.start) {
-            return item2;
-          }
-        })?.map((it: any, j) => {
-          return {
-            end: it?.end,
-            format: it?.format,
-            incr: it?.incr,
-            name: it?.name,
-            start: it?.start
-          };
-        });
-
-        if (action === 'edit' && counters?.length === 0) {
-          counters = state?.details?.counters;
-        }
+       
+        const csvs = action === 'edit' ? state?.details?.dataSource?.csvs : state?.csvs;
+        const counters = action === 'edit' ? state?.details?.counters : state?.counters;      
 
         let globalHttp = {
           contentEncoding: values?.contentEncoding,
