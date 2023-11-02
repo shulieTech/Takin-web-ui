@@ -119,8 +119,7 @@ const CountForm: React.FC<Props> = props => {
               onChange={ e =>
                 handleTransmit({ end: e.target.value })
               }
-             />
-
+            />
           </Form.Item>
           <Form.Item  label="数字格式">
             <Input  

@@ -14,7 +14,6 @@ import GlobalHeaderTable from './components/GlobalHeaderTable';
 import GlobalHttp from './components/GlobalHttp';
 import CountForm from './components/CountForm';
 import copy from 'copy-to-clipboard';
-import LinkItem from './components/LinkItem';
 
 const getInitState = () => ({
   details: {} as any,
@@ -1033,19 +1032,7 @@ const MultiFormComponent = ({ form }) => {
 </Tabs>
 
 {action === 'edit' && state?.details?.links ? state?.details?.links?.map((item, k) => {
-  return <LinkItem
-           onChange={(result) => {
-             setState({
-               details: result
-             });
-           }}  
-           action={action} 
-           form={form}
-           key={k}
-           value={item} 
-           state={state}
-           linkIndex={k}
-        />; 
+  return renderLink(item, k); 
 }) : state?.links?.map((item1, k1) => {
   return renderLink(item1, k1);
 })
