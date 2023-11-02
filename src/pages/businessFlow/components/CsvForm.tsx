@@ -4,29 +4,19 @@ import { useStateReducer } from 'racc';
 import React, { useEffect } from 'react';
 
 interface Props {
-  title?: string | React.ReactNode;
   value?: any;
   onChange?: (value: any) => void;
   state?: any;
-  form?: any;
   index?: any;
   action?: string;
-  setState?: any;
-  csv: any;
-}
-interface State {
-  list: any[];
-  disabled: boolean;
 }
 
 const getInitState = () => ({} as any);
 const CsvForm: React.FC<Props> = props => {
   const [state, setState] = useStateReducer(getInitState());
-  const { form , index,  action, csv } = props;
-  const { getFieldDecorator, validateFields, getFieldValue } = form;
+  const { index,  action } = props;
 
   useEffect(() => {
-    console.log('props.value', props?.value);
     setState({
       ...props.value,
       
@@ -61,7 +51,6 @@ const CsvForm: React.FC<Props> = props => {
         }
       };
     }
-    console.log('result', result);
     if (props.onChange) {
       props.onChange(newData);
     } 
@@ -102,7 +91,6 @@ const CsvForm: React.FC<Props> = props => {
         }
       };
     } 
-    console.log('newData', newData);  
 
     if (props.onChange) {
       props.onChange(newData);

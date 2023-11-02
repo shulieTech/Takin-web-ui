@@ -1005,11 +1005,8 @@ const MultiFormComponent = ({ form }) => {
       }} 
       value={item} 
       key={k} 
-      form={form} 
       action={action} 
-      csv={item} 
-      index={k} 
-      setState={setState} 
+      index={k}  
       state={state}
     />;
   }) : state?.csvs?.map((ite, k1) => {
@@ -1021,11 +1018,8 @@ const MultiFormComponent = ({ form }) => {
       }} 
       value={ite} 
       key={k1} 
-      form={form} 
       action={action} 
-      csv={ite}  
       index={k1} 
-      setState={setState} 
       state={state}
     />;
   })}
@@ -1063,9 +1057,31 @@ const MultiFormComponent = ({ form }) => {
   </TabPane>
   <TabPane tab="计数器" key="5">
   { action === 'edit' ? state?.details?.counters?.map((item, k) => {
-    return <CountForm key={k} form={form} action={action} counter={item} index={k} setState={setState} state={state}/>;
+    return <CountForm 
+      onChange={(result) => {
+        setState({
+          details: result
+        });
+      }}  
+      value={item} 
+      key={k} 
+      action={action} 
+      index={k} 
+      state={state}
+    />;
   }) : state?.counters?.map((ite, k1) => {
-    return <CountForm key={k1} form={form} action={action} counter={ite}  index={k1} setState={setState} state={state}/>;
+    return <CountForm 
+      onChange={(result) => {
+        setState({
+          counters: result
+        });
+      }}  
+      value={ite} 
+      key={k1} 
+      action={action} 
+      index={k1} 
+      state={state}
+    />;
   })}
     <Button onClick={() => { handleAddCount(); }}>添加计数器</Button>
   </TabPane>
