@@ -347,30 +347,45 @@ const APIPanel: React.FC<Props> = props => {
           <TabPane tab="Header定义" key="2">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${linkIndex}_${index}_headers`, {
-                  initialValue: action === 'edit' ? api?.header?.headers : [],
-                  rules: [{ required: false, message: 'url不能为空!' }],
-                })(<HeaderTable />)}
+                <HeaderTable
+                  value={action === 'edit' ? state?.header?.headers : []}
+                  onChange={(value) => {
+                    handleTransmit({ header: {
+                      ...state?.header,
+                      headers: value
+                    }});
+                  }}
+                />
               </Form.Item>
             </Form>
           </TabPane>
           <TabPane tab="出参定义" key="3">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${linkIndex}_${index}_vars`, {
-                  initialValue: action === 'edit' ? api?.returnVar?.vars : [],
-                  rules: [{ required: false, message: '' }],
-                })(<ParamsTable />)}
+                <ParamsTable 
+                  value={action === 'edit' ? state?.returnVar?.vars : []}
+                  onChange={(value) => {
+                    handleTransmit({ returnVar: {
+                      ...state?.returnVar,
+                      vars: value
+                    }});
+                  }}
+                />
               </Form.Item>
             </Form>
           </TabPane>
           <TabPane tab="检查点（断言）" key="4">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${linkIndex}_${index}_asserts`, {
-                  initialValue: action === 'edit' ? api?.checkAssert?.asserts : [],
-                  rules: [{ required: false, message: '' }],
-                })(<CheckPointTable />)}
+                <CheckPointTable 
+                  value={action === 'edit' ? state?.checkAssert?.asserts : []}
+                  onChange={(value) => {
+                    handleTransmit({ checkAssert: {
+                      ...state?.checkAssert,
+                      asserts: value
+                    }});
+                  }}
+                />
               </Form.Item>
             </Form>
           </TabPane>
