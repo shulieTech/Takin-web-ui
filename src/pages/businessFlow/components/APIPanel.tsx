@@ -394,20 +394,32 @@ const APIPanel: React.FC<Props> = props => {
           <TabPane tab="BeanShell预处理程序" key="7">
           <Form>
               <Form.Item label="脚本">
-                {getFieldDecorator(`${linkIndex}_${index}_beanShellPre`, {
-                  initialValue: action === 'edit' ? api?.beanShellPre?.script?.[0] : undefined,
-                  rules: [{ required: false, message: '' }],
-                })(<Input.TextArea style={{ height: 200 }}/>)}
+                <Input.TextArea 
+                  value={action === 'edit' ? state?.beanShellPre?.script?.[0] : undefined}
+                  style={{ height: 200 }}
+                  onChange={(e) => {
+                    handleTransmit({ beanShellPre: {
+                      ...state?.beanShellPre,
+                      script: [e.target.value]
+                    }});
+                  }}
+                />
               </Form.Item>
             </Form>
           </TabPane>
           <TabPane tab="BeanShell后置处理程序" key="8">
           <Form>
               <Form.Item label="脚本">
-                {getFieldDecorator(`${linkIndex}_${index}_beanShellPost`, {
-                  initialValue: action === 'edit' ? api?.beanShellPost?.script?.[0] : undefined,
-                  rules: [{ required: false, message: '' }],
-                })(<Input.TextArea style={{ height: 200 }}/>)}
+                <Input.TextArea
+                  value={action === 'edit' ? state?.beanShellPost?.script?.[0] : undefined} 
+                  style={{ height: 200 }}
+                  onChange={(e) => {
+                    handleTransmit({ beanShellPost: {
+                      ...state?.beanShellPost,
+                      script: [e.target.value]
+                    }});
+                  }}
+                />
               </Form.Item>
             </Form>
           </TabPane>
