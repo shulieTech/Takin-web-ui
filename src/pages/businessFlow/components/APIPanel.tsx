@@ -21,134 +21,36 @@ interface Props {
   action?: string;
   setState?: any;
   linkIndex?: any;
+  linksData: any;
 }
-interface State {
-  list: any[];
-  disabled: boolean;
-  type: string;
-}
+
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 const getInitState = () => ({} as any);
 const APIPanel: React.FC<Props> = props => {
     
-  const { form , index, api, action , linkIndex } = props;
-  const { getFieldDecorator, validateFields, getFieldValue, setFieldValue } = form;
-//   console.log('form------',form?.getFieldsValue());
-  // console.log('api', api);
-  // const [state, setState] = useStateReducer<State>({
-  //   list: [],
-  //   disabled: false,
-  //   type: ''
-  // });
+  const { form , index, api, action , linkIndex , linksData } = props;
+  const { getFieldDecorator } = form;
   const [state, setState] = useStateReducer(getInitState());
   useEffect(() => {
-    console.log('props.value', props.value);
     setState({
       ...props.value,
       
     });
   }, [props.value]);
-
-  const onChange = (e) => {
-    setState({
-      type: e.target.value
-    });
-    form?.setFieldsValue({
-      [`${linkIndex}_${index}_contentType`]: e.target.value 
-    });
-    // form?.setFieldsValue(`${linkIndex}_${index}_contentType`, e.target.value);
-    console.log('getFieldValue', getFieldValue(`${linkIndex}_${index}_contentType`));
-  };
-
-  const removePropertiesStartingWith = (obj, prefix) => {
-    Object.keys(obj).forEach((key) => {
-      if (key.startsWith(prefix)) {
-        delete obj[key];
-      }
-    });
-  };
-
-  function resetFieldsErrors(keys) {
-
-    const fields = keys.reduce((acc, key) => {
-      acc[key] = {
-        value: undefined,
-        errors: null
-      };
-      return acc;
-    }, {});
-    console.log('hahahahhaha这是files', fields);
-  
-    form.setFieldsValue(fields);
-  }
-
-  const resetFieldsStartingWith = (prefix, obj) => {
-    const fieldsToReset = Object.keys(obj).filter(key => key.startsWith(prefix));
-    console.log('fieldsToReset', fieldsToReset);
-    resetFieldsErrors(fieldsToReset);
-    form.resetFields(fieldsToReset);
-  };
   
   const handleDelete = (e) => {
     e.stopPropagation();
-    // console.log('index', index);
-    console.log('here-?????????执行');
-    // const allFields = Object.keys(form.getFieldsValue());
-    if (action === 'edit') {
-      // resetFieldsStartingWith(`${linkIndex}_${index}`, form.getFieldsValue());
-      const fields = form.getFieldsValue();
-      const newFields = Object.keys(fields).reduce((result, key) => {
-        if (!key.startsWith(`${linkIndex}_${index}`)) {
-          result[key] = fields[key];
-        }
-        return result;
-      }, {});
-   
-      props.setState({
-        formFields: Object.keys(newFields),
-        details: deleteApiAtIndexWithoutMutation(props?.state?.details, linkIndex, index)
-      });
-      return; 
-    }
-    // console.log('props?.state?.apis', props?.state?.apis, index);
-
-    // const newArray = props?.state?.apis?.slice(0, index).concat(props?.state?.apis.slice(index + 1));
-    // console.log('newArray', newArray);
-    props?.state?.apis.splice(index, 1);
-    props.setState({
-    //   apis: newArray
+    const apisData = linksData?.[linkIndex]?.apis;
+    const result = apisData?.filter((item, k) => {
+      if (k !== index) {
+        return item;
+      }
     });
-  };
-
-  function removeApiAtIndex(json, linksIndex, apiIndex) {
-    console.log('linksIndex-----', json, linksIndex, apiIndex);
-    if (json.links && json.links[linksIndex] && json.links[linksIndex].apis) {
-      // json.links[linksIndex].apis.splice(apiIndex, 1);
-      json.links[linksIndex].apis?.filter((item, k) => {
-        if (k !== apiIndex) {
-          return item;
-        }
-      });
+    if (props.onChange) {
+      props.onChange(result);
     }
-  }
-
-  function deleteApiAtIndexWithoutMutation(object, linksIndex, apiIndex) {
-    const newObject = JSON.parse(JSON.stringify(object));
-  
-    if (
-      newObject &&
-      newObject.links &&
-      newObject.links[linksIndex] &&
-      newObject.links[linksIndex].apis
-    ) {
-      newObject.links[linksIndex].apis.splice(apiIndex, 1);
-      return newObject;
-    } 
-    console.error('Invalid indices or object structure.');
-    return object;
-    
-  }
+  };
 
   const handleTransmit = value => {
     setState({
@@ -156,36 +58,22 @@ const APIPanel: React.FC<Props> = props => {
       ...value
     });
     const curValues = { ...state, ...value };
-    console.log('curValues',curValues);
 
-    // let counterData = [];
-    // let result = null;
-    // let newData = null;
+    let apisData = [];
+    let result = null;
+    let newData = null;
 
-    // counterData = props?.state?.counters;
-    // result = counterData?.map((item, k) => {
-    //   if (k === index) {
-    //     return curValues;
-    //   }
-    //   return item;
-    // });
-    // newData = result;
-    // if (action === 'edit') {
-    //   counterData = props?.state?.details?.counters;
-    //   result = counterData?.map((item, k) => {
-    //     if (k === index) {
-    //       return curValues;
-    //     }
-    //     return item;
-    //   });
-    //   newData = {
-    //     ...props?.state?.details,
-    //     counters: result
-    //   };
-    // } 
-    // if (props.onChange) {
-    //   props.onChange(newData);
-    // }
+    apisData = linksData?.[linkIndex]?.apis;
+    result = apisData?.map((item, k) => {
+      if (k === index) {
+        return curValues;
+      }
+      return item;
+    });
+    newData = result;
+    if (props.onChange) {
+      props.onChange(newData);
+    }
   };
 
   return (
