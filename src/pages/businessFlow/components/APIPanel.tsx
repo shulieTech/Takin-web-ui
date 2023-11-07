@@ -315,31 +315,49 @@ const APIPanel: React.FC<Props> = props => {
   </Form.Item>
 </Form>
           </TabPane>
-          {getFieldValue(`${linkIndex}_${index}_requestMethod`) === 'POST' &&    <TabPane tab="Body定义" key="5">
+          {state?.base?.requestMethod === 'POST' &&    <TabPane tab="Body定义" key="5">
             <Form>
               <Form.Item label="Content-Type">
-                {getFieldDecorator(`${linkIndex}_${index}_contentType`, {
-                  initialValue: action === 'edit' ? api?.body?.contentType : undefined,
-                  rules: [{ required: true, message: 'url不能为空!' }],
-                })(<Radio.Group onChange={onChange} >
+                <Radio.Group
+                  value={action === 'edit' ? state?.body?.contentType : undefined} 
+                  // onChange={onChange}
+                  onChange={(e) => {
+                    handleTransmit({ body: {
+                      ...state?.body,
+                      contentType: e.target.value,
+                    }});
+                  }}
+                >
                   <Radio value={'JSON'}>JSON</Radio>
                   <Radio value={'form-data'}>form-data</Radio>
                   <Radio value={'x-www-form-urlencoded'}>x-www-form-urlencoded</Radio>
-                </Radio.Group>)}
+                </Radio.Group>
               </Form.Item>
-              {getFieldValue(`${linkIndex}_${index}_contentType`) === 'JSON' && 
+              {state?.body?.contentType === 'JSON' && 
               <Form.Item>
-                 {getFieldDecorator(`${linkIndex}_${index}_rawData`, {
-                   initialValue: action === 'edit' ? api?.body?.rawData : undefined,
-                   rules: [{ required: false, message: '不能为空!' }],
-                 })(<Input.TextArea style={{ height: 100 }} placeholder="如果服务端（被压测端）需要强校验换行符（\n）或者待加密的部分需要有换行符，请使用unescape解码函数对包含换行符的字符串进行反转义：${sys.escapeJava(text)}"/>)}
+                 <Input.TextArea
+                   value={action === 'edit' ? state?.body?.rawData : undefined} 
+                   style={{ height: 100 }} 
+                   placeholder="如果服务端（被压测端）需要强校验换行符（\n）或者待加密的部分需要有换行符，请使用unescape解码函数对包含换行符的字符串进行反转义：${sys.escapeJava(text)}"
+                   onChange={(e) => {
+                     handleTransmit({ body: {
+                       ...state?.body,
+                       rawData: e.target.value
+                     }});
+                   }}
+                 />
               </Form.Item>}
-              {(getFieldValue(`${linkIndex}_${index}_contentType`) === 'form-data' || getFieldValue(`${linkIndex}_${index}_contentType`) === 'x-www-form-urlencoded') && 
+              {(state?.body?.contentType === 'form-data' || state?.body?.contentType === 'x-www-form-urlencoded') && 
               <Form.Item>
-                 {getFieldDecorator(`${linkIndex}_${index}_forms`, {
-                   initialValue: action === 'edit' ? api?.body?.forms : [],
-                   rules: [{ required: false, message: '不能为空!' }],
-                 })(<BodyTable/>)}
+                 <BodyTable
+                   value={action === 'edit' ? api?.body?.forms : []} 
+                   onChange={(value) => {
+                     handleTransmit({ body: {
+                       ...state?.body,
+                       forms: value
+                     }});
+                   }}
+                 />
               </Form.Item>}
             </Form>
           </TabPane>}
