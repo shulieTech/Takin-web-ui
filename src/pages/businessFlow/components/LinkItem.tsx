@@ -20,7 +20,7 @@ const LinkItem: React.FC<Props> = props => {
   const { action, form , linkIndex } = props;
 
   useEffect(() => {
-    console.log('props.value', props.value);
+    // console.log('props.value', props.value);
     setState({
       ...props.value,
     });
@@ -142,17 +142,13 @@ const LinkItem: React.FC<Props> = props => {
         <Button onClick={() => { handleDeleteLink(); }} type="link">删除</Button>
       </Form.Item>
     </Form>
-    {/* {action === 'edit' ? linkNode?.apis?.map((formItem, index) => {
+    { state?.apis?.map((formItem, index) => {
       if (formItem?.apiType === 'HTTP') {
-        return <APIPanel key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
+        return <APIPanel value={formItem} key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
       }
       return <IB2Node key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
-    }) : state?.apis?.map((formItem, index) => {
-      if (formItem?.apiType === 'HTTP') {
-        return <APIPanel key={index} form={form} index={index} api={formItem} setState={setState} state={state} linkIndex={linkIndex}/>;
-      }
-      return <IB2Node key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
-    })} */}
+    }) 
+    }
 <div style={{ marginTop: 20 }}>
   {/* <Dropdown.Button onClick={() => addNode('HTTP', linkIndex)} overlay={() =>  menu(linkIndex)}>
     添加压测节点

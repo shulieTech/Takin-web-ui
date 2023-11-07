@@ -29,26 +29,42 @@ interface State {
 }
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
-const getInitState = () => ({} as any);
 const APIPanel: React.FC<Props> = props => {
     
   const { form , index, api, action , linkIndex } = props;
   const { getFieldDecorator, validateFields, getFieldValue, setFieldValue } = form;
 //   console.log('form------',form?.getFieldsValue());
   // console.log('api', api);
-  // const [state, setState] = useStateReducer<State>({
-  //   list: [],
-  //   disabled: false,
-  //   type: ''
-  // });
-  const [state, setState] = useStateReducer(getInitState());
+  const [state, setState] = useStateReducer<State>({
+    list: [],
+    disabled: false,
+    type: ''
+  });
+
   useEffect(() => {
-    console.log('props.value', props.value);
     setState({
-      ...props.value,
-      
+      list: props.value?.length === 0 ? [{ key: '', value: '' }] : props.value,
+      type: api?.body?.contentType
     });
   }, [props.value]);
+
+//   const handleChange = (type, key, value, k) => {
+//     setState({ disabled: value.disabled });
+//     if (type === 'change') {
+//       state.list.splice(k, 1, { ...state.list[k], [key]: value });
+//     } else if (type === 'plus') {
+//       state.list.push({
+//         key:'',
+//         value:''
+//       });
+//     } else {
+//       state.list.splice(k, 1);
+//     }
+
+//     if (props.onChange) {
+//       props.onChange(state.list);
+//     }
+//   };
 
   const onChange = (e) => {
     setState({
@@ -150,85 +166,50 @@ const APIPanel: React.FC<Props> = props => {
     
   }
 
-  const handleTransmit = value => {
-    setState({
-      ...state,
-      ...value
-    });
-    const curValues = { ...state, ...value };
-    console.log('curValues',curValues);
-
-    // let counterData = [];
-    // let result = null;
-    // let newData = null;
-
-    // counterData = props?.state?.counters;
-    // result = counterData?.map((item, k) => {
-    //   if (k === index) {
-    //     return curValues;
-    //   }
-    //   return item;
-    // });
-    // newData = result;
-    // if (action === 'edit') {
-    //   counterData = props?.state?.details?.counters;
-    //   result = counterData?.map((item, k) => {
-    //     if (k === index) {
-    //       return curValues;
-    //     }
-    //     return item;
-    //   });
-    //   newData = {
-    //     ...props?.state?.details,
-    //     counters: result
-    //   };
-    // } 
-    // if (props.onChange) {
-    //   props.onChange(newData);
-    // }
-  };
-
   return (
     <Collapse expandIconPosition="left" style={{ marginBottom: 8 }}>
     <Panel header={
         <Form layout="inline">
           <Form.Item >
-            <Input 
-              value={action === 'edit' ? state?.apiName : undefined} 
-              placeholder="请输入压测API名称" 
-              onChange={ e =>
-                handleTransmit({ apiName: e.target.value })
-               } 
-              onClick={(e) => {
+            {getFieldDecorator(`${linkIndex}_${index}_apiName`, {
+              initialValue: action === 'edit' ? api?.apiName : undefined,
+              rules: [{ required: true, message: '请输入压测API名称!' }],
+            })(<Input placeholder="请输入压测API名称" onClick={(e) => {
               e.stopPropagation();
             // tslint:disable-next-line:jsx-alignment
-            }}/>
+            }}/>)}
           </Form.Item>
           <Form.Item >
-        <Switch
-          checked={action === 'edit' ? state?.enabled : true} 
-          onChange={(value, e) => {
-            handleTransmit({ enabled: value });
-            e.stopPropagation();
-          }} 
-        />
+        {getFieldDecorator(`${linkIndex}_${index}_enabled`, {
+          valuePropName: 'checked',
+          initialValue: action === 'edit' ? api?.enabled : true,
+          rules: [{ required: true, message: '' }],
+        })(<Switch onChange={(checked, e) => { e.stopPropagation(); }}/>)}
       </Form.Item>
          <Form.Item >
-            <Input
-                // value={action === 'edit' ? state?.base?.requestMethod : undefined}   
-                value={state?.base?.requestMethod}  
-                style={{ width: 80 }}
+            {getFieldDecorator(`${linkIndex}_${index}_requestMethod`, {
+              initialValue: action === 'edit' ? api?.base?.requestMethod : undefined,
+              rules: [{ required: true, message: '请输入压测API名称!' }],
+            })(<Input  
+                style={{width:80}}
                 disabled={true} 
-            />
+              />)}
           </Form.Item>
           <Form.Item >
-            <Input
-                // value={action === 'edit' ? state?.base?.requestUrl : undefined} 
-                value={state?.base?.requestUrl}   
+            {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
+              initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
+              rules: [{ required: true, message: '请输入压测API名称!' }],
+            })(<Input  
                 style={{ minWidth: 500 }}
                 disabled={true} 
-            />
+              />)}
           </Form.Item>
+          {/* <Form.Item >
+            {getFieldValue(`${linkIndex}_${index}_requestMethod`)}
+          </Form.Item> */}
+          {/* <Form.Item >
+             {getFieldValue(`${linkIndex}_${index}_requestUrl`)}
+          </Form.Item> */}
           <Form.Item style={{ float: 'right' }}>
             <Button type="link" style={{ marginBottom: 8 }} onClick={handleDelete}>删除</Button>
           </Form.Item>
@@ -240,70 +221,46 @@ const APIPanel: React.FC<Props> = props => {
   <Row>
     <Col span={24}>
       <Form.Item label="压测URL">
-        <Input.TextArea
-          value={action === 'edit' ? state?.base?.requestUrl : undefined}
-          placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v"
-          onChange={ e =>
-            handleTransmit({ base: {
-              ...state?.base,
-              requestUrl: e.target.value
-            }})
-           } 
-        />
+        {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
+          initialValue: action === 'edit' ? api?.base?.requestUrl : undefined,
+          rules: [{ required: false, message: 'url不能为空!' }],
+        })(<Input.TextArea placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v" />)}
       </Form.Item>
     </Col>
   </Row>
   <Row>
     <Col span={5}>
       <Form.Item label="请求方式">
-        <CommonSelect
-            value={action === 'edit' ? api?.base?.requestMethod : undefined} 
-            dataSource={[
-              {
-                label: 'GET',
-                value: 'GET'
-              },
-              {
-                label: 'POST',
-                value: 'POST'
-              }
-            ]}
-            onChange={ value =>
-              handleTransmit({ base: {
-                ...state?.base,
-                requestMethod: value
-              }})
-             } 
-        />
+        {getFieldDecorator(`${linkIndex}_${index}_requestMethod`, {
+          initialValue: action === 'edit' ? api?.base?.requestMethod : undefined,
+          rules: [{ required: true, message: '请输入请求方式!' }],
+        })(<CommonSelect dataSource={[
+          {
+            label: 'GET',
+            value: 'GET'
+          },
+          {
+            label: 'POST',
+            value: 'POST'
+          }
+        ]}/>)}
       </Form.Item>
     </Col>
     <Col offset={3} span={8}>
       <Form.Item label="超时时间">
-        <InputNumberPro
-          value={action === 'edit' ? state?.base?.requestTimeout : undefined} 
-          style={{ width: 200 }} 
-          addonAfter="毫秒" 
-          placeholder="请输入超时时间"
-          onChange={ value =>
-            handleTransmit({ base: {
-              ...state?.base,
-              requestTimeout: value
-            }})
-           } 
-        />
+        {getFieldDecorator(`${linkIndex}_${index}_requestTimeout`, {
+          initialValue: action === 'edit' ? api?.base?.requestTimeout : undefined,
+          rules: [{ required: false, message: '请输入超时时间!' }],
+        })(<InputNumberPro style={{ width: 200 }} addonAfter="毫秒" placeholder="请输入超时时间"/>)}
       </Form.Item>
     </Col>
     <Col span={8}>
       <Form.Item label="允许302跳转">
-        <Switch 
-          checked={action === 'edit' ? state?.base?.allowForward : true} 
-          onChange={(value) => {
-            handleTransmit({ base: {
-              ...state?.base,
-              allowForward: value
-            }});
-          }} 
-        />
+        {getFieldDecorator(`${linkIndex}_${index}_allowForward`, {
+          valuePropName: 'checked',
+          initialValue: action === 'edit' ? api?.base?.allowForward : true,
+          rules: [{ required: false, message: '请输入超时时间!' }],
+        })(<Switch/>)}
       </Form.Item>
     </Col>
   </Row>
@@ -377,17 +334,10 @@ const APIPanel: React.FC<Props> = props => {
           <TabPane tab="定时器" key="6">
           <Form layout="inline">
               <Form.Item label="线程延迟（毫秒）">
-                <InputNumber
-                  value={action === 'edit' ? state?.timer?.delay : undefined} 
-                  min={0} 
-                  precision={0}
-                  onChange={(value) => {
-                    handleTransmit({ timer: {
-                      ...state?.timer,
-                      delay: value
-                    }});
-                  }}
-                />
+                {getFieldDecorator(`${linkIndex}_${index}_delay`, {
+                  initialValue: action === 'edit' ? api?.timer?.delay : undefined,
+                  rules: [{ required: false, message: '' }],
+                })(<InputNumber min={0} precision={0}/>)}
               </Form.Item>
             </Form>
           </TabPane>

@@ -1032,7 +1032,7 @@ const MultiFormComponent = ({ form }) => {
   </TabPane>
 </Tabs>
 
-{action === 'edit' && state?.details?.links ? state?.details?.links?.map((item, k) => {
+{action === 'edit' ? state?.details?.links?.map((item, k) => {
   return <LinkItem
            onChange={(result) => {
              setState({
@@ -1054,7 +1054,8 @@ const MultiFormComponent = ({ form }) => {
         <Button 
           onClick={() => {
             addLink();
-          }} >
+          }} 
+        >
           + 添加串联链路
         </Button>
       </div>
