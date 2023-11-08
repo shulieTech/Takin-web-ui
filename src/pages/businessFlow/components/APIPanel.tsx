@@ -195,12 +195,6 @@ const APIPanel: React.FC<Props> = props => {
       </Form.Item>
     </Col>
   </Row>
-  <Form.Item style={{ display: 'none' }}>
-    {getFieldDecorator(`${linkIndex}_${index}_apiType`, {
-      initialValue: 'HTTP',
-      rules: [{ required: false, message: '' }],
-    })(<Input placeholder="请输入类名" />)}
-  </Form.Item>
 </Form>
           </TabPane>
           {state?.base?.requestMethod === 'POST' &&    <TabPane tab="Body定义" key="5">
@@ -238,7 +232,7 @@ const APIPanel: React.FC<Props> = props => {
               {(state?.body?.contentType === 'form-data' || state?.body?.contentType === 'x-www-form-urlencoded') && 
               <Form.Item>
                  <BodyTable
-                   value={action === 'edit' ? api?.body?.forms : []} 
+                   value={action === 'edit' ? state?.body?.forms : []} 
                    onChange={(value) => {
                      handleTransmit({ body: {
                        ...state?.body,

@@ -4,6 +4,7 @@ import { CommonSelect, useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';
 import IB2Node from './IB2Node';
 import APIPanel from './APIPanel';
+import BusinessFlowService from '../service';
 
 interface Props {
   value?: any;
@@ -94,8 +95,26 @@ const LinkItem: React.FC<Props> = props => {
       props.onChange(newData);
     }
   };
+  
+  /**
+   * @name 获取JavaRequest详情
+   */
+  const queryJavaRequestDetail = async () => {
+    const {
+              data: { success, data }
+            } = await BusinessFlowService.queryJavaRequestDetail({
+              javaType: 'IB2',   
+            });
+    if (success) {
+      setState({
+        javaRequestDetails: data,
+      });
+      addNode('JAVA', data);
+    }
+  };
 
-  const addNode = (type, defaultName?) => {
+  const addNode = (type, javaRequestDetails?) => {
+    console.log('javaRequestDetails',javaRequestDetails);
     let node = [];
     if (type === 'HTTP') {
       node = [{
@@ -155,10 +174,12 @@ const LinkItem: React.FC<Props> = props => {
         apiType: type,
         enabled: true,
         base: {
-          requestUrl: defaultName
+          requestUrl: javaRequestDetails?.className
         },
         param: {
-          params: []
+          params:  javaRequestDetails?.params?.map((item, k) => {
+            return { ...item, allowEdit: false };
+          }) 
         },
         needRequest: true,
         checkAssert: {
@@ -204,10 +225,10 @@ const LinkItem: React.FC<Props> = props => {
 
   function handleMenuClick(e) {
     if (e.key === 'HTTP') {
-      addNode('HTTP', linkIndex);
+      addNode('HTTP');
     }
     if (e.key === 'JAVA') {
-    //   queryJavaRequestDetail(linkIndex);
+      queryJavaRequestDetail();
     }
   }
 
@@ -288,7 +309,22 @@ const LinkItem: React.FC<Props> = props => {
           linkIndex={linkIndex}
         />;
       }
-      return <IB2Node key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
+      return <IB2Node
+                onChange={(value) => {
+                  handleTransmit({ apis: value });
+                }}
+                javaRequestDetails={state?.javaRequestDetails}
+                value={formItem}
+                linksData={action === 'edit' ? props?.state?.details?.links : props?.state?.links} 
+                key={index} 
+                form={form} 
+                index={index} 
+                api={formItem} 
+                action={action} 
+                setState={setState} 
+                state={state} 
+                linkIndex={linkIndex}
+        />;
     }) 
     }
 <div style={{ marginTop: 20 }}>

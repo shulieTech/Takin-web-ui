@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Form, Input, Button, Tabs, Row, Col, Collapse, Divider, InputNumber, Switch, Radio } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { CommonSelect, CommonTable, useStateReducer } from 'racc';
@@ -21,105 +22,96 @@ interface Props {
   action?: string;
   setState?: any;
   linkIndex?: any;
-}
-interface State {
-  list: any[];
-  disabled: boolean;
+  linksData: any;
+  javaRequestDetails: any;
 }
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
+const getInitState = () => ({} as any);
 const IB2Node: React.FC<Props> = props => {
     
-  const { form , index, api, action, linkIndex } = props;
-  const { getFieldDecorator, validateFields, getFieldValue } = form;
-//   console.log('form------',form?.getFieldsValue());
-//   const [state, setState] = useStateReducer<State>({
-
-//   });
-
-//   useEffect(() => {
-
-//   }, []);
-
-//   const handleChange = (type, key, value, k) => {
-//     setState({ disabled: value.disabled });
-//     if (type === 'change') {
-//       state.list.splice(k, 1, { ...state.list[k], [key]: value });
-//     } else if (type === 'plus') {
-//       state.list.push({
-//         key:'',
-//         value:''
-//       });
-//     } else {
-//       state.list.splice(k, 1);
-//     }
-
-//     if (props.onChange) {
-//       props.onChange(state.list);
-//     }
-//   };
-
-  const onChange = (e) => {
+  const { form , index, api, action , linkIndex , linksData, javaRequestDetails} = props;
+  const { getFieldDecorator } = form;
+  const [state, setState] = useStateReducer(getInitState());
+  useEffect(() => {
+    console.log('IB2的props.value', props.value);
     setState({
-      type: e.target.value
+      ...props.value,
     });
-  };
+  }, [props.value]);
 
   const handleDelete = (e) => {
     e.stopPropagation();
-    // console.log('index', index);
-    if (action === 'edit') {
-    //   console.log('props?.state?.details', props?.state?.details);
-      removeApiAtIndex(props?.state?.details, 0, index);
-    //   console.log(' removeApiAtIndex(props?.state?.details, 0, index)', removeApiAtIndex(props?.state?.details, 0, index));
-      props.setState({
-        // details: removeApiAtIndex(props?.state?.details, 0, index)
-      });
-      return; 
-    }
-    // console.log('props?.state?.apis', props?.state?.apis, index);
-
-    // const newArray = props?.state?.apis?.slice(0, index).concat(props?.state?.apis.slice(index + 1));
-    // console.log('newArray', newArray);
-    props?.state?.apis.splice(index, 1);
-    props.setState({
-    //   apis: newArray
+    const apisData = linksData?.[linkIndex]?.apis;
+    const result = apisData?.filter((item, k) => {
+      if (k !== index) {
+        return item;
+      }
     });
+    if (props.onChange) {
+      props.onChange(result);
+    }
   };
 
-  function removeApiAtIndex(json, linkIndexs, apiIndex) {
-    if (json.links && json.links[linkIndexs] && json.links[linkIndexs].apis) {
-      json.links[linkIndexs].apis.splice(apiIndex, 1);
-    }
-  }
+  const handleTransmit = value => {
+    setState({
+      ...state,
+      ...value
+    });
+    const curValues = { ...state, ...value };
+    console.log('curValues', curValues);
 
-  console.log('IB@中api--------', api);
+    let apisData = [];
+    let result = null;
+    let newData = null;
+
+    apisData = linksData?.[linkIndex]?.apis;
+    result = apisData?.map((item, k) => {
+      if (k === index) {
+        return curValues;
+      }
+      return item;
+    });
+    newData = result;
+    if (props.onChange) {
+      props.onChange(newData);
+    }
+  };
 
   return (
     <Collapse expandIconPosition="left" style={{ marginBottom: 8 }}>
     <Panel header={
         <Form layout="inline">
           <Form.Item >
-            {getFieldDecorator(`${linkIndex}_${index}_apiName`, {
-              initialValue: action === 'edit' ? api?.apiName : undefined,
-              rules: [{ required: true, message: '请输入压测API名称!' }],
-            })(<Input placeholder="请输入压测API名称" onClick={(e) => {
-              e.stopPropagation();
-            // tslint:disable-next-line:jsx-alignment
-            }}/>)}
+              <Input 
+                value={action === 'edit' ? state?.apiName : undefined} 
+                placeholder="请输入压测API名称" 
+                onChange={ e =>
+                  handleTransmit({ apiName: e.target.value })
+                } 
+                onClick={(e) => {
+                  e.stopPropagation();
+                // tslint:disable-next-line:jsx-alignment
+                }}/>
           </Form.Item>
           <Form.Item >
-        {getFieldDecorator(`${linkIndex}_${index}_enabled`, {
-          valuePropName: 'checked',
-          initialValue: action === 'edit' ? api?.enabled : true,
-          rules: [{ required: true, message: '' }],
-        })(<Switch onChange={(checked, e) => { e.stopPropagation(); }}/>)}
+          <Switch
+            checked={action === 'edit' ? state?.enabled : true} 
+            onChange={(value, e) => {
+              handleTransmit({ enabled: value });
+              e.stopPropagation();
+            }} 
+          />
          <Form.Item >
-         {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, 
-           {
-             initialValue: action === 'edit' && api?.needRequest  ? props?.state?.javaRequestDetails?.className : action === 'edit' ? api?.base?.requestUrl : props?.state?.javaRequestDetails?.className,
-             rules: [{ required: true, message: '请输入类名!' }],
-           })(<Input placeholder="请输入类名" disabled={true} style={{minWidth: 500, marginLeft: 20 }}/>)}
+           <Input
+             value={action === 'edit' && state?.needRequest  ? javaRequestDetails?.className : action === 'edit' ? state?.base?.requestUrl : javaRequestDetails?.className} 
+             placeholder="请输入类名" 
+             disabled={true} 
+             style={{ minWidth: 500, marginLeft: 20 }}
+             onChange={(e) => {
+               handleTransmit({ requestUrl: e.target.value });
+             }} 
+           />
         </Form.Item>
       </Form.Item>
           <Form.Item style={{ float: 'right' }}>
@@ -131,41 +123,44 @@ const IB2Node: React.FC<Props> = props => {
           <TabPane tab="基本请求信息" key="1">
            <Form>
               <Form.Item label="类名">
-                {getFieldDecorator(`${linkIndex}_${index}_requestUrl`, {
-                  initialValue: action === 'edit' && api?.needRequest  ? props?.state?.javaRequestDetails?.className : action === 'edit' ? api?.base?.requestUrl : props?.state?.javaRequestDetails?.className,
-                  rules: [{ required: true, message: '请输入类名!' }],
-                })(<Input placeholder="请输入类名" disabled={true}/>)}
-              </Form.Item>
-              <Form.Item style={{ display: 'none' }}>
-                {getFieldDecorator(`${linkIndex}_${index}_apiType`, {
-                  initialValue: 'JAVA',
-                  rules: [{ required: false, message: '' }],
-                })(<Input placeholder="请输入类名" />)}
+                <Input
+                  value={action === 'edit' && state?.needRequest  ? javaRequestDetails?.className : action === 'edit' ? state?.base?.requestUrl : javaRequestDetails?.className}  
+                  placeholder="请输入类名" 
+                  disabled={true}
+                />
               </Form.Item>
             </Form>
           </TabPane>
-      
           <TabPane tab="参数定义" key="2">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${linkIndex}_${index}_params`, {
-                  initialValue: action === 'edit' && api?.needRequest ? props?.state?.javaRequestDetails?.params?.map((item, k) => {
-                    return { ...item, allowEdit: false };
-                  }) : action === 'edit' ? api?.param?.params : props?.state?.javaRequestDetails?.params?.map((item, k) => {
-                    return { ...item, allowEdit: false };
-                  }),
-                  rules: [{ required: false, message: '' }],
-                })(<IB2HeaderTable />)}
+                <IB2HeaderTable
+                  // value={action === 'edit' && state?.needRequest ? javaRequestDetails?.params?.map((item, k) => {
+                  //   return { ...item, allowEdit: false };
+                  // }) : action === 'edit' ? state?.param?.params : javaRequestDetails?.params?.map((item, k) => {
+                  //   return { ...item, allowEdit: false };
+                  // })}
+                  value={state?.param?.params} 
+                  onChange={(value) => {
+                    handleTransmit({ param: {
+                      params: value
+                    } });
+                  }} 
+                  />
               </Form.Item>
             </Form>
           </TabPane>
           <TabPane tab="检查点（断言）" key="3">
           <Form>
               <Form.Item>
-                {getFieldDecorator(`${linkIndex}_${index}_asserts`, {
-                  initialValue: action === 'edit' ? api?.checkAssert?.asserts : [],
-                  rules: [{ required: false, message: '' }],
-                })(<CheckPointTable />)}
+                <CheckPointTable
+                  value={action === 'edit' ? state?.checkAssert?.asserts : []} 
+                  onChange={(value) => {
+                    handleTransmit({ checkAssert: {
+                      asserts: value
+                    } });
+                  }}
+                />
               </Form.Item>
             </Form>
           </TabPane>
