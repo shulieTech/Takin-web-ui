@@ -79,7 +79,7 @@ const AddTenantModal: React.FC<Props> = props => {
   // 自定义校验方法， 输入框不能输入汉字
   const checkData = async (rule, value, callback) => {
     if (value) {
-      if (/[^a-zA-Z]/g.test(value)) {
+      if (/[^a-zA-Z_]/g.test(value)) {
         callback(new Error('只可输入英文'));
       }
     } else {
