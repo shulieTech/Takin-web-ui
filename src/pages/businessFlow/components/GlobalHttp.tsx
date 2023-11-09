@@ -38,7 +38,6 @@ const GlobalHttp: React.FC<Props> = props => {
         globalHttp: curValues
       };
     }
- 
     if (props.onChange) {
       props.onChange(newData);
     }

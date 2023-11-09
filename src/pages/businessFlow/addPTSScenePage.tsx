@@ -1,15 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect } from 'react';
-import { Form, Input, Button, Tabs, Collapse,  message, Dropdown, Menu, Icon, Switch, Modal, Table } from 'antd';
+import { Form, Input, Button, Tabs, Collapse,  message, Modal, Table } from 'antd';
 import { MainPageLayout } from 'src/components/page-layout';
 import {  CommonSelect, useStateReducer } from 'racc';
-
-import APIPanel from './components/APIPanel';
 import BusinessFlowService from './service';
 import router from 'umi/router';
 import { getUrlParams } from 'src/utils/utils';
 import CsvForm from './components/CsvForm';
-import IB2Node from './components/IB2Node';
 import GlobalHeaderTable from './components/GlobalHeaderTable';
 import GlobalHttp from './components/GlobalHttp';
 import CountForm from './components/CountForm';
@@ -138,150 +135,46 @@ const getInitState = () => ({
     path: null,
     port:  null,
     protocol: null
-  }
+  },
+  globalHeader: {},
+  userVars: {}
 });
 export type State = ReturnType<typeof getInitState>;
 const MultiFormComponent = ({ form }) => {
-  const { getFieldDecorator, validateFields, getFieldValue } = form;
+  const { getFieldDecorator, validateFields } = form;
+  const id = getUrlParams(window.location.href)?.id;
+  const action = getUrlParams(window.location.href)?.action;
   const { TabPane } = Tabs;
   const { Panel } = Collapse;
   const [state, setState] = useStateReducer(getInitState());
 
-  function transformData(inputObj) {
-    const links = {};
-
-    for (const key in inputObj) {
-      if (!key.includes('_')) { continue; }
-    
-      const match = key.match(/(\d+)(?:_(\d+))?(?:_(.+))?/);
-    
-      if (!match) { continue; }
-    
-      const [_, linkIndex, apiIndex, apiKey] = match;
-    
-      const link = links[linkIndex] || (links[linkIndex] = { apis: {} });
-    
-      if (apiIndex) {
-        const api = link.apis[apiIndex] || (link.apis[apiIndex] = {});
-    
-        if (apiKey) {
-          api[apiKey] = inputObj[key];
-        } else {
-          api[apiIndex] = inputObj[key];
-        }
-      } else {
-        const newKey = key.substring(key.indexOf('_') + 1);
-        link[newKey] = inputObj[key];
-      }
+  useEffect(() => {
+    if (action === 'edit') {
+      queryPTSDetail();
     }
-    
-    const outputData = Object.entries(links).map(([_, link]) => {
-      const linkObj = {};
-      const apis = Object.values(link.apis);
-      linkObj.apis = apis;
-    
-      for (const key in link) {
-        if (key !== 'apis') {
-          linkObj[key] = link[key];
-        }
-      }
-    
-      return linkObj;
-    });
-    return outputData;
-  }
+    queryFunctionList();
+  }, []);
 
   const handleSubmit = async () => {
-
     await validateFields(async (err, values) => {
       if (!err) {
-        console.log('values-----', values);
-        
-        const formValues = transformData(values);
-        console.log('formValues', transformData(values));
-
-        const newFormValues = formValues?.map((itemLink: any, kLink) => {
-          return {
-            linkName: itemLink?.linkName,
-            linkType: itemLink?.linkType,
-            enabled: itemLink?.enabled,
-            apis: itemLink?.apis?.filter((ite) => {if (ite?.apiName) {return ite; }})?.map((item, k) => {
-              if (item?.apiType === 'HTTP') {
-                return {
-                  apiName: item?.apiName,
-                  apiType: item?.apiType,
-                  base: {
-                    allowForward: item?.allowForward,
-                    requestMethod: item?.requestMethod,
-                    requestTimeout: item?.requestTimeout,
-                    requestUrl: item?.requestUrl
-                  },
-                  body: {
-                    forms: item?.forms,
-                    rawData: item?.rawData,
-                    contentType: item?.contentType
-                  },
-                  checkAssert: {
-                    asserts: item?.asserts
-                  },
-                  header: {
-                    headers: item?.headers
-                  },
-                  returnVar: {
-                    vars: item?.vars
-                  },
-                  timer: {
-                    delay: item?.delay
-                  },
-                  beanShellPre: {
-                    script: [item?.beanShellPre]
-                  },
-                  beanShellPost: {
-                    script: [item?.beanShellPost]
-                  },
-                  enabled: item?.enabled
-                };
-              }
-              if (item?.apiType === 'JAVA') {
-                return {
-                  apiName: item?.apiName,
-                  apiType: item?.apiType,
-                  base: {
-                    requestUrl: item?.requestUrl
-                  },
-                  param: {
-                    params: item?.params
-                  },
-                  checkAssert: {
-                    asserts: item?.asserts
-                  },
-                  enabled: item?.enabled
-                };
-              }
-            })
-          };
-        }).filter((fItem, fK) => {
-          if (fItem?.linkName) {
-            return fItem;
-          }
-        });
-
         const csvs = action === 'edit' ? state?.details?.dataSource?.csvs : state?.csvs;
         const counters = action === 'edit' ? state?.details?.counters : state?.counters;
         const globalHttp = action === 'edit' ? state?.details?.globalHttp : state?.globalHttp;
+        const links = action === 'edit' ? state?.details?.links : state?.links;
+        const globalHeader = action === 'edit' ? state?.details?.globalHeader : state?.globalHeader;
+        const userVars = action === 'edit' ? state?.details?.userVars : state?.userVars;
 
         const result = {
           globalHttp,
           counters,
+          globalHeader,
+          links,
+          userVars,
           processName: values?.processName,
-          links: newFormValues,
           dataSource: {
             csvs
           },
-          globalHeader: {
-            headers: values?.globalHeader
-          },
-          userVars: values?.userVars,
         };
         console.log('resiult', result);
            
@@ -302,7 +195,6 @@ const MultiFormComponent = ({ form }) => {
             loading: false
           });
           return;
-         
         } 
         setState({
           loading: true
@@ -328,110 +220,25 @@ const MultiFormComponent = ({ form }) => {
   const handleDebug = async () => {
     validateFields(async (err, values) => {
       if (!err) {
-        const formValues = transformData(values);
-
-        const newFormValues = formValues?.map((itemLink: any, kLink) => {
-          return {
-            linkName: itemLink?.linkName,
-            linkType: itemLink?.linkType,
-            enabled: itemLink?.enabled,
-            apis: itemLink?.apis?.filter((ite) => {if (ite?.apiName) {return ite; }})?.map((item, k) => {
-              if (item?.apiType === 'HTTP') {
-                return {
-                  apiName: item?.apiName,
-                  apiType: item?.apiType,
-                  base: {
-                    allowForward: item?.allowForward,
-                    requestMethod: item?.requestMethod,
-                    requestTimeout: item?.requestTimeout,
-                    requestUrl: item?.requestUrl
-                  },
-                  body: {
-                    forms: item?.forms,
-                    rawData: item?.rawData,
-                    contentType: item?.contentType
-                  },
-                  checkAssert: {
-                    asserts: item?.asserts
-                  },
-                  header: {
-                    headers: item?.headers
-                  },
-                  returnVar: {
-                    vars: item?.vars
-                  },
-                  timer: {
-                    delay: item?.delay
-                  },
-                  beanShellPre: {
-                    script: [item?.beanShellPre]
-                  },
-                  beanShellPost: {
-                    script: [item?.beanShellPost]
-                  },
-                  enabled: item?.enabled
-                };
-              }
-              if (item?.apiType === 'JAVA') {
-                return {
-                  apiName: item?.apiName,
-                  apiType: item?.apiType,
-                  base: {
-                    requestUrl: item?.requestUrl
-                  },
-                  param: {
-                    params: item?.params
-                  },
-                  checkAssert: {
-                    asserts: item?.asserts
-                  },
-                  enabled: item?.enabled
-                };
-              }
-            })
-          };
-        }).filter((fItem, fK) => {
-          if (fItem?.linkName) {
-            return fItem;
-          }
-        });
-       
         const csvs = action === 'edit' ? state?.details?.dataSource?.csvs : state?.csvs;
-        const counters = action === 'edit' ? state?.details?.counters : state?.counters;      
-
-        let globalHttp = {
-          contentEncoding: values?.contentEncoding,
-          domain: values?.domain,
-          path: values?.path,
-          port: values?.port,
-          protocol: values?.protocol
-        };
-
-        if (action === 'edit' && (values?.contentEncoding || values?.domain || values?.path || values?.port ||  values?.protocol)) {
-          globalHttp = {
-            contentEncoding: values?.contentEncoding,
-            domain: values?.domain,
-            path: values?.path,
-            port: values?.port,
-            protocol: values?.protocol
-          };
-        } else {
-          globalHttp = state?.details?.globalHttp;
-        }
+        const counters = action === 'edit' ? state?.details?.counters : state?.counters;
+        const globalHttp = action === 'edit' ? state?.details?.globalHttp : state?.globalHttp;
+        const links = action === 'edit' ? state?.details?.links : state?.links;
+        const globalHeader = action === 'edit' ? state?.details?.globalHeader : state?.globalHeader;
+        const userVars = action === 'edit' ? state?.details?.userVars : state?.userVars;
 
         const result = {
           globalHttp,
           counters,
+          globalHeader,
+          links,
+          userVars,
           processName: values?.processName,
-          links: newFormValues,
           dataSource: {
             csvs
           },
-          globalHeader: {
-            headers: values?.globalHeader
-          },
-          userVars: values?.userVars,
         };
+        console.log('resiult', result);
        
         if (action === 'edit') {
           setState({
@@ -482,122 +289,6 @@ const MultiFormComponent = ({ form }) => {
     if (res?.data?.success) {
       router.push(`/businessFlow/debugDetail?id=${id}`);
     }
-  };
- 
-  const id = getUrlParams(window.location.href)?.id;
-  const action = getUrlParams(window.location.href)?.action;
-
-  useEffect(() => {
-    if (action === 'edit') {
-      queryPTSDetail();
-    }
-    queryFunctionList();
-  }, []);
- 
-  const addNode = (type, linkIndex, defaultName?) => {
-    let node = [];
-    if (type === 'HTTP') {
-      node = [{
-        apiName: '',
-        apiType: type,
-        enabled: true,
-        base: {
-          allowForward: true,
-          requestMethod: 'GET',
-          requestTimeout: undefined,
-          requestUrl: ''
-        },
-        body: {
-          forms: [
-            {
-              key: '',
-              value: ''
-            }
-          ],
-          rawData: ''
-        },
-        checkAssert: {
-          asserts: [
-            {
-              checkCondition: undefined,
-              checkContent: undefined,
-              checkObject: undefined,
-              checkPointType: undefined,
-            }
-          ]
-        },
-        header: {
-          headers: [
-            {
-              key: undefined,
-              value: undefined
-            }
-          ]
-        },
-        returnVar: {
-          vars: [
-            {
-              matchIndex: undefined,
-              parseExpress: undefined,
-              testName: undefined,
-              varName: undefined,
-              varSource: undefined
-            }
-          ]
-        }
-      }
-      ];
-    }
-    if (type === 'JAVA') {
-      node = [{
-        apiName: '',
-        apiType: type,
-        enabled: true,
-        base: {
-          requestUrl: defaultName
-        },
-        param: {
-          params: []
-        },
-        needRequest: true,
-        checkAssert: {
-          asserts: [
-            {
-              checkCondition: undefined,
-              checkContent: undefined,
-              checkObject: undefined,
-              checkPointType: undefined
-            }
-          ]
-        },
-      }
-      ];
-    }
-  
-    if (action === 'edit') {
-      const newLinks  = state?.details?.links?.map((item, k) => {
-        if (k === linkIndex) {
-          return {
-            linkName: item?.linkName,
-            linkType: item?.linkType,
-            enabled: item?.enabled,
-            apis: item?.apis?.concat(node)
-          };
-        }
-        return item;
-      });
-  
-      setState({
-        details: {
-          ...state?.details,
-          links: newLinks
-        }
-      });
-      return;
-    }
-    setState({
-      apis: state?.apis?.concat(node)
-    });
   };
 
   const addLink = () => {
@@ -671,31 +362,6 @@ const MultiFormComponent = ({ form }) => {
     });
   };
 
-  function deleteIndexWithoutMutation(object, linksIndex) {
-    const newObject = JSON.parse(JSON.stringify(object));
-  
-    if (
-      newObject &&
-      newObject.links 
-    ) {
-      newObject.links.splice(linksIndex, 1);
-      return newObject;
-    } 
-    return object;
-    
-  }
-
-  const handleDeleteLink = (linkIndex) => {
-    if (action === 'edit') {
-      setState({ details: deleteIndexWithoutMutation(state?.details, linkIndex) });
-      return;
-    }
-    state?.links?.splice(linkIndex, 1);
-    setState({
-      links: state?.links
-    });
-  };
-
   const handleAddCsv = () => {
     const csv = [{
       fileName: '',
@@ -739,28 +405,6 @@ const MultiFormComponent = ({ form }) => {
       counters: state?.counters?.concat(counter)
     });
   };
-
-  function handleMenuClick(e, linkIndex) {
-    if (e.key === 'HTTP') {
-      addNode('HTTP', linkIndex);
-    }
-    if (e.key === 'JAVA') {
-      queryJavaRequestDetail(linkIndex);
-    }
-  }
-
-  const menu = (linkIndex) => {
-
-    return  <Menu onClick={(e) => handleMenuClick(e, linkIndex)}>
-    <Menu.Item key="HTTP">
-      HTTP压测节点
-    </Menu.Item>
-    <Menu.Item key="JAVA">
-      IB2压测节点
-    </Menu.Item>
-  </Menu>;
-  };
-
   /**
    * @name 获取线程组内容详情
    */
@@ -778,23 +422,6 @@ const MultiFormComponent = ({ form }) => {
     }
   };
    
-  /**
-   * @name 获取JavaRequest详情
-   */
-  const queryJavaRequestDetail = async (linkIndex) => {
-    const {
-          data: { success, data }
-        } = await BusinessFlowService.queryJavaRequestDetail({
-          javaType: 'IB2',   
-        });
-    if (success) {
-      setState({
-        javaRequestDetails: data,
-      });
-      addNode('JAVA', linkIndex, data?.className);
-    }
-  };
-
   /**
    * @name 获取函数列表
    */
@@ -843,67 +470,6 @@ const MultiFormComponent = ({ form }) => {
     } else {
       message.error('复制失败');
     }
-  };
-
-  const renderLink = (linkNode, linkIndex) => {
-    // tslint:disable-next-line:jsx-wrap-multiline
-    return   <Form style={{ border: '1px solid #ddd', padding: '8px 16px', marginBottom: 20 }}>
-    <Form layout="inline">
-      <Form.Item >
-        {getFieldDecorator(`${linkIndex}_linkName`, {
-          initialValue: action === 'edit' ? linkNode?.linkName : '链路名称',
-          rules: [{ required: true, message: '请输入链路!' }],
-        })(<Input placeholder="请输入链路名称" />)}
-      </Form.Item>
-      <Form.Item >
-        {getFieldDecorator(`${linkIndex}_linkType`, {
-          initialValue: action === 'edit' ? linkNode?.linkType : 'normal',
-          rules: [{ required: true, message: '请选择链路类型!' }],
-        })(<CommonSelect 
-            style={{ width: 160 }} 
-            dataSource={[
-              {
-                label: '普通线程组',
-                value: 'normal'
-              },
-              {
-                label: 'setUp线程组',
-                value: 'setUp'
-              },
-              {
-                label: 'tearDown线程组',
-                value: 'tearDown'
-              }
-            ]} />)}
-      </Form.Item>
-      <Form.Item >
-        {getFieldDecorator(`${linkIndex}_enabled`, {
-          valuePropName: 'checked',
-          initialValue: action === 'edit' ? linkNode?.enabled : true,
-          rules: [{ required: true, message: '' }],
-        })(<Switch />)}
-      </Form.Item>
-      <Form.Item style={{ float: 'right' }}>
-        <Button onClick={() => {handleDeleteLink(linkIndex); }} type="link">删除</Button>
-      </Form.Item>
-    </Form>
-    {action === 'edit' ? linkNode?.apis?.map((formItem, index) => {
-      if (formItem?.apiType === 'HTTP') {
-        return <APIPanel key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
-      }
-      return <IB2Node key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
-    }) : state?.apis?.map((formItem, index) => {
-      if (formItem?.apiType === 'HTTP') {
-        return <APIPanel key={index} form={form} index={index} api={formItem} setState={setState} state={state} linkIndex={linkIndex}/>;
-      }
-      return <IB2Node key={index} form={form} index={index} api={formItem} action={action} setState={setState} state={state} linkIndex={linkIndex}/>;
-    })}
-<div style={{ marginTop: 20 }}>
-  <Dropdown.Button onClick={() => addNode('HTTP', linkIndex)} overlay={() =>  menu(linkIndex)}>
-    添加压测节点
-  </Dropdown.Button>
-</div>
-    </Form>;
   };
 
   return (
@@ -964,10 +530,25 @@ const MultiFormComponent = ({ form }) => {
   <TabPane tab="http信息头" key="2">
   <Form>
   <Form.Item >
-        {getFieldDecorator('globalHeader', {
-          initialValue: action === 'edit' ? state?.details?.globalHeader?.headers : [],
-          rules: [{ required: false, message: '请输入!' }],
-        })(<GlobalHeaderTable />)}
+        <GlobalHeaderTable 
+          value={action === 'edit' ? state?.details?.globalHeader?.headers : []}
+          onChange={action === 'edit' ? (result) => {
+            setState({
+              details: {
+                ...state?.details,
+                globalHeader: {
+                  headers: result
+                }
+              }
+            });
+          } : (result) => {
+            setState({
+              globalHeader: {
+                headers: result
+              }
+            });
+          }}
+        />
       </Form.Item>
   </Form>
   </TabPane>
@@ -975,7 +556,10 @@ const MultiFormComponent = ({ form }) => {
         <GlobalHttp 
           onChange={action === 'edit' ? (result) => {
             setState({
-              details: result
+              details: {
+                ...state?.details,
+                globalHttp: result?.globalHttp
+              }
             });
           } : (result) => {
             setState({
@@ -989,10 +573,21 @@ const MultiFormComponent = ({ form }) => {
   <TabPane tab="用户变量" key="4">
   <Form>
   <Form.Item >
-        {getFieldDecorator('userVars', {
-          initialValue: action === 'edit' ? state?.details?.userVars : [],
-          rules: [{ required: false, message: '请输入!' }],
-        })(<GlobalHeaderTable/>)}
+        <GlobalHeaderTable
+          value={action === 'edit' ? state?.details?.userVars : []}
+          onChange={action === 'edit' ? (result) => {
+            setState({
+              details: {
+                ...state?.details,
+                userVars: result
+              }
+            });
+          } : (result) => {
+            setState({
+              userVars: result
+            });
+          }} 
+        />
       </Form.Item>
   </Form>
   </TabPane>
@@ -1047,7 +642,19 @@ const MultiFormComponent = ({ form }) => {
            linkIndex={k}
         />; 
 }) : state?.links?.map((item1, k1) => {
-  return renderLink(item1, k1);
+  return <LinkItem
+          onChange={(result) => {
+            setState({
+              links: result
+            });
+          }}  
+          action={action} 
+          form={form}
+          key={k1}
+          value={item1} 
+          state={state}
+          linkIndex={k1}
+        />;
 })
   }
       <div style={{ marginTop: 20 }}>
