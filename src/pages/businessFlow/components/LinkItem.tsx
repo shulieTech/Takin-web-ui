@@ -259,7 +259,7 @@ const LinkItem: React.FC<Props> = props => {
     <Form layout="inline">
       <Form.Item >
         <Input
-          value={action === 'edit' ? state?.linkName : '链路名称'} 
+          value={state?.linkName} 
           placeholder="请输入链路名称" 
           onChange={ e =>
             handleTransmit({ linkName: e.target.value })
@@ -268,7 +268,7 @@ const LinkItem: React.FC<Props> = props => {
       </Form.Item>
       <Form.Item >
         <CommonSelect 
-            value={action === 'edit' ? state?.linkType : 'normal'} 
+            value={state?.linkType} 
             style={{ width: 160 }} 
             dataSource={[
               {
@@ -291,7 +291,7 @@ const LinkItem: React.FC<Props> = props => {
       </Form.Item>
       <Form.Item >
         <Switch
-          checked={action === 'edit' ? state?.enabled : true} 
+          checked={state?.enabled} 
           onChange={(value) => {
             handleTransmit({ enabled: value });
           }}
