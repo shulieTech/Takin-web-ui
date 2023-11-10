@@ -101,7 +101,7 @@ const CsvForm: React.FC<Props> = props => {
      <Form layout="inline" style={{ border: '1px solid #ddd', padding: 8, marginBottom: 8 }}>
           <Form.Item  label="文件名">
             <Input 
-                value={action === 'edit' ? state?.fileName : undefined}
+                value={state?.fileName}
                 placeholder="请输入文件名"
                 style={{ width: 250 }} 
                 onChange={ e =>
@@ -111,7 +111,7 @@ const CsvForm: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="变量名（西文逗号间隔）" >
             <Input 
-                value={action === 'edit' ? state?.params : undefined}
+                value={state?.params}
                 placeholder="请输入变量名（西文逗号间隔)" 
                 style={{ width: 350 }} 
                 onChange={ e =>
@@ -121,7 +121,7 @@ const CsvForm: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="首行忽略">
             <Switch 
-                checked={action === 'edit' ? state?.ingoreFirstLine : false}
+                checked={state?.ingoreFirstLine}
                 onChange={(value) => {
                   handleTransmit({ ingoreFirstLine: value });
                 }}

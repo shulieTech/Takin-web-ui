@@ -178,41 +178,41 @@ const MultiFormComponent = ({ form }) => {
         };
         console.log('resiult', result);
            
-        if (action === 'edit') {
-          setState({
-            loading: true
-          });
-          const msg = await BusinessFlowService.addPTS({ id, ...result });
-          if (msg?.data?.success) {
-            message.success('保存成功');
-            router.push('/businessFlow');
-            setState({
-              loading: false
-            });
-            return;
-          } 
-          setState({
-            loading: false
-          });
-          return;
-        } 
-        setState({
-          loading: true
-        }); 
-        const {
-        data: { success, data }
-      } = await BusinessFlowService.addPTS(result);
-        if (success) {
-          setState({
-            loading: false
-          });
-          message.success('保存成功');
-          router.push('/businessFlow');
-          return;
-        } 
-        setState({
-          loading: false
-        });
+      //   if (action === 'edit') {
+      //     setState({
+      //       loading: true
+      //     });
+      //     const msg = await BusinessFlowService.addPTS({ id, ...result });
+      //     if (msg?.data?.success) {
+      //       message.success('保存成功');
+      //       router.push('/businessFlow');
+      //       setState({
+      //         loading: false
+      //       });
+      //       return;
+      //     } 
+      //     setState({
+      //       loading: false
+      //     });
+      //     return;
+      //   } 
+      //   setState({
+      //     loading: true
+      //   }); 
+      //   const {
+      //   data: { success, data }
+      // } = await BusinessFlowService.addPTS(result);
+      //   if (success) {
+      //     setState({
+      //       loading: false
+      //     });
+      //     message.success('保存成功');
+      //     router.push('/businessFlow');
+      //     return;
+      //   } 
+      //   setState({
+      //     loading: false
+      //   });
       }
     });
   };
