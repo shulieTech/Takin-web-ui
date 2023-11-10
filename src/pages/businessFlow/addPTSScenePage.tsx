@@ -136,8 +136,10 @@ const getInitState = () => ({
     port:  null,
     protocol: null
   },
-  globalHeader: {},
-  userVars: {}
+  globalHeader: {
+    headers: []
+  },
+  userVars: []
 });
 export type State = ReturnType<typeof getInitState>;
 const MultiFormComponent = ({ form }) => {
@@ -531,7 +533,7 @@ const MultiFormComponent = ({ form }) => {
   <Form>
   <Form.Item >
         <GlobalHeaderTable 
-          value={action === 'edit' ? state?.details?.globalHeader?.headers : []}
+          value={action === 'edit' ? state?.details?.globalHeader?.headers : state?.globalHeader?.headers}
           onChange={action === 'edit' ? (result) => {
             setState({
               details: {
@@ -574,7 +576,7 @@ const MultiFormComponent = ({ form }) => {
   <Form>
   <Form.Item >
         <GlobalHeaderTable
-          value={action === 'edit' ? state?.details?.userVars : []}
+          value={action === 'edit' ? state?.details?.userVars : state?.userVars}
           onChange={action === 'edit' ? (result) => {
             setState({
               details: {

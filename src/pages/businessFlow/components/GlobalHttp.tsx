@@ -48,7 +48,7 @@ const GlobalHttp: React.FC<Props> = props => {
           <Form.Item  label="协议">
          
             <Input 
-              value={action === 'edit' ? state?.protocol : undefined} 
+              value={state?.protocol} 
               placeholder="请输入协议，http或https" 
               style={{ width: 200 }}
               onChange={ e =>
@@ -59,7 +59,7 @@ const GlobalHttp: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="服务器名称或IP" >
             <Input 
-              value={action === 'edit' ? state?.domain : undefined} 
+              value={state?.domain} 
               placeholder="请输入服务器名称或IP"
               style={{ width: 350 }}
               onChange={ e =>
@@ -69,7 +69,7 @@ const GlobalHttp: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="端口号" >
             <Input 
-              value={action === 'edit' ? state?.port : undefined} 
+              value={state?.port} 
               placeholder="请输入端口号" 
               style={{ width: 100 }}
               onChange={ e =>
@@ -79,7 +79,7 @@ const GlobalHttp: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="路径" >
             <Input 
-              value={action === 'edit' ? state?.path : undefined} 
+              value={state?.path} 
               placeholder="请输入路径" 
               style={{ width: 500 }}
               onChange={ e =>
@@ -89,7 +89,7 @@ const GlobalHttp: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="内容编码" >
             <Input 
-              value={action === 'edit' ? state?.contentEncoding : undefined} 
+              value={state?.contentEncoding} 
               placeholder="请输入内容编码" 
               style={{ width: 150 }}
               onChange={ e =>

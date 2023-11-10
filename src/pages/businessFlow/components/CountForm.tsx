@@ -94,7 +94,7 @@ const CountForm: React.FC<Props> = props => {
      <Form layout="inline" style={{ border: '1px solid #ddd', padding: 8, marginBottom: 8 }}>
           <Form.Item  label="初始值">
             <Input
-               value={action === 'edit' ? state?.start : undefined} 
+               value={state?.start} 
                placeholder="请输入初始值" 
                style={{ width: 200 }}
                onChange={ e =>
@@ -104,7 +104,7 @@ const CountForm: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="递增" >
             <Input
-              value={action === 'edit' ? state?.incr : undefined}  
+              value={state?.incr}  
               placeholder="请输入递增" 
               style={{ width: 200 }} 
               onChange={ e =>
@@ -113,7 +113,7 @@ const CountForm: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="最大值">
             <Input
-              value={action === 'edit' ? state?.end : undefined} 
+              value={state?.end} 
               placeholder="请输入最大值" 
               style={{ width: 200 }} 
               onChange={ e =>
@@ -123,7 +123,7 @@ const CountForm: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="数字格式">
             <Input  
-              value={action === 'edit' ? state?.format : undefined}  
+              value={state?.format}  
               placeholder="请输入数字格式" 
               style={{ width: 200 }}
               onChange={ e =>
@@ -133,7 +133,7 @@ const CountForm: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item  label="引用名称">
             <Input
-              value={action === 'edit' ? state?.name : undefined}   
+              value={state?.name}   
               placeholder="请输入引用名称" 
               style={{ width: 200 }}
               onChange={ e =>

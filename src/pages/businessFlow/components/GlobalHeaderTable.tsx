@@ -24,6 +24,7 @@ const GlobalHeaderTable: React.FC<Props> = props => {
   });
 
   useEffect(() => {
+    console.log('props.value',props.value);
     setState({
       list: props.value?.length === 0 ? [{ key: '', value: '' }] : props.value
     });
