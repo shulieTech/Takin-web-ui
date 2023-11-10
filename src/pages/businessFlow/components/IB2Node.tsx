@@ -1,15 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Form, Input, Button, Tabs, Row, Col, Collapse, Divider, InputNumber, Switch, Radio } from 'antd';
-import { ColumnProps } from 'antd/lib/table';
-import { CommonSelect, CommonTable, useStateReducer } from 'racc';
+import { Form, Input, Button, Tabs,  Collapse,  Switch} from 'antd';
+import {  useStateReducer } from 'racc';
 import React, { useEffect } from 'react';
-import InputNumberPro from 'src/common/inputNumber-pro';
-import { customColumnProps } from 'src/components/custom-table/utils';
-import BodyTable from './BodyTable';
 import CheckPointTable from './CheckPointTable';
-import HeaderTable from './HeaderTable';
 import IB2HeaderTable from './IB2HeaderTable';
-import ParamsTable from './ParamsTable';
 
 interface Props {
   title?: string | React.ReactNode;
@@ -30,11 +24,9 @@ const { Panel } = Collapse;
 const getInitState = () => ({} as any);
 const IB2Node: React.FC<Props> = props => {
     
-  const { form , index, api, action , linkIndex , linksData, javaRequestDetails} = props;
-  const { getFieldDecorator } = form;
+  const { index,  action , linkIndex , linksData, javaRequestDetails } = props;
   const [state, setState] = useStateReducer(getInitState());
   useEffect(() => {
-    console.log('IB2的props.value', props.value);
     setState({
       ...props.value,
     });
@@ -59,7 +51,6 @@ const IB2Node: React.FC<Props> = props => {
       ...value
     });
     const curValues = { ...state, ...value };
-    console.log('curValues', curValues);
 
     let apisData = [];
     let result = null;
@@ -84,7 +75,7 @@ const IB2Node: React.FC<Props> = props => {
         <Form layout="inline">
           <Form.Item >
               <Input 
-                value={action === 'edit' ? state?.apiName : undefined} 
+                value={state?.apiName} 
                 placeholder="请输入压测API名称" 
                 onChange={ e =>
                   handleTransmit({ apiName: e.target.value })
@@ -96,7 +87,7 @@ const IB2Node: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item >
           <Switch
-            checked={action === 'edit' ? state?.enabled : true} 
+            checked={state?.enabled} 
             onChange={(value, e) => {
               handleTransmit({ enabled: value });
               e.stopPropagation();
@@ -108,9 +99,6 @@ const IB2Node: React.FC<Props> = props => {
              placeholder="请输入类名" 
              disabled={true} 
              style={{ minWidth: 500, marginLeft: 20 }}
-             onChange={(e) => {
-               handleTransmit({ requestUrl: e.target.value });
-             }} 
            />
         </Form.Item>
       </Form.Item>
@@ -154,7 +142,7 @@ const IB2Node: React.FC<Props> = props => {
           <Form>
               <Form.Item>
                 <CheckPointTable
-                  value={action === 'edit' ? state?.checkAssert?.asserts : []} 
+                  value={state?.checkAssert?.asserts} 
                   onChange={(value) => {
                     handleTransmit({ checkAssert: {
                       asserts: value

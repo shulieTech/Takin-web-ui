@@ -310,7 +310,6 @@ const LinkItem: React.FC<Props> = props => {
           linksData={action === 'edit' ? props?.state?.details?.links : props?.state?.links}
           value={formItem} 
           key={index} 
-          form={form} 
           index={index} 
           api={formItem} 
           action={action} 
