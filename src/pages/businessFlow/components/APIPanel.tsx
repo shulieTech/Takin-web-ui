@@ -15,7 +15,6 @@ interface Props {
   value?: any;
   onChange?: (value: any) => void;
   state?: any;
-  form?: any;
   index?: any;
   api?: any;
   action?: string;
@@ -29,8 +28,7 @@ const { Panel } = Collapse;
 const getInitState = () => ({} as any);
 const APIPanel: React.FC<Props> = props => {
     
-  const { form , index, api, action , linkIndex , linksData } = props;
-  const { getFieldDecorator } = form;
+  const { index, api, action , linkIndex , linksData } = props;
   const [state, setState] = useStateReducer(getInitState());
   useEffect(() => {
     setState({
@@ -82,7 +80,7 @@ const APIPanel: React.FC<Props> = props => {
         <Form layout="inline">
           <Form.Item >
             <Input 
-              value={action === 'edit' ? state?.apiName : undefined} 
+              value={state?.apiName} 
               placeholder="请输入压测API名称" 
               onChange={ e =>
                 handleTransmit({ apiName: e.target.value })
@@ -94,7 +92,7 @@ const APIPanel: React.FC<Props> = props => {
           </Form.Item>
           <Form.Item >
         <Switch
-          checked={action === 'edit' ? state?.enabled : true} 
+          checked={state?.enabled} 
           onChange={(value, e) => {
             handleTransmit({ enabled: value });
             e.stopPropagation();
@@ -129,7 +127,7 @@ const APIPanel: React.FC<Props> = props => {
     <Col span={24}>
       <Form.Item label="压测URL">
         <Input.TextArea
-          value={action === 'edit' ? state?.base?.requestUrl : undefined}
+          value={state?.base?.requestUrl}
           placeholder="请输入有效的压测URL，例如 http://www.xxxx.com?k=v"
           onChange={ e =>
             handleTransmit({ base: {
@@ -145,7 +143,7 @@ const APIPanel: React.FC<Props> = props => {
     <Col span={5}>
       <Form.Item label="请求方式">
         <CommonSelect
-            value={action === 'edit' ? api?.base?.requestMethod : undefined} 
+            value={api?.base?.requestMethod} 
             dataSource={[
               {
                 label: 'GET',
@@ -168,7 +166,7 @@ const APIPanel: React.FC<Props> = props => {
     <Col offset={3} span={8}>
       <Form.Item label="超时时间">
         <InputNumberPro
-          value={action === 'edit' ? state?.base?.requestTimeout : undefined} 
+          value={state?.base?.requestTimeout} 
           style={{ width: 200 }} 
           addonAfter="毫秒" 
           placeholder="请输入超时时间"
@@ -184,7 +182,7 @@ const APIPanel: React.FC<Props> = props => {
     <Col span={8}>
       <Form.Item label="允许302跳转">
         <Switch 
-          checked={action === 'edit' ? state?.base?.allowForward : true} 
+          checked={state?.base?.allowForward} 
           onChange={(value) => {
             handleTransmit({ base: {
               ...state?.base,
@@ -201,7 +199,7 @@ const APIPanel: React.FC<Props> = props => {
             <Form>
               <Form.Item label="Content-Type">
                 <Radio.Group
-                  value={action === 'edit' ? state?.body?.contentType : undefined} 
+                  value={state?.body?.contentType} 
                   // onChange={onChange}
                   onChange={(e) => {
                     handleTransmit({ body: {
@@ -218,7 +216,7 @@ const APIPanel: React.FC<Props> = props => {
               {state?.body?.contentType === 'JSON' && 
               <Form.Item>
                  <Input.TextArea
-                   value={action === 'edit' ? state?.body?.rawData : undefined} 
+                   value={state?.body?.rawData} 
                    style={{ height: 100 }} 
                    placeholder="如果服务端（被压测端）需要强校验换行符（\n）或者待加密的部分需要有换行符，请使用unescape解码函数对包含换行符的字符串进行反转义：${sys.escapeJava(text)}"
                    onChange={(e) => {
@@ -232,7 +230,7 @@ const APIPanel: React.FC<Props> = props => {
               {(state?.body?.contentType === 'form-data' || state?.body?.contentType === 'x-www-form-urlencoded') && 
               <Form.Item>
                  <BodyTable
-                   value={action === 'edit' ? state?.body?.forms : []} 
+                   value={state?.body?.forms} 
                    onChange={(value) => {
                      handleTransmit({ body: {
                        ...state?.body,
@@ -248,7 +246,7 @@ const APIPanel: React.FC<Props> = props => {
           <Form>
               <Form.Item>
                 <HeaderTable
-                  value={action === 'edit' ? state?.header?.headers : []}
+                  value={state?.header?.headers}
                   onChange={(value) => {
                     handleTransmit({ header: {
                       ...state?.header,
@@ -263,7 +261,7 @@ const APIPanel: React.FC<Props> = props => {
           <Form>
               <Form.Item>
                 <ParamsTable 
-                  value={action === 'edit' ? state?.returnVar?.vars : []}
+                  value={state?.returnVar?.vars}
                   onChange={(value) => {
                     handleTransmit({ returnVar: {
                       ...state?.returnVar,
@@ -278,7 +276,7 @@ const APIPanel: React.FC<Props> = props => {
           <Form>
               <Form.Item>
                 <CheckPointTable 
-                  value={action === 'edit' ? state?.checkAssert?.asserts : []}
+                  value={state?.checkAssert?.asserts}
                   onChange={(value) => {
                     handleTransmit({ checkAssert: {
                       ...state?.checkAssert,
@@ -293,7 +291,7 @@ const APIPanel: React.FC<Props> = props => {
           <Form layout="inline">
               <Form.Item label="线程延迟（毫秒）">
                 <InputNumber
-                  value={action === 'edit' ? state?.timer?.delay : undefined} 
+                  value={state?.timer?.delay} 
                   min={0} 
                   precision={0}
                   onChange={(value) => {
@@ -310,7 +308,7 @@ const APIPanel: React.FC<Props> = props => {
           <Form>
               <Form.Item label="脚本">
                 <Input.TextArea 
-                  value={action === 'edit' ? state?.beanShellPre?.script?.[0] : undefined}
+                  value={state?.beanShellPre?.script?.[0]}
                   style={{ height: 200 }}
                   onChange={(e) => {
                     handleTransmit({ beanShellPre: {
@@ -326,7 +324,7 @@ const APIPanel: React.FC<Props> = props => {
           <Form>
               <Form.Item label="脚本">
                 <Input.TextArea
-                  value={action === 'edit' ? state?.beanShellPost?.script?.[0] : undefined} 
+                  value={state?.beanShellPost?.script?.[0]} 
                   style={{ height: 200 }}
                   onChange={(e) => {
                     handleTransmit({ beanShellPost: {
