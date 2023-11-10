@@ -114,7 +114,6 @@ const LinkItem: React.FC<Props> = props => {
   };
 
   const addNode = (type, javaRequestDetails?) => {
-    console.log('javaRequestDetails',javaRequestDetails);
     let node = [];
     if (type === 'HTTP') {
       node = [{
@@ -216,10 +215,21 @@ const LinkItem: React.FC<Props> = props => {
       }
       return;
     }
+    const newLinks  = props?.state?.links?.map((item, k) => {
+      if (k === linkIndex) {
+        return {
+          linkName: item?.linkName,
+          linkType: item?.linkType,
+          enabled: item?.enabled,
+          apis: item?.apis?.concat(node)
+        };
+      }
+      return item;
+    });
     if (props.onChange) {
-      props.onChange({
-        apis: state?.apis?.concat(node)
-      });
+      props.onChange(
+        newLinks
+      );
     }
   };
 
