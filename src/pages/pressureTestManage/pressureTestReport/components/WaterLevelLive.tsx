@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Badge, Button, Col, Collapse, Icon, Input, Row } from 'antd';
 import { useStateReducer } from 'racc';
 import React, { Fragment, useEffect } from 'react';

@@ -8,6 +8,7 @@ import ReportLinkOverviewDetail from './ReportLinkOverviewDetail';
 import RequestList from './RequestList';
 import WarningDetailList from './WarningDetailList';
 import WaterLevel from './WaterLevel';
+import MockDetailList from './MockDetailList';
 
 interface Props {
   id?: string;
@@ -24,7 +25,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
   const { id, detailData, state, setState, reportCountData, failedCount } =
     props;
   const [tabState, setTabState] = useStateReducer<State>({
-    tabKey: 0,
+    tabKey: 6,
   });
   const data = [
     {
@@ -127,6 +128,15 @@ const ModuleTabs: React.FC<Props> = (props) => {
       },
       renderTabNode: <RequestList id={id} detailData={state.detailData} tabList={state.tabList}/>,
     },
+    {
+      title: 'mock明细',
+      firstLineTxt: '次请求',
+      firstLineNum: {
+        value: reportCountData && reportCountData.warnCount,
+        color: '#FE7D61',
+      },
+      renderTabNode: <MockDetailList id={id} />,
+    },
   ];
 
   const handleChangeTab = async (key) => {
@@ -149,7 +159,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
           return (
             <Col
               key={key}
-              style={{ width: '16.6%', position: 'relative' }}
+              style={{ width: '14.25%', position: 'relative' }}
               onClick={() => handleChangeTab(key)}
             >
               <div

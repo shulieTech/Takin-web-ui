@@ -9,6 +9,13 @@ const PressureTestReportService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取mock详情列表
+   */
+  async queryMockDetailList(data = {}) {
+    const url = '/report/mock/list';
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取报告详情
    */
   async queryReportDetail(data = {}) {
