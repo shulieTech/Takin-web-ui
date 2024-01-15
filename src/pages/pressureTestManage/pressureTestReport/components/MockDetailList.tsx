@@ -31,13 +31,13 @@ const MockDetailList: React.FC<Props> = props => {
 
   useEffect(() => {
     const { id } = props;
-    queryWaringDetailList({ reportId: id, ...state.searchParams });
+    queryMockDetailList({ reportId: id, ...state.searchParams });
   }, [state.searchParams, state.searchParams.pageSize]);
 
   /**
-   * @name 获取警告详情列表
+   * @name 获取Mock详情列表
    */
-  const queryWaringDetailList = async value => {
+  const queryMockDetailList = async value => {
     setState({
       loading: true
     });

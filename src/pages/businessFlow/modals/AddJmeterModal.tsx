@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect, useState } from 'react';
 import { CommonForm, CommonModal, ImportFile, useStateReducer } from 'racc';
 import { Col, Collapse, Divider, Icon, Input, message, Row, Spin } from 'antd';
@@ -98,6 +99,14 @@ const AddJmeterModal: React.FC<Props> = (props) => {
       },
       {
         ...customColumnProps,
+        title: '解析结果',
+        dataIndex: 'jmxCheckSuccess',
+        render: (text, record) => {
+          return text ? <span>成功</span> : <span>失败:{record?.jmxCheckErrorMsg}</span>;
+        }
+      },
+      {
+        ...customColumnProps,
         title: '操作',
         dataIndex: 'action',
         render: (text, row) => {
@@ -119,13 +128,18 @@ const AddJmeterModal: React.FC<Props> = (props) => {
   /**
    * @name 上传jmeter文件
    */
-  const handleImport = async (file) => {
+  const handleChange = async (info) => {
     setState({
       loading: true,
     });
+    const formData = new FormData();
+    info.fileList.map(item => {
+      formData.set('file', item.originFileObj);
+      formData.set('parseJmx', true);
+    });
     const {
       data: { data, success },
-    } = await BusinessFlowService.uploadJmeter(file);
+    } = await BusinessFlowService.uploadJmeter(formData);
 
     if (success) {
       setScriptFileInfo(data?.[0] || {});
@@ -154,11 +168,18 @@ const AddJmeterModal: React.FC<Props> = (props) => {
         node: (
           <ImportFile
             accept={['jmx']}
-            onImport={handleImport}
             UploadProps={{
               type: 'drag',
               multiple: false,
+              onChange: info => handleChange(info)
             }}
+            fileName="file"
+            onImport={file => true}
+            // onImport={handleImport}
+            // UploadProps={{
+            //   type: 'drag',
+            //   multiple: false,
+            // }}
           >
             <p>
               <Icon type="inbox" />
@@ -249,7 +270,7 @@ const AddJmeterModal: React.FC<Props> = (props) => {
   return (
     <CommonModal
       modalProps={{
-        width: 700,
+        width: 900,
         title: 'Jmeter脚本解析',
         maskClosable: false,
         okText: '保存并解析',

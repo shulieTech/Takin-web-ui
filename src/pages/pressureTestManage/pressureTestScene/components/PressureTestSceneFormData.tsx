@@ -1,5 +1,5 @@
 import { Input } from 'antd';
-import { DatePick } from 'racc';
+import { CommonSelect, DatePick } from 'racc';
 import { FormDataType } from 'racc/dist/common-form/type';
 import React from 'react';
 import BusinessSelect from 'src/components/business-select';
@@ -21,6 +21,20 @@ const getPressureTestSceneFormData = (state): FormDataType[] => {
       key: 'sceneName',
       label: '',
       node: <Input placeholder="压测场景名称" />
+    },
+    {
+      key: 'status',
+      label: '',
+      node: (
+        <CommonSelect
+          placeholder="状态"
+          dataSource={[
+            { label: '待启动', value: 0 },
+            { label: '启动中', value: 1 },
+            { label: '压测中', value: 2 },
+          ]}
+        />
+      )
     },
     {
       key: 'tagId',

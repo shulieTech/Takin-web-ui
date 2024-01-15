@@ -33,6 +33,7 @@ import CommonHeader from 'src/common/header/Header';
 import RequestFlowQueryForm from './components/RequestFlowQueryForm';
 import moment from 'moment';
 import BusinessActivityTree, { getFirstTreeNodeByFilter } from './components/BusinessActivityTree';
+import MockDetailLive from './components/MockDetailLive';
 
 interface State {
   isReload?: boolean;
@@ -536,6 +537,12 @@ const PressureTestLive: React.FC<Props> = (props) => {
             </div>
           </div>
         </>
+      ),
+    },
+    {
+      title: 'mock明细',
+      component: (
+        <MockDetailLive isReload={state.isReload} id={detailData.id} />
       ),
     },
   ];
