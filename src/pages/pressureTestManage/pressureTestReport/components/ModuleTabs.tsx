@@ -25,7 +25,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
   const { id, detailData, state, setState, reportCountData, failedCount } =
     props;
   const [tabState, setTabState] = useStateReducer<State>({
-    tabKey: 6,
+    tabKey: 0,
   });
   const data = [
     {
@@ -132,7 +132,7 @@ const ModuleTabs: React.FC<Props> = (props) => {
       title: 'mock明细',
       firstLineTxt: '次请求',
       firstLineNum: {
-        value: reportCountData && reportCountData.warnCount,
+        value: reportCountData && reportCountData.mockCount,
         color: '#FE7D61',
       },
       renderTabNode: <MockDetailList id={id} />,
