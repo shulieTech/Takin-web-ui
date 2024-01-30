@@ -100,7 +100,7 @@ const FlowPreview: React.FC<Props> = (props) => {
       .catch(() => {
         setEstimateFlow(null);
       });
-  }, [duration, ...Object.values(pressConfig)]);
+  }, [checkValid, duration, getEstimateFlow, pressConfig.mode, pressConfig.rampUp, pressConfig.steps, pressConfig.threadNum, pressConfig.type]);
 
   return (
     <div
@@ -112,7 +112,7 @@ const FlowPreview: React.FC<Props> = (props) => {
         marginTop: 8,
       }}
     >
-      <div
+      {/* <div
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -161,7 +161,7 @@ const FlowPreview: React.FC<Props> = (props) => {
         ) : (
           '-- vum'
         )}
-      </div>
+      </div> */}
       {/* 固定压力模式 */}
       {pressConfig.mode === 1 && (
         <FixLineCharts

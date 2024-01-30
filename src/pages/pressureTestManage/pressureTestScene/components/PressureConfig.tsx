@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @name 步骤1-基本信息
  */
@@ -351,7 +352,7 @@ const PressureConfig = (
             className={styles.chartWrap}
             style={{ top: testMode === TestMode.并发模式 ? -60 : -40 }}
           >
-            <p className={styles.title}>
+            {/* <p className={styles.title}>
               流量预估
               <Tooltip
                 title="流量预估是根据施压配置参数模拟的压力图与预计消耗流量，最终计费以实际施压情况为准"
@@ -372,7 +373,7 @@ const PressureConfig = (
               ) : (
                 '-- vum'
               )}
-            </p>
+            </p> */}
             {state.flag ? (
               <div>
                 {state.pressureMode === 1 && (

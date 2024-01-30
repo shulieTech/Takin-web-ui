@@ -20,7 +20,7 @@ const PressureTestSceneTableAction: React.FC<Props> = props => {
     JSON.parse(localStorage.getItem('trowebBtnResource'));
   return (
     <Fragment>
-      {getTakinAuthority() === 'true' && (
+      {/* {getTakinAuthority() === 'true' && (
         <span className={styles.usableFlow}>
           可用压测流量：
           <Statistic suffix="vum" precision={2} value={state.usableFlow || 0} />
@@ -41,7 +41,7 @@ const PressureTestSceneTableAction: React.FC<Props> = props => {
             <a style={{ marginLeft: 4 }}>计费说明</a>
           </Tooltip>
         </span>
-      )}
+      )} */}
       <AuthorityBtn
         isShow={
           btnAuthority &&

@@ -36,12 +36,12 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
       title: '压测时长',
       dataIndex: 'totalTime'
     },
-    {
-      ...customColumnProps,
-      title: '消耗流量（vum）',
-      dataIndex: 'amount',
-      className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
-    },
+    // {
+    //   ...customColumnProps,
+    //   title: '消耗流量（vum）',
+    //   dataIndex: 'amount',
+    //   className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
+    // },
     {
       ...customColumnProps,
       title: '压测开始时间',
@@ -67,7 +67,7 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '执行人',
-      dataIndex: 'userName',
+      dataIndex: 'nickName',
       className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
