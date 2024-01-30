@@ -418,7 +418,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           </Button>
         </Popover>
       )}
-      {/* { detailData?.hasJtl && !detailData.ptlPath && (
+      { detailData?.hasJtl && !detailData.ptlPath && (
         <Button
           type="primary"
           ghost
@@ -428,7 +428,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
         >
           下载Jtl文件
         </Button>
-      )} */}
+      )}
 
       <PressTestMachines
         reportInfo={{

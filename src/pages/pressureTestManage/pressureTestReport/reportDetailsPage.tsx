@@ -315,7 +315,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     if (success) {
       return data;
     }
-  }
+  };
 
   /**
    * @name 获取业务活动拓扑图
@@ -334,9 +334,9 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     if (success) {
       return data;
     }
-  }
+  };
 
-    /**
+  /**
    * @name 获取对比报告
    */
   const queryVlCompare = async (reportIds, businessActivityId) => {
@@ -351,7 +351,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     }
   };
 
-     /**
+  /**
    * @name 获取应用实例趋势图
    */
   const queryTrendData = async (value) => {
@@ -367,7 +367,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     }
   };
 
-        /**
+  /**
    * @name 获取应用趋势图
    */
   const queryAppTrendData = async (value) => {
@@ -391,9 +391,9 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       ).then((res) => {
         const codeArr = [];
         res?.map((item, k) => {
-          console.log('item9999999', item)
-          codeArr.push(item?.[0]?.statusCode)
-        })
+          console.log('item9999999', item);
+          codeArr.push(item?.[0]?.statusCode);
+        });
       
         setState({
           allMessageCodeList: res,
@@ -459,9 +459,9 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     console.log(value);
     setState({
       compareReportId: value
-    })
+    });
     queryAllCompareData(state?.detailData, value ? [state?.detailData?.reportId, value] : [state?.detailData?.reportId]);
-  }
+  };
 
   console.log('allMessageCodeList', state?.allMessageCodeList);
   console.log('allMessageDetailList', state?.allMessageDetailList);
@@ -546,13 +546,13 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       reportId,
       remarks,
     });
-    if (success){
+    if (success) {
       setState({
         isReload: !state?.isReload
-      })
+      });
     }
 
-  }
+  };
 
   const summaryList = [
     {
@@ -657,19 +657,53 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
       });
   };
 
+  // const contentRef = React.createRef();
+  // const exportToPDF = async () => {
+  //   const contentCanvas = await html2canvas(contentRef.current, {
+  //     backgroundColor: 'white', // 通过 html2canvas 配置选项设置背景颜色为白色
+  //   });
+  //   const contentWidth = contentCanvas.width;
+  //   const contentHeight = contentCanvas.height;
+
+  //   const a4WidthInPixels = 595.28;
+  //   const scaleFactor = a4WidthInPixels / contentWidth;
+  //   const pdfHeight = contentHeight * scaleFactor;
+  //   const pdf = new jsPDF('p', 'pt', [a4WidthInPixels, pdfHeight]);
+  //   pdf.addImage(contentCanvas.toDataURL('image/png'), 'PNG', 0, 0, a4WidthInPixels, pdfHeight);
+  //   pdf.save(`${detailData?.sceneName}-${detailData?.reportId}`);
+  // };
+
   const contentRef = React.createRef();
   const exportToPDF = async () => {
     const contentCanvas = await html2canvas(contentRef.current, {
-      backgroundColor: 'white', // 通过 html2canvas 配置选项设置背景颜色为白色
+      backgroundColor: 'white',
+      scale: 0.5 // 降低缩放比例以减小图像大小
     });
+
     const contentWidth = contentCanvas.width;
     const contentHeight = contentCanvas.height;
 
     const a4WidthInPixels = 595.28;
-    const scaleFactor = a4WidthInPixels / contentWidth;
-    const pdfHeight = contentHeight * scaleFactor;
-    const pdf = new jsPDF('p', 'pt', [a4WidthInPixels, pdfHeight]);
-    pdf.addImage(contentCanvas.toDataURL('image/png'), 'PNG', 0, 0, a4WidthInPixels, pdfHeight);
+    const a4HeightInPixels = 841.89;
+    const pdfWidth = a4WidthInPixels;
+    const pdfHeight = a4HeightInPixels;
+
+    const pdf = new jsPDF('p', 'pt', [pdfWidth, pdfHeight]);
+  
+  // 分页处理（如果需要）
+    for (let y = 0; y < contentHeight; y += a4HeightInPixels) {
+      if (y > 0) {
+        pdf.addPage();
+      }
+      pdf.addImage(
+      contentCanvas.toDataURL('image/jpeg', 0.7), // 使用 JPEG 格式并调整品质
+      'JPEG',
+      0,
+      -y,
+      pdfWidth,
+      contentHeight
+    );
+    }
     pdf.save(`${detailData?.sceneName}-${detailData?.reportId}`);
   };
 
@@ -686,20 +720,20 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     if (success) {
       setState({
         allMessageDetailList: state?.allMessageDetailList?.map((item, k) => {
-          if (key === k){
+          if (key === k) {
             return data;
           }
           return item;
         }),
         statusCode: state?.statusCode?.map((item, k2) => {
-          if (k2 === key){
+          if (k2 === key) {
             return statusCode;
           }
           return item;
         })
-      })
+      });
     }
-  }
+  };
 
   const extra = (
     <>
