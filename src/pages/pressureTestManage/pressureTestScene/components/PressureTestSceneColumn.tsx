@@ -315,7 +315,7 @@ const getPressureTestSceneColumns = (
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'userName',
+      dataIndex: 'nickName',
       className: getTakinAuthority() === 'true' ? '' : 'tableHiddle',
     },
     {

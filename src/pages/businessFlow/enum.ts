@@ -5,7 +5,7 @@ export enum BusinessFlowBean {
   来源 = 'type',
   总计 = 'totalNodeNum',
   已完成 = 'linkRelateNum',
-  负责人 = 'userName',
+  负责人 = 'nickName',
   最后更新时间 = 'updateTime'
 }
 

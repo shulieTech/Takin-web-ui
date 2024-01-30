@@ -43,7 +43,7 @@ const getColumns = (state, setState): ColumnProps<any>[] => {
     {
       ...customColumnProps,
       title: '负责人',
-      dataIndex: 'userName',
+      dataIndex: 'nickName',
       className: getTakinAuthority() === 'true' ? '' : 'tableHiddle'
     },
     {
