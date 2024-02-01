@@ -6,13 +6,14 @@ import {
   Row,
   Statistic,
   Typography,
+  message,
 } from 'antd';
 import { CommonSelect, useStateReducer } from 'racc';
 import React, { Fragment, useEffect, useState } from 'react';
 import CustomSkeleton from 'src/common/custom-skeleton';
 import EmptyNode from 'src/common/empty-node';
 import { BasePageLayout } from 'src/components/page-layout';
-import {  checkMenuByPath } from 'src/utils/utils';
+import { checkMenuByPath } from 'src/utils/utils';
 import Summary from './components/Summary';
 import styles from './index.less';
 import PressureTestReportService from './service';
@@ -133,7 +134,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   const { location } = props;
   const { query } = location;
   const { id, sceneId } = query;
-  const { detailData} = state;
+  const { detailData } = state;
 
   useEffect(() => {
     queryVltReportDetail(id);
@@ -155,8 +156,6 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   //   queryReportCount(id);
   //   queryRequestCount(id);
   // }, [state.isReload]);
-
- 
 
   // useEffect(() => {
   //   // 数据校准中时5s刷新一次
@@ -204,7 +203,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
         detailData: data
       });
       queryAllMessageCode(data);
-      queryAllCompareData(data, [data?.reportId])
+      queryAllCompareData(data, [data?.reportId]);
       queryAllTopologyData(data);
     }
   };
@@ -214,12 +213,12 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    */
   const queryVltBottleneck = async (value) => {
     const {
-        data: { data, success },
-      } = await PressureTestReportService.queryVltBottleneck({
-        reportId: value,
-        current: 0,
-        pageSize: 1000
-      });
+      data: { data, success },
+    } = await PressureTestReportService.queryVltBottleneck({
+      reportId: value,
+      current: 0,
+      pageSize: 1000
+    });
     if (success) {
       setState({
         bottleneckList: data,
@@ -250,12 +249,12 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    */
   const queryVltPerformanceList = async (value) => {
     const {
-        data: { data, success },
-      } = await PressureTestReportService.queryVltPerformanceList({
-        reportId: value,
-        // current:0,
-        // pageSize:1000
-      });
+      data: { data, success },
+    } = await PressureTestReportService.queryVltPerformanceList({
+      reportId: value,
+      // current:0,
+      // pageSize:1000
+    });
     if (success) {
       setState({
         performanceList: data
@@ -268,12 +267,12 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    */
   const queryVltInstancePerformanceList = async (value) => {
     const {
-          data: { data, success },
-        } = await PressureTestReportService.queryVltInstancePerformanceList({
-          reportId: value,
-          // current:0,
-          // pageSize:1000
-        });
+      data: { data, success },
+    } = await PressureTestReportService.queryVltInstancePerformanceList({
+      reportId: value,
+      // current:0,
+      // pageSize:1000
+    });
     if (success) {
       setState({
         instancePerformanceList: data
@@ -286,13 +285,13 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    */
   const queryVlMessageCode = async (serviceName, startTime, endTime, jobId) => {
     const {
-        data: { data, success },
-      } = await PressureTestReportService.queryVlMessageCode({
-        serviceName,
-        startTime,
-        endTime,
-        jobId
-      });
+      data: { data, success },
+    } = await PressureTestReportService.queryVlMessageCode({
+      serviceName,
+      startTime,
+      endTime,
+      jobId
+    });
     if (success) {
       return data;
     }
@@ -302,16 +301,16 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    * @name 获取报文请求明细
    */
   const queryVlMessageDetail = async (serviceName, startTime, endTime, statusCode, jobId) => {
-    console.log('serviceName,startTime,endTime,code', serviceName, startTime, endTime, statusCode, );
+    console.log('serviceName,startTime,endTime,code', serviceName, startTime, endTime, statusCode,);
     const {
-        data: { data, success },
-      } = await PressureTestReportService.queryVlMessageDetail({
-        serviceName,
-        startTime,
-        endTime,
-        statusCode,
-        jobId
-      });
+      data: { data, success },
+    } = await PressureTestReportService.queryVlMessageDetail({
+      serviceName,
+      startTime,
+      endTime,
+      statusCode,
+      jobId
+    });
     if (success) {
       return data;
     }
@@ -323,14 +322,14 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   const queryVlTopologyData = async (sceneId, startTime, endTime, reportId, xpathMd5) => {
     console.log('serviceName,startTime,endTime,code', sceneId, startTime, endTime, reportId, xpathMd5);
     const {
-          data: { data, success },
-        } = await PressureTestReportService.queryVlTopologyData({
-          sceneId,
-          startTime,
-          endTime,
-          reportId,
-          xpathMd5
-        });
+      data: { data, success },
+    } = await PressureTestReportService.queryVlTopologyData({
+      sceneId,
+      startTime,
+      endTime,
+      reportId,
+      xpathMd5
+    });
     if (success) {
       return data;
     }
@@ -341,11 +340,11 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    */
   const queryVlCompare = async (reportIds, businessActivityId) => {
     const {
-        data: { data, success },
-      } = await PressureTestReportService.queryVlCompare({
-        reportIds,
-        businessActivityId
-      });
+      data: { data, success },
+    } = await PressureTestReportService.queryVlCompare({
+      reportIds,
+      businessActivityId
+    });
     if (success) {
       return data;
     }
@@ -356,10 +355,10 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    */
   const queryTrendData = async (value) => {
     const {
-        data: { data, success },
-      } = await PressureTestReportService.queryTrendData({
-        reportId: value,
-      });
+      data: { data, success },
+    } = await PressureTestReportService.queryTrendData({
+      reportId: value,
+    });
     if (success) {
       setState({
         trendData: data
@@ -372,10 +371,10 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
    */
   const queryAppTrendData = async (value) => {
     const {
-            data: { data, success },
-          } = await PressureTestReportService.queryAppTrendData({
-            reportId: value,
-          });
+      data: { data, success },
+    } = await PressureTestReportService.queryAppTrendData({
+      reportId: value,
+    });
     if (success) {
       setState({
         appTrendData: data
@@ -385,78 +384,83 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
 
   const queryAllMessageCode = async (detailDataValue) => {
     await Promise.all(
-        detailDataValue?.businessActivities?.map((item) =>
-          queryVlMessageCode(item?.serviceName, detailDataValue?.startTime, detailDataValue?.endTime, detailDataValue?.jobId)
-        )
-      ).then((res) => {
-        const codeArr = [];
-        res?.map((item, k) => {
-          console.log('item9999999', item);
-          codeArr.push(item?.[0]?.statusCode);
-        });
-      
-        setState({
-          allMessageCodeList: res,
-          statusCode: codeArr  
-        });
-    
-        // 使用第一次请求的结果 res 作为第二次请求的参数
-        Promise.all(
-          detailDataValue?.businessActivities?.map((item, k) =>
-            queryVlMessageDetail(
-              item?.serviceName,
-              detailDataValue?.startTime,
-              detailDataValue?.endTime,
-              res?.[k]?.[0]?.statusCode,
-              detailDataValue?.jobId,
-            )
+      detailDataValue?.businessActivities?.map((item) =>
+        queryVlMessageCode(item?.serviceName, detailDataValue?.startTime, detailDataValue?.endTime, detailDataValue?.jobId)
+      )
+    ).then((res) => {
+      const codeArr = [];
+      res?.map((item, k) => {
+        console.log('item9999999', item);
+        codeArr.push(item?.[0]?.statusCode);
+      });
+
+      setState({
+        allMessageCodeList: res,
+        statusCode: codeArr
+      });
+
+      // 使用第一次请求的结果 res 作为第二次请求的参数
+      Promise.all(
+        detailDataValue?.businessActivities?.map((item, k) =>
+          queryVlMessageDetail(
+            item?.serviceName,
+            detailDataValue?.startTime,
+            detailDataValue?.endTime,
+            res?.[k]?.[0]?.statusCode,
+            detailDataValue?.jobId,
           )
-        ).then((res1) => {
-          setState({
-            allMessageDetailList: res1,
-          });
+        )
+      ).then((res1) => {
+        setState({
+          allMessageDetailList: res1,
         });
       });
+    });
   };
 
-    /**
-     * 
-     * @name 获取压测报告比对
-     */
+  /**
+   * 
+   * @name 获取压测报告比对
+   */
   const queryAllCompareData = async (detailDataValue, reportIds) => {
     await Promise.all(
-        detailDataValue?.businessActivities?.map((item) =>
+      detailDataValue?.businessActivities?.map((item) =>
         queryVlCompare(reportIds, item?.businessActivityId)
-        )
-      ).then((res) => {
-        setState({
-          allCompareData: res,
-        });
+      )
+    ).then((res) => {
+      setState({
+        allCompareData: res,
       });
+    });
   };
 
-     /**
-     * 
-     * @name 获取业务活动拓扑图
-     */
+  /**
+  * 
+  * @name 获取业务活动拓扑图
+  */
   const queryAllTopologyData = async (detailDataValue) => {
     await Promise.all(
-        detailDataValue?.businessActivities?.map((item) =>
+      detailDataValue?.businessActivities?.map((item) =>
         queryVlTopologyData(detailDataValue?.sceneId,
           detailDataValue?.startTime,
           detailDataValue?.endTime,
           detailDataValue?.reportId,
           item?.xpathMd5)
-        )
-      ).then((res) => {
-        setState({
-          allTopologyData: res
-        });
+      )
+    ).then((res) => {
+      setState({
+        allTopologyData: res
       });
+    });
   };
 
   const handleChangeReportId = (value) => {
-    console.log(value);
+    console.log("----",value);
+    if (value.length > 3) {
+      // 如果选择超过3个，不做任何操作（或显示警告消息）
+      message.info("最多选择3个对比");
+      return;
+    }
     setState({
       compareReportId: value
     });
@@ -466,7 +470,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   console.log('allMessageCodeList', state?.allMessageCodeList);
   console.log('allMessageDetailList', state?.allMessageDetailList);
   console.log('allCompareData', state?.allCompareData);
-  
+
   console.log('state?.allTopologyData?.[0]', state?.allTopologyData?.[0]);
   console.log('trendData', state?.trendData);
   /**
@@ -539,7 +543,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     }
   };
 
-  const handleChangeRemark = async(reportId, remarks) => {
+  const handleChangeRemark = async (reportId, remarks) => {
     const {
       data: { data, success },
     } = await PressureTestReportService.editReportRemark({
@@ -634,21 +638,21 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
         校准中
       </span>
     );
-    
+
   }
 
   const exportPDF = () => {
     const input = document.getElementById('content-to-export'); // 获取需要导出的内容的DOM节点
-  
+
     html2canvas(input)
       .then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4'); // 创建一个新的PDF文档，设置纸张大小为A4
-  
+
         const imgProps = pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-  
+
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight); // 将图片添加到PDF文档中
         pdf.save('download.pdf'); // 保存并下载PDF文档
       })
@@ -659,8 +663,10 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
 
   // const contentRef = React.createRef();
   // const exportToPDF = async () => {
+
   //   const contentCanvas = await html2canvas(contentRef.current, {
   //     backgroundColor: 'white', // 通过 html2canvas 配置选项设置背景颜色为白色
+  //     scale: 0.8 // 降低缩放比例以减小图像大小
   //   });
   //   const contentWidth = contentCanvas.width;
   //   const contentHeight = contentCanvas.height;
@@ -669,44 +675,51 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
   //   const scaleFactor = a4WidthInPixels / contentWidth;
   //   const pdfHeight = contentHeight * scaleFactor;
   //   const pdf = new jsPDF('p', 'pt', [a4WidthInPixels, pdfHeight]);
-  //   pdf.addImage(contentCanvas.toDataURL('image/png'), 'PNG', 0, 0, a4WidthInPixels, pdfHeight);
+  //   pdf.addImage(contentCanvas.toDataURL('image/jepg', 0.7), 'JEPG', 0, 0, a4WidthInPixels, pdfHeight);
   //   pdf.save(`${detailData?.sceneName}-${detailData?.reportId}`);
   // };
 
+  function splitContentIntoParts(contentElement) {
+    // 假设每个需要单独渲染的部分都有一个特定的类名，比如 'export-section'
+    const sections = contentElement.querySelectorAll('.export-section');
+    return Array.from(sections);
+  }
+
   const contentRef = React.createRef();
   const exportToPDF = async () => {
-    const contentCanvas = await html2canvas(contentRef.current, {
-      backgroundColor: 'white',
-      scale: 0.5 // 降低缩放比例以减小图像大小
-    });
-
-    const contentWidth = contentCanvas.width;
-    const contentHeight = contentCanvas.height;
-
+    const contentElement = contentRef.current;
     const a4WidthInPixels = 595.28;
     const a4HeightInPixels = 841.89;
-    const pdfWidth = a4WidthInPixels;
-    const pdfHeight = a4HeightInPixels;
+    const pdf = new jsPDF('p', 'pt', [a4WidthInPixels, a4HeightInPixels]);
 
-    const pdf = new jsPDF('p', 'pt', [pdfWidth, pdfHeight]);
-  
-  // 分页处理（如果需要）
-    for (let y = 0; y < contentHeight; y += a4HeightInPixels) {
-      if (y > 0) {
+    // 分批处理内容
+    const parts = splitContentIntoParts(contentElement); // 需要实现这个函数，将内容分成多个部分
+    for (const part of parts) {
+      const contentCanvas = await html2canvas(part, {
+        backgroundColor: 'white',
+        scale: 0.8, // 进一步降低缩放比例
+        useCORS: true
+      });
+
+      const scaledWidth = a4WidthInPixels;
+      const scaledHeight = (contentCanvas.height * scaledWidth) / contentCanvas.width;
+
+      if (pdf.internal.pages.length > 1) {
         pdf.addPage();
       }
+
       pdf.addImage(
-      contentCanvas.toDataURL('image/jpeg', 0.7), // 使用 JPEG 格式并调整品质
-      'JPEG',
-      0,
-      -y,
-      pdfWidth,
-      contentHeight
-    );
+        contentCanvas.toDataURL('image/jpeg', 0.8), // 降低 JPEG 质量
+        'JPEG',
+        0,
+        0,
+        scaledWidth,
+        scaledHeight
+      );
     }
+
     pdf.save(`${detailData?.sceneName}-${detailData?.reportId}`);
   };
-
   const handleChangeCode = async (serviceName, startTime, endTime, statusCode, jobId, key) => {
     const {
       data: { data, success },
@@ -737,10 +750,10 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
 
   const extra = (
     <>
-       <Link
-            to={`/pressureTestManage/pressureTestReport/details?id=${id}&sceneId=${sceneId}`}
-          >
-          <Button
+      <Link
+        to={`/pressureTestManage/pressureTestReport/details?id=${id}&sceneId=${sceneId}`}
+      >
+        <Button
           type="primary"
           ghost
           style={{ marginRight: 8 }}
@@ -748,7 +761,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
           返回
         </Button>
       </Link>
-     <Button  type="primary" onClick={exportToPDF}>导出为PDF</Button>    
+      <Button type="primary" onClick={exportToPDF}>导出为PDF</Button>
     </>
   );
 
@@ -768,181 +781,192 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
            </div> */}
           </div>}
       >
-       
-        <div ref={contentRef} id="content-to-export"  style={{
-          padding: '20px',
-  //  boxSizing: 'border-box',
-        }}>
-        <Summary
-          id={id}
-          detailData={detailData}
-          list={summaryList}
+
+        <div  
+          ref={contentRef} 
+          id="content-to-export" 
           style={{
-            marginTop: 24,
-            marginBottom: 24,
-            background: detailData.conclusion === 1 ? '#75D0DD' : '#F58D76',
+            padding: '20px',
+          //  boxSizing: 'border-box',
           }}
-          leftWrap={
-            <Col span={4}>
-              <Row type="flex" align="middle">
-                <Col>
-                  <img
-                    style={{ width: 40 }}
-                    src={require(`./../../../assets/${
-                      detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
-                    }.png`)}
-                  />
-                </Col>
-                <Col style={{ marginLeft: 8 }}>
-                  <p
-                    style={{
-                      fontSize: 20,
-                      color: '#fff',
-                    }}
-                  >
-                    {detailData.conclusion === 1 ? '压测通过' : '压测不通过'}
-                  </p>
-                  {detailData.conclusion === 0 && (
-                    <p style={{ color: '#fff' }}>
-                      {detailData.conclusionRemark}
-                    </p>
-                  )}
-                </Col>
-              </Row>
-            </Col>}
-        />
-         {/* <div className={styles.detailCardWarp}>
-            <div className={styles.detailCardListTitle}>瓶颈接口</div>
-            <CustomTable style={{ marginTop: 8 }} columns={getBottleneckColumns()} dataSource={state?.bottleneckList||[]}/>
-        </div> */}
-        <div className={styles.detailCardWarp} >
+          className="export-section"
+          
+          >
+          <div className="export-section">
+            <Summary
+              id={id}
+              detailData={detailData}
+              list={summaryList}
+              style={{
+                marginTop: 24,
+                marginBottom: 24,
+                background: detailData.conclusion === 1 ? '#75D0DD' : '#F58D76',
+              }}
+              leftWrap={
+                <Col span={4}>
+                  <Row type="flex" align="middle">
+                    <Col>
+                      <img
+                        style={{ width: 40 }}
+                        src={require(`./../../../assets/${detailData.conclusion === 1 ? 'success_icon' : 'fail_icon'
+                          }.png`)}
+                      />
+                    </Col>
+                    <Col style={{ marginLeft: 8 }}>
+                      <p
+                        style={{
+                          fontSize: 20,
+                          color: '#fff',
+                        }}
+                      >
+                        {detailData.conclusion === 1 ? '压测通过' : '压测不通过'}
+                      </p>
+                      {detailData.conclusion === 0 && (
+                        <p style={{ color: '#fff' }}>
+                          {detailData.conclusionRemark}
+                        </p>
+                      )}
+                    </Col>
+                  </Row>
+                </Col>}
+            />
+               <div className={`${styles.detailCardWarp}`} >
             <div className={styles.detailCardListTitle}>风险容器</div>
-            <CustomTable style={{ marginTop: 8 }} columns={getRiskColumns()} dataSource={state?.riskMachineList || []}/>
-        </div>
-        <div>
-        <div className={styles.detailCardTitle}>
-                业务活动对比
-                <div style={{ float: 'right' }}>
-                    <span style={{ padding: '5px 12px', border: '1px solid #eef0f2', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>{`压测报告${detailData?.reportId}`}（当前）</span>
-                    <span style={{ margin: '0 8px' }}>🆚</span>
-                    <CommonSelect 
-                      onChange={handleChangeReportId} 
-                      placeholder="请选择要对比的压测报告" 
-                      style={{ width: 400 }} 
-                      dataSource={detailData?.reports?.filter((item) => { if (item?.reportId !== detailData?.reportId) {return item; } })?.map((item2) => {
-                        return { label: `压测报告${item2?.reportId}（并发数）${item2?.maxConcurrent},${item2?.startTime}`, value: item2?.reportId };
-                      })}/>
-                </div>
+            <CustomTable style={{ marginTop: 8 }} columns={getRiskColumns()} dataSource={state?.riskMachineList || []} />
+          </div>
+          </div>
+       
+          <div className="export-section">
+            <div className={`${styles.detailCardTitle}`}>
+              业务活动对比
+              <div style={{ float: 'right' }}>
+                <span style={{ padding: '5px 12px', border: '1px solid #eef0f2', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>{`压测报告${detailData?.reportId}`}（当前）</span>
+                <span style={{ margin: '0 8px' }}>🆚</span>
+                <CommonSelect
+                  mode="multiple"
+                  onChange={handleChangeReportId}
+                  placeholder="请选择要对比的压测报告"
+                  style={{ width: 400 }}
+                  dataSource={detailData?.reports?.filter((item) => { if (item?.reportId !== detailData?.reportId) { return item; } })?.map((item2) => {
+                    return { label: `压测报告${item2?.reportId}（并发数）${item2?.maxConcurrent},${item2?.startTime}`, value: item2?.reportId, disabled: state?.compareReportId?.length >= 3 && state?.compareReportId?.indexOf(item2?.reportId) === -1 };
+                  })}
+                  onRender={(item) => (
+                    <CommonSelect.Option key={item.value} value={item.value} disabled={item.disabled}>
+                      {item.label}
+                    </CommonSelect.Option>
+                  )} 
+                  />
+              </div>
             </div>
             {detailData?.businessActivities?.map((item, k) => {
-              return  <div key={k}>
-              <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex" justify="space-between">
-                <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{item?.businessActivityName}</Col>
-                <Col>
-                <CompareNodeModal sceneId={sceneId} activityId={item?.businessActivityId} activityName={item?.businessActivityName} btnText="查看节点对比" reportIds={state?.compareReportId ? [state?.detailData?.reportId, state?.compareReportId] : [state?.detailData?.reportId]}/>
-                </Col>
-              </Row>
-              <div style={{  height: 500 }}>
-              <GraphNode
-                graphKey={state?.allTopologyData?.[k]?.activityId}
-                graphData={state?.allTopologyData?.[k]?.topology}
-                tooltip={
-                  <div>
-                    调用量：包含所有业务活动的调用量数据，取最近 5分钟的累加值；
-                    <br />
-                    成功率：包含所有业务活动的成功率数据，取最近
-                    5分钟的平均成功率；
-                    <br />
-                    TPS：包含所有业务活动的TPS数据，取最近 5分钟的平均TPS,
-                    单位次/秒；
-                    <br />
-                    RT：包含所有业务活动的RT数据，取最近 5分钟的平均RT,
-                    单位毫秒；
-                    <br />
-                    延迟：链路性能数据涉及大量数据计算与采集，数据存在一定延迟，大概2分钟左右。
-                  </div>
-                }
-              />
-        
-          </div>
-              <div className={styles.detailCardWarp}>
-                <div className={styles.detailCardListTitle}>性能指标明细</div>
-                  <CustomTable style={{ marginTop: 8 }} columns={getIndexColumns()} dataSource={state?.allCompareData?.[k]?.targetData || []}/>
-              </div>
-              <div className={styles.detailCardWarp}>
-                <div className={styles.detailCardListTitle}>RT分位明细</div>
-                  <CustomTable style={{ marginTop: 8 }} columns={getRtColumns()} dataSource={state?.allCompareData?.[k]?.rtData || []}/>
+              return <div className="export-section" key={k} >
+                <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex" justify="space-between">
+                  <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }} />{item?.businessActivityName}</Col>
+                  <Col>
+                    <CompareNodeModal sceneId={sceneId} activityId={item?.businessActivityId} activityName={item?.businessActivityName} btnText="查看节点对比" reportIds={state?.compareReportId ? [state?.detailData?.reportId, state?.compareReportId] : [state?.detailData?.reportId]} />
+                  </Col>
+                </Row>
+                <div style={{ height: 500 }}>
+                  <GraphNode
+                    graphKey={state?.allTopologyData?.[k]?.activityId}
+                    graphData={state?.allTopologyData?.[k]?.topology}
+                    tooltip={
+                      <div>
+                        调用量：包含所有业务活动的调用量数据，取最近 5分钟的累加值；
+                        <br />
+                        成功率：包含所有业务活动的成功率数据，取最近
+                        5分钟的平均成功率；
+                        <br />
+                        TPS：包含所有业务活动的TPS数据，取最近 5分钟的平均TPS,
+                        单位次/秒；
+                        <br />
+                        RT：包含所有业务活动的RT数据，取最近 5分钟的平均RT,
+                        单位毫秒；
+                        <br />
+                        延迟：链路性能数据涉及大量数据计算与采集，数据存在一定延迟，大概2分钟左右。
+                      </div>
+                    }
+                  />
+
                 </div>
-                <BarChart data={state?.allCompareData?.[k]?.columnarData || []}/>
-                <LineChartWrap data={state?.allCompareData?.[k]?.trendData || []}/> 
-            </div>; 
+                <div className={styles.detailCardWarp}>
+                  <div className={styles.detailCardListTitle}>性能指标明细</div>
+                  <CustomTable style={{ marginTop: 8 }} columns={getIndexColumns()} dataSource={state?.allCompareData?.[k]?.targetData || []} />
+                </div>
+                <div className={styles.detailCardWarp}>
+                  <div className={styles.detailCardListTitle}>RT分位明细</div>
+                  <CustomTable style={{ marginTop: 8 }} columns={getRtColumns()} dataSource={state?.allCompareData?.[k]?.rtData || []} />
+                </div>
+                <BarChart data={state?.allCompareData?.[k]?.columnarData || []} />
+                <LineChartWrap data={state?.allCompareData?.[k]?.trendData || []} />
+              </div>;
             })}
-        </div>
+          </div>
 
-        <div className={styles.detailCardTitle}>
-          应用性能
-          <div className={styles.detailCardWarp}>
-            <CustomTable style={{ marginTop: 8 }} columns={getAppPerformanceColumns()} dataSource={state?.performanceList || []}/>
-            <CustomTable style={{ marginTop: 8 }} columns={getAppInstancePerformanceColumns()} dataSource={state?.instancePerformanceList || []}/>
-          </div>   
-        </div>
-        <div className={styles.detailCardTitle}>
-          请求报文
-          {detailData?.businessActivities?.map((item, k) => {
-            return <div key={k}>
-              <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex" justify="space-between">
-              <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{item?.businessActivityName || '-'}</Col>
-              <Col><CommonSelect onChange={(value) => handleChangeCode(item?.serviceName,
-              detailData?.startTime,
-              detailData?.endTime,
-              value,
-              detailData?.jobId, k)} allowClear={false} value={state?.statusCode?.[k]} style={{ width: 200 }} dataSource={state?.allMessageCodeList?.[k]?.map((item) => {return { label: item?.statusName, value: item?.statusCode }; })}/></Col>
-          </Row>
-          <Descriptions bordered size="small">
-            <Descriptions.Item label="服务入口">{item?.serviceName}</Descriptions.Item>
-            <Descriptions.Item label="请求方式">{item?.requestMethod}</Descriptions.Item>
-            <Descriptions.Item label="Trace ID">（{state?.allMessageDetailList?.[k]?.cost}ms）
-                <RequestDetailModal
-                  btnText={state?.allMessageDetailList?.[k]?.traceId}
-                  traceId={state?.allMessageDetailList?.[k]?.traceId}
-                  // btnText='0100007f16822286171551035d1ca80001'
-                  // traceId='0100007f16822286171551035d1ca80001'
-                // traceId={row.traceId}
-                // totalRt={row.totalRt}
-              /></Descriptions.Item>
-            <Descriptions.Item label="请求头"  span={3}>{state?.allMessageDetailList?.[k]?.requestHeader || '-'}</Descriptions.Item>
-            <Descriptions.Item label="请求体" span={3}>
-            {state?.allMessageDetailList?.[k]?.request}
-             </Descriptions.Item>  
-             <Descriptions.Item label="响应头"  span={3}>{state?.allMessageDetailList?.[k]?.responseHeader || '-'}</Descriptions.Item>
-            <Descriptions.Item label="响应体" span={3}>
-            {state?.allMessageDetailList?.[k]?.response}
-             </Descriptions.Item>  
-          </Descriptions>
+          <div className={styles.detailCardTitle}>
+            应用性能
+            <div className={styles.detailCardWarp}>
+              <CustomTable style={{ marginTop: 8 }} columns={getAppPerformanceColumns()} dataSource={state?.performanceList || []} />
+              <CustomTable style={{ marginTop: 8 }} columns={getAppInstancePerformanceColumns()} dataSource={state?.instancePerformanceList || []} />
+            </div>
+          </div>
+          <div className={styles.detailCardTitle}>
+            请求报文
+            {detailData?.businessActivities?.map((item, k) => {
+              return <div key={k}>
+                <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex" justify="space-between">
+                  <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }} />{item?.businessActivityName || '-'}</Col>
+                  <Col><CommonSelect onChange={(value) => handleChangeCode(item?.serviceName,
+                    detailData?.startTime,
+                    detailData?.endTime,
+                    value,
+                    detailData?.jobId, k)} allowClear={false} value={state?.statusCode?.[k]} style={{ width: 200 }} dataSource={state?.allMessageCodeList?.[k]?.map((item) => { return { label: item?.statusName, value: item?.statusCode }; })} /></Col>
+                </Row>
+                <Descriptions bordered size="small">
+                  <Descriptions.Item label="服务入口">{item?.serviceName}</Descriptions.Item>
+                  <Descriptions.Item label="请求方式">{item?.requestMethod}</Descriptions.Item>
+                  <Descriptions.Item label="Trace ID">（{state?.allMessageDetailList?.[k]?.cost}ms）
+                    <RequestDetailModal
+                      btnText={state?.allMessageDetailList?.[k]?.traceId}
+                      traceId={state?.allMessageDetailList?.[k]?.traceId}
+                    // btnText='0100007f16822286171551035d1ca80001'
+                    // traceId='0100007f16822286171551035d1ca80001'
+                    // traceId={row.traceId}
+                    // totalRt={row.totalRt}
+                    /></Descriptions.Item>
+                  <Descriptions.Item label="请求头" span={3}>{state?.allMessageDetailList?.[k]?.requestHeader || '-'}</Descriptions.Item>
+                  <Descriptions.Item label="请求体" span={3}>
+                    {state?.allMessageDetailList?.[k]?.request}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="响应头" span={3}>{state?.allMessageDetailList?.[k]?.responseHeader || '-'}</Descriptions.Item>
+                  <Descriptions.Item label="响应体" span={3}>
+                    {state?.allMessageDetailList?.[k]?.response}
+                  </Descriptions.Item>
+                </Descriptions>
               </div>;
-          })}
-          
-        </div>
-        <div className={styles.detailCardTitle}>
-          趋势图
+            })}
 
-          {state?.appTrendData?.map((item, k) => {
-            return <div key={k}>
-              <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex">
-              <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{`${item?.appName}`}</Col>
-             </Row>
-             <AppTrendData data={[item]}/>
+          </div>
+          <div className={styles.detailCardTitle}>
+            趋势图
+
+            {state?.appTrendData?.map((item, k) => {
+              return <div key={k}>
+                <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex">
+                  <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }} />{`${item?.appName}`}</Col>
+                </Row>
+                <AppTrendData data={[item]} />
               </div>;
-          })}
-          {state?.trendData?.map((item, k) => {
-            return <div key={k}>
-              <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex">
-              <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }}/>{`${item?.applicationName}|${item?.agentId}`}</Col>
-             </Row>
-             <TrendChart data={item?.tpsTarget}/>
+            })}
+            {state?.trendData?.map((item, k) => {
+              return <div key={k}>
+                <Row style={{ marginTop: 16, marginBottom: 16 }} type="flex">
+                  <Col style={{ fontSize: '16px', fontWeight: 500 }}> <span style={{ width: 4, height: 14, backgroundColor: '#11BBD5', display: 'inline-block', marginRight: 10 }} />{`${item?.applicationName}|${item?.agentId}`}</Col>
+                </Row>
+                <TrendChart data={item?.tpsTarget} />
               </div>;
-          })}
-        </div>
+            })}
+          </div>
         </div>
       </BasePageLayout>
     </div>
@@ -998,7 +1022,7 @@ const getBottleneckColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '最小TPS',
       dataIndex: 'minTps'
-    }, 
+    },
     {
       ...customColumnProps,
       title: '最大TPS',
@@ -1041,7 +1065,7 @@ const getRiskColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '风险描述',
       dataIndex: 'riskContent'
-    }, 
+    },
   ];
 };
 
@@ -1056,7 +1080,7 @@ const getIndexColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '压测时长',
       dataIndex: 'pressureTestTime'
-    }, 
+    },
     {
       ...customColumnProps,
       title: '请求数',
@@ -1071,7 +1095,7 @@ const getIndexColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '平均TPS',
       dataIndex: 'avgTps'
-    }, 
+    },
     {
       ...customColumnProps,
       title: '最大TPS',
@@ -1127,7 +1151,7 @@ const getRtColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '最大RT（ms）',
       dataIndex: 'maxRt'
-    }, 
+    },
     {
       ...customColumnProps,
       title: '最小RT（ms）',
@@ -1137,7 +1161,7 @@ const getRtColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '50分位',
       dataIndex: 'rt50'
-    }, 
+    },
     {
       ...customColumnProps,
       title: '75分位',
@@ -1152,7 +1176,7 @@ const getRtColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: '95分位',
       dataIndex: 'rt95'
-    }, 
+    },
     {
       ...customColumnProps,
       title: '99分位',
@@ -1160,7 +1184,7 @@ const getRtColumns = (): ColumnProps<any>[] => {
     }
   ];
 };
-  
+
 const getAppPerformanceColumns = (): ColumnProps<any>[] => {
   return [
     {
@@ -1198,7 +1222,7 @@ const getAppPerformanceColumns = (): ColumnProps<any>[] => {
       render: (text) => {
         return <span>{text}%</span>;
       }
-    }, 
+    },
     {
       ...customColumnProps,
       title: '压测时间',
@@ -1206,7 +1230,7 @@ const getAppPerformanceColumns = (): ColumnProps<any>[] => {
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss') || '-'
     }
   ];
-}; 
+};
 
 const getAppInstancePerformanceColumns = (): ColumnProps<any>[] => {
   return [
@@ -1243,7 +1267,7 @@ const getAppInstancePerformanceColumns = (): ColumnProps<any>[] => {
       render: (text) => {
         return <span>{text}%</span>;
       }
-    }, 
+    },
     {
       ...customColumnProps,
       title: '网络宽带利用率',
@@ -1261,7 +1285,7 @@ const getAppInstancePerformanceColumns = (): ColumnProps<any>[] => {
       ...customColumnProps,
       title: 'GC耗时（ms）',
       dataIndex: 'gcCost'
-    }, 
+    },
     {
       ...customColumnProps,
       title: '平均TPS',

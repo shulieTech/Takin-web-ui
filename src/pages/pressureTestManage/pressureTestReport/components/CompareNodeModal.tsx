@@ -14,6 +14,7 @@ import styles from './../index.less';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import PressureTestReportService from '../service';
+import './../../../../global.less';
   
 interface Props {
   btnText?: string | React.ReactNode;
@@ -114,18 +115,17 @@ const CompareNodeModal: React.FC<Props> = props => {
         title: '应用名/中间件名',
         dataIndex: 'label',
       },
-      {
-        ...customColumnProps,
-        title: `报告${state?.reportIds?.[0]}（平均RT/ms）`,
-        dataIndex: 'service1Rt',
-      },
-      {
-        ...customColumnProps,
-        title: `报告${state?.reportIds?.[1]}（平均RT/ms）`,
-        dataIndex: 'service2Rt',
-      }
-   
     ];
+  
+    // 动态添加报告列
+    state.reportIds.forEach((reportId, index) => {
+      columns.push({
+        ...customColumnProps,
+        title: `报告${reportId}（平均RT/ms）`,
+        dataIndex: `service${index + 1}Rt`,
+      });
+    });
+  
     return columns;
   };
 
