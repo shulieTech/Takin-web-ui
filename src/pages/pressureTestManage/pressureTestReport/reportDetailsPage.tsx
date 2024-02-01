@@ -690,36 +690,43 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
     const contentElement = contentRef.current;
     const a4WidthInPixels = 595.28;
     const a4HeightInPixels = 841.89;
+    const padding = 20; // 设置 padding 为 20pt
     const pdf = new jsPDF('p', 'pt', [a4WidthInPixels, a4HeightInPixels]);
-
+  
     // 分批处理内容
-    const parts = splitContentIntoParts(contentElement); // 需要实现这个函数，将内容分成多个部分
+    const parts = splitContentIntoParts(contentElement); // 将内容分成多个部分
+    let isFirstPart = true; // 标记是否是第一部分
+  
     for (const part of parts) {
       const contentCanvas = await html2canvas(part, {
         backgroundColor: 'white',
         scale: 0.8, // 进一步降低缩放比例
         useCORS: true
       });
-
-      const scaledWidth = a4WidthInPixels;
-      const scaledHeight = (contentCanvas.height * scaledWidth) / contentCanvas.width;
-
-      if (pdf.internal.pages.length > 1) {
-        pdf.addPage();
+  
+      const scaledWidth = a4WidthInPixels - 2 * padding; // 考虑 padding 的宽度
+      const scaledHeight = (contentCanvas.height * scaledWidth) / contentCanvas.width; // 调整高度
+  
+      if (!isFirstPart) {
+        pdf.addPage(); // 从第二部分开始添加新页面
       }
-
+  
+      // 添加图片时考虑 padding
       pdf.addImage(
         contentCanvas.toDataURL('image/jpeg', 0.8), // 降低 JPEG 质量
         'JPEG',
-        0,
-        0,
+        padding, // X 坐标
+        padding, // Y 坐标
         scaledWidth,
         scaledHeight
       );
+  
+      isFirstPart = false; // 更新标记，表示后续部分不是第一部分
     }
-
+  
     pdf.save(`${detailData?.sceneName}-${detailData?.reportId}`);
   };
+  
   const handleChangeCode = async (serviceName, startTime, endTime, statusCode, jobId, key) => {
     const {
       data: { data, success },
@@ -902,8 +909,8 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
               </div>;
             })}
           </div>
-
-          <div className={styles.detailCardTitle}>
+  <div className="export-section">
+  <div className={`${styles.detailCardTitle}`}>
             应用性能
             <div className={styles.detailCardWarp}>
               <CustomTable style={{ marginTop: 8 }} columns={getAppPerformanceColumns()} dataSource={state?.performanceList || []} />
@@ -947,7 +954,9 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
             })}
 
           </div>
-          <div className={styles.detailCardTitle}>
+          
+  </div>
+  <div className={`${styles.detailCardTitle} export-section`}>
             趋势图
 
             {state?.appTrendData?.map((item, k) => {
@@ -967,6 +976,7 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
               </div>;
             })}
           </div>
+         
         </div>
       </BasePageLayout>
     </div>
