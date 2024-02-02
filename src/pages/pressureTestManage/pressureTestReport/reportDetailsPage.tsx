@@ -845,8 +845,11 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
        
           <div className="export-section">
             <div className={`${styles.detailCardTitle}`}>
-              业务活动对比
-              <div style={{ float: 'right' }}>
+              <Row type="flex" justify="space-between">
+                <Col>
+                业务活动对比
+                </Col>
+                <Col>
                 <span style={{ padding: '5px 12px', border: '1px solid #eef0f2', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>{`压测报告${detailData?.reportId}`}（当前）</span>
                 <span style={{ margin: '0 8px' }}>🆚</span>
                 <CommonSelect
@@ -863,7 +866,8 @@ const PressureTestReportDetail: React.FC<Props> = (props) => {
                     </CommonSelect.Option>
                   )} 
                   />
-              </div>
+             </Col>
+              </Row>    
             </div>
             {detailData?.businessActivities?.map((item, k) => {
               return <div className="export-section" key={k} >
