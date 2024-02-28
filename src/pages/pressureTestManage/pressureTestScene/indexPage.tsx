@@ -143,6 +143,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
    * @name 启动检查并开启压测
    */
   const handleCheckAndStart = async (scenceInfo) => {
+    console.log('scenceInfo', scenceInfo);
     if (!state.machineId) {
       message.warning('请选择压力来源');
       return;
@@ -225,9 +226,22 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
     });
   };
 
-  const handleChangePressureStyle = (e) => {
+  const handleChangePressureStyle = (e, k) => {
+    // setState({
+    //   pressureStyle: e.target.value,
+    // });
     setState({
-      pressureStyle: e.target.value,
+      dataScriptNum: state?.dataScriptNum?.map((item, k2) => {
+        if (k === k2) {
+          return {
+            ...item,
+            continueRead:  e.target.value
+          };
+        }
+        return {
+          ...item
+        };
+      })
     });
   };
 
@@ -314,21 +328,25 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
           {state.dataScriptNum &&
             state.dataScriptNum.map((item, k) => {
               return (
-                <p key={k}>
+                <div key={k}>
+                  <p key={k}>
                   {item.scriptName}数据脚本共{item.scriptSize}，已压测
                   {item.pressedSize}
                   ，是否继续压测？
                 </p>
+                   <Radio.Group
+                      value={item?.continueRead}
+                      onChange={(value) => handleChangePressureStyle(value, k)}
+                   >
+                    <Radio value={PressureStyle.从头开始压测}>从头开始压测</Radio>
+                    <Radio value={PressureStyle.继续压测}>继续压测</Radio>
+                   </Radio.Group>
+                </div>
+                
               );
             })}
         </div>
-        <Radio.Group
-          value={state.pressureStyle}
-          onChange={handleChangePressureStyle}
-        >
-          <Radio value={PressureStyle.从头开始压测}>从头开始压测</Radio>
-          <Radio value={PressureStyle.继续压测}>继续压测</Radio>
-        </Radio.Group>
+       
         {state.hasMissingData && (
           <Row
             type="flex"
@@ -526,6 +544,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             leakSqlEnable: state.missingDataSwitch,
             continueRead: state.pressureStyle,
             machineId: state.machineId,
+            pressureFileInfos: state?.dataScriptNum
           }}
         />
       )}

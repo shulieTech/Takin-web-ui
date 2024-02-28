@@ -2,14 +2,35 @@
  * @name
  * @author chuxu
  */
-import { Badge } from 'antd';
+import { Badge, Popconfirm } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import React, { Fragment } from 'react';
+import AuthorityBtn from 'src/common/authority-btn/AuthorityBtn';
 import { customColumnProps } from 'src/components/custom-table/utils';
 import { getTakinAuthority } from 'src/utils/utils';
 import Link from 'umi/link';
+import PressureTestReportService from '../service';
+
+const btnAuthority: any =
+localStorage.getItem('trowebBtnResource') &&
+JSON.parse(localStorage.getItem('trowebBtnResource'));
 
 const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
+
+  /**
+   * @name 删除
+   */
+  const handleDelete = async reportId => {
+    const {
+      data: { success, data }
+    } = await PressureTestReportService.deleteReport({ reportId });
+    if (success) {
+      setState({
+        isReload: state?.isReload
+      });
+    }
+  };
+
   return [
     {
       ...customColumnProps,
@@ -78,6 +99,23 @@ const getPressureTestReportColumns = (state, setState): ColumnProps<any>[] => {
       render: (text, row) => {
         return (
           <Fragment>
+            {/* <AuthorityBtn
+              isShow={
+                btnAuthority &&
+                btnAuthority.businessActivity_4_delete
+              }
+            >
+              <Popconfirm
+                title="确定要删除吗？"
+                okText="确认删除"
+                cancelText="取消"
+                onConfirm={() => handleDelete(row.id)}
+              >
+                <a href="#" style={{ marginRight: 8 }}>
+                  删除
+                </a>
+              </Popconfirm>
+            </AuthorityBtn> */}
             <Link
               to={`/pressureTestManage/pressureTestReport/details?id=${row.id}&sceneId=${row.sceneId}`}
             >

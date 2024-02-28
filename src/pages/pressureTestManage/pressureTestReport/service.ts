@@ -314,6 +314,14 @@ const PressureTestReportService = {
     const url = '/apm/traceFlowManage/detail';
     return httpGet(url, data);
   },
+
+  /**
+   * @name 删除报告
+   */
+  async deleteReport(data = {}) {
+    const url = '/report';
+    return httpPost(url, data);
+  },
 };
 
 export default PressureTestReportService;

@@ -141,7 +141,13 @@ const getPressureTestSceneColumns = (
     } = await PressureTestSceneService.queryDataScriptNum({ id: sceneId });
     if (success) {
       setState({
-        dataScriptNum: data,
+        dataScriptNum: data?.map((item) => {
+          return {
+            ...item,
+            fileName: item?.scriptName,
+            continueRead: '0'
+          };
+        }),
       });
     }
   };
