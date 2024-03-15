@@ -9,6 +9,22 @@ const PressureTestSceneService = {
     return httpPost(url, data);
   },
   /**
+   * @name 新增性能基线
+   */
+  async addBaseLine(data = {}) {
+    const url = '/scenemanage/performanceLine/create';
+    return httpPost(url, data);
+  },
+
+  /**
+   * @name 获取性能基线
+   */
+  async getPerformanceBaseline(data = {}) {
+    const url = '/scenemanage/getPerformanceLineResultList';
+    return httpGet(url, data);
+  },
+
+  /**
    * @name 编辑压测场景
    */
   async editPressureTestScene(data = {}) {
@@ -155,7 +171,7 @@ const PressureTestSceneService = {
   // 启动压测场景检测
   async scenceStartPreCheck(data) {
     const url = '/scene/task/preCheck';
-    return httpGet(url, data);
+    return httpPost(url, data);
   },
   /**
    * @name 恢复被归档的压测场景
@@ -199,6 +215,10 @@ const PressureTestSceneService = {
         machineList: list,
       };
     }
+  },
+  async queryReportList(data = {}) {
+    const url = `/scenemanage/getReportListById`;
+    return httpGet(url, data);
   },
 };
 

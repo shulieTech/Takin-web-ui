@@ -28,6 +28,8 @@ import AddTagsModal from '../modals/AddTagsModal';
 import PressureTestSceneService from '../service';
 import moment from 'moment';
 import AppDistributeModal from 'src/modals/AppDistributeModal';
+import AddBaselineModal from '../modals/AddBaselineModal';
+import SlaListModal from '../modals/SLAListModal';
 
 const getPressureTestSceneColumns = (
   state,
@@ -169,7 +171,7 @@ const getPressureTestSceneColumns = (
     ]).finally(() => {
       msg();
     });
-    
+
   };
 
   const handleCloseTiming = async (sceneId: number) => {
@@ -351,6 +353,20 @@ const getPressureTestSceneColumns = (
                 </Button>
               </Popconfirm>
             )}
+            <span style={{ marginRight: 8 }}>
+            <AddBaselineModal 
+              sceneId={row.id} 
+              btnText="设置性能基线" 
+              onSccuess={() => {
+                setState({
+                  isReload: !state?.isReload
+                });
+              }} 
+            />
+            </span>
+            <span style={{ marginRight: 8 }}>
+              <SlaListModal btnText="查看性能基线" sceneId={row.id}/>
+            </span>
             {row.status === 0 && (
               <AuthorityBtn
                 isShow={

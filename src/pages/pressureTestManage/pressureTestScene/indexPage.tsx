@@ -342,11 +342,11 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
                     <Radio value={PressureStyle.继续压测}>继续压测</Radio>
                    </Radio.Group>
                 </div>
-                
+
               );
             })}
         </div>
-       
+
         {state.hasMissingData && (
           <Row
             type="flex"
@@ -370,7 +370,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
         {/* 机器选择 */}
         <div style={{ padding: '24px 0' }}>
           <div style={{ marginBottom: 16 }}>请选择压力来源</div>
-          <Radio.Group 
+          <Radio.Group
             value={state.machineId}
             onChange={e => {
               setState({
@@ -379,7 +379,7 @@ const PressureTestScene: React.FC<PressureTestSceneProps> = (props) => {
             }}
           >
               {
-                state.machineList?.map(x => 
+                state.machineList?.map(x =>
                 <Radio key={x.id} value={x.id} disabled={!!x.disabled}>
                   ({{ 0: '公', 1: '私' }[x.type]}网){x.name}
                 </Radio>)

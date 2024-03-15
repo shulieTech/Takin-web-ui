@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import styles from './../index.less';
 import { Tabs, Tooltip, Icon } from 'antd';
-import BottleneckAPIList from './BottleneckAPIList';
 import RiskMachine from './RiskMachine';
+import BottleneckAPINewList from './BottleneckAPINewList';
 interface Props {
   state?: any;
   setState?: (value) => void;
@@ -36,7 +36,7 @@ const ProblemAnalysis: React.FC<Props> = props => {
           </Tooltip>
         </span>
       ),
-      tabNode: <BottleneckAPIList id={id} tabList={state.tabList}/>
+      tabNode: <BottleneckAPINewList id={id} tabList={state.tabList}/>
     },
     {
       title: (

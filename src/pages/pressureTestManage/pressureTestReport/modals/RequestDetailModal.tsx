@@ -11,6 +11,7 @@ import { router } from 'umi';
 import Header from '../components/Header';
 import PressureTestReportService from '../service';
 import styles from './../index.less';
+import { float } from 'html2canvas/dist/types/css/property-descriptors/float';
 
 interface Props {
   btnText: string | React.ReactNode;
@@ -31,6 +32,7 @@ interface State {
   loading: boolean;
   originData: any[];
   totalRt: number;
+  traceStatus: number;
 }
 const RequestDetailModal: React.FC<Props> = (props) => {
   const [state, setState] = useStateReducer<State>({
@@ -44,6 +46,7 @@ const RequestDetailModal: React.FC<Props> = (props) => {
     traceId: null,
     loading: false,
     totalRt: null,
+    traceStatus: 0, // 切换trace精简、全量模式
   });
 
   const { traceId } = props;
@@ -68,13 +71,13 @@ const RequestDetailModal: React.FC<Props> = (props) => {
       traceId,
       totalRt: props.totalRt,
     });
-    queryRequestDetail({
+    queryReduceRequestDetail({
       traceId,
     });
   };
 
   /**
-   * @name 获取请求详情列表
+   * @name 获取请求详情列表（全量）
    */
   const queryRequestDetail = async (value) => {
     setState({
@@ -84,6 +87,40 @@ const RequestDetailModal: React.FC<Props> = (props) => {
     const {
       data: { success, data },
     } = await PressureTestReportService.queryRequestDetail({
+      ...value,
+    });
+    if (success) {
+      if (data) {
+        setState({
+          originData: data.traces,
+          data: data.traces,
+          totalCost: data.totalCost,
+          startTime: data.startTime,
+          entryHostIp: data.entryHostIp,
+          clusterTest: data.clusterTest,
+          loading: false,
+        });
+      } else {
+        setState({
+          data: null,
+          loading: false,
+        });
+      }
+    }
+  };
+
+
+  /**
+   * @name 获取请求详情列表（精简）
+   */
+  const queryReduceRequestDetail = async (value) => {
+    setState({
+      data: null,
+      loading: true,
+    });
+    const {
+      data: { success, data },
+    } = await PressureTestReportService.queryReduceRequestDetail({
       ...value,
     });
     if (success) {
@@ -439,7 +476,31 @@ const RequestDetailModal: React.FC<Props> = (props) => {
                 {state.clusterTest ? '压测流量' : '业务流量'}
               </span>
             )}
+
+            <Button
+              style={{ float: 'right' }}
+              onClick={() => {
+                setState({
+                  traceStatus: state?.traceStatus === 0 ? 1 : 0
+                });
+                if (state?.traceStatus === 0) {
+                  queryRequestDetail({ traceId });
+                  setState({
+                    traceStatus: 1
+                  });
+                } else {
+                  queryReduceRequestDetail({ traceId });
+                  setState({
+                    traceStatus: 0
+                  });
+                }
+              }}
+            > 切换{state?.traceStatus === 1 ? '精简' : '全量'}模式
+            </Button>
           </div>
+          <span style={{ color: '#a2a6b1', fontSize: 12, float: 'right' }}>
+            {state?.traceStatus === 0 ? '精简模式:展示接口rt大于100ms或调用异常的trace' : '全量模式:展示全部trace'}
+          </span>
           <Header list={requestHeadList} isExtra={false} />
         </div>
         {state.data && state.data[0] && !state.loading ? (

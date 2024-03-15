@@ -54,7 +54,7 @@ export default () => {
     antVars = getThemeConfig().antVars || {},
     cssVars = getThemeConfig().cssVars || {},
   } = {}) => {
-    window.less.modifyVars(antVars);
+    // window?.less?.modifyVars(antVars);
     Object.entries(cssVars).forEach(([k, v]) => {
       rootEle?.style?.setProperty(k, v as string);
     });

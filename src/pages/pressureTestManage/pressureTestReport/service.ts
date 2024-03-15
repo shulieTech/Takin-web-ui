@@ -79,6 +79,13 @@ const PressureTestReportService = {
     return httpGet(url, data);
   },
   /**
+   * @name 获取瓶颈接口
+   */
+  async queryBottleneckAPINewList(data = {}) {
+    const url = `/scenemanage/getReportProblemList`;
+    return httpGet(url, data);
+  },
+  /**
    * @name 获取风险机器左侧应用列表
    */
   async queryRiskMachineAppList(data = {}) {
@@ -135,10 +142,17 @@ const PressureTestReportService = {
     return httpGet(url, data);
   },
   /**
-   * @name 获取请求明细列表
+   * @name 获取请求明细列表（全量）
    */
   async queryRequestDetail(data = {}) {
     const url = '/report/link/detail';
+    return httpGet(url, data);
+  },
+  /**
+   * @name 获取请求明细列表（精简）
+   */
+  async queryReduceRequestDetail(data = {}) {
+    const url = '/report/link/reduce/detail';
     return httpGet(url, data);
   },
   /**
