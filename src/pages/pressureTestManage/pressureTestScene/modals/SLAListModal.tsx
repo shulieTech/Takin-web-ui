@@ -45,6 +45,7 @@ const SlaListModal: React.FC<Props> = props => {
     const {
       data: { data, success },
     } = await PressureTestSceneService.getPerformanceBaseline({ sceneId });
+    console.log('data',data);
     setLoading(false);
     if (success && data) {
       setData(data || []);
@@ -67,10 +68,16 @@ const SlaListModal: React.FC<Props> = props => {
       {
         title: 'rt',
         dataIndex: 'rt',
+        render: (text, row) => {
+          return <span>{text}ms</span>;
+        }
       },
       {
         title: '成功率',
         dataIndex: 'successRate',
+        render: (text, row) => {
+          return <span>{text}%</span>;
+        }
       }
     ];
   }; 
@@ -81,7 +88,7 @@ const SlaListModal: React.FC<Props> = props => {
         centered: true,
         title: '性能基线详情',
         maskClosable: false,
-        width: 800,
+        width: '95%',
         bodyStyle: {
           height: '70vh',
           overflow: 'scroll'
@@ -97,7 +104,7 @@ const SlaListModal: React.FC<Props> = props => {
     >
     <Collapse>
   
-    {[dataSource]?.map((item: any, k) => {
+    {dataSource?.map((item: any, k) => {
       return  <Panel  header={item?.activityName} key={k}>
       <Table
         dataSource={item?.nodeList}

@@ -5,6 +5,7 @@ import PressureTestReportService from '../service';
 import BusinessActivityTree from './BusinessActivityTree';
 import styles from '../index.less';
 import ServiceCustomTable from 'src/components/service-custom-table';
+import RequestDetailNewModal from '../modals/RequestDetailNewModal';
 
 interface Props {
   id?: string;
@@ -16,7 +17,7 @@ const BottleneckAPINewList: React.FC<Props> = (props) => {
   const { id, tabList, sceneId } = props;
   const [tableQuery, setTableQuery] = useState({
     reportId: id,
-    
+
     // tabelKey: tabList?.[0]?.xpathMd5,
   });
 
@@ -36,6 +37,17 @@ const BottleneckAPINewList: React.FC<Props> = (props) => {
         ...customColumnProps,
         title: '业务活动平均rt',
         dataIndex: 'rt',
+        render: (text) => {
+          return <span>{text}ms</span>;
+        },
+      },
+      {
+        ...customColumnProps,
+        title: '基线rt',
+        dataIndex: 'baseRt',
+        render: (text) => {
+          return <span>{text}ms</span>;
+        },
       },
       {
         ...customColumnProps,
@@ -45,28 +57,23 @@ const BottleneckAPINewList: React.FC<Props> = (props) => {
           return <span>{text}%</span>;
         },
       },
+      // {
+      //   ...customColumnProps,
+      //   title: '存在问题节点',
+      //   dataIndex: 'rt',
+      //   render: (text) => {
+      //     return <span>{text}ms</span>;
+      //   },
+      // },
+      // {
+      //   ...customColumnProps,
+      //   title: '问题节点rt',
+      //   dataIndex: 'successRate',
+      //
+      // },
       {
         ...customColumnProps,
-        title: '存在问题节点',
-        dataIndex: 'rt',
-        render: (text) => {
-          return <span>{text}ms</span>;
-        },
-      },
-      {
-        ...customColumnProps,
-        title: '问题节点rt',
-        dataIndex: 'successRate',
-       
-      },
-      {
-        ...customColumnProps,
-        title: '基线rt',
-        dataIndex: 'baseRt',
-      },
-      {
-        ...customColumnProps,
-        title: '节点成功率',
+        title: '基线成功率',
         dataIndex: 'baseSuccessRate',
         render: (text) => {
           return <span>{text}%</span>;
@@ -80,8 +87,14 @@ const BottleneckAPINewList: React.FC<Props> = (props) => {
       {
         ...customColumnProps,
         title: '操作',
-        dataIndex: 'tps',
-        
+        dataIndex: 'traceSnapshot',
+        width: 100,
+        render: (text) => {
+          if (text) {
+            return <RequestDetailNewModal btnText="请求详情" snapData={text}/>;
+          }
+          return '-';  
+        },
       },
     ];
   };

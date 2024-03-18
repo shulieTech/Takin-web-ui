@@ -1,0 +1,555 @@
+import { Button, Divider, message, Row, Tooltip, Typography } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
+import copy from 'copy-to-clipboard';
+import { CommonModal, useStateReducer } from 'racc';
+import React, { Fragment } from 'react';
+import ColorCircle from 'src/common/color-circle/ColorCircle';
+import Loading from 'src/common/loading';
+import CustomTable from 'src/components/custom-table';
+import { customColumnProps } from 'src/components/custom-table/utils';
+import { router } from 'umi';
+import Header from '../components/Header';
+import PressureTestReportService from '../service';
+import styles from './../index.less';
+import { float } from 'html2canvas/dist/types/css/property-descriptors/float';
+
+interface Props {
+  btnText: string | React.ReactNode;
+  traceId?: string;
+  isLive?: boolean;
+  reportId?: string;
+  totalRt?: number;
+  snapData: any;
+}
+
+interface State {
+  isReload?: boolean;
+  data: any;
+  totalCost: number;
+  startTime: string;
+  entryHostIp: string;
+  clusterTest: boolean;
+  traceId: string;
+  loading: boolean;
+  originData: any[];
+  totalRt: number;
+  traceStatus: number;
+}
+const RequestDetailNewModal: React.FC<Props> = (props) => {
+  const [state, setState] = useStateReducer<State>({
+    isReload: false,
+    data: null,
+    originData: null,
+    totalCost: null,
+    startTime: null,
+    entryHostIp: null,
+    clusterTest: null,
+    traceId: null,
+    loading: false,
+    totalRt: null,
+    traceStatus: 0, // 切换trace精简、全量模式
+  });
+
+  const { traceId } = props;
+
+  const timestampToTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const Y = `${date.getFullYear()}-`;
+    const M =
+      date.getMonth() + 1 < 10
+        ? `0${date.getMonth() + 1}-`
+        : `${date.getMonth() + 1}-`;
+    const D =
+      date.getDate() < 10 ? `0${date.getDate()} ` : `${date.getDate()} `;
+    const h = `${date.getHours()}:`;
+    const m = `${date.getMinutes()}:`;
+    const s = date.getSeconds();
+    return Y + M + D + h + m + s;
+  };
+
+  const handleClick = () => {
+    // setState({
+    //   traceId,
+    //   totalRt: props.totalRt,
+    // });
+    // queryReduceRequestDetail({
+    //   traceId,
+    // });
+    queryDetail();
+  };
+
+  /**
+   * @name 获取请求详情列表（全量）
+   */
+  const queryRequestDetail = async (value) => {
+    setState({
+      data: null,
+      loading: true,
+    });
+    const {
+      data: { success, data },
+    } = await PressureTestReportService.queryRequestDetail({
+      ...value,
+    });
+    if (success) {
+      if (data) {
+        setState({
+          originData: data.traces,
+          data: data.traces,
+          totalCost: data.totalCost,
+          startTime: data.startTime,
+          entryHostIp: data.entryHostIp,
+          clusterTest: data.clusterTest,
+          loading: false,
+        });
+      } else {
+        setState({
+          data: null,
+          loading: false,
+        });
+      }
+    }
+  };
+
+  /**
+   * @name 获取请求详情
+   */
+  const queryDetail = async () => {
+    setState({
+      originData: props?.snapData,
+      data: props?.snapData,
+    });
+  };
+
+  /**
+   * @name 获取请求详情列表（精简）
+   */
+  const queryReduceRequestDetail = async (value) => {
+    setState({
+      data: null,
+      loading: true,
+    });
+    const {
+      data: { success, data },
+    } = await PressureTestReportService.queryReduceRequestDetail({
+      ...value,
+    });
+    if (success) {
+      if (data) {
+        setState({
+          originData: data.traces,
+          data: data.traces,
+          totalCost: data.totalCost,
+          startTime: data.startTime,
+          entryHostIp: data.entryHostIp,
+          clusterTest: data.clusterTest,
+          loading: false,
+        });
+      } else {
+        setState({
+          data: null,
+          loading: false,
+        });
+      }
+    }
+  };
+
+  const handleCopy = async (value) => {
+    if (copy(value)) {
+      message.success('复制成功');
+    } else {
+      message.error('复制失败');
+    }
+  };
+
+  const getColumns = (): ColumnProps<any>[] => {
+    const columns: ColumnProps<any>[] = [
+      {
+        ...customColumnProps,
+        title: '方法名/服务名',
+        dataIndex: 'interfaceName',
+        width: 280,
+        render: (text, row) => {
+          return (
+            <span>
+              <Tooltip
+                placement="bottomLeft"
+                title={
+                  <div style={{ maxHeight: 300, overflow: 'auto' }}>
+                    <div style={{ textAlign: 'right' }}>
+                      <a
+                        onClick={() => handleCopy(`${row.methodName}/${text}`)}
+                      >
+                        复制
+                      </a>
+                    </div>
+                    {row.methodName}/{text}
+                  </div>}
+              >
+                <span
+                  style={{
+                    display: 'inline-block',
+                    maxWidth: 200,
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {row.methodName}/{text}
+                </span>
+              </Tooltip>
+            </span>
+          );
+        },
+      },
+      {
+        ...customColumnProps,
+        title: '调用方/被调用方',
+        dataIndex: 'logTypeName',
+        width: 120,
+      },
+      {
+        ...customColumnProps,
+        title: 'IP',
+        dataIndex: 'nodeIp',
+        width: 140,
+      },
+      {
+        ...customColumnProps,
+        title: '同步/异步',
+        dataIndex: 'asyncName',
+        width: 100,
+      },
+      {
+        ...customColumnProps,
+        title: '应用名/中间件名',
+        dataIndex: 'applicationName',
+        ellipsis: true,
+        width: 120,
+        render: (text, row) => {
+          return (
+            <Tooltip
+              placement="bottomLeft"
+              title={
+                <span>
+                  {text}/{row.middlewareName}
+                </span>
+              }
+            >
+              <span>
+                {text}/{row.middlewareName}
+              </span>
+            </Tooltip>
+          );
+        },
+      },
+      {
+        ...customColumnProps,
+        title: '请求参数',
+        dataIndex: 'params',
+        ellipsis: true,
+        width: 200,
+        render: (text) => {
+          return text ? (
+            <Tooltip
+              placement="bottomLeft"
+              title={
+                <div style={{ maxHeight: 300, overflow: 'auto' }}>
+                  <div style={{ textAlign: 'right' }}>
+                    <a onClick={() => handleCopy(text)}>复制</a>
+                  </div>
+                  {text}
+                </div>}
+            >
+              <span>{text}</span>
+            </Tooltip>
+          ) : (
+            <span>-</span>
+          );
+        },
+      },
+      {
+        ...customColumnProps,
+        title: '状态',
+        dataIndex: 'succeeded',
+        width: 70,
+        render: (text, row) => {
+          return (
+            <Fragment>
+              <Row type="flex" align="middle">
+                <ColorCircle color={text === true ? '#11DFB2' : '#ED5F47'} />
+                {row.nodeSuccess === false && (
+                  <Fragment>
+                    <Divider type="vertical" />
+                    <Tooltip title="子节点有异常" trigger="click">
+                      <img
+                        style={{ width: 14, cursor: 'pointer' }}
+                        src={require('./../../../../assets/tooltip_error.png')}
+                      />
+                    </Tooltip>
+                  </Fragment>
+                )}
+              </Row>
+            </Fragment>
+          );
+        },
+      },
+      {
+        ...customColumnProps,
+        title: '响应参数',
+        dataIndex: 'response',
+        ellipsis: true,
+        width: 200,
+        render: (text) => {
+          return text ? (
+            <Tooltip
+              placement="bottomLeft"
+              title={
+                <div style={{ maxHeight: 300, overflow: 'auto' }}>
+                  <div style={{ textAlign: 'right' }}>
+                    <a onClick={() => handleCopy(text)}>复制</a>
+                  </div>
+                  {text}
+                </div>}
+            >
+              <span>{text}</span>
+            </Tooltip>
+          ) : (
+            <span>-</span>
+          );
+        },
+      },
+      {
+        ...customColumnProps,
+        title: '时间轴（平均RT）',
+        dataIndex: 'costTime',
+        width: 220,
+        render: (text, row) => {
+          return (
+            <div style={{ width: 150, position: 'relative' }}>
+              <span className={styles.timeLineBg} />
+              {state.totalCost && (
+                <div
+                  className={styles.timeLineWrap}
+                  style={{
+                    left: Math.min(
+                      150,
+                      (150 / state.totalCost) * row.offsetStartTime
+                    ),
+                  }}
+                >
+                  <span
+                    className={styles.timeLine}
+                    style={{
+                      width: Math.min(150, (150 / state.totalCost) * text),
+                      marginRight: 2,
+                    }}
+                  />
+                  <span>{text === 0 ? '<1' : text}ms</span>
+                </div>
+              )}
+            </div>
+          );
+        },
+      },
+    ];
+    const actions = {
+      title: '操作',
+      dataIndex: 'actions',
+      width: 100,
+      render: (text, row) => {
+        if (
+          row.entryHostIp &&
+          row.agentId
+          // && row.trackMethod
+        ) {
+          return (
+            <Button
+              onClick={() =>
+                // router.push(
+                //   `/analysisManage?tab=method&appName=${
+                //     row.applicationName
+                //   }&processName=${row.entryHostIp}|${row.agentId}&reportId=${
+                //     props.reportId
+                //   }&type=actually&traceObject=${encodeURIComponent(
+                //     row.trackMethod
+                //   )}`
+                // )
+                router.push(
+                  `/analysisManage?tab=method&appName=${row.applicationName}&processName=${row.entryHostIp}|${row.agentId}&reportId=${props.reportId}&type=actually`
+                )
+              }
+              style={{ marginLeft: 16 }}
+              type="primary"
+              size="small"
+            >
+              开启方法追踪
+            </Button>
+          );
+        }
+      },
+    };
+    if (props.isLive) {
+      columns.push(actions);
+    }
+    return columns;
+  };
+
+  const handleExpand = async (expanded, record) => {
+    if (expanded === false) {
+      setState({
+        data: changeNodes(state.data, record.id, []),
+      });
+      return;
+    }
+    const {
+      data: { success, data },
+    } = await PressureTestReportService.queryRequestDetail({
+      traceId,
+      id: record.id,
+    });
+    if (success) {
+      if (data) {
+        setState({
+          data: changeNodes(state.data, record.id, data.traces),
+        });
+      }
+    }
+  };
+
+  /**
+   * @name 替换子节点
+   */
+  function changeNodes(data, id, node) {
+    data.map((item) => {
+      if (item.id === id) {
+        item.nextNodes = node;
+      }
+      if (item.nextNodes) {
+        changeNodes(item.nextNodes, id, node);
+      }
+    });
+
+    return data;
+  }
+
+  const requestHeadList = [
+    {
+      label: '调用链路入口',
+      value: state.entryHostIp,
+    },
+    {
+      label: '开始时间',
+      value: state.startTime && timestampToTime(state.startTime),
+    },
+    {
+      label: '总耗时',
+      value: state.totalRt ? `${state.totalRt}ms` : null,
+    },
+    {
+      label: '网络耗时',
+      value: `${state.totalRt - state.totalCost}ms`,
+    },
+    {
+      label: '接口耗时',
+      value: state.totalCost ? `${state.totalCost}ms` : null,
+    },
+  ];
+
+  return (
+    <CommonModal
+      modalProps={{
+        width: 'calc(100% - 40px)',
+        footer: null,
+        maskClosable: false,
+        centered: true,
+        title: (
+          <p style={{ fontSize: 16 }}>
+            请求详情
+            <span style={{ color: '#a2a6b1', fontSize: 12, marginLeft: 16 }}>
+              (请求日志数据仅保留3天，3天后将无法查看，请知晓。)
+            </span>
+          </p>
+        ),
+      }}
+      btnProps={{ type: 'link' }}
+      btnText={props.btnText}
+      onClick={() => handleClick()}
+    >
+      <div
+        style={{ height: document.body.clientHeight - 200, overflow: 'auto' }}
+      >
+        <div style={{ marginBottom: 26 }}>
+          <div style={{ lineHeight: '32px', marginBottom: 8 }}>
+            <span className={styles.requestTitle}>{state.traceId}</span>
+            {state.data?.length > 0 && state.clusterTest !== null && (
+              <span className={styles.requestTag}>
+                {state.clusterTest ? '压测流量' : '业务流量'}
+              </span>
+            )}
+
+            <Button
+              style={{ float: 'right' }}
+              onClick={() => {
+                setState({
+                  traceStatus: state?.traceStatus === 0 ? 1 : 0
+                });
+                if (state?.traceStatus === 0) {
+                  queryRequestDetail({ traceId });
+                  setState({
+                    traceStatus: 1
+                  });
+                } else {
+                  queryReduceRequestDetail({ traceId });
+                  setState({
+                    traceStatus: 0
+                  });
+                }
+              }}
+            > 切换{state?.traceStatus === 1 ? '精简' : '全量'}模式
+            </Button>
+          </div>
+          <span style={{ color: '#a2a6b1', fontSize: 12, float: 'right' }}>
+            {state?.traceStatus === 0 ? '精简模式:展示接口rt大于100ms或调用异常的trace' : '全量模式:展示全部trace'}
+          </span>
+          <Header list={requestHeadList} isExtra={false} />
+        </div>
+        {state.data && state.data[0] && !state.loading ? (
+          <div className={styles.detailTable}>
+            <CustomTable
+              indentSize={8}
+              rowKey="id"
+              columns={getColumns()}
+              size="small"
+              dataSource={state.data}
+              defaultExpandAllRows={false}
+              defaultExpandedRowKeys={[
+                state.data && state.data[0] && state.data[0].id,
+              ]}
+              childrenColumnName="nextNodes"
+              onExpand={(expanded, record) => {
+                if (record.id !== 0) {
+                  handleExpand(expanded, record);
+                }
+              }}
+            />
+          </div>
+        ) : state.data === null && state.loading ? (
+          <Loading />
+        ) : (
+          <div className={styles.defaultWrap}>
+            <div className={styles.circle} />
+            <p className={styles.defaultTxt}>
+              请求日志数据已清理，请查看其他报告信息。
+            </p>
+          </div>
+        )}
+      </div>
+    </CommonModal>
+  );
+};
+export default RequestDetailNewModal;
+
+RequestDetailNewModal.defaultProps = {
+  isLive: false,
+};
