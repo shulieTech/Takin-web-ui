@@ -24,15 +24,16 @@ const state = {
   imgSrc: '',
   takinAuthority: null,
   arr: [],
-  disabled: true,
-  text: '获取短信验证码',
+  disabled: false,
+  text: '获取验证码',
   settimer: 61,
   config: {
     loginType: null
   },
   keyType: 1,
   phone: undefined,
-  form: null
+  form: null,
+  settimer: 120, // 初始倒计时设为120秒
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -135,9 +136,9 @@ const getFormData = (that: Login): FormDataType[] => {
       extra: (
         <Button
           style={{ marginLeft: 8 }}
-          // disabled={that.state.disabled}
+          disabled={that.state.disabled}
           onClick={() => that.fetchSMSCode()} >
-          获取验证码
+          {that.state.text}
         </Button>
       ),
     },
@@ -278,6 +279,10 @@ export default class Login extends DvaComponent<Props, State> {
     this.queryCode();
   };
 
+  componentWillUnmount() {
+    clearInterval(this.timer); // 假设你的计时器变量为this.timer
+  }
+
   handlePhoneChange = (e) => {
     const phone = e.target.value;
     // 假设使用简单的手机号码正则表达式进行验证，实际项目中可根据需要调整
@@ -294,19 +299,33 @@ export default class Login extends DvaComponent<Props, State> {
       return;
     }
     const username = this.state.form.getFieldValue('username');
-    const code = username.split('@')?.[0];
+    const code = username?.split('@')?.[0];
     if (!code) {
       message.error('请先输入用正确户名');
       return;
     }
     const {
       data: { success },
-    } = await UserService.fetchSMSCode({ username: code }); // 假设 `UserService.fetchSMSCode` 存在并且是调用 `/api/sms` 的方法
+    } = await UserService.fetchSMSCode({ username: code }); // 假设变量code已正确获取用户名或手机号
     if (success) {
       message.success('验证码已发送');
-      // 实现逻辑以处理倒计时/禁用按钮（如果需要）
+      this.setState({ disabled: true, text: `120秒后可重发` }); // 禁用按钮并设置初始文本
+  
+      // 开始倒计时
+      const timer = setInterval(() => {
+        this.setState(prevState => ({
+          settimer: prevState.settimer - 1,
+          text: `${prevState.settimer}秒后可重发`,
+        }), () => {
+          if (this.state.settimer === 0) {
+            clearInterval(timer); // 清除计时器
+            this.setState({ disabled: false, text: '获取验证码', settimer: 120 }); // 重置状态
+          }
+        });
+      }, 1000); // 每秒更新一次
     } else {
       message.error('获取验证码失败');
+      // 可以在这里处理失败的逻辑，如重新启用按钮等
     }
   };
 
