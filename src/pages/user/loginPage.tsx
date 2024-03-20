@@ -30,7 +30,9 @@ const state = {
   config: {
     loginType: null
   },
-  keyType: 1
+  keyType: 1,
+  phone: undefined,
+  form: null
 };
 type State = Partial<typeof state>;
 const getFormData = (that: Login): FormDataType[] => {
@@ -112,8 +114,36 @@ const getFormData = (that: Login): FormDataType[] => {
         </div>
       ),
     },
+    {
+      key: 'phoneCode',
+      label: '',
+      options: {
+        rules: [
+          {
+            required: true,
+            message: '请输入验证码',
+          },
+        ],
+      },
+      node: (
+        <Input
+          style={{ width: '205px' }}
+          className={styles.inputStyle}
+          placeholder="验证码"
+        />
+      ),
+      extra: (
+        <Button
+          style={{ marginLeft: 8 }}
+          // disabled={that.state.disabled}
+          onClick={() => that.fetchSMSCode()} >
+          获取验证码
+        </Button>
+      ),
+    },
   ];
 };
+
 const getFormDatatre = (that: Login): FormDataType[] => {
   return [
     {
@@ -246,6 +276,38 @@ export default class Login extends DvaComponent<Props, State> {
 
   refresh = () => {
     this.queryCode();
+  };
+
+  handlePhoneChange = (e) => {
+    const phone = e.target.value;
+    // 假设使用简单的手机号码正则表达式进行验证，实际项目中可根据需要调整
+    const isValidPhone = /^1[3-9]\d{9}$/.test(phone);
+    this.setState({
+      phone, // 更新手机号码
+      disabled: !isValidPhone, // 如果手机号有效，则启用获取验证码按钮
+    });
+  };
+
+  fetchSMSCode = async () => {
+    if (!this.state.form) {
+      console.error('Form is not initialized yet.');
+      return;
+    }
+    const username = this.state.form.getFieldValue('username');
+    const code = username.split('@')?.[0];
+    if (!code) {
+      message.error('请先输入用正确户名');
+      return;
+    }
+    const {
+      data: { success },
+    } = await UserService.fetchSMSCode({ username: code }); // 假设 `UserService.fetchSMSCode` 存在并且是调用 `/api/sms` 的方法
+    if (success) {
+      message.success('验证码已发送');
+      // 实现逻辑以处理倒计时/禁用按钮（如果需要）
+    } else {
+      message.error('获取验证码失败');
+    }
   };
 
   thirdParty = async (tenantCode) => {
@@ -504,6 +566,7 @@ export default class Login extends DvaComponent<Props, State> {
             <CommonForm
               formData={getFormData(this)}
               rowNum={1}
+              getForm={f => this.setState({ form: f })}
               onSubmit={this.handleSubmit}
               btnProps={{
                 isResetBtn: false,
@@ -567,6 +630,7 @@ export default class Login extends DvaComponent<Props, State> {
             <CommonForm
               formData={getFormData(this)}
               rowNum={1}
+              getForm={f => this.setState({ form: f })}
               onSubmit={this.handleSubmit}
               btnProps={{
                 isResetBtn: false,

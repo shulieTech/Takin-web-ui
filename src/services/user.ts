@@ -93,6 +93,10 @@ const UserService = {
     const url = '/thirdParty/callback';
     return httpGet(url, data);
   },
+  async fetchSMSCode(data) {
+    const url = '/sms';
+    return httpPost(url, data);
+  },
 };
 
 export default UserService;
